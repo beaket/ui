@@ -1,0 +1,38 @@
+{
+  "name": "@beaket/ui",
+  "version": "0.1.0",
+  "description": "CLI for adding Beaket UI components to your project",
+  "type": "module",
+  "bin": {
+    "beaket-ui": "./src/index.ts"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "publish:jsr": "npx jsr publish"
+  },
+  "keywords": [
+    "beaket",
+    "ui",
+    "cli",
+    "react",
+    "components",
+    "tailwindcss"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "13.1.0",
+    "prompts": "2.4.2",
+    "fs-extra": "11.3.0",
+    "picocolors": "1.1.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "11.0.4",
+    "@types/node": "22.15.29",
+    "@types/prompts": "2.4.9",
+    "typescript": "5.9.3"
+  }
+}

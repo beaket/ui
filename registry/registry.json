@@ -1,0 +1,13 @@
+{
+  "$schema": "./schema.json",
+  "name": "beaket-ui",
+  "components": [
+    {
+      "name": "button",
+      "description": "A button component with multiple variants and sizes",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": ["components/button/button.tsx", "components/button/index.ts"]
+    }
+  ]
+}

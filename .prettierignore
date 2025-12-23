@@ -1,0 +1,11 @@
+node_modules
+dist
+build
+coverage
+.tmp
+.out
+.next
+.vite
+.svelte-kit
+.cache
+.storybook-static
