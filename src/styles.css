@@ -1,1 +1,23 @@
 @import "tailwindcss";
+
+:root {
+  --branch: #1C1F24;
+  --ink: #0D0D0D;
+  --paper: #F8F8F8;
+  --steel: #6B6B6B;
+  --chrome: #C8C8C8;
+  --graphite: #1A1A1A;
+  --iron: #2D2D2D;
+  --slate: #404040;
+  --zinc: #525252;
+  --aluminum: #9E9E9E;
+  --silver: #DEDEDE;
+  --platinum: #F0F0F0;
+  --frost: #F5F5F5;
+  --signal-blue: #2B6CB0;
+  --signal-red: #D32F2F;
+  --signal-green: #137752;
+  --signal-amber: #A86800;
+  --signal-purple: #6F2DA8;
+  --signal-cyan: #1A6B7C;
+}

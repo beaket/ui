@@ -8,11 +8,17 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["primary", "secondary", "outline"],
+      options: ["primary", "destructive", "outline", "secondary", "ghost", "link", "success", "stark"],
     },
     size: {
       control: "select",
-      options: ["sm", "md", "lg"],
+      options: ["sm", "md", "lg", "icon"],
+    },
+    loading: {
+      control: "boolean",
+    },
+    disabled: {
+      control: "boolean",
     },
   },
 };
@@ -27,10 +33,10 @@ export const Primary: Story = {
   },
 };
 
-export const Secondary: Story = {
+export const Destructive: Story = {
   args: {
-    children: "Button",
-    variant: "secondary",
+    children: "Delete",
+    variant: "destructive",
   },
 };
 
@@ -38,6 +44,55 @@ export const Outline: Story = {
   args: {
     children: "Button",
     variant: "outline",
+  },
+};
+
+export const Secondary: Story = {
+  args: {
+    children: "Button",
+    variant: "secondary",
+  },
+};
+
+export const Ghost: Story = {
+  args: {
+    children: "Button",
+    variant: "ghost",
+  },
+};
+
+export const Link: Story = {
+  args: {
+    children: "Link",
+    variant: "link",
+  },
+};
+
+export const Success: Story = {
+  args: {
+    children: "Save",
+    variant: "success",
+  },
+};
+
+export const Stark: Story = {
+  args: {
+    children: "Button",
+    variant: "stark",
+  },
+};
+
+export const Loading: Story = {
+  args: {
+    children: "Loading",
+    loading: true,
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    children: "Disabled",
+    disabled: true,
   },
 };
 

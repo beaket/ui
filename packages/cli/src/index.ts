@@ -6,9 +6,9 @@ import { init } from "./commands/init.ts";
 const program = new Command();
 
 program
-  .name("beaket-ui")
+  .name("@beaket/ui")
   .description("CLI for adding Beaket UI components to your project")
-  .version("0.1.1");
+  .version("0.1.0");
 
 program.command("init").description("Initialize Beaket UI in your project").action(init);
 
