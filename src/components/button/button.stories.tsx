@@ -122,7 +122,7 @@ export const Large: Story = {
 // Compositions for docs
 export const AllVariants = () => (
   <div className="flex flex-wrap gap-2">
-    <Button variant="primary">Primary</Button>
+    <Button variant="primary">Primary2</Button>
     <Button variant="secondary">Secondary</Button>
     <Button variant="destructive">Destructive</Button>
     <Button variant="outline">Outline</Button>
