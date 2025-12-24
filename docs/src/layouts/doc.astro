@@ -1,0 +1,47 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+}
+const { title = 'Beaket UI' } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/ui/favicon.svg" />
+    <title>{title} - Beaket UI</title>
+  </head>
+  <body>
+    <div class="layout">
+      <nav class="sidebar">
+        <a href="/ui/" class="sidebar-title">Beaket UI</a>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <a href="/ui/" class:list={["sidebar-link", { active: currentPath === '/ui/' }]}>Introduction</a>
+          <a href="/ui/installation" class:list={["sidebar-link", { active: currentPath.includes('/installation') }]}>Installation</a>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Components</div>
+          <a href="/ui/components/button" class:list={["sidebar-link", { active: currentPath.includes('/button') }]}>Button</a>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Links</div>
+          <a href="https://github.com/beaket/ui" class="sidebar-link">GitHub</a>
+          <a href="https://www.npmjs.com/package/@beaket/ui" class="sidebar-link">npm</a>
+        </div>
+      </nav>
+
+      <main class="main">
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>
