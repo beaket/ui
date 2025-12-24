@@ -5,9 +5,9 @@ on:
     branches:
       - main
     paths-ignore:
-      - '**/*.md'
-      - '**/*.json'
-      - 'docs/**'
+      - "**/*.md"
+      - "**/*.json"
+      - "docs/**"
 
 jobs:
   build:

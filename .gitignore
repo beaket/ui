@@ -1,4 +1,12 @@
+.DS_Store
 node_modules
-packages/cli/dist
+dist
+
+# Environment
+.npmrc
 .env
-packages/cli/.npmrc
+
+# Storybook
+*storybook.log
+storybook-static
+

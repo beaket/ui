@@ -1,6 +1,6 @@
+import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
-import { cn } from "@/lib/utils";
 
 export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?:
@@ -67,8 +67,7 @@ const buttonVariants = cva(
           "border border-[var(--chrome)] bg-transparent text-[var(--ink)] hover:bg-[var(--frost)] active:bg-[var(--platinum)]",
         secondary:
           "bg-[var(--frost)] text-[var(--ink)] border border-[var(--chrome)] hover:bg-[var(--platinum)] active:bg-[var(--silver)]",
-        ghost:
-          "text-[var(--ink)] hover:bg-[var(--frost)] active:bg-[var(--platinum)]",
+        ghost: "text-[var(--ink)] hover:bg-[var(--frost)] active:bg-[var(--platinum)]",
         link: "text-[var(--signal-blue)] underline-offset-4 hover:underline",
         success:
           "bg-[var(--signal-green)] text-white border border-[var(--signal-green)] hover:bg-[#0f5f42] hover:border-[#0f5f42] active:bg-[#0a4a32] disabled:text-[var(--steel)] no-underline",
@@ -91,12 +90,7 @@ const buttonVariants = cva(
 
 function Spinner() {
   return (
-    <svg
-      className="animate-spin"
-      viewBox="0 0 24 24"
-      role="status"
-      aria-label="Loading"
-    >
+    <svg className="animate-spin" viewBox="0 0 24 24" role="status" aria-label="Loading">
       <circle
         cx="12"
         cy="12"
