@@ -2,7 +2,7 @@ name: Auto Changeset
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened]
 
 jobs:
   auto-changeset:
@@ -59,6 +59,8 @@ jobs:
 
       - name: Generate changeset
         if: steps.check.outputs.existing == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           BUMP="${{ steps.bump.outputs.bump }}"
           BRANCH="${{ github.head_ref }}"
@@ -66,8 +68,8 @@ jobs:
           # Generate a unique filename from branch name
           FILENAME=$(echo "$BRANCH" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
 
-          # Get first commit message for summary
-          SUMMARY=$(git log origin/${{ github.base_ref }}..HEAD --pretty=format:"%s" | head -1)
+          # Use PR title as summary
+          SUMMARY=$(gh pr view ${{ github.event.pull_request.number }} --json title -q '.title')
 
           # Create changeset file
           cat > ".changeset/${FILENAME}.md" << EOF
