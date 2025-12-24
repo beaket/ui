@@ -1,4 +1,5 @@
 #!/usr/bin/env -S npx tsx
+// Test comment for changeset verification
 import { Command } from "commander";
 import { createRequire } from "module";
 import { add } from "./commands/add.ts";
