@@ -1,0 +1,90 @@
+name: Auto Changeset
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  auto-changeset:
+    # Skip changeset release branches and renovate branches
+    if: |
+      !startsWith(github.head_ref, 'changeset-release/') &&
+      !startsWith(github.head_ref, 'renovate/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get commits in PR
+        id: commits
+        run: |
+          # Get commit messages from PR
+          COMMITS=$(git log origin/${{ github.base_ref }}..HEAD --pretty=format:"%s" | head -50)
+          echo "commits<<EOF" >> $GITHUB_OUTPUT
+          echo "$COMMITS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Determine version bump
+        id: bump
+        run: |
+          COMMITS="${{ steps.commits.outputs.commits }}"
+
+          # Default to patch
+          BUMP="patch"
+
+          # Check for BREAKING CHANGE or ! (major)
+          if echo "$COMMITS" | grep -qE "(BREAKING CHANGE|^[a-z]+(\(.+\))?!:)"; then
+            BUMP="major"
+          # Check for feat (minor)
+          elif echo "$COMMITS" | grep -qE "^feat(\(.+\))?:"; then
+            BUMP="minor"
+          fi
+
+          echo "bump=$BUMP" >> $GITHUB_OUTPUT
+          echo "Determined bump type: $BUMP"
+
+      - name: Check for existing changeset
+        id: check
+        run: |
+          # Count non-README changeset files
+          COUNT=$(find .changeset -name "*.md" ! -name "README.md" | wc -l | tr -d ' ')
+          echo "existing=$COUNT" >> $GITHUB_OUTPUT
+          echo "Existing changesets: $COUNT"
+
+      - name: Generate changeset
+        if: steps.check.outputs.existing == '0'
+        run: |
+          BUMP="${{ steps.bump.outputs.bump }}"
+          BRANCH="${{ github.head_ref }}"
+
+          # Generate a unique filename from branch name
+          FILENAME=$(echo "$BRANCH" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
+
+          # Get first commit message for summary
+          SUMMARY=$(git log origin/${{ github.base_ref }}..HEAD --pretty=format:"%s" | head -1)
+
+          # Create changeset file
+          cat > ".changeset/${FILENAME}.md" << EOF
+          ---
+          "@beaket/ui": $BUMP
+          ---
+
+          $SUMMARY
+          EOF
+
+          echo "Created changeset with $BUMP bump: $SUMMARY"
+
+      - name: Commit changeset
+        if: steps.check.outputs.existing == '0'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .changeset/
+          git commit -m "Add changeset for PR"
+          git push
