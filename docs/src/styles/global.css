@@ -48,8 +48,13 @@ body {
   color: var(--ink);
   text-decoration: none;
 }
-.sidebar-link:hover { color: var(--signal-blue); }
-.sidebar-link.active { color: var(--signal-blue); font-weight: 500; }
+.sidebar-link:hover {
+  color: var(--signal-blue);
+}
+.sidebar-link.active {
+  color: var(--signal-blue);
+  font-weight: 500;
+}
 
 .main {
   flex: 1;
@@ -58,12 +63,31 @@ body {
   max-width: 720px;
 }
 
-h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
-h2 { font-size: 1rem; margin: 2rem 0 0.5rem; border-bottom: 1px solid var(--chrome); padding-bottom: 0.25rem; }
-h3 { font-size: 0.875rem; margin: 1.5rem 0 0.5rem; color: var(--steel); }
-p { margin: 0.5rem 0; }
-ul { margin: 0.5rem 0; padding-left: 1.5rem; }
-li { margin: 0.25rem 0; }
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+h2 {
+  font-size: 1rem;
+  margin: 2rem 0 0.5rem;
+  border-bottom: 1px solid var(--chrome);
+  padding-bottom: 0.25rem;
+}
+h3 {
+  font-size: 0.875rem;
+  margin: 1.5rem 0 0.5rem;
+  color: var(--steel);
+}
+p {
+  margin: 0.5rem 0;
+}
+ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+li {
+  margin: 0.25rem 0;
+}
 
 code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -81,20 +105,29 @@ pre {
   font-size: 13px;
   margin: 0.5rem 0;
 }
-pre code { background: none; padding: 0; }
+pre code {
+  background: none;
+  padding: 0;
+}
 
-a { color: var(--signal-blue); }
+a {
+  color: var(--signal-blue);
+}
 
 .tagline {
   color: var(--steel);
   margin-bottom: 2rem;
 }
 
-.components { margin-top: 0.5rem; }
+.components {
+  margin-top: 0.5rem;
+}
 .component {
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 0;
   border-bottom: 1px dashed var(--chrome);
 }
-.component:last-child { border-bottom: none; }
+.component:last-child {
+  border-bottom: none;
+}

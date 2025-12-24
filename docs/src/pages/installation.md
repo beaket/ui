@@ -28,11 +28,11 @@ pnpm add -D tailwindcss @tailwindcss/vite
 
 ```ts
 // vite.config.ts
-import tailwindcss from '@tailwindcss/vite'
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-})
+});
 ```
 
 ### Next.js
@@ -45,9 +45,9 @@ pnpm add -D tailwindcss @tailwindcss/postcss postcss
 // postcss.config.mjs
 export default {
   plugins: {
-    '@tailwindcss/postcss': {}
-  }
-}
+    "@tailwindcss/postcss": {},
+  },
+};
 ```
 
 ### CSS
@@ -66,15 +66,15 @@ Components use `@/` imports.
 
 ```ts
 // vite.config.ts
-import path from 'path'
+import path from "path";
 
 export default defineConfig({
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
-    }
-  }
-})
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+});
 ```
 
 ```json

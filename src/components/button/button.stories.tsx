@@ -8,7 +8,16 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["primary", "destructive", "outline", "secondary", "ghost", "link", "success", "stark"],
+      options: [
+        "primary",
+        "destructive",
+        "outline",
+        "secondary",
+        "ghost",
+        "link",
+        "success",
+        "stark",
+      ],
     },
     size: {
       control: "select",
