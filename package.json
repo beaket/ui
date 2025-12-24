@@ -9,7 +9,8 @@
     "typecheck": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "prepare": "husky"
   },
   "keywords": [
     "react",
@@ -33,6 +34,7 @@
     "@vitejs/plugin-react": "5.1.2",
     "@vitest/browser-playwright": "4.0.16",
     "@vitest/coverage-v8": "4.0.16",
+    "husky": "9.1.7",
     "playwright": "1.57.0",
     "prettier": "3.7.4",
     "prettier-plugin-organize-imports": "4.3.0",
