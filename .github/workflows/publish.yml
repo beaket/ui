@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -17,8 +16,11 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
+          registry-url: "https://registry.npmjs.org"
       - name: Install dependencies
         run: pnpm install
       - name: Publish package
-        run: npx jsr publish
+        run: npm publish --access public
         working-directory: packages/cli
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

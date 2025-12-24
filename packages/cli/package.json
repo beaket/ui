@@ -1,10 +1,10 @@
 {
   "name": "@beaket/ui",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "CLI for adding Beaket UI components to your project",
   "type": "module",
   "bin": {
-    "ui": "./bin/cli.mjs"
+    "ui": "./bin/cli.js"
   },
   "files": [
     "bin",
