@@ -1,3 +1,4 @@
 node_modules
 packages/cli/dist
 .env
+packages/cli/.npmrc

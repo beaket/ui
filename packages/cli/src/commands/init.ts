@@ -52,7 +52,7 @@ export async function init() {
       type: "text",
       name: "tailwindCss",
       message: "Where is your Tailwind CSS file?",
-      initial: "src/styles.css",
+      initial: "src/index.css",
     },
     {
       type: "text",

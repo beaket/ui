@@ -36,7 +36,6 @@ export async function installDependencies(deps: string[]): Promise<void> {
   return new Promise((resolve, reject) => {
     const child = spawn(packageManager, [installCmd, ...deps], {
       stdio: "inherit",
-      shell: true,
     });
 
     child.on("close", (code) => {
