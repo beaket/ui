@@ -2,7 +2,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?:
     | "primary"
     | "destructive"
@@ -26,7 +26,7 @@ export function Button({
   children,
   asChild = false,
   ...props
-}: Props) {
+}: ButtonProps) {
   const Comp = asChild ? Slot : "button";
 
   return (
