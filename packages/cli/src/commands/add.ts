@@ -1,8 +1,7 @@
-import fs from "fs-extra";
 import path from "path";
 import pc from "picocolors";
 import { getConfig } from "../utils/config.ts";
-import { writeComponentFiles } from "../utils/files.ts";
+import { installDependencies, writeComponentFiles } from "../utils/files.ts";
 import { fetchComponent, fetchRegistry } from "../utils/registry.ts";
 
 export async function add(componentName: string) {
@@ -40,6 +39,14 @@ export async function add(componentName: string) {
   await writeComponentFiles(componentsDir, componentName, files, config);
 
   console.log(pc.green("✓"), `Added ${componentName}`);
+
+  // Install dependencies
+  if (componentDef.dependencies.length > 0) {
+    console.log();
+    console.log("Installing dependencies...");
+    await installDependencies(componentDef.dependencies);
+    console.log(pc.green("✓"), `Installed ${componentDef.dependencies.join(", ")}`);
+  }
   console.log();
   console.log("Import it in your code:");
   console.log(
