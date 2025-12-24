@@ -1,14 +1,18 @@
 #!/usr/bin/env -S npx tsx
 import { Command } from "commander";
+import { createRequire } from "module";
 import { add } from "./commands/add.ts";
 import { init } from "./commands/init.ts";
+
+const require = createRequire(import.meta.url);
+const { version } = require("../package.json");
 
 const program = new Command();
 
 program
   .name("@beaket/ui")
   .description("CLI for adding Beaket UI components to your project")
-  .version("0.1.2");
+  .version(version);
 
 program.command("init").description("Initialize Beaket UI in your project").action(init);
 
