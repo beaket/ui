@@ -1,18 +1,18 @@
-name: Publish
+name: Release
+
 on:
   push:
     branches:
       - main
-    paths:
-      - 'packages/cli/**'
-      - 'src/**'
-      - 'registry/**'
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -21,10 +21,15 @@ jobs:
           node-version: 20
           cache: pnpm
           registry-url: "https://registry.npmjs.org"
+
       - name: Install dependencies
         run: pnpm install
-      - name: Publish package
-        run: npm publish --access public
-        working-directory: packages/cli
+
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: pnpm run release
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
