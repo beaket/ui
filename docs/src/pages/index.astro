@@ -1,134 +1,27 @@
 ---
-const title = "Beaket UI";
-const description = "CLI for adding brutalist React components to your project";
+import Layout from '../layouts/doc.astro';
+import { ComponentCard } from '../components/component-card';
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/ui/favicon.svg" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <style>
-      :root {
-        --branch: #1C1F24;
-        --ink: #0D0D0D;
-        --paper: #F8F8F8;
-        --steel: #6B6B6B;
-        --chrome: #C8C8C8;
-        --frost: #F5F5F5;
-        --signal-blue: #2B6CB0;
-      }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: var(--paper);
-        color: var(--ink);
-        line-height: 1.5;
-        font-size: 14px;
-      }
-      .container {
-        max-width: 720px;
-        margin: 0 auto;
-        padding: 2rem 1rem;
-      }
-      h1 {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-      }
-      .tagline {
-        color: var(--steel);
-        margin-bottom: 2rem;
-      }
-      h2 {
-        font-size: 1rem;
-        margin: 2rem 0 0.5rem;
-        padding-bottom: 0.25rem;
-        border-bottom: 1px solid var(--chrome);
-      }
-      pre {
-        background: var(--frost);
-        border: 1px solid var(--chrome);
-        padding: 0.75rem 1rem;
-        overflow-x: auto;
-        font-size: 13px;
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      }
-      code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 13px;
-      }
-      p {
-        margin: 0.5rem 0;
-      }
-      ul {
-        margin: 0.5rem 0;
-        padding-left: 1.5rem;
-      }
-      li {
-        margin: 0.25rem 0;
-      }
-      a {
-        color: var(--signal-blue);
-      }
-      .components {
-        margin-top: 0.5rem;
-      }
-      .component {
-        display: flex;
-        justify-content: space-between;
-        padding: 0.5rem 0;
-        border-bottom: 1px dashed var(--chrome);
-      }
-      .component:last-child {
-        border-bottom: none;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Beaket UI</h1>
-      <p class="tagline">Brutalist React components. Copy to your project.</p>
+<Layout title="Introduction">
+  <h1>Beaket UI</h1>
+  <p class="tagline">Brutalist React components. Copy to your project.</p>
 
-      <h2>Quick Start</h2>
-      <pre><code>npx @beaket/ui init</code></pre>
+  <h2>Quick Start</h2>
+  <pre><code>npx @beaket/ui init
+npx @beaket/ui add button</code></pre>
 
-      <h2>Add Components</h2>
-      <pre><code>npx @beaket/ui add button</code></pre>
+  <h2>Components</h2>
+  <div class="grid">
+    <ComponentCard client:load />
+  </div>
+</Layout>
 
-      <h2>Available Components</h2>
-      <div class="components">
-        <div class="component">
-          <span>button</span>
-          <span style="color: var(--steel)">Primary, destructive, outline, secondary, ghost, link, success, stark</span>
-        </div>
-      </div>
-
-      <h2>What init does</h2>
-      <ul>
-        <li>Creates <code>beaket.json</code> configuration</li>
-        <li>Adds CSS variables to your stylesheet</li>
-        <li>Creates <code>cn()</code> utility function</li>
-        <li>Installs <code>clsx</code> and <code>tailwind-merge</code></li>
-      </ul>
-
-      <h2>Requirements</h2>
-      <ul>
-        <li>React 18+</li>
-        <li>Tailwind CSS 4+</li>
-      </ul>
-
-      <h2>Links</h2>
-      <ul>
-        <li><a href="https://github.com/beaket/ui">GitHub</a></li>
-        <li><a href="https://www.npmjs.com/package/@beaket/ui">npm</a></li>
-      </ul>
-    </div>
-  </body>
-</html>
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+</style>

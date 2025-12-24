@@ -109,3 +109,33 @@ export const Large: Story = {
     size: "lg",
   },
 };
+
+// Compositions for docs
+export const AllVariants = () => (
+  <div className="flex flex-wrap gap-2">
+    <Button variant="primary">Primary</Button>
+    <Button variant="secondary">Secondary</Button>
+    <Button variant="destructive">Destructive</Button>
+    <Button variant="outline">Outline</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="link">Link</Button>
+    <Button variant="success">Success</Button>
+    <Button variant="stark">Stark</Button>
+  </div>
+);
+
+export const AllSizes = () => (
+  <div className="flex items-center gap-2">
+    <Button size="sm">Small</Button>
+    <Button size="md">Medium</Button>
+    <Button size="lg">Large</Button>
+    <Button size="icon">→</Button>
+  </div>
+);
+
+export const AllStates = () => (
+  <div className="flex gap-2">
+    <Button disabled>Disabled</Button>
+    <Button loading>Loading</Button>
+  </div>
+);
