@@ -150,8 +150,11 @@ export const AllStates = () => (
   </div>
 );
 
-// Interaction Test
+// Interaction Tests
 export const ClickTest: Story = {
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
   args: {
     children: "Click Me",
     onClick: fn(),
@@ -166,6 +169,9 @@ export const ClickTest: Story = {
 };
 
 export const DisabledClickTest: Story = {
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
   args: {
     children: "Disabled",
     disabled: true,
@@ -182,6 +188,9 @@ export const DisabledClickTest: Story = {
 };
 
 export const LoadingClickTest: Story = {
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
   args: {
     children: "Loading",
     loading: true,

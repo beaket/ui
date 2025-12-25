@@ -1,4 +1,4 @@
-name: Component Tests
+name: Upload Chromatic
 on:
   push:
     branches:
