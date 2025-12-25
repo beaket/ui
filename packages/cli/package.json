@@ -1,7 +1,7 @@
 {
   "name": "@beaket/ui",
   "version": "0.1.7",
-  "description": "CLI for adding Beaket UI components to your project",
+  "description": "CLI tool for adding Beaket UI components to your project",
   "type": "module",
   "scripts": {
     "typecheck": "tsc --noEmit"
