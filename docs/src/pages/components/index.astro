@@ -1,0 +1,12 @@
+---
+import Layout from '../../layouts/doc.astro';
+import { ComponentList } from '../../components/component-list';
+import registry from '../../../../registry/registry.json';
+---
+
+<Layout title="Components">
+  <h1>Components</h1>
+  <p class="tagline">Brutalist React components. Copy and paste into your project.</p>
+
+  <ComponentList components={registry.components} client:load />
+</Layout>

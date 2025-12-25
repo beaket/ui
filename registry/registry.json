@@ -7,7 +7,12 @@
       "description": "Button component with variants and sizes",
       "dependencies": ["@radix-ui/react-slot", "class-variance-authority"],
       "registryDependencies": [],
-      "files": ["components/button/button.tsx", "components/button/index.ts"]
+      "files": ["components/button/button.tsx", "components/button/index.ts"],
+      "docs": {
+        "title": "Button",
+        "tagline": "Clickable button with multiple variants and sizes.",
+        "sections": ["AllVariants", "AllSizes", "AllStates"]
+      }
     }
   ]
 }

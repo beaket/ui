@@ -25,10 +25,15 @@ body {
 
 .sidebar-title {
   font-weight: 600;
-  margin-bottom: 1.5rem;
   color: var(--ink);
   text-decoration: none;
   display: block;
+}
+
+.sidebar-version {
+  font-size: 0.75rem;
+  color: var(--steel);
+  margin-bottom: 1.5rem;
 }
 
 .sidebar-section {
@@ -54,6 +59,18 @@ body {
 .sidebar-link.active {
   color: var(--signal-blue);
   font-weight: 500;
+}
+
+.sidebar-icons {
+  display: flex;
+  gap: 0.75rem;
+}
+.sidebar-icons a {
+  opacity: 0.7;
+  transition: opacity 0.15s;
+}
+.sidebar-icons a:hover {
+  opacity: 1;
 }
 
 .main {
