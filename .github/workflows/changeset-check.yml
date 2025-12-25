@@ -9,17 +9,19 @@ on:
 
 jobs:
   check:
-    # Skip for automated branches that don't need changesets
-    if: |
-      !startsWith(github.head_ref, 'changeset-release/') &&
-      !startsWith(github.head_ref, 'renovate/')
     runs-on: ubuntu-latest
     steps:
+      - name: Skip for automated branches
+        if: startsWith(github.head_ref, 'changeset-release/') || startsWith(github.head_ref, 'renovate/')
+        run: echo "Skipping changeset check for automated branch"
+
       - uses: actions/checkout@v6
+        if: ${{ !startsWith(github.head_ref, 'changeset-release/') && !startsWith(github.head_ref, 'renovate/') }}
         with:
           fetch-depth: 0
 
       - name: Check for changesets in this PR
+        if: ${{ !startsWith(github.head_ref, 'changeset-release/') && !startsWith(github.head_ref, 'renovate/') }}
         run: |
           if ! git diff --name-only origin/main...HEAD -- '.changeset/*.md' | grep -qv README.md; then
             echo "::error::Missing changeset. Run 'pnpm changeset' to add one."
