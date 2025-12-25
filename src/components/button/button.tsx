@@ -90,6 +90,7 @@ const buttonVariants = cva(
   },
 );
 
+/** Loading spinner for button */
 function Spinner() {
   return (
     <svg className="animate-spin" viewBox="0 0 24 24" role="status" aria-label="Loading">
