@@ -3,6 +3,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 
 export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Button style variant */
   variant?:
     | "primary"
     | "destructive"
@@ -12,8 +13,11 @@ export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     | "link"
     | "success"
     | "stark";
+  /** Button size */
   size?: "sm" | "md" | "lg" | "icon";
+  /** Shows a loading spinner and disables the button */
   loading?: boolean;
+  /** Merges props onto the immediate child element instead of rendering a button */
   asChild?: boolean;
 }
 
