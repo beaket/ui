@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/doc.astro';
+import { ComponentPage } from '../../components/component-page';
+import registry from '../../../../registry/registry.json';
+
+// Generate static paths for all components
+export function getStaticPaths() {
+  return registry.components.map((component) => ({
+    params: { name: component.name },
+    props: { component },
+  }));
+}
+
+interface Props {
+  component: (typeof registry.components)[0];
+}
+
+const { component } = Astro.props;
+---
+
+<Layout title={component.docs?.title ?? component.name}>
+  <ComponentPage component={component} client:load />
+</Layout>

@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import pkg from '../../../packages/cli/package.json';
 
 interface Props {
   title?: string;
@@ -20,6 +21,7 @@ const currentPath = Astro.url.pathname;
     <div class="layout">
       <nav class="sidebar">
         <a href="/ui/" class="sidebar-title">Beaket UI</a>
+        <div class="sidebar-version">v{pkg.version}</div>
 
         <div class="sidebar-section">
           <div class="sidebar-section-title">Getting Started</div>
@@ -28,14 +30,16 @@ const currentPath = Astro.url.pathname;
         </div>
 
         <div class="sidebar-section">
-          <div class="sidebar-section-title">Components</div>
-          <a href="/ui/components/button" class:list={["sidebar-link", { active: currentPath.includes('/button') }]}>Button</a>
+          <div class="sidebar-section-title">Docs</div>
+          <a href="/ui/components" class:list={["sidebar-link", { active: currentPath.includes('/components') }]}>Components</a>
         </div>
 
         <div class="sidebar-section">
           <div class="sidebar-section-title">Links</div>
-          <a href="https://github.com/beaket/ui" class="sidebar-link">GitHub</a>
-          <a href="https://www.npmjs.com/package/@beaket/ui" class="sidebar-link">npm</a>
+          <div class="sidebar-icons">
+            <a href="https://github.com/beaket/ui" aria-label="GitHub"><img src="/ui/github.svg" alt="GitHub" width="20" height="20" /></a>
+            <a href="https://www.npmjs.com/package/@beaket/ui" aria-label="npm"><img src="/ui/npm.svg" alt="npm" width="20" height="20" /></a>
+          </div>
         </div>
       </nav>
 

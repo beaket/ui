@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/doc.astro';
-import { ComponentCard } from '../components/component-card';
 ---
 
 <Layout title="Introduction">
@@ -11,17 +10,7 @@ import { ComponentCard } from '../components/component-card';
   <pre><code>npx @beaket/ui init
 npx @beaket/ui add button</code></pre>
 
-  <h2>Components</h2>
-  <div class="grid">
-    <ComponentCard client:load />
-  </div>
+  <p>
+    Browse the <a href="/ui/components">components</a> to get started.
+  </p>
 </Layout>
-
-<style>
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-</style>
