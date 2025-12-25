@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 
-/** Button component props */
 export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?:
     | "primary"
@@ -18,7 +17,6 @@ export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean;
 }
 
-/** Button component */
 export function Button({
   className,
   variant,
@@ -90,7 +88,6 @@ const buttonVariants = cva(
   },
 );
 
-/** Loading spinner for button */
 function Spinner() {
   return (
     <svg className="animate-spin" viewBox="0 0 24 24" role="status" aria-label="Loading">
