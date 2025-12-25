@@ -1,1 +1,5 @@
+# Skip in CI or for changeset-release branches
+[ -n "$CI" ] && exit 0
+[[ "$(git rev-parse --abbrev-ref HEAD)" == changeset-release/* ]] && exit 0
+
 pnpm changeset status --since=main
