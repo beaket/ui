@@ -10,3 +10,6 @@ dist
 *storybook.log
 storybook-static
 
+# Claude
+.claude/
+
