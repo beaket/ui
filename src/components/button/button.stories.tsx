@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, fn, userEvent, within } from "storybook/test";
 import { Button } from "./button";
 
 const meta: Meta<typeof Button> = {
@@ -148,3 +149,50 @@ export const AllStates = () => (
     <Button loading>Loading</Button>
   </div>
 );
+
+// Interaction Tests
+export const ClickTest: Story = {
+  args: {
+    children: "Click Me",
+    onClick: fn(),
+  },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole("button");
+
+    await userEvent.click(button);
+    await expect(args.onClick).toHaveBeenCalledTimes(1);
+  },
+};
+
+export const DisabledClickTest: Story = {
+  args: {
+    children: "Disabled",
+    disabled: true,
+    onClick: fn(),
+  },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole("button");
+
+    // Disabled button should not trigger onClick
+    await userEvent.click(button);
+    await expect(args.onClick).not.toHaveBeenCalled();
+  },
+};
+
+export const LoadingClickTest: Story = {
+  args: {
+    children: "Loading",
+    loading: true,
+    onClick: fn(),
+  },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole("button");
+
+    // Loading button should not trigger onClick
+    await userEvent.click(button);
+    await expect(args.onClick).not.toHaveBeenCalled();
+  },
+};

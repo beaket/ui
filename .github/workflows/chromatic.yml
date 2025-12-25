@@ -1,19 +1,26 @@
-name: Chromatic Tests
+name: Upload Chromatic
 on:
-  workflow_dispatch: # Temporarily disabled - manual trigger only
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'src/**'
-  #     - '.storybook/**'
-  # pull_request:
-  #   paths:
-  #     - 'src/**'
-  #     - '.storybook/**'
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - ".storybook/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "vite.config.ts"
+      - "tsconfig.json"
+  pull_request:
+    paths:
+      - "src/**"
+      - ".storybook/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "vite.config.ts"
+      - "tsconfig.json"
 
 jobs:
-  chromatic:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
