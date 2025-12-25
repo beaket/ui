@@ -1,5 +1,11 @@
 # @beaket/ui
 
+## 0.1.7
+
+### Patch Changes
+
+- e30519c: Add JSDoc comments to Button component props
+
 ## 0.1.6
 
 ### Patch Changes
