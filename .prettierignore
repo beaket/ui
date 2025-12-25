@@ -9,3 +9,5 @@ coverage
 .svelte-kit
 .cache
 .storybook-static
+pnpm-lock.yaml
+docs/.astro

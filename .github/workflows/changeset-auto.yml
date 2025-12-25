@@ -1,8 +1,9 @@
 name: Auto Changeset
 
 on:
-  pull_request:
-    types: [opened]
+  workflow_dispatch: # Temporarily disabled - manual trigger only
+  # pull_request:
+  #   types: [opened]
 
 jobs:
   auto-changeset:
