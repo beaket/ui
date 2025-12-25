@@ -161,8 +161,7 @@ export const ClickTest: Story = {
     const button = canvas.getByRole("button");
 
     await userEvent.click(button);
-    // Intentionally fail: expecting 2 calls but only 1 happens
-    await expect(args.onClick).toHaveBeenCalledTimes(2);
+    await expect(args.onClick).toHaveBeenCalledTimes(1);
   },
 };
 
