@@ -161,7 +161,8 @@ export const ClickTest: Story = {
     const button = canvas.getByRole("button");
 
     await userEvent.click(button);
-    await expect(args.onClick).toHaveBeenCalledTimes(1);
+    // Intentionally fail to verify Chromatic detects it
+    await expect(args.onClick).toHaveBeenCalledTimes(2);
   },
 };
 
