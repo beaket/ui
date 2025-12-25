@@ -23,8 +23,3 @@ jobs:
         run: pnpm format:check
       - name: Typecheck
         run: pnpm typecheck
-      - name: Check changeset
-        if: |
-          !startsWith(github.head_ref, 'changeset-release/') &&
-          !startsWith(github.head_ref, 'renovate/')
-        run: pnpm changeset status --since=origin/main
