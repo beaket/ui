@@ -1,5 +1,22 @@
-# Skip in CI or for changeset-release branches
+# Skip in CI or for changeset-release/renovate branches
 [ -n "$CI" ] && exit 0
-[[ "$(git rev-parse --abbrev-ref HEAD)" == changeset-release/* ]] && exit 0
+branch=$(git rev-parse --abbrev-ref HEAD)
+[[ "$branch" == changeset-release/* ]] && exit 0
+[[ "$branch" == renovate/* ]] && exit 0
 
-pnpm changeset status --since=main
+# Check if src/** or packages/** changed
+if git diff --name-only origin/main...HEAD | grep -qE '^(src|packages)/'; then
+  # Check for changeset
+  if ! git diff --name-only origin/main...HEAD -- '.changeset/*.md' | grep -qv README.md; then
+    echo ""
+    echo "⚠️  Missing changeset for source file changes."
+    echo ""
+    echo "To add a changeset:"
+    echo "  pnpm changeset"
+    echo ""
+    echo "If this change should NOT trigger a release:"
+    echo "  pnpm changeset --empty"
+    echo ""
+    exit 1
+  fi
+fi
