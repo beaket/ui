@@ -1,15 +1,16 @@
 name: Chromatic Tests
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'src/**'
-      - '.storybook/**'
-  pull_request:
-    paths:
-      - 'src/**'
-      - '.storybook/**'
+  workflow_dispatch: # Temporarily disabled - manual trigger only
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'src/**'
+  #     - '.storybook/**'
+  # pull_request:
+  #   paths:
+  #     - 'src/**'
+  #     - '.storybook/**'
 
 jobs:
   chromatic:
@@ -25,8 +26,8 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
-          node-version-file: 'package.json'
-          cache: 'pnpm'
+          node-version-file: "package.json"
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install

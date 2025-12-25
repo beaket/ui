@@ -14,6 +14,7 @@ export default defineConfig({
   output: "static",
   integrations: [react()],
   vite: {
+    // @ts-expect-error - Vite version mismatch between root (7.x) and Astro (6.x)
     plugins: [tailwindcss()],
     resolve: {
       alias: {
