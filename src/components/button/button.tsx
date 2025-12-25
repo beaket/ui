@@ -18,6 +18,7 @@ export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean;
 }
 
+/** Button component */
 export function Button({
   className,
   variant,
