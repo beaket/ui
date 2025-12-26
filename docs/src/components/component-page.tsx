@@ -1,11 +1,15 @@
-import { AllSizes, AllStates, AllVariants } from "@/components/button.stories";
+import { AllSizes, AllVariants, AllStates as ButtonAllStates } from "@/components/button.stories";
+import { AllStates as CheckboxAllStates } from "@/components/checkbox.stories";
 
 // Map section names to their components
 const sectionComponents: Record<string, Record<string, React.ComponentType>> = {
   button: {
     AllVariants,
     AllSizes,
-    AllStates,
+    AllStates: ButtonAllStates,
+  },
+  checkbox: {
+    AllStates: CheckboxAllStates,
   },
 };
 
