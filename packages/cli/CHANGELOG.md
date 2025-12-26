@@ -1,5 +1,11 @@
 # @beaket/ui
 
+## 1.1.0
+
+### Minor Changes
+
+- 4901272: Add Checkbox component with Radix UI primitives
+
 ## 1.0.0
 
 ### Major Changes
