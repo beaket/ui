@@ -18,9 +18,9 @@ npx @beaket/ui add button
 - Tailwind CSS 4+
 - Path alias `@/` configured
 
-## Tailwind CSS 4 Setup
+## Tailwind CSS Setup
 
-### Vite / React Router v7
+### Vite / React Router
 
 ```bash
 pnpm add -D tailwindcss @tailwindcss/vite
@@ -31,7 +31,7 @@ pnpm add -D tailwindcss @tailwindcss/vite
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [tailwindcss()],
 });
 ```
 
@@ -50,9 +50,9 @@ export default {
 };
 ```
 
-### CSS
+### CSS File
 
-Add to your main CSS file:
+Add to your main CSS file (required for all frameworks):
 
 ```css
 @import "tailwindcss";
