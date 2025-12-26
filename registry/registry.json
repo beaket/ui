@@ -18,6 +18,18 @@
         "tagline": "Clickable button with multiple variants and sizes.",
         "sections": ["AllVariants", "AllSizes", "AllStates"]
       }
+    },
+    {
+      "name": "checkbox",
+      "description": "Checkbox component for boolean input",
+      "dependencies": ["@radix-ui/react-checkbox", "clsx", "lucide-react", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/checkbox.tsx"],
+      "docs": {
+        "title": "Checkbox",
+        "tagline": "A control for boolean input with checked and unchecked states.",
+        "sections": ["AllStates"]
+      }
     }
   ]
 }
