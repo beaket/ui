@@ -3,7 +3,6 @@ import path from "path";
 import pc from "picocolors";
 import prompts from "prompts";
 import { writeConfig, type BeaketConfig } from "../utils/config.ts";
-import { installDependencies } from "../utils/files.ts";
 
 const CSS_VARIABLES = `
 /* Beaket UI Design System */
@@ -38,97 +37,54 @@ export async function init() {
   const response = await prompts([
     {
       type: "text",
-      name: "componentsDir",
-      message: "Where would you like to install components?",
-      initial: "src/components",
+      name: "components",
+      message: "Where should components be installed?",
+      initial: "src/components/ui",
     },
     {
       type: "text",
-      name: "utilsDir",
-      message: "Where would you like to install utilities (cn, etc.)?",
-      initial: "src/lib",
-    },
-    {
-      type: "text",
-      name: "tailwindCss",
+      name: "css",
       message: "Where is your Tailwind CSS file?",
       initial: "src/index.css",
     },
-    {
-      type: "text",
-      name: "componentsAlias",
-      message: "Components import alias",
-      initial: "@/components",
-    },
-    {
-      type: "text",
-      name: "utilsAlias",
-      message: "Utils import alias",
-      initial: "@/lib",
-    },
   ]);
 
-  if (!response.componentsDir) {
+  if (!response.components) {
     console.log(pc.red("Cancelled."));
     process.exit(1);
   }
 
+  // Write beaket.json (only components path)
   const config: BeaketConfig = {
     $schema: "https://beaket.dev/schema.json",
-    tailwind: {
-      css: response.tailwindCss,
-    },
-    aliases: {
-      components: response.componentsAlias,
-      utils: response.utilsAlias,
-    },
-    paths: {
-      components: response.componentsDir,
-      utils: response.utilsDir,
-    },
+    components: response.components,
   };
 
-  // Write beaket.json
   await writeConfig(config);
-  console.log(pc.green("✓"), "Created beaket.json");
+  console.log(pc.green("✔"), "Created beaket.json");
 
   // Inject CSS variables into Tailwind CSS file
-  const cssPath = path.join(process.cwd(), response.tailwindCss);
-  if (await fs.pathExists(cssPath)) {
-    const cssContent = await fs.readFile(cssPath, "utf-8");
-    if (!cssContent.includes("Beaket UI Design System")) {
-      await fs.writeFile(cssPath, cssContent + CSS_VARIABLES);
-      console.log(pc.green("✓"), `Added CSS variables to ${response.tailwindCss}`);
+  if (response.css) {
+    const cssPath = path.join(process.cwd(), response.css);
+    if (await fs.pathExists(cssPath)) {
+      const cssContent = await fs.readFile(cssPath, "utf-8");
+      if (!cssContent.includes("Beaket UI Design System")) {
+        await fs.writeFile(cssPath, cssContent + CSS_VARIABLES);
+        console.log(pc.green("✔"), `Added CSS variables to ${response.css}`);
+      } else {
+        console.log(pc.yellow("ℹ"), "CSS variables already exist");
+      }
+    } else {
+      console.log(pc.yellow("!"), `CSS file not found: ${response.css}`);
+      console.log("  Add CSS variables manually:");
+      console.log(pc.cyan("  https://beaket.github.io/ui/installation"));
     }
-  } else {
-    console.log(pc.yellow("!"), `CSS file not found: ${response.tailwindCss}`);
   }
-
-  // Create utils directory and cn function
-  const utilsDir = path.join(process.cwd(), response.utilsDir);
-  await fs.ensureDir(utilsDir);
-
-  const cnContent = `import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-`;
-
-  await fs.writeFile(path.join(utilsDir, "utils.ts"), cnContent);
-  console.log(pc.green("✓"), `Created ${response.utilsDir}/utils.ts`);
-
-  // Install dependencies
-  console.log();
-  console.log("Installing dependencies...");
-  await installDependencies(["clsx", "tailwind-merge"]);
-  console.log(pc.green("✓"), "Installed clsx, tailwind-merge");
 
   console.log();
   console.log(pc.green("Done!"), "Beaket UI is ready.");
   console.log();
-  console.log("You can now add components:");
+  console.log("Add components:");
   console.log(pc.cyan("  npx @beaket/ui add button"));
   console.log();
 }

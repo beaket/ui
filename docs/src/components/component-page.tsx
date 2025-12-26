@@ -1,4 +1,4 @@
-import { AllSizes, AllStates, AllVariants } from "@/components/button/button.stories";
+import { AllSizes, AllStates, AllVariants } from "@/components/button.stories";
 
 // Map section names to their components
 const sectionComponents: Record<string, Record<string, React.ComponentType>> = {

@@ -1,6 +1,9 @@
-import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** Button style variant */

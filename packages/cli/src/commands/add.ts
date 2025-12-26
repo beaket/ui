@@ -45,14 +45,8 @@ export async function add(componentName: string, options: AddOptions) {
   const files = await fetchComponent(componentDef);
 
   // Write files
-  const componentsDir = path.join(process.cwd(), config.paths.components);
-  const { written, skipped } = await writeComponentFiles(
-    componentsDir,
-    componentName,
-    files,
-    config,
-    options.overwrite,
-  );
+  const componentsDir = path.join(process.cwd(), config.components);
+  const { written, skipped } = await writeComponentFiles(componentsDir, files, options.overwrite);
 
   // Show skipped files
   if (skipped.length > 0) {
@@ -69,18 +63,7 @@ export async function add(componentName: string, options: AddOptions) {
   }
 
   console.log();
-  console.log("Import it in your code:");
-  console.log(
-    pc.cyan(
-      `  import { ${pascalCase(componentName)} } from "${config.aliases.components}/${componentName}";`,
-    ),
-  );
+  console.log("Added:");
+  written.forEach((f) => console.log(pc.cyan(`  ${f}`)));
   console.log();
-}
-
-function pascalCase(str: string): string {
-  return str
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join("");
 }
