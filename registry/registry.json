@@ -1,6 +1,4 @@
 {
-  "$schema": "./schema.json",
-  "name": "beaket-ui",
   "components": [
     {
       "name": "button",
