@@ -15,11 +15,13 @@ export function Checkbox({ className, ...props }: Props) {
     <CheckboxPrimitive.Root
       data-slot="checkbox"
       className={cn(
-        "peer size-4 shrink-0 rounded border border-[var(--chrome)]",
+        "peer size-4 shrink-0 border border-[var(--chrome)]",
         "bg-[var(--paper)]",
+        "hover:border-[var(--steel)]",
         "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--signal-blue)]",
-        "data-[state=checked]:border-[var(--branch)] data-[state=checked]:bg-[var(--branch)] data-[state=checked]:text-white",
-        "disabled:cursor-not-allowed disabled:opacity-50",
+        "data-[state=checked]:border-[var(--ink)] data-[state=checked]:bg-[var(--ink)] data-[state=checked]:text-[var(--paper)]",
+        "disabled:cursor-not-allowed disabled:border-dashed disabled:border-[var(--chrome)] disabled:bg-[var(--frost)] disabled:text-[var(--steel)] disabled:hover:border-[var(--chrome)]",
+        "disabled:data-[state=checked]:border-[var(--chrome)] disabled:data-[state=checked]:bg-[var(--frost)] disabled:data-[state=checked]:text-[var(--steel)]",
         "aria-[invalid=true]:border-[var(--signal-red)]",
         className,
       )}
