@@ -4,7 +4,11 @@ import { getConfig } from "../utils/config.ts";
 import { installDependencies, writeComponentFiles } from "../utils/files.ts";
 import { fetchComponent, fetchRegistry } from "../utils/registry.ts";
 
-export async function add(componentName: string) {
+interface AddOptions {
+  overwrite?: boolean;
+}
+
+export async function add(componentName: string, options: AddOptions) {
   console.log();
 
   // Read config
@@ -16,9 +20,9 @@ export async function add(componentName: string) {
   }
 
   // Fetch registry
-  console.log(`Adding ${pc.cyan(componentName)}...`);
-
   const registry = await fetchRegistry();
+  console.log(pc.green("✔"), "Checking registry.");
+
   const componentDef = registry.components.find((c) => c.name === componentName);
 
   if (!componentDef) {
@@ -31,22 +35,39 @@ export async function add(componentName: string) {
     process.exit(1);
   }
 
+  // Install dependencies
+  if (componentDef.dependencies.length > 0) {
+    await installDependencies(componentDef.dependencies);
+    console.log(pc.green("✔"), "Installing dependencies.");
+  }
+
   // Fetch component files
   const files = await fetchComponent(componentDef);
 
   // Write files
   const componentsDir = path.join(process.cwd(), config.paths.components);
-  await writeComponentFiles(componentsDir, componentName, files, config);
+  const { written, skipped } = await writeComponentFiles(
+    componentsDir,
+    componentName,
+    files,
+    config,
+    options.overwrite,
+  );
 
-  console.log(pc.green("✓"), `Added ${componentName}`);
-
-  // Install dependencies
-  if (componentDef.dependencies.length > 0) {
-    console.log();
-    console.log("Installing dependencies...");
-    await installDependencies(componentDef.dependencies);
-    console.log(pc.green("✓"), `Installed ${componentDef.dependencies.join(", ")}`);
+  // Show skipped files
+  if (skipped.length > 0) {
+    console.log(
+      pc.yellow("ℹ"),
+      `Skipped ${skipped.length} file(s): (use --overwrite to overwrite)`,
+    );
+    skipped.forEach((f) => console.log(`  - ${f}`));
   }
+
+  if (written.length === 0) {
+    console.log();
+    return;
+  }
+
   console.log();
   console.log("Import it in your code:");
   console.log(

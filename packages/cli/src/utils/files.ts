@@ -1,19 +1,45 @@
 import { spawn } from "child_process";
 import fs from "fs-extra";
 import path from "path";
+import prompts from "prompts";
 import type { BeaketConfig } from "./config.ts";
 import type { ComponentFile } from "./registry.ts";
+
+export interface WriteResult {
+  written: string[];
+  skipped: string[];
+}
 
 export async function writeComponentFiles(
   baseDir: string,
   componentName: string,
   files: ComponentFile[],
   config: BeaketConfig,
-): Promise<void> {
+  overwrite: boolean = false,
+): Promise<WriteResult> {
+  const written: string[] = [];
+  const skipped: string[] = [];
+
   for (const file of files) {
     // Transform file path: components/button/button.tsx -> button/button.tsx
     const relativePath = file.path.replace(/^components\//, "");
     const targetPath = path.join(baseDir, relativePath);
+
+    // Check if file exists
+    if (await fs.pathExists(targetPath)) {
+      if (!overwrite) {
+        const { confirm } = await prompts({
+          type: "confirm",
+          name: "confirm",
+          message: `${path.basename(targetPath)} already exists. Overwrite?`,
+          initial: false,
+        });
+        if (!confirm) {
+          skipped.push(targetPath);
+          continue;
+        }
+      }
+    }
 
     // Transform imports in content
     let content = file.content;
@@ -26,7 +52,10 @@ export async function writeComponentFiles(
 
     await fs.ensureDir(path.dirname(targetPath));
     await fs.writeFile(targetPath, content);
+    written.push(targetPath);
   }
+
+  return { written, skipped };
 }
 
 export async function installDependencies(deps: string[]): Promise<void> {
