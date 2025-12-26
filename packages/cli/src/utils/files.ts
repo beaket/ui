@@ -2,7 +2,6 @@ import { spawn } from "child_process";
 import fs from "fs-extra";
 import path from "path";
 import prompts from "prompts";
-import type { BeaketConfig } from "./config.ts";
 import type { ComponentFile } from "./registry.ts";
 
 export interface WriteResult {
@@ -12,16 +11,14 @@ export interface WriteResult {
 
 export async function writeComponentFiles(
   baseDir: string,
-  componentName: string,
   files: ComponentFile[],
-  config: BeaketConfig,
   overwrite: boolean = false,
 ): Promise<WriteResult> {
   const written: string[] = [];
   const skipped: string[] = [];
 
   for (const file of files) {
-    // Transform file path: components/button/button.tsx -> button/button.tsx
+    // Transform file path: components/button.tsx -> button.tsx
     const relativePath = file.path.replace(/^components\//, "");
     const targetPath = path.join(baseDir, relativePath);
 
@@ -41,17 +38,8 @@ export async function writeComponentFiles(
       }
     }
 
-    // Transform imports in content
-    let content = file.content;
-
-    // Replace @/lib/utils with user's utils alias
-    content = content.replace(/@\/lib\/utils/g, `${config.aliases.utils}/utils`);
-
-    // Replace @/components with user's components alias
-    content = content.replace(/@\/components/g, config.aliases.components);
-
     await fs.ensureDir(path.dirname(targetPath));
-    await fs.writeFile(targetPath, content);
+    await fs.writeFile(targetPath, file.content);
     written.push(targetPath);
   }
 

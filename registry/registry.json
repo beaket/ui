@@ -5,9 +5,9 @@
     {
       "name": "button",
       "description": "Button component with variants and sizes",
-      "dependencies": ["@radix-ui/react-slot", "class-variance-authority"],
+      "dependencies": ["@radix-ui/react-slot", "class-variance-authority", "clsx", "tailwind-merge"],
       "registryDependencies": [],
-      "files": ["components/button/button.tsx", "components/button/index.ts"],
+      "files": ["components/button.tsx"],
       "docs": {
         "title": "Button",
         "tagline": "Clickable button with multiple variants and sizes.",

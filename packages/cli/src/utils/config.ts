@@ -3,17 +3,7 @@ import path from "path";
 
 export interface BeaketConfig {
   $schema?: string;
-  tailwind: {
-    css: string;
-  };
-  aliases: {
-    components: string;
-    utils: string;
-  };
-  paths: {
-    components: string;
-    utils: string;
-  };
+  components: string;
 }
 
 const CONFIG_FILE = "beaket.json";
