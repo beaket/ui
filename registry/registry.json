@@ -5,7 +5,12 @@
     {
       "name": "button",
       "description": "Button component with variants and sizes",
-      "dependencies": ["@radix-ui/react-slot", "class-variance-authority", "clsx", "tailwind-merge"],
+      "dependencies": [
+        "@radix-ui/react-slot",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge"
+      ],
       "registryDependencies": [],
       "files": ["components/button.tsx"],
       "docs": {

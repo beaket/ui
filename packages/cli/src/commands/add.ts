@@ -46,11 +46,7 @@ export async function add(componentName: string, options: AddOptions) {
 
   // Write files
   const componentsDir = path.join(process.cwd(), config.components);
-  const { written, skipped } = await writeComponentFiles(
-    componentsDir,
-    files,
-    options.overwrite,
-  );
+  const { written, skipped } = await writeComponentFiles(componentsDir, files, options.overwrite);
 
   // Show skipped files
   if (skipped.length > 0) {
