@@ -1,5 +1,11 @@
 # @beaket/ui
 
+## 0.1.8
+
+### Patch Changes
+
+- 6ecf976: Update CLI package description
+
 ## 0.1.7
 
 ### Patch Changes
