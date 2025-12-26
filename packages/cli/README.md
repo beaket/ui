@@ -18,7 +18,7 @@ npx @beaket/ui add button
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `init` | Setup project configuration |
-| `add <component>` | Add a component |
+| Command           | Description                 |
+| ----------------- | --------------------------- |
+| `init`            | Setup project configuration |
+| `add <component>` | Add a component             |

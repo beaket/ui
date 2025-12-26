@@ -15,8 +15,8 @@ pnpm dev
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start Storybook |
-| `pnpm build` | Build Storybook |
-| `pnpm typecheck` | Run type check |
+| Command          | Description     |
+| ---------------- | --------------- |
+| `pnpm dev`       | Start Storybook |
+| `pnpm build`     | Build Storybook |
+| `pnpm typecheck` | Run type check  |
