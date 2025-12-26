@@ -7,8 +7,6 @@ export interface ComponentDefinition {
 }
 
 export interface Registry {
-  $schema?: string;
-  name: string;
   components: ComponentDefinition[];
 }
 
