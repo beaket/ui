@@ -1,5 +1,11 @@
 # @beaket/ui
 
+## 1.2.0
+
+### Minor Changes
+
+- 11f945c: Add Badge component with 6 variants: default, secondary, success, error, info, outline
+
 ## 1.1.1
 
 ### Patch Changes
