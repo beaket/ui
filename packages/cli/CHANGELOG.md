@@ -1,5 +1,11 @@
 # @beaket/ui
 
+## 1.1.1
+
+### Patch Changes
+
+- 6916e4e: Add usage field to registry.json for component documentation
+
 ## 1.1.0
 
 ### Minor Changes
