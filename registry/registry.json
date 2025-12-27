@@ -30,6 +30,19 @@
         "sections": ["AllStates"],
         "usage": "<Checkbox />"
       }
+    },
+    {
+      "name": "badge",
+      "description": "Badge component for status indicators and labels",
+      "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/badge.tsx"],
+      "docs": {
+        "title": "Badge",
+        "tagline": "A compact label for status indicators, categories, and counts.",
+        "sections": ["AllVariants"],
+        "usage": "<Badge>Label</Badge>"
+      }
     }
   ]
 }
