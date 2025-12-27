@@ -3,11 +3,12 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "tsx scripts/generate-props.ts && astro dev",
+    "prebuild": "tsx scripts/generate-props.ts",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "typecheck": "astro check"
+    "typecheck": "tsx scripts/generate-props.ts && astro check"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
@@ -18,11 +19,14 @@
     "clsx": "2.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "shiki": "^3.20.0",
     "tailwind-merge": "3.4.0",
     "tailwindcss": "4.1.18"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.6",
+    "react-docgen-typescript": "^2.4.0",
+    "tsx": "^4.21.0",
     "typescript": "5.9.3"
   }
 }
