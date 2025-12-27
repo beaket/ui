@@ -1,17 +1,20 @@
 ---
-import { Code } from 'astro:components';
-import Layout from '../layouts/doc.astro';
+import '../styles/global.css';
+import { ComponentShowcase } from '../components/component-showcase';
+import registry from '../../../registry/registry.json';
 ---
 
-<Layout title="Introduction">
-  <h1>Beaket UI</h1>
-  <p class="tagline">Brutalist React components. Copy to your project.</p>
-
-  <h2>Quick Start</h2>
-  <Code code={`npx @beaket/ui init
-npx @beaket/ui add button`} lang="bash" theme="gruvbox-dark-soft" />
-
-  <p>
-    Browse the <a href="/ui/components">components</a> to get started.
-  </p>
-</Layout>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Beaket UI</title>
+    <link rel="icon" type="image/svg+xml" href="/ui/favicon.svg" />
+  </head>
+  <body class="min-h-screen bg-[var(--paper)]">
+    <main class="mx-auto max-w-4xl p-4">
+      <ComponentShowcase client:load components={registry.components} />
+    </main>
+  </body>
+</html>
