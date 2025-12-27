@@ -15,7 +15,8 @@
         "title": "Button",
         "tagline": "Clickable button with multiple variants and sizes.",
         "sections": ["AllVariants", "AllSizes", "AllStates"],
-        "usage": "<Button>Click me</Button>"
+        "usage": "<Button>Click me</Button>",
+        "previewStory": "AllVariants"
       }
     },
     {
@@ -28,7 +29,8 @@
         "title": "Checkbox",
         "tagline": "A control for boolean input with checked and unchecked states.",
         "sections": ["AllStates"],
-        "usage": "<Checkbox />"
+        "usage": "<Checkbox />",
+        "previewStory": "AllStates"
       }
     },
     {
@@ -41,7 +43,8 @@
         "title": "Badge",
         "tagline": "A compact label for status indicators, categories, and counts.",
         "sections": ["AllVariants"],
-        "usage": "<Badge>Label</Badge>"
+        "usage": "<Badge>Label</Badge>",
+        "previewStory": "AllVariants"
       }
     },
     {
@@ -54,7 +57,8 @@
         "title": "Input",
         "tagline": "A text input field for capturing user data.",
         "sections": ["AllStates", "AllTypes"],
-        "usage": "<Input placeholder=\"Email address\" />"
+        "usage": "<Input placeholder=\"Email address\" />",
+        "previewStory": "AllStates"
       }
     },
     {
@@ -67,7 +71,8 @@
         "title": "Radio",
         "tagline": "A control for selecting one option from a set of choices.",
         "sections": ["AllStates"],
-        "usage": "<RadioGroup defaultValue=\"option1\"><RadioItem value=\"option1\" /><RadioItem value=\"option2\" /></RadioGroup>"
+        "usage": "<RadioGroup defaultValue=\"option1\"><RadioItem value=\"option1\" /><RadioItem value=\"option2\" /></RadioGroup>",
+        "previewStory": "AllStates"
       }
     }
   ]

@@ -131,12 +131,15 @@ pre code {
 
 a {
   color: var(--ink);
+  text-decoration: none;
+}
+.main a {
   text-decoration: underline;
 }
-a:hover {
+.main a:hover {
   background: var(--frost);
 }
-a:focus {
+.main a:focus {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
