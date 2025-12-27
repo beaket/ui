@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { createHighlighter, type Highlighter } from "shiki";
 import propsData from "../generated/props.json";
 import { getDefaultStory, getStoriesForComponent, type LoadedStory } from "../utils/story-loader";
-import { generateUsageCode } from "../utils/story-parser";
 
 // Lazy-load highlighter
 let highlighterPromise: Promise<Highlighter> | null = null;
@@ -23,6 +22,7 @@ interface ComponentData {
     title?: string;
     tagline?: string;
     sections?: string[];
+    usage?: string;
   };
 }
 
@@ -37,7 +37,11 @@ export function ComponentPage({ component }: ComponentPageProps) {
   const stories = useMemo(() => getStoriesForComponent(name), [name]);
   const defaultStory = useMemo(() => getDefaultStory(name), [name]);
   const props = propsData[name as keyof typeof propsData] ?? [];
-  const usageCode = useMemo(() => generateUsageCode(name), [name]);
+
+  const pascalName = name.charAt(0).toUpperCase() + name.slice(1);
+  const usageCode = `import { ${pascalName} } from "@beaket/ui/${name}"
+
+${docs?.usage ?? `<${pascalName} />`}`;
 
   return (
     <div className="space-y-6">

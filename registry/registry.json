@@ -14,7 +14,8 @@
       "docs": {
         "title": "Button",
         "tagline": "Clickable button with multiple variants and sizes.",
-        "sections": ["AllVariants", "AllSizes", "AllStates"]
+        "sections": ["AllVariants", "AllSizes", "AllStates"],
+        "usage": "<Button>Click me</Button>"
       }
     },
     {
@@ -26,7 +27,8 @@
       "docs": {
         "title": "Checkbox",
         "tagline": "A control for boolean input with checked and unchecked states.",
-        "sections": ["AllStates"]
+        "sections": ["AllStates"],
+        "usage": "<Checkbox />"
       }
     }
   ]

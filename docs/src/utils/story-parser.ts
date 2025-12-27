@@ -94,21 +94,3 @@ export function formatExportName(name: string): string {
 
   return formatted || name;
 }
-
-/**
- * Generates a basic usage example for a component.
- */
-export function generateUsageCode(componentName: string): string {
-  const pascalName = componentName.charAt(0).toUpperCase() + componentName.slice(1);
-
-  // Different usage patterns for different components
-  if (componentName === "checkbox") {
-    return `import { ${pascalName} } from "@beaket/ui/${componentName}"
-
-<${pascalName} />`;
-  }
-
-  return `import { ${pascalName} } from "@beaket/ui/${componentName}"
-
-<${pascalName}>Click me</${pascalName}>`;
-}
