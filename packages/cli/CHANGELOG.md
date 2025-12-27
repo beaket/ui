@@ -1,5 +1,12 @@
 # @beaket/ui
 
+## 1.3.0
+
+### Minor Changes
+
+- 495bc3c: Add Input component with brutalist design
+- 2633dec: Add Radio component for single-choice selection
+
 ## 1.2.0
 
 ### Minor Changes
