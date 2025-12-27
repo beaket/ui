@@ -2,11 +2,11 @@
 
 :root {
   --branch: #1c1f24;
-  --ink: #0d0d0d;
+  --graphite: #0d0d0d;
+  --ink: #1a1a1a;
   --paper: #f8f8f8;
-  --steel: #6b6b6b;
-  --chrome: #c8c8c8;
-  --graphite: #1a1a1a;
+  --steel: #595959;
+  --chrome: #e0e0e0;
   --iron: #2d2d2d;
   --slate: #404040;
   --zinc: #525252;

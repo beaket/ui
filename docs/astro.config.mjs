@@ -13,6 +13,11 @@ export default defineConfig({
   base: "/ui",
   output: "static",
   integrations: [react()],
+  markdown: {
+    shikiConfig: {
+      theme: "gruvbox-dark-soft",
+    },
+  },
   vite: {
     // @ts-expect-error - Vite version mismatch between root (7.x) and Astro (6.x)
     plugins: [tailwindcss()],

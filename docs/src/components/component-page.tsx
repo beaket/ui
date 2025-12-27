@@ -33,6 +33,11 @@ interface ComponentPageProps {
 export function ComponentPage({ component }: ComponentPageProps) {
   const { name, docs } = component;
   const sections = docs?.sections ?? [];
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const stories = useMemo(() => getStoriesForComponent(name), [name]);
   const defaultStory = useMemo(() => getDefaultStory(name), [name]);
@@ -44,12 +49,12 @@ export function ComponentPage({ component }: ComponentPageProps) {
 ${docs?.usage ?? `<${pascalName} />`}`;
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Title + Preview */}
       <header>
-        <h1 className="font-mono text-xl font-semibold">{docs?.title ?? name}</h1>
-        <p className="text-sm text-[var(--steel)]">{docs?.tagline ?? component.description}</p>
-        {defaultStory && (
+        <h1>{docs?.title ?? name}</h1>
+        <p className="tagline">{docs?.tagline ?? component.description}</p>
+        {mounted && defaultStory && (
           <Preview>
             <StoryRenderer story={defaultStory} />
           </Preview>
@@ -58,35 +63,32 @@ ${docs?.usage ?? `<${pascalName} />`}`;
 
       {/* Install */}
       <section>
-        <h2 className="mb-1 font-mono text-xs font-medium text-[var(--steel)] uppercase">
-          Install
-        </h2>
+        <h2>Install</h2>
         <CodeBlock lang="bash">{`npx @beaket/ui add ${name}`}</CodeBlock>
       </section>
 
       {/* Usage */}
       <section>
-        <h2 className="mb-1 font-mono text-xs font-medium text-[var(--steel)] uppercase">Usage</h2>
+        <h2>Usage</h2>
         <CodeBlock>{usageCode}</CodeBlock>
       </section>
 
       {/* Examples */}
       <section>
-        <h2 className="mb-2 font-mono text-xs font-medium text-[var(--steel)] uppercase">
-          Examples
-        </h2>
+        <h2>Examples</h2>
         <div className="space-y-4">
-          {sections.map((sectionName) => {
-            const story = stories.get(sectionName);
-            if (!story) return null;
-            return <ExampleSection key={sectionName} story={story} />;
-          })}
+          {mounted &&
+            sections.map((sectionName) => {
+              const story = stories.get(sectionName);
+              if (!story) return null;
+              return <ExampleSection key={sectionName} story={story} />;
+            })}
         </div>
       </section>
 
       {/* Props */}
       <section>
-        <h2 className="mb-2 font-mono text-xs font-medium text-[var(--steel)] uppercase">Props</h2>
+        <h2>Props</h2>
         <PropsTable props={props} />
       </section>
     </div>
@@ -109,14 +111,14 @@ function CodeBlock({ children, lang = "tsx" }: { children: string; lang?: string
   if (html) {
     return (
       <div
-        className="overflow-x-auto font-mono text-sm [&_pre]:p-2"
+        className="overflow-x-auto font-mono text-[13px] [&_pre]:p-3"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     );
   }
 
   return (
-    <pre className="overflow-x-auto bg-[#32302f] p-2 font-mono text-sm text-[#ebdbb2]">
+    <pre className="overflow-x-auto bg-[#32302f] p-3 font-mono text-[13px] text-[#ebdbb2]">
       <code>{children}</code>
     </pre>
   );
@@ -131,13 +133,15 @@ function StoryRenderer({ story }: { story: LoadedStory }) {
 function ExampleSection({ story }: { story: LoadedStory }) {
   return (
     <div>
-      <h3 className="mb-1 text-sm font-medium">{story.displayName}</h3>
+      <h3>{story.displayName}</h3>
       <Preview>
         <StoryRenderer story={story} />
       </Preview>
       {story.source && (
-        <details className="mt-1">
-          <summary className="cursor-pointer font-mono text-xs text-[var(--steel)]">code</summary>
+        <details className="mt-2">
+          <summary className="cursor-pointer text-xs tracking-wide text-[var(--steel)] uppercase">
+            Code
+          </summary>
           <CodeBlock>{story.source}</CodeBlock>
         </details>
       )}
@@ -159,23 +163,23 @@ function PropsTable({ props }: { props: PropInfo[] }) {
   return (
     <table className="w-full font-mono text-xs">
       <thead>
-        <tr className="border-b border-[var(--chrome)] text-left text-[var(--steel)]">
-          <th className="py-1 pr-3">name</th>
-          <th className="py-1 pr-3">type</th>
-          <th className="py-1 pr-3">default</th>
-          <th className="py-1">description</th>
+        <tr className="border-b border-[var(--chrome)] text-left tracking-wide text-[var(--steel)] uppercase">
+          <th className="py-1.5 pr-3 font-medium">Name</th>
+          <th className="py-1.5 pr-3 font-medium">Type</th>
+          <th className="py-1.5 pr-3 font-medium">Default</th>
+          <th className="py-1.5 font-medium">Description</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody className="text-[13px]">
         {props.map((p) => (
           <tr key={p.name} className="border-b border-[var(--chrome)]">
-            <td className="py-1 pr-3">
+            <td className="py-1.5 pr-3">
               {p.name}
               {p.required && <span className="text-[var(--signal-red)]">*</span>}
             </td>
-            <td className="py-1 pr-3 text-[var(--steel)]">{p.type}</td>
-            <td className="py-1 pr-3">{p.defaultValue ?? "—"}</td>
-            <td className="py-1 font-sans text-[var(--steel)]">{p.description}</td>
+            <td className="py-1.5 pr-3 text-[var(--steel)]">{p.type}</td>
+            <td className="py-1.5 pr-3">{p.defaultValue ?? "—"}</td>
+            <td className="py-1.5 font-sans text-[var(--steel)]">{p.description}</td>
           </tr>
         ))}
       </tbody>
