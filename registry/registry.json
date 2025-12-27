@@ -56,6 +56,19 @@
         "sections": ["AllStates", "AllTypes"],
         "usage": "<Input placeholder=\"Email address\" />"
       }
+    },
+    {
+      "name": "radio",
+      "description": "Radio group component for single-choice selection",
+      "dependencies": ["@radix-ui/react-radio-group", "clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/radio.tsx"],
+      "docs": {
+        "title": "Radio",
+        "tagline": "A control for selecting one option from a set of choices.",
+        "sections": ["AllStates"],
+        "usage": "<RadioGroup defaultValue=\"option1\"><RadioItem value=\"option1\" /><RadioItem value=\"option2\" /></RadioGroup>"
+      }
     }
   ]
 }
