@@ -12,7 +12,11 @@ export default defineConfig({
   site: "https://beaket.github.io",
   base: "/ui",
   output: "static",
-  integrations: [react()],
+  integrations: [
+    react({
+      include: ["**/src/components/*.tsx", "**/src/components/*.stories.tsx"],
+    }),
+  ],
   markdown: {
     shikiConfig: {
       theme: "gruvbox-dark-soft",
@@ -25,6 +29,12 @@ export default defineConfig({
       alias: {
         "@": path.resolve(__dirname, "../src"),
       },
+    },
+    esbuild: {
+      jsx: "automatic",
+    },
+    optimizeDeps: {
+      include: ["react/jsx-runtime", "react/jsx-dev-runtime"],
     },
   },
 });

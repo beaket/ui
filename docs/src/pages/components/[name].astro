@@ -1,7 +1,18 @@
 ---
 import Layout from '../../layouts/doc.astro';
-import { ComponentPage } from '../../components/component-page';
+import CodeBlock from '../../components/code-block.astro';
+import PropsTable from '../../components/props-table.astro';
+import ExampleSection from '../../components/example-section.astro';
+import { StoryPreview } from '../../components/story-preview';
+import { extractExports, formatExportName } from '../../utils/story-parser';
 import registry from '../../../../registry/registry.json';
+import propsData from '../../generated/props.json';
+
+// Import story sources at build time
+const storySources = import.meta.glob<string>(
+  '../../../../src/components/*.stories.tsx',
+  { eager: true, query: '?raw', import: 'default' }
+);
 
 // Generate static paths for all components
 export function getStaticPaths() {
@@ -11,13 +22,76 @@ export function getStaticPaths() {
   }));
 }
 
-interface Props {
-  component: (typeof registry.components)[0];
-}
+const { component } = Astro.props as { component: (typeof registry.components)[0] };
+const { name, docs } = component;
+const sections = docs?.sections ?? [];
 
-const { component } = Astro.props;
+// Get props for this component
+const props = propsData[name as keyof typeof propsData] ?? [];
+
+// Get story source for this component
+const storyPath = Object.keys(storySources).find((path) =>
+  path.includes(`/${name}.stories.tsx`)
+);
+const storySource = storyPath ? storySources[storyPath] : '';
+const parsedSources = storySource ? extractExports(storySource) : new Map();
+
+// Generate usage code
+const pascalName = name.charAt(0).toUpperCase() + name.slice(1);
+const usageCode = `import { ${pascalName} } from "@beaket/ui/${name}"
+
+${docs?.usage ?? `<${pascalName} />`}`;
+
+// Prepare section data
+const sectionData = sections.map((sectionName) => ({
+  storyName: sectionName,
+  displayName: formatExportName(sectionName),
+  source: parsedSources.get(sectionName) ?? '',
+}));
 ---
 
-<Layout title={component.docs?.title ?? component.name}>
-  <ComponentPage component={component} client:load />
+<Layout title={docs?.title ?? name}>
+  <div>
+    <!-- Title + Preview -->
+    <header>
+      <h1>{docs?.title ?? name}</h1>
+      <p class="tagline">{docs?.tagline ?? component.description}</p>
+      <div class="mt-2 border border-[var(--chrome)] bg-white p-4">
+        <StoryPreview componentName={name} client:visible />
+      </div>
+    </header>
+
+    <!-- Install -->
+    <section>
+      <h2>Install</h2>
+      <CodeBlock code={`npx @beaket/ui add ${name}`} lang="bash" />
+    </section>
+
+    <!-- Usage -->
+    <section>
+      <h2>Usage</h2>
+      <CodeBlock code={usageCode} />
+    </section>
+
+    <!-- Examples -->
+    <section>
+      <h2>Examples</h2>
+      <div class="space-y-4">
+        {sectionData.map((section) => (
+          <ExampleSection
+            componentName={name}
+            storyName={section.storyName}
+            displayName={section.displayName}
+            source={section.source}
+          />
+        ))}
+      </div>
+    </section>
+
+    <!-- Props -->
+    <section>
+      <h2>Props</h2>
+      <PropsTable props={props} />
+    </section>
+  </div>
 </Layout>
