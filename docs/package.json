@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "typecheck": "astro check"
+    "typecheck": "tsx scripts/generate-props.ts && astro check"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
