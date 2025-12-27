@@ -1,12 +1,14 @@
 ---
 import '../styles/global.css';
 import pkg from '../../../packages/cli/package.json';
+import registry from '../../../registry/registry.json';
 
 interface Props {
   title?: string;
 }
 const { title = 'Beaket UI' } = Astro.props;
 const currentPath = Astro.url.pathname;
+const components = registry.components;
 ---
 
 <!doctype html>
@@ -30,8 +32,10 @@ const currentPath = Astro.url.pathname;
         </div>
 
         <div class="sidebar-section">
-          <div class="sidebar-section-title">Docs</div>
-          <a href="/ui/components" class:list={["sidebar-link", { active: currentPath.includes('/components') }]}>Components</a>
+          <div class="sidebar-section-title">Components</div>
+          {components.map((component) => (
+            <a href={`/ui/components/${component.name}`} class:list={["sidebar-link", { active: currentPath.includes(`/components/${component.name}`) }]}>{component.docs.title}</a>
+          ))}
         </div>
 
         <div class="sidebar-section">
