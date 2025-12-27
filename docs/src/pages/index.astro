@@ -1,4 +1,5 @@
 ---
+import { Code } from 'astro:components';
 import Layout from '../layouts/doc.astro';
 ---
 
@@ -7,8 +8,8 @@ import Layout from '../layouts/doc.astro';
   <p class="tagline">Brutalist React components. Copy to your project.</p>
 
   <h2>Quick Start</h2>
-  <pre><code>npx @beaket/ui init
-npx @beaket/ui add button</code></pre>
+  <Code code={`npx @beaket/ui init
+npx @beaket/ui add button`} lang="bash" theme="gruvbox-dark-soft" />
 
   <p>
     Browse the <a href="/ui/components">components</a> to get started.
