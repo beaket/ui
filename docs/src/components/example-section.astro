@@ -1,0 +1,28 @@
+---
+import CodeBlock from './code-block.astro';
+import { StoryPreview } from './story-preview';
+
+interface Props {
+  componentName: string;
+  storyName: string;
+  displayName: string;
+  source: string;
+}
+
+const { componentName, storyName, displayName, source } = Astro.props;
+---
+
+<div>
+  <h3>{displayName}</h3>
+  <div class="mt-2 border border-[var(--chrome)] bg-white p-4">
+    <StoryPreview componentName={componentName} storyName={storyName} client:visible />
+  </div>
+  {source && (
+    <details class="mt-2">
+      <summary class="cursor-pointer text-xs tracking-wide text-[var(--steel)] uppercase">
+        Code
+      </summary>
+      <CodeBlock code={source} />
+    </details>
+  )}
+</div>
