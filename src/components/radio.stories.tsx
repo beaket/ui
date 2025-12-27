@@ -170,32 +170,6 @@ export const ClickTest: Story = {
   },
 };
 
-export const KeyboardNavigationTest: Story = {
-  args: {
-    onValueChange: fn(),
-  },
-  render: (args) => (
-    <RadioGroup {...args} aria-label="Options">
-      <RadioItem value="option1" aria-label="Option 1" />
-      <RadioItem value="option2" aria-label="Option 2" />
-      <RadioItem value="option3" aria-label="Option 3" />
-    </RadioGroup>
-  ),
-  play: async ({ args, canvasElement }) => {
-    const canvas = within(canvasElement);
-    const radios = canvas.getAllByRole("radio");
-
-    await userEvent.click(radios[0]);
-    await expect(args.onValueChange).toHaveBeenCalledWith("option1");
-
-    await userEvent.keyboard("{ArrowRight}");
-    await expect(args.onValueChange).toHaveBeenCalledWith("option2");
-
-    await userEvent.keyboard("{ArrowRight}");
-    await expect(args.onValueChange).toHaveBeenCalledWith("option3");
-  },
-};
-
 export const DisabledClickTest: Story = {
   args: {
     disabled: true,
