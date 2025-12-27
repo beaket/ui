@@ -43,6 +43,19 @@
         "sections": ["AllVariants"],
         "usage": "<Badge>Label</Badge>"
       }
+    },
+    {
+      "name": "input",
+      "description": "Text input component for user data entry",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/input.tsx"],
+      "docs": {
+        "title": "Input",
+        "tagline": "A text input field for capturing user data.",
+        "sections": ["AllStates", "AllTypes"],
+        "usage": "<Input placeholder=\"Email address\" />"
+      }
     }
   ]
 }
