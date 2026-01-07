@@ -1,6 +1,20 @@
 {
   "components": [
     {
+      "name": "dialog",
+      "description": "Modal dialog component for confirmations, forms, and alerts",
+      "dependencies": ["@radix-ui/react-dialog", "clsx", "lucide-react", "tailwind-merge"],
+      "registryDependencies": ["button"],
+      "files": ["components/dialog.tsx"],
+      "docs": {
+        "title": "Dialog",
+        "tagline": "A modal dialog for confirmations, forms, and alerts.",
+        "sections": ["AllStates"],
+        "usage": "<Dialog trigger={<Button>Open</Button>}><Dialog.Header><Dialog.Title>Title</Dialog.Title></Dialog.Header></Dialog>",
+        "previewStory": "Default"
+      }
+    },
+    {
       "name": "table",
       "description": "Semantic HTML table components with styled header, body, footer, rows, and cells",
       "dependencies": ["clsx", "tailwind-merge"],

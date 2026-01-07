@@ -60,6 +60,70 @@ export function ComponentName({ className, ...props }: React.ComponentProps<"div
 }
 ```
 
+### Compound Components
+
+For complex components with sub-components, use the **compound pattern**:
+
+```tsx
+// Main component (exported)
+export function Dialog({ children }: Props) {
+  return <DialogPrimitive.Root>{children}</DialogPrimitive.Root>;
+}
+
+// Sub-components (not exported individually)
+function DialogTitle({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Title>) {
+  return <DialogPrimitive.Title className={cn("...", className)} {...props} />;
+}
+
+function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn("...", className)} {...props} />;
+}
+
+// Attach sub-components to main component
+Dialog.Title = DialogTitle;
+Dialog.Footer = DialogFooter;
+```
+
+**Why compound-only (no individual exports)?**
+
+- **Semantic coupling**: `Dialog.Title` only makes sense inside `<Dialog>` - compound pattern signals this relationship
+- **Discoverability**: Type `Dialog.` and autocomplete shows all sub-components
+- **Encapsulation**: Not exporting sub-components signals they shouldn't be used outside their parent
+- **Namespace clarity**: `Dialog.Title` clearly shows hierarchy, avoids collision with other `Title` components
+
+### Controlled/Uncontrolled Pattern
+
+For components supporting both modes:
+
+```tsx
+export function Dialog({ open, onOpenChange, children }: Props) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = open !== undefined;
+
+  // Dev warning for incomplete controlled usage
+  if (process.env.NODE_ENV !== "production") {
+    if (isControlled && !onOpenChange) {
+      console.warn("Dialog: `open` provided without `onOpenChange`.");
+    }
+  }
+
+  const dialogOpen = isControlled ? open : internalOpen;
+  const dialogOnOpenChange = useCallback(
+    (value: boolean) => {
+      onOpenChange?.(value);
+      if (!isControlled) setInternalOpen(value);
+    },
+    [isControlled, onOpenChange],
+  );
+
+  return (
+    <Root open={dialogOpen} onOpenChange={dialogOnOpenChange}>
+      {children}
+    </Root>
+  );
+}
+```
+
 ## Required Items When Creating Components
 
 When creating a new component, you **must** create all of the following:
@@ -114,6 +178,36 @@ export const ClickTest: Story = {
   },
 };
 ```
+
+#### Testing Portal-Based Components
+
+For components using portals (Dialog, Popover, etc.), content renders outside `canvasElement`. Use `screen` instead:
+
+```tsx
+import { expect, screen, userEvent, within } from "storybook/test";
+
+export const DialogTest: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Trigger is in canvas
+    await userEvent.click(canvas.getByRole("button", { name: "Open" }));
+
+    // Dialog content is in portal - use screen
+    const dialog = await screen.findByRole("dialog");
+    await expect(dialog).toBeInTheDocument();
+
+    // Query within the dialog
+    const closeBtn = within(dialog).getByRole("button", { name: "Close" });
+    await userEvent.click(closeBtn);
+
+    // Verify closed
+    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  },
+};
+```
+
+**Important:** Don't use mock `fn()` for `onOpenChange` props - it prevents internal state updates and the component won't actually open/close.
 
 ### 3. Registry Registration
 
