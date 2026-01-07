@@ -3,11 +3,20 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export function Table({ className, ...props }: React.ComponentProps<"table">) {
+export interface TableProps extends React.ComponentProps<"table"> {
+  /** Add offset shadow to the table */
+  shadow?: boolean;
+}
+
+export function Table({ className, shadow, ...props }: TableProps) {
   return (
     <table
       data-slot="table"
-      className={cn("w-full caption-bottom text-sm tabular-nums", className)}
+      className={cn(
+        "w-full caption-bottom text-sm tabular-nums",
+        shadow && "shadow-offset",
+        className,
+      )}
       {...props}
     />
   );
@@ -18,7 +27,7 @@ export function TableHeader({ className, ...props }: React.ComponentProps<"thead
     <thead
       data-slot="table-header"
       className={cn(
-        "[&_tr]:border-b [&_tr]:border-[var(--chrome)] [&_tr]:bg-[var(--frost)]",
+        "[&_tr]:border-b [&_tr]:border-[var(--graphite)] [&_tr]:bg-[var(--frost)]",
         className,
       )}
       {...props}
@@ -67,7 +76,7 @@ export function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "h-9 px-2 py-1.5 text-left align-middle font-semibold whitespace-nowrap text-[var(--ink)] [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "h-9 px-1.5 py-1 text-left align-middle font-semibold whitespace-nowrap text-[var(--ink)] [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className,
       )}
       {...props}
@@ -80,7 +89,20 @@ export function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "px-2 py-1.5 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "px-1.5 py-1 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function TableSectionHeader({ className, ...props }: React.ComponentProps<"tr">) {
+  return (
+    <tr
+      data-slot="table-section-header"
+      className={cn(
+        "bg-[var(--platinum)] [&>th]:border-y [&>th]:border-[var(--chrome)] [&>th]:px-1.5 [&>th]:py-1 [&>th]:font-semibold",
         className,
       )}
       {...props}

@@ -3,12 +3,18 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-function CardRoot({ className, ...props }: React.ComponentProps<"div">) {
+interface CardRootProps extends React.ComponentProps<"div"> {
+  /** Add offset shadow to the card */
+  shadow?: boolean;
+}
+
+function CardRoot({ className, shadow, ...props }: CardRootProps) {
   return (
     <div
       data-slot="card"
       className={cn(
         "flex flex-col gap-0 border border-[var(--chrome)] bg-[var(--paper)] text-[var(--ink)]",
+        shadow && "shadow-offset",
         className,
       )}
       {...props}

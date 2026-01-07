@@ -8,6 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableSectionHeader,
 } from "./table";
 
 const meta: Meta<typeof Table> = {
@@ -29,11 +30,11 @@ type Story = StoryObj<typeof meta>;
 
 // Sample data
 const invoices = [
-  { id: "INV001", status: "Paid", method: "Credit Card", amount: "$250.00" },
-  { id: "INV002", status: "Pending", method: "PayPal", amount: "$150.00" },
-  { id: "INV003", status: "Unpaid", method: "Bank Transfer", amount: "$350.00" },
-  { id: "INV004", status: "Paid", method: "Credit Card", amount: "$450.00" },
-  { id: "INV005", status: "Paid", method: "PayPal", amount: "$550.00" },
+  { id: "INV001", status: "Paid", method: "Credit Card", amount: "¥25,000" },
+  { id: "INV002", status: "Pending", method: "PayPal", amount: "¥15,000" },
+  { id: "INV003", status: "Unpaid", method: "Bank Transfer", amount: "¥35,000" },
+  { id: "INV004", status: "Paid", method: "Credit Card", amount: "¥45,000" },
+  { id: "INV005", status: "Paid", method: "PayPal", amount: "¥55,000" },
 ];
 
 export const Default: Story = {
@@ -111,9 +112,72 @@ export const WithFooter: Story = {
       <TableFooter>
         <TableRow>
           <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$1,750.00</TableCell>
+          <TableCell className="text-right">¥175,000</TableCell>
         </TableRow>
       </TableFooter>
+    </Table>
+  ),
+};
+
+export const WithShadow: Story = {
+  render: () => (
+    <Table shadow>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Invoice</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Method</TableHead>
+          <TableHead className="text-right">Amount</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {invoices.slice(0, 3).map((invoice) => (
+          <TableRow key={invoice.id}>
+            <TableCell className="font-medium">{invoice.id}</TableCell>
+            <TableCell>{invoice.status}</TableCell>
+            <TableCell>{invoice.method}</TableCell>
+            <TableCell className="text-right">{invoice.amount}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  ),
+};
+
+export const WithSectionHeader: Story = {
+  render: () => (
+    <Table shadow>
+      <TableHeader>
+        <TableRow>
+          <TableHead>SKU</TableHead>
+          <TableHead>Product</TableHead>
+          <TableHead>Category</TableHead>
+          <TableHead className="text-right">Price</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow>
+          <TableCell className="font-mono text-xs">SPEC-001</TableCell>
+          <TableCell>Widget Pro</TableCell>
+          <TableCell>Hardware</TableCell>
+          <TableCell className="text-right font-mono">¥7,500</TableCell>
+        </TableRow>
+        <TableSectionHeader>
+          <th colSpan={4}>Accessories</th>
+        </TableSectionHeader>
+        <TableRow>
+          <TableCell className="font-mono text-xs">SPEC-002</TableCell>
+          <TableCell>USB Cable</TableCell>
+          <TableCell>Accessory</TableCell>
+          <TableCell className="text-right font-mono">Incl.</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell className="font-mono text-xs">SPEC-003</TableCell>
+          <TableCell>Power Adapter</TableCell>
+          <TableCell>Accessory</TableCell>
+          <TableCell className="text-right font-mono">¥1,500</TableCell>
+        </TableRow>
+      </TableBody>
     </Table>
   ),
 };
@@ -135,12 +199,12 @@ export const AllVariants = () => (
           <TableRow>
             <TableCell>Alice</TableCell>
             <TableCell>Developer</TableCell>
-            <TableCell className="text-right">$120,000</TableCell>
+            <TableCell className="text-right">¥12,000,000</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Bob</TableCell>
             <TableCell>Designer</TableCell>
-            <TableCell className="text-right">$100,000</TableCell>
+            <TableCell className="text-right">¥10,000,000</TableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -157,17 +221,17 @@ export const AllVariants = () => (
         <TableBody>
           <TableRow>
             <TableCell>Product A</TableCell>
-            <TableCell className="text-right">$50.00</TableCell>
+            <TableCell className="text-right">¥5,000</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Product B</TableCell>
-            <TableCell className="text-right">$75.00</TableCell>
+            <TableCell className="text-right">¥7,500</TableCell>
           </TableRow>
         </TableBody>
         <TableFooter>
           <TableRow>
             <TableCell>Total</TableCell>
-            <TableCell className="text-right">$125.00</TableCell>
+            <TableCell className="text-right">¥12,500</TableCell>
           </TableRow>
         </TableFooter>
       </Table>

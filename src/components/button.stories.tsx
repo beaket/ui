@@ -18,6 +18,7 @@ const meta: Meta<typeof Button> = {
         "link",
         "success",
         "stark",
+        "warning",
       ],
     },
     size: {
@@ -28,6 +29,9 @@ const meta: Meta<typeof Button> = {
       control: "boolean",
     },
     disabled: {
+      control: "boolean",
+    },
+    mono: {
       control: "boolean",
     },
   },
@@ -92,6 +96,21 @@ export const Stark: Story = {
   },
 };
 
+export const Warning: Story = {
+  args: {
+    children: "Warning",
+    variant: "warning",
+  },
+};
+
+export const Mono: Story = {
+  args: {
+    children: "SUBMIT",
+    variant: "success",
+    mono: true,
+  },
+};
+
 export const Loading: Story = {
   args: {
     children: "Loading",
@@ -131,6 +150,24 @@ export const AllVariants = () => (
     <Button variant="link">Link</Button>
     <Button variant="success">Success</Button>
     <Button variant="stark">Stark</Button>
+    <Button variant="warning">Warning</Button>
+  </div>
+);
+
+export const MonoVariants = () => (
+  <div className="flex flex-wrap gap-2">
+    <Button variant="primary" mono>
+      SIGN IN
+    </Button>
+    <Button variant="success" mono>
+      SUBMIT
+    </Button>
+    <Button variant="destructive" mono>
+      DELETE
+    </Button>
+    <Button variant="warning" mono>
+      CONFIRM
+    </Button>
   </div>
 );
 
@@ -139,7 +176,7 @@ export const AllSizes = () => (
     <Button size="sm">Small</Button>
     <Button size="md">Medium</Button>
     <Button size="lg">Large</Button>
-    <Button size="icon">→</Button>
+    <Button size="icon">+</Button>
   </div>
 );
 

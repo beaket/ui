@@ -15,11 +15,14 @@ export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     | "ghost"
     | "link"
     | "success"
-    | "stark";
+    | "stark"
+    | "warning";
   /** Button size */
   size?: "sm" | "md" | "lg" | "icon";
   /** Shows a loading spinner and disables the button */
   loading?: boolean;
+  /** Use monospace font for CTA-style text */
+  mono?: boolean;
   /** Merges props onto the immediate child element instead of rendering a button */
   asChild?: boolean;
 }
@@ -31,6 +34,7 @@ export function Button({
   loading,
   disabled,
   children,
+  mono = false,
   asChild = false,
   ...props
 }: Props) {
@@ -38,7 +42,7 @@ export function Button({
 
   return (
     <Comp
-      className={cn(buttonVariants({ variant, size }), className)}
+      className={cn(buttonVariants({ variant, size, mono }), className)}
       disabled={!asChild ? disabled || loading : undefined}
       {...props}
     >
@@ -59,9 +63,13 @@ const buttonVariants = cva(
     "inline-flex items-center justify-center gap-2",
     "font-medium",
     "cursor-pointer",
-    "disabled:cursor-not-allowed disabled:border-dashed disabled:border-[var(--chrome)] disabled:bg-[var(--frost)] disabled:text-[var(--steel)]",
+    "shadow-offset",
+    "hover:shadow-offset-hover",
+    "active:shadow-offset-active",
+    "disabled:shadow-none disabled:cursor-not-allowed disabled:border-dashed disabled:border-[var(--chrome)] disabled:bg-[var(--frost)] disabled:text-[var(--steel)]",
     "focus-visible:outline-2 focus-visible:outline-[var(--signal-blue)] focus-visible:outline-offset-2",
     "[&_svg]:size-4",
+    "transition-shadow duration-100",
   ].join(" "),
   {
     variants: {
@@ -74,12 +82,15 @@ const buttonVariants = cva(
           "border border-[var(--chrome)] bg-transparent text-[var(--ink)] hover:bg-[var(--frost)] active:bg-[var(--platinum)]",
         secondary:
           "bg-[var(--frost)] text-[var(--ink)] border border-[var(--chrome)] hover:bg-[var(--platinum)] active:bg-[var(--silver)]",
-        ghost: "text-[var(--ink)] hover:bg-[var(--frost)] active:bg-[var(--platinum)]",
-        link: "text-[var(--signal-blue)] underline-offset-4 hover:underline",
+        ghost:
+          "text-[var(--ink)] hover:bg-[var(--frost)] active:bg-[var(--platinum)] shadow-none hover:shadow-none active:shadow-none",
+        link: "text-[var(--signal-blue)] underline-offset-4 hover:underline shadow-none hover:shadow-none active:shadow-none",
         success:
           "bg-[var(--signal-green)] text-[var(--paper)] border border-[var(--signal-green)] hover:bg-[#0f5f42] hover:border-[#0f5f42] active:bg-[#0a4a32] disabled:text-[var(--steel)] no-underline",
         stark:
           "border border-[var(--ink)] bg-transparent text-[var(--ink)] hover:bg-[var(--ink)] hover:text-[var(--paper)] active:bg-[var(--graphite)]",
+        warning:
+          "bg-[var(--signal-amber)] text-[var(--graphite)] border border-[var(--signal-amber)] hover:bg-[#9a7209] hover:border-[#9a7209] active:bg-[#7a5a07] disabled:text-[var(--steel)] no-underline",
       },
       size: {
         sm: "h-8 px-3 text-xs",
@@ -87,10 +98,15 @@ const buttonVariants = cva(
         lg: "h-10 px-6 text-sm",
         icon: "size-9 p-0",
       },
+      mono: {
+        true: "font-mono tracking-wide",
+        false: "",
+      },
     },
     defaultVariants: {
       variant: "primary",
       size: "md",
+      mono: false,
     },
   },
 );
