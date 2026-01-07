@@ -1,6 +1,34 @@
 {
   "components": [
     {
+      "name": "table",
+      "description": "Semantic HTML table components with styled header, body, footer, rows, and cells",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/table.tsx"],
+      "docs": {
+        "title": "Table",
+        "tagline": "A semantic HTML table with styled components.",
+        "sections": ["AllVariants"],
+        "usage": "<Table><TableHeader><TableRow><TableHead>Column</TableHead></TableRow></TableHeader><TableBody><TableRow><TableCell>Data</TableCell></TableRow></TableBody></Table>",
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "data-table",
+      "description": "Data table component built on TanStack Table with sorting, filtering, pagination, and row selection",
+      "dependencies": ["@tanstack/react-table", "clsx", "tailwind-merge", "lucide-react"],
+      "registryDependencies": ["table", "button", "input", "checkbox"],
+      "files": ["components/data-table.tsx"],
+      "docs": {
+        "title": "DataTable",
+        "tagline": "A powerful data table with sorting, filtering, pagination, and selection.",
+        "sections": ["AllFeatures"],
+        "usage": "<DataTable columns={columns} data={data} />",
+        "previewStory": "FullFeatured"
+      }
+    },
+    {
       "name": "button",
       "description": "Button component with variants and sizes",
       "dependencies": [

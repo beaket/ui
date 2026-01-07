@@ -1,5 +1,65 @@
 # CLAUDE.md - AI Component Development Guidelines
 
+## Library Architecture
+
+This is a **copy-paste component library** (like shadcn/ui). Users copy individual component files into their projects.
+
+### Key Principles
+
+1. **Self-contained components** - Each component file must be standalone
+   - Include `cn` utility in every component file
+   - No shared `lib/utils.ts` or similar
+   - Users copy only the files they need
+
+2. **Dependencies in registry** - List npm packages in `registry.json`
+   - `dependencies`: External packages (e.g., `@radix-ui/react-checkbox`)
+   - `registryDependencies`: Other components from this library (e.g., `button`)
+
+## Design Philosophy (Brutalist)
+
+This library follows a **brutalist design system**:
+
+- **No gradients** - Flat colors only
+- **No shadows** - No box-shadow, drop-shadow
+- **No border-radius** - Sharp rectangular corners (except Radio which is circular by nature)
+- **No decorative elements** - No opacity effects for styling
+- **Use design tokens** - Always use CSS variables from `styles.css`
+
+### Design Tokens
+
+```css
+/* Neutral palette */
+--branch, --graphite, --ink, --paper, --steel, --chrome
+--iron, --slate, --zinc, --aluminum, --silver, --platinum, --frost
+
+/* Signal colors */
+--signal-blue, --signal-red, --signal-green, --signal-amber, --signal-purple, --signal-cyan
+```
+
+### Styling Rules
+
+| Do                        | Don't                                     |
+| ------------------------- | ----------------------------------------- |
+| `bg-[var(--paper)]`       | `bg-white` (except where contrast needed) |
+| `text-[var(--steel)]`     | `opacity-50`                              |
+| `border-[var(--chrome)]`  | `rounded-lg`                              |
+| `hover:bg-[var(--frost)]` | `shadow-md`                               |
+
+## Component Template
+
+Every component file must follow this structure:
+
+```tsx
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
+
+export function ComponentName({ className, ...props }: React.ComponentProps<"div">) {
+  return <div data-slot="component-name" className={cn("base-styles", className)} {...props} />;
+}
+```
+
 ## Required Items When Creating Components
 
 When creating a new component, you **must** create all of the following:
