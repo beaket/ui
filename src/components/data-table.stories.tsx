@@ -55,7 +55,7 @@ const columns: ColumnDef<User>[] = [
 ];
 
 const meta: Meta<typeof DataTable<User, unknown>> = {
-  title: "Components/DataTable",
+  title: "UI/DataTable",
   component: DataTable<User, unknown>,
   tags: ["autodocs"],
   parameters: {
