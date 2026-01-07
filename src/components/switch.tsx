@@ -1,0 +1,102 @@
+import * as SwitchPrimitive from "@radix-ui/react-switch";
+import { cva, type VariantProps } from "class-variance-authority";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
+
+const switchVariants = cva(
+  "peer inline-flex shrink-0 cursor-pointer items-center p-0.5 transition-colors outline-none data-[state=checked]:bg-[var(--signal-green)] data-[state=unchecked]:bg-[var(--chrome)] focus-visible:border-[var(--signal-blue)] disabled:cursor-not-allowed disabled:opacity-50 border border-[var(--chrome)]",
+  {
+    variants: {
+      size: {
+        sm: "h-5 w-9",
+        md: "h-6 w-11",
+        lg: "h-7 w-14",
+      },
+    },
+    defaultVariants: {
+      size: "md",
+    },
+  },
+);
+
+const switchThumbVariants = cva(
+  "pointer-events-none block bg-[var(--paper)] ring-0 transition-transform data-[state=unchecked]:translate-x-0",
+  {
+    variants: {
+      size: {
+        sm: "size-4 data-[state=checked]:translate-x-4",
+        md: "size-5 data-[state=checked]:translate-x-5",
+        lg: "size-6 data-[state=checked]:translate-x-6",
+      },
+    },
+    defaultVariants: {
+      size: "md",
+    },
+  },
+);
+
+interface SwitchProps
+  extends
+    Omit<React.ComponentProps<typeof SwitchPrimitive.Root>, "asChild">,
+    VariantProps<typeof switchVariants> {
+  /**
+   * Additional CSS classes to apply to the switch
+   */
+  className?: string;
+
+  /**
+   * Size of the switch
+   */
+  size?: "sm" | "md" | "lg";
+
+  /**
+   * Whether the switch is checked (controlled mode)
+   */
+  checked?: boolean;
+
+  /**
+   * Default checked state (uncontrolled mode)
+   */
+  defaultChecked?: boolean;
+
+  /**
+   * Callback fired when the checked state changes
+   */
+  onCheckedChange?: (checked: boolean) => void;
+
+  /**
+   * Whether the switch is disabled
+   */
+  disabled?: boolean;
+
+  /**
+   * Whether the switch is required in a form
+   */
+  required?: boolean;
+
+  /**
+   * Name attribute for form submission
+   */
+  name?: string;
+
+  /**
+   * Value attribute for form submission when checked
+   */
+  value?: string;
+}
+
+export function Switch({ className, size, ...props }: SwitchProps) {
+  return (
+    <SwitchPrimitive.Root
+      data-slot="switch"
+      className={cn(switchVariants({ size }), className)}
+      {...props}
+    >
+      <SwitchPrimitive.Thumb data-slot="switch-thumb" className={switchThumbVariants({ size })} />
+    </SwitchPrimitive.Root>
+  );
+}
+
+export type { SwitchProps };

@@ -144,6 +144,67 @@
         "usage": "<RadioGroup defaultValue=\"option1\"><RadioItem value=\"option1\" /><RadioItem value=\"option2\" /></RadioGroup>",
         "previewStory": "AllStates"
       }
+    },
+    {
+      "name": "label",
+      "description": "Label component for form controls with accessibility support",
+      "dependencies": ["@radix-ui/react-label", "clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/label.tsx"],
+      "docs": {
+        "title": "Label",
+        "tagline": "A semantic label for form controls with proper accessibility.",
+        "sections": ["AllStates"],
+        "usage": "<Label htmlFor=\"email\">Email</Label>",
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "textarea",
+      "description": "Multi-line text input component with validation states",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/textarea.tsx"],
+      "docs": {
+        "title": "Textarea",
+        "tagline": "A multi-line text input field for longer content.",
+        "sections": ["AllStates"],
+        "usage": "<Textarea placeholder=\"Enter description...\" />",
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "select",
+      "description": "Dropdown select component with grouped options and validation",
+      "dependencies": ["@radix-ui/react-select", "clsx", "lucide-react", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/select.tsx"],
+      "docs": {
+        "title": "Select",
+        "tagline": "A dropdown for selecting from a list of options.",
+        "sections": ["AllStates", "WithGroups"],
+        "usage": "<Select><Select.Trigger><Select.Value placeholder=\"Select...\" /></Select.Trigger><Select.Content><Select.Item value=\"1\">Option</Select.Item></Select.Content></Select>",
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "switch",
+      "description": "Toggle switch component for binary on/off states",
+      "dependencies": [
+        "@radix-ui/react-switch",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [],
+      "files": ["components/switch.tsx"],
+      "docs": {
+        "title": "Switch",
+        "tagline": "A toggle for binary on/off states.",
+        "sections": ["AllStates", "Sizes"],
+        "usage": "<Switch />",
+        "previewStory": "Default"
+      }
     }
   ]
 }
