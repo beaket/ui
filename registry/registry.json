@@ -289,6 +289,34 @@
         "usage": "<Alert variant=\"warning\">Important message here.</Alert>",
         "previewStory": "Default"
       }
+    },
+    {
+      "name": "pagination",
+      "description": "Server-side pagination component using links for SSR-friendly navigation",
+      "dependencies": ["clsx", "lucide-react", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/pagination.tsx"],
+      "docs": {
+        "title": "Pagination",
+        "tagline": "A navigation component for paginated content with ellipsis support.",
+        "sections": ["AllStates"],
+        "usage": "<Pagination page={1} totalPages={10} buildPageUrl={(p) => `?page=${p}`} />",
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "blank-slate",
+      "description": "Empty state component for displaying placeholder content",
+      "dependencies": ["clsx", "lucide-react", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/blank-slate.tsx"],
+      "docs": {
+        "title": "BlankSlate",
+        "tagline": "An empty state component for when there is no data to display.",
+        "sections": ["AllStates"],
+        "usage": "<BlankSlate icon=\"inbox\" title=\"No messages\" description=\"Your inbox is empty.\" />",
+        "previewStory": "Default"
+      }
     }
   ]
 }
