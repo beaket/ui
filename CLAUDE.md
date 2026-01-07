@@ -228,6 +228,29 @@ Register the component in `registry/registry.json`.
 }
 ```
 
+### 4. Changeset
+
+Create a changeset for version tracking using `pnpm changeset` or manually create a file in `.changeset/`.
+
+**Important:** The package name must be `@beaket/ui` (not `ui`).
+
+```md
+---
+"@beaket/ui": minor
+---
+
+Add ComponentName component with feature X, Y, and Z
+```
+
+**Version bump guidelines:**
+
+| Change Type                       | Bump    | Example                      |
+| --------------------------------- | ------- | ---------------------------- |
+| New component                     | `minor` | Adding Dialog component      |
+| New feature to existing component | `minor` | Adding new variant to Button |
+| Bug fix                           | `patch` | Fixing focus state issue     |
+| Breaking change                   | `major` | Changing component API       |
+
 ## File Structure
 
 ```
@@ -237,6 +260,9 @@ src/components/
 
 registry/
 └── registry.json        # Component registration
+
+.changeset/
+└── [description].md     # Changeset for versioning
 ```
 
 ## Checklist
@@ -247,3 +273,4 @@ Verify when creating a component:
 - [ ] `src/components/[name].stories.tsx` - Storybook created
 - [ ] Interaction tests implemented (play function)
 - [ ] Registered in `registry/registry.json`
+- [ ] Changeset created with `@beaket/ui` package name
