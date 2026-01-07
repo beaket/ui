@@ -7,6 +7,7 @@ interface StoryMeta {
 
 interface StoryObj {
   args?: Record<string, unknown>;
+  render?: () => React.ReactNode;
   play?: unknown;
 }
 
@@ -50,7 +51,7 @@ export function StoryPreview({ componentName, storyName = "Default" }: StoryPrev
         }
 
         if (typeof story === "function") {
-          // Composition component
+          // Composition component (e.g., export const AllStates = () => ...)
           setStory({
             Component: story as ComponentType,
             isComposition: true,
@@ -58,11 +59,20 @@ export function StoryPreview({ componentName, storyName = "Default" }: StoryPrev
         } else if (typeof story === "object" && story !== null) {
           // StoryObj
           const storyObj = story as StoryObj;
-          setStory({
-            Component: meta?.component ?? null,
-            args: storyObj.args,
-            isComposition: false,
-          });
+          if (storyObj.render) {
+            // StoryObj with render function
+            setStory({
+              Component: storyObj.render as ComponentType,
+              isComposition: true,
+            });
+          } else {
+            // StoryObj with args
+            setStory({
+              Component: meta?.component ?? null,
+              args: storyObj.args,
+              isComposition: false,
+            });
+          }
         }
       } catch (e) {
         setError(`Failed to load story: ${e}`);

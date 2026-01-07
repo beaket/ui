@@ -16,8 +16,22 @@ function TooltipProvider({ delayDuration = 0, ...props }: TooltipProviderProps) 
   return <TooltipPrimitive.Provider delayDuration={delayDuration} {...props} />;
 }
 
-function TooltipRoot(props: React.ComponentProps<typeof TooltipPrimitive.Root>) {
-  return <TooltipPrimitive.Root data-slot="tooltip" {...props} />;
+interface TooltipProps extends React.ComponentProps<typeof TooltipPrimitive.Root> {
+  /**
+   * The duration in milliseconds before the tooltip appears
+   * @default 0
+   */
+  delayDuration?: number;
+}
+
+function TooltipRoot({ delayDuration = 0, children, ...props }: TooltipProps) {
+  return (
+    <TooltipPrimitive.Provider delayDuration={delayDuration}>
+      <TooltipPrimitive.Root data-slot="tooltip" {...props}>
+        {children}
+      </TooltipPrimitive.Root>
+    </TooltipPrimitive.Provider>
+  );
 }
 
 function TooltipTrigger(props: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {

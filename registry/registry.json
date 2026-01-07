@@ -1,6 +1,20 @@
 {
   "components": [
     {
+      "name": "alert",
+      "description": "Callout component for important information, tips, warnings, or cautions",
+      "dependencies": ["class-variance-authority", "clsx", "lucide-react", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/alert.tsx"],
+      "docs": {
+        "title": "Alert",
+        "tagline": "A callout for displaying important information with semantic variants.",
+        "sections": ["AllStates", "AllVariants"],
+        "usage": "<Alert variant=\"warning\">Important message here.</Alert>",
+        "previewStory": "Default"
+      }
+    },
+    {
       "name": "avatar",
       "description": "Avatar component for displaying user profile images with fallback support",
       "dependencies": ["@radix-ui/react-avatar", "clsx", "tailwind-merge"],
@@ -11,63 +25,21 @@
         "tagline": "A visual representation of a user with image and fallback support.",
         "sections": ["AllStates", "CustomSizes", "AvatarGroup"],
         "usage": "<Avatar><Avatar.Image src=\"/user.png\" alt=\"User\" /><Avatar.Fallback>JD</Avatar.Fallback></Avatar>",
-        "previewStory": "Default"
+        "previewStory": "AvatarGroup"
       }
     },
     {
-      "name": "dropdown-menu",
-      "description": "Dropdown menu component for actions, navigation, and selection",
-      "dependencies": ["@radix-ui/react-dropdown-menu", "clsx", "lucide-react", "tailwind-merge"],
+      "name": "badge",
+      "description": "Badge component for status indicators and labels",
+      "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
       "registryDependencies": [],
-      "files": ["components/dropdown-menu.tsx"],
+      "files": ["components/badge.tsx"],
       "docs": {
-        "title": "DropdownMenu",
-        "tagline": "A menu of actions or options triggered by a button.",
-        "sections": ["AllStates"],
-        "usage": "<DropdownMenu><DropdownMenu.Trigger asChild><Button>Open</Button></DropdownMenu.Trigger><DropdownMenu.Content><DropdownMenu.Item>Action</DropdownMenu.Item></DropdownMenu.Content></DropdownMenu>",
-        "previewStory": "Default"
-      }
-    },
-    {
-      "name": "dialog",
-      "description": "Modal dialog component for confirmations, forms, and alerts",
-      "dependencies": ["@radix-ui/react-dialog", "clsx", "lucide-react", "tailwind-merge"],
-      "registryDependencies": ["button"],
-      "files": ["components/dialog.tsx"],
-      "docs": {
-        "title": "Dialog",
-        "tagline": "A modal dialog for confirmations, forms, and alerts.",
-        "sections": ["AllStates"],
-        "usage": "<Dialog trigger={<Button>Open</Button>}><Dialog.Header><Dialog.Title>Title</Dialog.Title></Dialog.Header></Dialog>",
-        "previewStory": "Default"
-      }
-    },
-    {
-      "name": "table",
-      "description": "Semantic HTML table components with styled header, body, footer, rows, and cells",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "registryDependencies": [],
-      "files": ["components/table.tsx"],
-      "docs": {
-        "title": "Table",
-        "tagline": "A semantic HTML table with styled components.",
+        "title": "Badge",
+        "tagline": "A compact label for status indicators, categories, and counts.",
         "sections": ["AllVariants"],
-        "usage": "<Table><TableHeader><TableRow><TableHead>Column</TableHead></TableRow></TableHeader><TableBody><TableRow><TableCell>Data</TableCell></TableRow></TableBody></Table>",
-        "previewStory": "Default"
-      }
-    },
-    {
-      "name": "data-table",
-      "description": "Data table component built on TanStack Table with sorting, filtering, pagination, and row selection",
-      "dependencies": ["@tanstack/react-table", "clsx", "tailwind-merge", "lucide-react"],
-      "registryDependencies": ["table", "button", "input", "checkbox"],
-      "files": ["components/data-table.tsx"],
-      "docs": {
-        "title": "DataTable",
-        "tagline": "A powerful data table with sorting, filtering, pagination, and selection.",
-        "sections": ["AllFeatures"],
-        "usage": "<DataTable columns={columns} data={data} />",
-        "previewStory": "FullFeatured"
+        "usage": "<Badge>Label</Badge>",
+        "previewStory": "AllVariants"
       }
     },
     {
@@ -104,20 +76,6 @@
       }
     },
     {
-      "name": "badge",
-      "description": "Badge component for status indicators and labels",
-      "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
-      "registryDependencies": [],
-      "files": ["components/badge.tsx"],
-      "docs": {
-        "title": "Badge",
-        "tagline": "A compact label for status indicators, categories, and counts.",
-        "sections": ["AllVariants"],
-        "usage": "<Badge>Label</Badge>",
-        "previewStory": "AllVariants"
-      }
-    },
-    {
       "name": "input",
       "description": "Text input component for user data entry",
       "dependencies": ["clsx", "tailwind-merge"],
@@ -128,6 +86,20 @@
         "tagline": "A text input field for capturing user data.",
         "sections": ["AllStates", "AllTypes"],
         "usage": "<Input placeholder=\"Email address\" />",
+        "previewStory": "AllStates"
+      }
+    },
+    {
+      "name": "label",
+      "description": "Label component for form controls with accessibility support",
+      "dependencies": ["@radix-ui/react-label", "clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/label.tsx"],
+      "docs": {
+        "title": "Label",
+        "tagline": "A semantic label for form controls with proper accessibility.",
+        "sections": ["AllStates"],
+        "usage": "<Label htmlFor=\"email\">Email</Label>",
         "previewStory": "AllStates"
       }
     },
@@ -143,34 +115,6 @@
         "sections": ["AllStates"],
         "usage": "<RadioGroup defaultValue=\"option1\"><RadioItem value=\"option1\" /><RadioItem value=\"option2\" /></RadioGroup>",
         "previewStory": "AllStates"
-      }
-    },
-    {
-      "name": "label",
-      "description": "Label component for form controls with accessibility support",
-      "dependencies": ["@radix-ui/react-label", "clsx", "tailwind-merge"],
-      "registryDependencies": [],
-      "files": ["components/label.tsx"],
-      "docs": {
-        "title": "Label",
-        "tagline": "A semantic label for form controls with proper accessibility.",
-        "sections": ["AllStates"],
-        "usage": "<Label htmlFor=\"email\">Email</Label>",
-        "previewStory": "Default"
-      }
-    },
-    {
-      "name": "textarea",
-      "description": "Multi-line text input component with validation states",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "registryDependencies": [],
-      "files": ["components/textarea.tsx"],
-      "docs": {
-        "title": "Textarea",
-        "tagline": "A multi-line text input field for longer content.",
-        "sections": ["AllStates"],
-        "usage": "<Textarea placeholder=\"Enter description...\" />",
-        "previewStory": "Default"
       }
     },
     {
@@ -207,31 +151,32 @@
       }
     },
     {
-      "name": "tooltip",
-      "description": "Popup that displays information on hover or focus",
-      "dependencies": ["@radix-ui/react-tooltip", "clsx", "tailwind-merge"],
+      "name": "textarea",
+      "description": "Multi-line text input component with validation states",
+      "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
-      "files": ["components/tooltip.tsx"],
+      "files": ["components/textarea.tsx"],
       "docs": {
-        "title": "Tooltip",
-        "tagline": "A popup that displays information related to an element on hover.",
-        "sections": ["AllStates", "Positions"],
-        "usage": "<TooltipProvider><Tooltip><Tooltip.Trigger>Hover me</Tooltip.Trigger><Tooltip.Content>Tooltip text</Tooltip.Content></Tooltip></TooltipProvider>",
+        "title": "Textarea",
+        "tagline": "A multi-line text input field for longer content.",
+        "sections": ["AllStates"],
+        "usage": "<Textarea placeholder=\"Enter description...\" />",
         "previewStory": "Default"
       }
     },
     {
-      "name": "separator",
-      "description": "Visual divider for separating content into sections",
-      "dependencies": ["@radix-ui/react-separator", "clsx", "tailwind-merge"],
+      "name": "table",
+      "description": "Semantic HTML table components with styled header, body, footer, rows, and cells",
+      "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
-      "files": ["components/separator.tsx"],
+      "files": ["components/table.tsx"],
       "docs": {
-        "title": "Separator",
-        "tagline": "A visual divider that separates content into distinct sections.",
-        "sections": ["AllStates"],
-        "usage": "<Separator />",
-        "previewStory": "Default"
+        "title": "Table",
+        "tagline": "A semantic HTML table with styled components.",
+        "sections": ["AllVariants"],
+        "usage": "<Table><TableHeader><TableRow><TableHead>Column</TableHead></TableRow></TableHeader><TableBody><TableRow><TableCell>Data</TableCell></TableRow></TableBody></Table>",
+        "previewStory": "Default",
+        "span": 2
       }
     },
     {
@@ -263,30 +208,30 @@
       }
     },
     {
-      "name": "sheet",
-      "description": "Slide-out panel from any edge of the screen",
-      "dependencies": ["@radix-ui/react-dialog", "clsx", "lucide-react", "tailwind-merge"],
-      "registryDependencies": ["button"],
-      "files": ["components/sheet.tsx"],
+      "name": "separator",
+      "description": "Visual divider for separating content into sections",
+      "dependencies": ["@radix-ui/react-separator", "clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/separator.tsx"],
       "docs": {
-        "title": "Sheet",
-        "tagline": "A slide-out panel that can appear from any edge of the screen.",
+        "title": "Separator",
+        "tagline": "A visual divider that separates content into distinct sections.",
         "sections": ["AllStates"],
-        "usage": "<Sheet trigger={<Button>Open</Button>}><Sheet.Header><Sheet.Title>Title</Sheet.Title></Sheet.Header></Sheet>",
+        "usage": "<Separator />",
         "previewStory": "Default"
       }
     },
     {
-      "name": "alert",
-      "description": "Callout component for important information, tips, warnings, or cautions",
-      "dependencies": ["class-variance-authority", "clsx", "lucide-react", "tailwind-merge"],
+      "name": "tooltip",
+      "description": "Popup that displays information on hover or focus",
+      "dependencies": ["@radix-ui/react-tooltip", "clsx", "tailwind-merge"],
       "registryDependencies": [],
-      "files": ["components/alert.tsx"],
+      "files": ["components/tooltip.tsx"],
       "docs": {
-        "title": "Alert",
-        "tagline": "A callout for displaying important information with semantic variants.",
-        "sections": ["AllStates", "AllVariants"],
-        "usage": "<Alert variant=\"warning\">Important message here.</Alert>",
+        "title": "Tooltip",
+        "tagline": "A popup that displays information related to an element on hover.",
+        "sections": ["AllStates", "Positions"],
+        "usage": "<TooltipProvider><Tooltip><Tooltip.Trigger>Hover me</Tooltip.Trigger><Tooltip.Content>Tooltip text</Tooltip.Content></Tooltip></TooltipProvider>",
         "previewStory": "Default"
       }
     },
@@ -305,6 +250,48 @@
       }
     },
     {
+      "name": "dialog",
+      "description": "Modal dialog component for confirmations, forms, and alerts",
+      "dependencies": ["@radix-ui/react-dialog", "clsx", "lucide-react", "tailwind-merge"],
+      "registryDependencies": ["button"],
+      "files": ["components/dialog.tsx"],
+      "docs": {
+        "title": "Dialog",
+        "tagline": "A modal dialog for confirmations, forms, and alerts.",
+        "sections": ["AllStates"],
+        "usage": "<Dialog trigger={<Button>Open</Button>}><Dialog.Header><Dialog.Title>Title</Dialog.Title></Dialog.Header></Dialog>",
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "sheet",
+      "description": "Slide-out panel from any edge of the screen",
+      "dependencies": ["@radix-ui/react-dialog", "clsx", "lucide-react", "tailwind-merge"],
+      "registryDependencies": ["button"],
+      "files": ["components/sheet.tsx"],
+      "docs": {
+        "title": "Sheet",
+        "tagline": "A slide-out panel that can appear from any edge of the screen.",
+        "sections": ["AllStates"],
+        "usage": "<Sheet trigger={<Button>Open</Button>}><Sheet.Header><Sheet.Title>Title</Sheet.Title></Sheet.Header></Sheet>",
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "dropdown-menu",
+      "description": "Dropdown menu component for actions, navigation, and selection",
+      "dependencies": ["@radix-ui/react-dropdown-menu", "clsx", "lucide-react", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/dropdown-menu.tsx"],
+      "docs": {
+        "title": "DropdownMenu",
+        "tagline": "A menu of actions or options triggered by a button.",
+        "sections": ["AllStates"],
+        "usage": "<DropdownMenu><DropdownMenu.Trigger asChild><Button>Open</Button></DropdownMenu.Trigger><DropdownMenu.Content><DropdownMenu.Item>Action</DropdownMenu.Item></DropdownMenu.Content></DropdownMenu>",
+        "previewStory": "Default"
+      }
+    },
+    {
       "name": "blank-slate",
       "description": "Empty state component for displaying placeholder content",
       "dependencies": ["clsx", "lucide-react", "tailwind-merge"],
@@ -316,6 +303,21 @@
         "sections": ["AllStates"],
         "usage": "<BlankSlate icon=\"inbox\" title=\"No messages\" description=\"Your inbox is empty.\" />",
         "previewStory": "Default"
+      }
+    },
+    {
+      "name": "data-table",
+      "description": "Data table component built on TanStack Table with sorting, filtering, pagination, and row selection",
+      "dependencies": ["@tanstack/react-table", "clsx", "tailwind-merge", "lucide-react"],
+      "registryDependencies": ["table", "button", "input", "checkbox"],
+      "files": ["components/data-table.tsx"],
+      "docs": {
+        "title": "DataTable",
+        "tagline": "A powerful data table with sorting, filtering, pagination, and selection.",
+        "sections": ["AllFeatures"],
+        "usage": "<DataTable columns={columns} data={data} />",
+        "previewStory": "FullFeatured",
+        "span": 3
       }
     }
   ]
