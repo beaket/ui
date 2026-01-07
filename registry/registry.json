@@ -1,6 +1,20 @@
 {
   "components": [
     {
+      "name": "avatar",
+      "description": "Avatar component for displaying user profile images with fallback support",
+      "dependencies": ["@radix-ui/react-avatar", "clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/avatar.tsx"],
+      "docs": {
+        "title": "Avatar",
+        "tagline": "A visual representation of a user with image and fallback support.",
+        "sections": ["AllStates", "CustomSizes", "AvatarGroup"],
+        "usage": "<Avatar><Avatar.Image src=\"/user.png\" alt=\"User\" /><Avatar.Fallback>JD</Avatar.Fallback></Avatar>",
+        "previewStory": "Default"
+      }
+    },
+    {
       "name": "dropdown-menu",
       "description": "Dropdown menu component for actions, navigation, and selection",
       "dependencies": ["@radix-ui/react-dropdown-menu", "clsx", "lucide-react", "tailwind-merge"],
