@@ -111,7 +111,7 @@ export function Sheet({
         <DialogPrimitive.Content
           data-slot="sheet-content"
           className={cn(
-            "fixed z-50 gap-4 border border-[var(--chrome)] bg-[var(--paper)] p-4",
+            "shadow-offset-dark fixed z-50 gap-4 border border-[var(--chrome)] bg-[var(--paper)] p-4",
             sidePositions[side],
             sideAnimations[side],
           )}

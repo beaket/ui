@@ -14,7 +14,7 @@ export function Input({ className, type = "text", ...props }: Props) {
       type={type}
       data-slot="input"
       className={cn(
-        "h-10 w-full px-3 text-sm",
+        "h-9 w-full px-3 text-sm",
         "bg-white text-[var(--ink)]",
         "border border-[var(--graphite)]",
         "placeholder:text-[var(--steel)]",

@@ -9,7 +9,7 @@ const meta: Meta<typeof Badge> = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "secondary", "success", "error", "info", "outline"],
+      options: ["default", "secondary", "success", "error", "info", "outline", "warning", "code"],
     },
   },
 };
@@ -59,6 +59,20 @@ export const Outline: Story = {
   },
 };
 
+export const Warning: Story = {
+  args: {
+    children: "Warning",
+    variant: "warning",
+  },
+};
+
+export const Code: Story = {
+  args: {
+    children: "SPEC-001",
+    variant: "code",
+  },
+};
+
 // Compositions for docs
 export const AllVariants = () => (
   <div className="flex flex-wrap gap-2">
@@ -68,6 +82,8 @@ export const AllVariants = () => (
     <Badge variant="error">Error</Badge>
     <Badge variant="info">Info</Badge>
     <Badge variant="outline">Outline</Badge>
+    <Badge variant="warning">Warning</Badge>
+    <Badge variant="code">SPEC-001</Badge>
   </div>
 );
 

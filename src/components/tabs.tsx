@@ -14,12 +14,18 @@ function TabsRoot({ className, ...props }: React.ComponentProps<typeof TabsPrimi
   );
 }
 
-function TabsList({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.List>) {
+interface TabsListProps extends React.ComponentProps<typeof TabsPrimitive.List> {
+  /** Add offset shadow to the tabs list */
+  shadow?: boolean;
+}
+
+function TabsList({ className, shadow, ...props }: TabsListProps) {
   return (
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
         "inline-flex h-9 w-fit items-center justify-center border border-[var(--chrome)] bg-[var(--frost)] p-[3px] text-[var(--ink)]",
+        shadow && "shadow-offset",
         className,
       )}
       {...props}
