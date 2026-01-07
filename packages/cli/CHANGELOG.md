@@ -1,5 +1,21 @@
 # @beaket/ui
 
+## 1.5.0
+
+### Minor Changes
+
+- 2fa9067: Add offset shadow system and new component variants
+  - Button: Add offset shadow states, warning variant, mono prop
+  - Badge: Add warning and code variants
+  - Table: Add shadow prop, TableSectionHeader component
+  - Card, Tabs: Add optional shadow prop
+  - Dialog, Sheet, Dropdown, Tooltip: Add offset shadows
+
+- df80cc1: Add Blockquote, Breadcrumb, and Navigation components
+  - Blockquote: Styled quotation with author attribution support
+  - Breadcrumb: Compound component for navigation hierarchy
+  - Navigation: Primary site navigation with offset shadow styling
+
 ## 1.4.0
 
 ### Minor Changes
