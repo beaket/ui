@@ -1,5 +1,40 @@
 # @beaket/ui
 
+## 1.4.0
+
+### Minor Changes
+
+- 1b26167: Add Avatar component for displaying user profile images with fallback support
+- 69a50f4: Add form components: Label, Textarea, Select, and Switch
+  - Label: Form label with accessibility support via @radix-ui/react-label
+  - Textarea: Multi-line text input with validation states
+  - Select: Dropdown select with grouped options using compound pattern (Select.Trigger, Select.Content, Select.Item, etc.)
+  - Switch: Toggle switch with size variants (sm, md, lg) via @radix-ui/react-switch
+
+- 0a6eb92: Add Phase 2 components: Tooltip, Separator, Card, Tabs, Sheet, and Alert
+  - **Tooltip**: Popup that displays information on hover or focus
+  - **Separator**: Visual divider for horizontal or vertical separation
+  - **Card**: Container component with Header, Title, Description, Action, Content, and Footer sub-components
+  - **Tabs**: Tab navigation component for switching between content panels
+  - **Sheet**: Slide-out panel from any edge of the screen (left, right, top, bottom)
+  - **Alert**: Callout component with semantic variants (note, tip, important, warning, caution)
+
+- 21e60c3: Add Table and DataTable components
+  - Table: Semantic HTML table components (TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption)
+  - DataTable: TanStack Table-based component with sorting, filtering, pagination, and row selection
+  - Update Button to use design tokens
+  - Update CLAUDE.md with library architecture and design philosophy
+
+- 2304fb0: Add Dialog component with compound pattern, controlled/uncontrolled modes, and Storybook tests
+- 4028bf6: Add DropdownMenu component with compound pattern, checkbox/radio items, submenus, and keyboard shortcuts support
+- 27f74ac: Add Pagination and BlankSlate components (Phase 3 migration)
+  - Pagination: Server-side pagination with ellipsis support for SSR-friendly navigation
+  - BlankSlate: Empty state component with preset icons and custom icon support
+
+### Patch Changes
+
+- 86722d0: Make Tooltip self-contained by including TooltipProvider internally
+
 ## 1.3.0
 
 ### Minor Changes
