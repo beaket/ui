@@ -1,6 +1,48 @@
 {
   "components": [
     {
+      "name": "blockquote",
+      "description": "Styled quotation component with optional author attribution",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/blockquote.tsx"],
+      "docs": {
+        "title": "Blockquote",
+        "tagline": "A styled quotation block with optional author and source attribution.",
+        "sections": ["AllVariants"],
+        "usage": "<Blockquote author=\"Author Name\">Quote text here.</Blockquote>",
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "breadcrumb",
+      "description": "Navigation component showing the current page location within a hierarchy",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/breadcrumb.tsx"],
+      "docs": {
+        "title": "Breadcrumb",
+        "tagline": "A navigation trail showing the user's location within a site hierarchy.",
+        "sections": ["AllVariants"],
+        "usage": "<Breadcrumb><Breadcrumb.List><Breadcrumb.Item><Breadcrumb.Link href=\"/\">Home</Breadcrumb.Link></Breadcrumb.Item></Breadcrumb.List></Breadcrumb>",
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "navigation",
+      "description": "Primary site navigation component with active state support",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/navigation.tsx"],
+      "docs": {
+        "title": "Navigation",
+        "tagline": "A primary navigation component with active state indicators.",
+        "sections": ["AllVariants"],
+        "usage": "<Navigation><Navigation.List><Navigation.Item><Navigation.Link href=\"/\" active>Home</Navigation.Link></Navigation.Item></Navigation.List></Navigation>",
+        "previewStory": "Default"
+      }
+    },
+    {
       "name": "alert",
       "description": "Callout component for important information, tips, warnings, or cautions",
       "dependencies": ["class-variance-authority", "clsx", "lucide-react", "tailwind-merge"],
