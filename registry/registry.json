@@ -205,6 +205,90 @@
         "usage": "<Switch />",
         "previewStory": "Default"
       }
+    },
+    {
+      "name": "tooltip",
+      "description": "Popup that displays information on hover or focus",
+      "dependencies": ["@radix-ui/react-tooltip", "clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/tooltip.tsx"],
+      "docs": {
+        "title": "Tooltip",
+        "tagline": "A popup that displays information related to an element on hover.",
+        "sections": ["AllStates", "Positions"],
+        "usage": "<TooltipProvider><Tooltip><Tooltip.Trigger>Hover me</Tooltip.Trigger><Tooltip.Content>Tooltip text</Tooltip.Content></Tooltip></TooltipProvider>",
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "separator",
+      "description": "Visual divider for separating content into sections",
+      "dependencies": ["@radix-ui/react-separator", "clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/separator.tsx"],
+      "docs": {
+        "title": "Separator",
+        "tagline": "A visual divider that separates content into distinct sections.",
+        "sections": ["AllStates"],
+        "usage": "<Separator />",
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "card",
+      "description": "Container component for grouping related content and actions",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/card.tsx"],
+      "docs": {
+        "title": "Card",
+        "tagline": "A versatile container for grouping related content and actions.",
+        "sections": ["AllStates"],
+        "usage": "<Card><Card.Header><Card.Title>Title</Card.Title></Card.Header><Card.Content>Content</Card.Content></Card>",
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "tabs",
+      "description": "Tab navigation component for switching between content panels",
+      "dependencies": ["@radix-ui/react-tabs", "clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/tabs.tsx"],
+      "docs": {
+        "title": "Tabs",
+        "tagline": "A set of layered sections of content that display one panel at a time.",
+        "sections": ["AllStates"],
+        "usage": "<Tabs defaultValue=\"tab1\"><Tabs.List><Tabs.Trigger value=\"tab1\">Tab 1</Tabs.Trigger></Tabs.List><Tabs.Content value=\"tab1\">Content</Tabs.Content></Tabs>",
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "sheet",
+      "description": "Slide-out panel from any edge of the screen",
+      "dependencies": ["@radix-ui/react-dialog", "clsx", "lucide-react", "tailwind-merge"],
+      "registryDependencies": ["button"],
+      "files": ["components/sheet.tsx"],
+      "docs": {
+        "title": "Sheet",
+        "tagline": "A slide-out panel that can appear from any edge of the screen.",
+        "sections": ["AllStates"],
+        "usage": "<Sheet trigger={<Button>Open</Button>}><Sheet.Header><Sheet.Title>Title</Sheet.Title></Sheet.Header></Sheet>",
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "alert",
+      "description": "Callout component for important information, tips, warnings, or cautions",
+      "dependencies": ["class-variance-authority", "clsx", "lucide-react", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/alert.tsx"],
+      "docs": {
+        "title": "Alert",
+        "tagline": "A callout for displaying important information with semantic variants.",
+        "sections": ["AllStates", "AllVariants"],
+        "usage": "<Alert variant=\"warning\">Important message here.</Alert>",
+        "previewStory": "Default"
+      }
     }
   ]
 }
