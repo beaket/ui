@@ -1,6 +1,20 @@
 {
   "components": [
     {
+      "name": "dropdown-menu",
+      "description": "Dropdown menu component for actions, navigation, and selection",
+      "dependencies": ["@radix-ui/react-dropdown-menu", "clsx", "lucide-react", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/dropdown-menu.tsx"],
+      "docs": {
+        "title": "DropdownMenu",
+        "tagline": "A menu of actions or options triggered by a button.",
+        "sections": ["AllStates"],
+        "usage": "<DropdownMenu><DropdownMenu.Trigger asChild><Button>Open</Button></DropdownMenu.Trigger><DropdownMenu.Content><DropdownMenu.Item>Action</DropdownMenu.Item></DropdownMenu.Content></DropdownMenu>",
+        "previewStory": "Default"
+      }
+    },
+    {
       "name": "dialog",
       "description": "Modal dialog component for confirmations, forms, and alerts",
       "dependencies": ["@radix-ui/react-dialog", "clsx", "lucide-react", "tailwind-merge"],
