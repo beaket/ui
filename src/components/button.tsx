@@ -67,9 +67,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-[var(--branch)] text-white border border-[var(--branch)] hover:bg-[#2A2D33] hover:border-[#2A2D33] active:bg-[var(--ink)] disabled:text-[var(--steel)] no-underline",
+          "bg-[var(--branch)] text-[var(--paper)] border border-[var(--branch)] hover:bg-[var(--iron)] hover:border-[var(--iron)] active:bg-[var(--ink)] disabled:text-[var(--steel)] no-underline",
         destructive:
-          "bg-[var(--signal-red)] text-white border border-[var(--signal-red)] hover:bg-[#b71c1c] hover:border-[#b71c1c] active:bg-[#9a1919] disabled:text-[var(--steel)] no-underline",
+          "bg-[var(--signal-red)] text-[var(--paper)] border border-[var(--signal-red)] hover:bg-[#b71c1c] hover:border-[#b71c1c] active:bg-[#9a1919] disabled:text-[var(--steel)] no-underline",
         outline:
           "border border-[var(--chrome)] bg-transparent text-[var(--ink)] hover:bg-[var(--frost)] active:bg-[var(--platinum)]",
         secondary:
@@ -77,7 +77,7 @@ const buttonVariants = cva(
         ghost: "text-[var(--ink)] hover:bg-[var(--frost)] active:bg-[var(--platinum)]",
         link: "text-[var(--signal-blue)] underline-offset-4 hover:underline",
         success:
-          "bg-[var(--signal-green)] text-white border border-[var(--signal-green)] hover:bg-[#0f5f42] hover:border-[#0f5f42] active:bg-[#0a4a32] disabled:text-[var(--steel)] no-underline",
+          "bg-[var(--signal-green)] text-[var(--paper)] border border-[var(--signal-green)] hover:bg-[#0f5f42] hover:border-[#0f5f42] active:bg-[#0a4a32] disabled:text-[var(--steel)] no-underline",
         stark:
           "border border-[var(--ink)] bg-transparent text-[var(--ink)] hover:bg-[var(--ink)] hover:text-[var(--paper)] active:bg-[var(--graphite)]",
       },
