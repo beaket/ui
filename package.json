@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "storybook dev -p 6006",
+    "docs:dev": "pnpm --filter docs dev",
     "build": "storybook build",
     "lint": "echo 'TODO: Add ESLint'",
     "format:check": "prettier --check .",
