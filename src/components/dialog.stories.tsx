@@ -5,7 +5,7 @@ import { Button } from "./button";
 import { Dialog } from "./dialog";
 
 const meta: Meta<typeof Dialog> = {
-  title: "Components/Dialog",
+  title: "UI/Dialog",
   component: Dialog,
   tags: ["autodocs"],
   argTypes: {

@@ -3,7 +3,7 @@ import { expect, fn, userEvent, within } from "storybook/test";
 import { Button } from "./button";
 
 const meta: Meta<typeof Button> = {
-  title: "Components/Button",
+  title: "UI/Button",
   component: Button,
   tags: ["autodocs"],
   argTypes: {
