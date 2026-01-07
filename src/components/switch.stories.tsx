@@ -5,7 +5,7 @@ import { Label } from "./label";
 import { Switch } from "./switch";
 
 const meta: Meta<typeof Switch> = {
-  title: "Components/Switch",
+  title: "UI/Switch",
   component: Switch,
   tags: ["autodocs"],
   parameters: {

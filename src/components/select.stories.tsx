@@ -4,7 +4,7 @@ import { Label } from "./label";
 import { Select } from "./select";
 
 const meta: Meta<typeof Select> = {
-  title: "Components/Select",
+  title: "UI/Select",
   component: Select,
   tags: ["autodocs"],
   parameters: {
