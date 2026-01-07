@@ -1,23 +1,146 @@
 @import "tailwindcss";
 
+@theme {
+  /* ===========================================
+   * SHADOW UTILITIES
+   * Offset shadows for brutalist design
+   * =========================================== */
+  --shadow-offset: 2px 2px 0px 0px var(--chrome);
+  --shadow-offset-dark: 2px 2px 0px 0px var(--aluminum);
+  --shadow-offset-hover: 3px 3px 0px 0px var(--chrome);
+  --shadow-offset-active: 1px 1px 0px 0px var(--chrome);
+
+  /* ===========================================
+   * FONT FAMILY UTILITIES
+   * =========================================== */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", "Roboto Mono", Menlo, Monaco, Consolas, monospace;
+}
+
 :root {
-  --branch: #1c1f24;
-  --graphite: #0d0d0d;
-  --ink: #1a1a1a;
-  --paper: #f8f8f8;
-  --steel: #595959;
-  --chrome: #e0e0e0;
-  --iron: #2d2d2d;
-  --slate: #404040;
-  --zinc: #525252;
-  --aluminum: #9e9e9e;
-  --silver: #dedede;
-  --platinum: #f0f0f0;
-  --frost: #f5f5f5;
-  --signal-blue: #2b6cb0;
-  --signal-red: #d32f2f;
-  --signal-green: #137752;
-  --signal-amber: #a86800;
-  --signal-purple: #6f2da8;
-  --signal-cyan: #1a6b7c;
+  /* ===========================================
+   * NEUTRAL PALETTE
+   * Grayscale spectrum from dark to light
+   * =========================================== */
+
+  /* Dark tones */
+  --graphite: #0d0d0d; /* Near black, primary text */
+  --ink: #1a1a1a; /* Dark backgrounds, text */
+  --branch: #1c1f24; /* Primary brand dark */
+  --iron: #2d2d2d; /* Hover states for dark elements */
+  --slate: #404040; /* Secondary dark */
+  --zinc: #525252; /* Tertiary dark */
+
+  /* Mid tones */
+  --steel: #595959; /* Muted text, placeholders */
+  --aluminum: #9e9e9e; /* Disabled text */
+
+  /* Light tones */
+  --chrome: #d0d0d0; /* Borders, dividers */
+  --silver: #dedede; /* Active backgrounds */
+  --platinum: #e8e8e8; /* Hover backgrounds */
+  --frost: #f5f5f5; /* Subtle backgrounds */
+  --paper: #fafafa; /* Primary background */
+
+  /* ===========================================
+   * SIGNAL COLORS
+   * Semantic colors for feedback and actions
+   * =========================================== */
+
+  --signal-blue: #00449e; /* Links, information */
+  --signal-red: #c41e1e; /* Errors, destructive */
+  --signal-green: #00794c; /* Success, confirmation */
+  --signal-amber: #b8860b; /* Warnings, attention */
+  --signal-purple: #6f2da8; /* Special, highlight */
+  --signal-cyan: #1a6b7c; /* Info variant */
+
+  /* ===========================================
+   * FUNCTIONAL TOKENS
+   * Semantic mappings for consistent usage
+   * =========================================== */
+
+  /* Text */
+  --color-text-primary: var(--graphite);
+  --color-text-secondary: var(--steel);
+  --color-text-muted: var(--aluminum);
+  --color-text-inverse: var(--paper);
+  --color-text-link: var(--signal-blue);
+
+  /* Backgrounds */
+  --color-bg-primary: var(--paper);
+  --color-bg-secondary: var(--frost);
+  --color-bg-tertiary: var(--platinum);
+  --color-bg-inverse: var(--ink);
+  --color-bg-hover: var(--frost);
+  --color-bg-active: var(--platinum);
+
+  /* Borders */
+  --color-border-default: var(--chrome);
+  --color-border-strong: var(--graphite);
+  --color-border-muted: var(--silver);
+
+  /* ===========================================
+   * TYPOGRAPHY
+   * Type scale and font stacks
+   * =========================================== */
+
+  /* Font families */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", "Roboto Mono", Menlo, Monaco, Consolas, monospace;
+
+  /* Type scale */
+  --text-xs: 0.6875rem; /* 11px */
+  --text-sm: 0.8125rem; /* 13px */
+  --text-base: 0.875rem; /* 14px */
+  --text-md: 0.9375rem; /* 15px */
+  --text-lg: 1rem; /* 16px */
+  --text-xl: 1.125rem; /* 18px */
+  --text-2xl: 1.25rem; /* 20px */
+
+  /* Line heights */
+  --leading-tight: 1.2;
+  --leading-snug: 1.3;
+  --leading-normal: 1.4;
+  --leading-relaxed: 1.5;
+
+  /* Font weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* ===========================================
+   * SPACING
+   * 7px base unit scale
+   * =========================================== */
+
+  --space-0: 0;
+  --space-1: 0.175rem; /* 2.8px - micro */
+  --space-2: 0.35rem; /* 5.6px - tight */
+  --space-3: 0.4375rem; /* 7px - base */
+  --space-4: 0.7rem; /* 11.2px - comfortable */
+  --space-5: 0.875rem; /* 14px - standard */
+  --space-6: 1.75rem; /* 28px - large */
+  --space-7: 2.625rem; /* 42px - section */
+  --space-8: 3.5rem; /* 56px - page */
+
+  /* ===========================================
+   * SHADOWS
+   * Offset shadow system for brutalist depth
+   * =========================================== */
+
+  --shadow-offset: 2px 2px 0px 0px var(--chrome);
+  --shadow-offset-dark: 2px 2px 0px 0px var(--aluminum);
+  --shadow-offset-none: none;
+
+  /* ===========================================
+   * BORDERS
+   * =========================================== */
+
+  --border-width-thin: 1px;
+  --border-width-medium: 2px;
+  --radius-none: 0;
+  --radius-full: 9999px; /* Only for Radio buttons */
 }

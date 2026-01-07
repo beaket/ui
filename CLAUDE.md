@@ -20,7 +20,7 @@ This is a **copy-paste component library** (like shadcn/ui). Users copy individu
 This library follows a **brutalist design system**:
 
 - **No gradients** - Flat colors only
-- **No shadows** - No box-shadow, drop-shadow
+- **Offset shadows only** - 2px 2px offset shadows for interactive elements (no blur/decorative shadows)
 - **No border-radius** - Sharp rectangular corners (except Radio which is circular by nature)
 - **No decorative elements** - No opacity effects for styling
 - **Use design tokens** - Always use CSS variables from `styles.css`
@@ -29,21 +29,38 @@ This library follows a **brutalist design system**:
 
 ```css
 /* Neutral palette */
---branch, --graphite, --ink, --paper, --steel, --chrome
---iron, --slate, --zinc, --aluminum, --silver, --platinum, --frost
+--graphite, --ink, --branch, --iron, --slate, --zinc   /* Dark tones */
+--steel, --aluminum                                     /* Mid tones */
+--chrome, --silver, --platinum, --frost, --paper        /* Light tones */
 
 /* Signal colors */
 --signal-blue, --signal-red, --signal-green, --signal-amber, --signal-purple, --signal-cyan
+
+/* Shadows (offset only, no blur) */
+--shadow-offset: 2px 2px 0px 0px var(--chrome);       /* Interactive elements */
+--shadow-offset-dark: 2px 2px 0px 0px var(--aluminum); /* Overlays (Dialog, etc.) */
 ```
 
 ### Styling Rules
 
-| Do                        | Don't                                     |
-| ------------------------- | ----------------------------------------- |
-| `bg-[var(--paper)]`       | `bg-white` (except where contrast needed) |
-| `text-[var(--steel)]`     | `opacity-50`                              |
-| `border-[var(--chrome)]`  | `rounded-lg`                              |
-| `hover:bg-[var(--frost)]` | `shadow-md`                               |
+| Do                          | Don't                                     |
+| --------------------------- | ----------------------------------------- |
+| `bg-[var(--paper)]`         | `bg-white` (except where contrast needed) |
+| `text-[var(--steel)]`       | `opacity-50`                              |
+| `border-[var(--chrome)]`    | `rounded-lg`                              |
+| `shadow-offset`             | `shadow-md`, `shadow-lg` (blur shadows)   |
+| `hover:shadow-offset-hover` | gradients, decorative effects             |
+
+### Shadow States
+
+Interactive elements use offset shadows with state transitions:
+
+| State    | Shadow                           |
+| -------- | -------------------------------- |
+| Default  | `2px 2px` (shadow-offset)        |
+| Hover    | `3px 3px` (shadow-offset-hover)  |
+| Active   | `1px 1px` (shadow-offset-active) |
+| Disabled | `none`                           |
 
 ## Component Template
 
