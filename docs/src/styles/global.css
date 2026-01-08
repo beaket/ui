@@ -129,17 +129,17 @@ pre code {
   padding: 0;
 }
 
-a {
+a:not([data-slot]) {
   color: var(--ink);
   text-decoration: none;
 }
-.main a {
+.main a:not([data-slot]) {
   text-decoration: underline;
 }
-.main a:hover {
+.main a:not([data-slot]):hover {
   background: var(--frost);
 }
-.main a:focus {
+.main a:not([data-slot]):focus {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
 }

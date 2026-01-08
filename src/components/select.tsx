@@ -31,7 +31,7 @@ function SelectTrigger({ className, size = "default", children, ...props }: Sele
       data-size={size}
       className={cn(
         "flex w-full items-center justify-between gap-2",
-        "border border-[var(--chrome)] bg-[var(--paper)] px-3 py-2 text-sm text-[var(--ink)]",
+        "border border-[var(--graphite)] bg-[var(--paper)] px-3 py-2 text-sm text-[var(--ink)]",
         "focus:border-[var(--signal-blue)] focus:outline-none",
         "disabled:cursor-not-allowed disabled:border-dashed disabled:bg-[var(--frost)] disabled:text-[var(--steel)]",
         "aria-[invalid=true]:border-[var(--signal-red)]",
