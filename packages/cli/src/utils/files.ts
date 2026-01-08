@@ -74,7 +74,7 @@ async function detectPackageManager(): Promise<"npm" | "pnpm" | "yarn" | "bun"> 
   if (await fs.pathExists(path.join(cwd, "yarn.lock"))) {
     return "yarn";
   }
-  if (await fs.pathExists(path.join(cwd, "bun.lockb"))) {
+  if (await fs.pathExists(path.join(cwd, "bun.lock"))) {
     return "bun";
   }
 
