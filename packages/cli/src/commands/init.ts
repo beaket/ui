@@ -2,6 +2,7 @@ import fs from "fs-extra";
 import path from "path";
 import pc from "picocolors";
 import prompts from "prompts";
+import CSS_VARIABLES from "../../../../src/css-variables.css";
 import { writeConfig, type BeaketConfig } from "../utils/config.ts";
 
 interface TsConfig {
@@ -72,45 +73,6 @@ async function detectCssPath(): Promise<string> {
 
   return "src/index.css";
 }
-
-const CSS_VARIABLES = `
-/* Beaket UI Design System */
-@theme {
-  --color-inverse: var(--paper);
-  --shadow-offset: 2px 2px 0px 0px var(--chrome);
-  --shadow-offset-dark: 2px 2px 0px 0px var(--aluminum);
-  --shadow-offset-hover: 3px 3px 0px 0px var(--chrome);
-  --shadow-offset-active: 1px 1px 0px 0px var(--chrome);
-}
-
-:root {
-  --graphite: #0d0d0d;
-  --ink: #1a1a1a;
-  --branch: #1c1f24;
-  --iron: #2d2d2d;
-  --slate: #404040;
-  --zinc: #525252;
-  --steel: #595959;
-  --aluminum: #9e9e9e;
-  --chrome: #d0d0d0;
-  --silver: #dedede;
-  --platinum: #e8e8e8;
-  --frost: #f5f5f5;
-  --paper: #fafafa;
-  --signal-blue: #00449e;
-  --signal-red: #c41e1e;
-  --signal-red-hover: #b71c1c;
-  --signal-red-active: #9a1919;
-  --signal-green: #00794c;
-  --signal-green-hover: #0f5f42;
-  --signal-green-active: #0a4a32;
-  --signal-amber: #b8860b;
-  --signal-amber-hover: #9a7209;
-  --signal-amber-active: #7a5a07;
-  --signal-purple: #6f2da8;
-  --signal-cyan: #1a6b7c;
-}
-`;
 
 interface InitOptions {
   yes?: boolean;

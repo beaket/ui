@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
 
-CLI="node $(pwd)/packages/cli/bin/cli.js"
+# Build CLI first
+pnpm --filter @beaket/ui build
+
+CLI="node $(pwd)/packages/cli/dist/index.js"
 TEMP_DIR=$(mktemp -d)
 cd "$TEMP_DIR"
 
