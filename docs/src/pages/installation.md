@@ -5,70 +5,29 @@ title: Installation
 
 # Installation
 
-## Quick Start
-
-```bash
-npx @beaket/ui init
-npx @beaket/ui add button
-```
-
 ## Requirements
 
 - React 18+
 - Tailwind CSS 4+
-- Path alias `@/` configured
 
-## Tailwind CSS Setup
+## Vite
 
-### Vite / React Router
+1. Install Tailwind CSS:
 
 ```bash
-pnpm add -D tailwindcss @tailwindcss/vite
+npm install -D tailwindcss @tailwindcss/vite
 ```
 
+2. Update `vite.config.ts`:
+
 ```ts
-// vite.config.ts
 import tailwindcss from "@tailwindcss/vite";
-
-export default defineConfig({
-  plugins: [tailwindcss()],
-});
-```
-
-### Next.js
-
-```bash
-pnpm add -D tailwindcss @tailwindcss/postcss postcss
-```
-
-```js
-// postcss.config.mjs
-export default {
-  plugins: {
-    "@tailwindcss/postcss": {},
-  },
-};
-```
-
-### CSS File
-
-Add to your main CSS file (required for all frameworks):
-
-```css
-@import "tailwindcss";
-```
-
-## Path Alias Setup
-
-Components use `@/` imports.
-
-### Vite
-
-```ts
-// vite.config.ts
+import react from "@vitejs/plugin-react";
 import path from "path";
+import { defineConfig } from "vite";
 
 export default defineConfig({
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -77,25 +36,45 @@ export default defineConfig({
 });
 ```
 
+3. Add to `compilerOptions` in `tsconfig.app.json`:
+
 ```json
-// tsconfig.json or tsconfig.app.json
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
+"baseUrl": ".",
+"paths": {
+  "@/*": ["./src/*"]
 }
 ```
 
-### Next.js
+4. Add to `src/index.css`:
 
-Already configured by default.
+```css
+@import "tailwindcss";
+```
 
-## What init does
+5. Initialize Beaket UI:
 
-- Creates `beaket.json` configuration
-- Adds CSS variables to your stylesheet
-- Creates `cn()` utility function
-- Installs `clsx` and `tailwind-merge`
+```bash
+npx @beaket/ui init
+```
+
+6. Add a component:
+
+```bash
+npx @beaket/ui add button
+```
+
+## Next.js
+
+Tailwind CSS is pre-configured in Next.js.
+
+1. Initialize Beaket UI:
+
+```bash
+npx @beaket/ui init
+```
+
+2. Add a component:
+
+```bash
+npx @beaket/ui add button
+```

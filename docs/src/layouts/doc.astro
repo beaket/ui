@@ -34,7 +34,6 @@ const currentYear = new Date().getFullYear();
         <div class="sidebar-nav">
           <div class="sidebar-section">
             <div class="sidebar-section-title">Getting Started</div>
-            <a href="/ui/" class:list={["sidebar-link", { active: currentPath === '/ui/' }]}>Introduction</a>
             <a href="/ui/installation" class:list={["sidebar-link", { active: currentPath.includes('/installation') }]}>Installation</a>
           </div>
 
@@ -45,11 +44,6 @@ const currentYear = new Date().getFullYear();
             ))}
           </div>
 
-          <div class="sidebar-section">
-            <div class="sidebar-section-title">Links</div>
-            <a href="https://github.com/beaket/ui" class="sidebar-link">GitHub</a>
-            <a href="https://www.npmjs.com/package/@beaket/ui" class="sidebar-link">npm</a>
-          </div>
         </div>
       </nav>
 
@@ -74,6 +68,25 @@ const currentYear = new Date().getFullYear();
         toggle.setAttribute('aria-expanded', String(!expanded));
         nav?.classList.toggle('open');
       });
+
+      // Add copy buttons to all code blocks
+      document.querySelectorAll('pre').forEach((pre) => {
+        const button = document.createElement('button');
+        button.className = 'copy-button';
+        button.textContent = 'Copy';
+        button.addEventListener('click', async () => {
+          const code = pre.querySelector('code')?.textContent || pre.textContent || '';
+          await navigator.clipboard.writeText(code);
+          button.textContent = 'Copied';
+          button.classList.add('copied');
+          setTimeout(() => {
+            button.textContent = 'Copy';
+            button.classList.remove('copied');
+          }, 2000);
+        });
+        pre.appendChild(button);
+      });
+
     </script>
   </body>
 </html>
