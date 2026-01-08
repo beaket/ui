@@ -106,33 +106,42 @@ const CSS_VARIABLES = `
 }
 `;
 
-export async function init() {
+interface InitOptions {
+  yes?: boolean;
+}
+
+export async function init(options: InitOptions) {
   console.log();
   console.log(pc.bold("Initializing Beaket UI..."));
   console.log();
 
-  // Auto-detect defaults based on project structure
   const detectedComponentsPath = await detectAliasPath();
   const detectedCssPath = await detectCssPath();
 
-  const response = await prompts([
-    {
-      type: "text",
-      name: "components",
-      message: "Where should components be installed?",
-      initial: detectedComponentsPath,
-    },
-    {
-      type: "text",
-      name: "css",
-      message: "Where is your Tailwind CSS file?",
-      initial: detectedCssPath,
-    },
-  ]);
+  let response: { components: string; css: string };
 
-  if (!response.components) {
-    console.log(pc.red("Cancelled."));
-    process.exit(1);
+  if (options.yes) {
+    response = { components: detectedComponentsPath, css: detectedCssPath };
+  } else {
+    response = await prompts([
+      {
+        type: "text",
+        name: "components",
+        message: "Where should components be installed?",
+        initial: detectedComponentsPath,
+      },
+      {
+        type: "text",
+        name: "css",
+        message: "Where is your Tailwind CSS file?",
+        initial: detectedCssPath,
+      },
+    ]);
+
+    if (!response.components) {
+      console.log(pc.red("Cancelled."));
+      process.exit(1);
+    }
   }
 
   // Write beaket.ui.json (only components path)
