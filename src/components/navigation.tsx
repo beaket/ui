@@ -36,7 +36,7 @@ function NavigationLink({ className, active, ...props }: NavigationLinkProps) {
         "border border-[var(--graphite)] bg-white text-[var(--ink)]",
         "shadow-offset hover:shadow-offset-hover",
         "hover:bg-[var(--frost)]",
-        "data-[active]:bg-[var(--ink)] data-[active]:text-[var(--paper)]",
+        "data-[active]:text-inverse data-[active]:bg-[var(--ink)]",
         className,
       )}
       aria-current={active ? "page" : undefined}

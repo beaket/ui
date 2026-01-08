@@ -18,7 +18,6 @@ export function Input({ className, type = "text", ...props }: Props) {
         "bg-white text-[var(--ink)]",
         "border border-[var(--graphite)]",
         "placeholder:text-[var(--steel)]",
-        "hover:border-[var(--ink)]",
         "focus:ring-2 focus:ring-[var(--signal-blue)] focus:ring-offset-1 focus:outline-none",
         "disabled:cursor-not-allowed disabled:border-dashed disabled:border-[var(--chrome)] disabled:bg-[var(--frost)] disabled:text-[var(--steel)]",
         "aria-[invalid=true]:border-[var(--signal-red)] aria-[invalid=true]:focus:ring-[var(--signal-red)]",

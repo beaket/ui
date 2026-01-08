@@ -2,6 +2,12 @@
 
 @theme {
   /* ===========================================
+   * COLOR UTILITIES
+   * Text colors based on design tokens
+   * =========================================== */
+  --color-inverse: var(--paper);
+
+  /* ===========================================
    * SHADOW UTILITIES
    * Offset shadows for brutalist design
    * =========================================== */
