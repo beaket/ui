@@ -175,6 +175,30 @@ summary:focus-visible {
   border-bottom: none;
 }
 
+/* Component prev/next navigation */
+.component-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--chrome);
+}
+
+.component-nav-link {
+  font-size: 0.75rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.component-nav-link.next {
+  text-align: right;
+}
+
+.component-nav-link:hover {
+  text-decoration: underline;
+}
+
 /* Sidebar toggle (hidden on desktop) */
 .sidebar-header {
   display: flex;
