@@ -57,6 +57,8 @@ export default defineConfig({
 npx @beaket/ui init
 ```
 
+This adds [design tokens](/ui/tokens) (colors, shadows) to your CSS file.
+
 6. Add components:
 
 ```bash
@@ -83,17 +85,4 @@ npx @beaket/ui init
 npx @beaket/ui add button
 ```
 
-## CLI Options
-
-Use `--help` to see available options:
-
-```bash
-npx @beaket/ui --help
-npx @beaket/ui init --help
-npx @beaket/ui add --help
-```
-
-Common options:
-
-- `init -y` - Skip prompts and use defaults
-- `add --overwrite` - Overwrite existing component files
+See [CLI](/ui/cli) for all available options.

@@ -35,6 +35,8 @@ const currentYear = new Date().getFullYear();
           <div class="sidebar-section">
             <div class="sidebar-section-title">Getting Started</div>
             <a href="/ui/installation" class:list={["sidebar-link", { active: currentPath.includes('/installation') }]}>Installation</a>
+            <a href="/ui/cli" class:list={["sidebar-link", { active: currentPath.includes('/cli') }]}>CLI</a>
+            <a href="/ui/tokens" class:list={["sidebar-link", { active: currentPath.includes('/tokens') }]}>Design Tokens</a>
           </div>
 
           <div class="sidebar-section">
@@ -42,6 +44,10 @@ const currentYear = new Date().getFullYear();
             {components.map((component) => (
               <a href={`/ui/components/${component.name}`} class:list={["sidebar-link", { active: currentPath.includes(`/components/${component.name}`) }]}>{component.docs.title}</a>
             ))}
+          </div>
+
+          <div class="sidebar-section">
+            <a href="/ui/changelog" class:list={["sidebar-link", { active: currentPath.includes('/changelog') }]}>Changelog</a>
           </div>
 
         </div>
