@@ -178,7 +178,7 @@ summary:focus-visible {
 /* Sidebar toggle (hidden on desktop) */
 .sidebar-header {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 0.5rem;
 }
 
