@@ -1,5 +1,31 @@
 # @beaket/ui
 
+## 1.9.0
+
+### Minor Changes
+
+- [#113](https://github.com/beaket/ui/pull/113) [`4e8f921`](https://github.com/beaket/ui/commit/4e8f92132854c5dfd5814dd64ccf33086e3adf63) Thanks [@jihnma](https://github.com/jihnma)! - Add support for installing multiple components at once: `npx @beaket/ui add alert button label`
+
+- [#109](https://github.com/beaket/ui/pull/109) [`028aa68`](https://github.com/beaket/ui/commit/028aa68803bbda585ff75c91253da96b0fe07ba4) Thanks [@jihnma](https://github.com/jihnma)! - ### Breaking Changes
+  - **Table**: Migrated to compound component pattern
+    - Before: `import { Table, TableBody, TableCell, ... } from "@beaket/ui"`
+    - After: `import { Table } from "@beaket/ui"` and use `Table.Body`, `Table.Cell`, etc.
+
+  ### New Features
+  - **Input**: Added `prefix` and `suffix` props for icon support
+  - **Sheet**: Added `fullScreen` prop for full-width mobile navigation
+  - **Button**: Hover/active states now use CSS variables for easier customization
+    - Added `--signal-green-hover`, `--signal-green-active`
+    - Added `--signal-red-hover`, `--signal-red-active`
+    - Added `--signal-amber-hover`, `--signal-amber-active`
+
+### Patch Changes
+
+- [#111](https://github.com/beaket/ui/pull/111) [`df61ccd`](https://github.com/beaket/ui/commit/df61ccdd5daf2b930eecec26033b627c08daebb9) Thanks [@jihnma](https://github.com/jihnma)! - Refactor CSS variables to use single source of truth
+  - Extract core CSS variables to `src/css-variables.css`
+  - CLI now imports from generated file instead of hardcoding
+  - Add `pnpm sync:css` script to sync variables to CLI
+
 ## 1.8.0
 
 ### Minor Changes
