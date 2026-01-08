@@ -1,6 +1,6 @@
 {
   "name": "@beaket/ui",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "CLI tool for adding Beaket UI components to your project",
   "type": "module",
   "scripts": {
