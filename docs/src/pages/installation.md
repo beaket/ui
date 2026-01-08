@@ -7,8 +7,8 @@ title: Installation
 
 ## Requirements
 
-- [React](https://react.dev) 18+
-- [Tailwind CSS](https://tailwindcss.com) 4+
+- React 18+
+- Tailwind CSS 4+
 
 ## Vite
 
