@@ -1,5 +1,5 @@
 ---
-"@beaket/ui": major
+"@beaket/ui": minor
 ---
 
 ### Breaking Changes
