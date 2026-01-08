@@ -20,8 +20,8 @@ program
 
 program
   .command("add")
-  .description("Add a component to your project")
-  .argument("<component>", "Component name to add")
+  .description("Add components to your project")
+  .argument("<components...>", "Component names to add")
   .option("-o, --overwrite", "Overwrite existing files")
   .action(add);
 
