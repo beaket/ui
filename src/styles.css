@@ -56,8 +56,14 @@
 
   --signal-blue: #00449e; /* Links, information */
   --signal-red: #c41e1e; /* Errors, destructive */
+  --signal-red-hover: #b71c1c;
+  --signal-red-active: #9a1919;
   --signal-green: #00794c; /* Success, confirmation */
+  --signal-green-hover: #0f5f42;
+  --signal-green-active: #0a4a32;
   --signal-amber: #b8860b; /* Warnings, attention */
+  --signal-amber-hover: #9a7209;
+  --signal-amber-active: #7a5a07;
   --signal-purple: #6f2da8; /* Special, highlight */
   --signal-cyan: #1a6b7c; /* Info variant */
 

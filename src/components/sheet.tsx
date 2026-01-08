@@ -42,11 +42,24 @@ interface Props {
    * Side from which the sheet slides in
    */
   side?: "left" | "right" | "top" | "bottom";
+
+  /**
+   * When true, the sheet takes up the full width (for left/right sides).
+   * Useful for mobile navigation menus.
+   */
+  fullScreen?: boolean;
 }
 
 const sidePositions = {
   right: "inset-y-0 right-0 h-full w-3/4 sm:max-w-md",
   left: "inset-y-0 left-0 h-full w-3/4 sm:max-w-md",
+  top: "inset-x-0 top-0 w-full",
+  bottom: "inset-x-0 bottom-0 w-full",
+};
+
+const sidePositionsFullScreen = {
+  right: "inset-y-0 right-0 h-full w-full",
+  left: "inset-y-0 left-0 h-full w-full",
   top: "inset-x-0 top-0 w-full",
   bottom: "inset-x-0 bottom-0 w-full",
 };
@@ -68,6 +81,7 @@ export function Sheet({
   onOpenChange,
   closeWhen,
   side = "right",
+  fullScreen = false,
 }: Props) {
   const [internalOpen, setInternalOpen] = useState(false);
 
@@ -112,7 +126,7 @@ export function Sheet({
           data-slot="sheet-content"
           className={cn(
             "shadow-offset-dark fixed z-50 gap-4 border border-[var(--chrome)] bg-[var(--paper)] p-4",
-            sidePositions[side],
+            fullScreen ? sidePositionsFullScreen[side] : sidePositions[side],
             sideAnimations[side],
           )}
           onInteractOutside={preventClose ? (e) => e.preventDefault() : undefined}
