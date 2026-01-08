@@ -22,26 +22,33 @@ const components = registry.components;
   <body>
     <div class="layout">
       <nav class="sidebar">
-        <a href="/ui/" class="sidebar-title">Beaket UI</a>
-        <div class="sidebar-version">v{pkg.version}</div>
-
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">Getting Started</div>
-          <a href="/ui/" class:list={["sidebar-link", { active: currentPath === '/ui/' }]}>Introduction</a>
-          <a href="/ui/installation" class:list={["sidebar-link", { active: currentPath.includes('/installation') }]}>Installation</a>
+        <div class="sidebar-header">
+          <a href="/ui/" class="sidebar-title">Beaket UI</a>
+          <span class="sidebar-version">v{pkg.version}</span>
+          <button class="sidebar-toggle" aria-label="Toggle menu" aria-expanded="false">
+            <span class="sidebar-toggle-icon"></span>
+          </button>
         </div>
 
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">Components</div>
-          {components.map((component) => (
-            <a href={`/ui/components/${component.name}`} class:list={["sidebar-link", { active: currentPath.includes(`/components/${component.name}`) }]}>{component.docs.title}</a>
-          ))}
-        </div>
+        <div class="sidebar-nav">
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">Getting Started</div>
+            <a href="/ui/" class:list={["sidebar-link", { active: currentPath === '/ui/' }]}>Introduction</a>
+            <a href="/ui/installation" class:list={["sidebar-link", { active: currentPath.includes('/installation') }]}>Installation</a>
+          </div>
 
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">Links</div>
-          <a href="https://github.com/beaket/ui" class="sidebar-link">GitHub</a>
-          <a href="https://www.npmjs.com/package/@beaket/ui" class="sidebar-link">npm</a>
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">Components</div>
+            {components.map((component) => (
+              <a href={`/ui/components/${component.name}`} class:list={["sidebar-link", { active: currentPath.includes(`/components/${component.name}`) }]}>{component.docs.title}</a>
+            ))}
+          </div>
+
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">Links</div>
+            <a href="https://github.com/beaket/ui" class="sidebar-link">GitHub</a>
+            <a href="https://www.npmjs.com/package/@beaket/ui" class="sidebar-link">npm</a>
+          </div>
         </div>
       </nav>
 
@@ -49,5 +56,14 @@ const components = registry.components;
         <slot />
       </main>
     </div>
+    <script>
+      const toggle = document.querySelector('.sidebar-toggle');
+      const nav = document.querySelector('.sidebar-nav');
+      toggle?.addEventListener('click', () => {
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!expanded));
+        nav?.classList.toggle('open');
+      });
+    </script>
   </body>
 </html>

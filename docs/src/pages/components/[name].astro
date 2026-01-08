@@ -48,6 +48,11 @@ const sectionData = sections.map((sectionName) => ({
   displayName: formatExportName(sectionName),
   source: parsedSources.get(sectionName) ?? '',
 }));
+
+// Get prev/next components
+const currentIndex = registry.components.findIndex((c) => c.name === name);
+const prevComponent = currentIndex > 0 ? registry.components[currentIndex - 1] : null;
+const nextComponent = currentIndex < registry.components.length - 1 ? registry.components[currentIndex + 1] : null;
 ---
 
 <Layout title={docs?.title ?? name}>
@@ -56,8 +61,8 @@ const sectionData = sections.map((sectionName) => ({
     <header>
       <h1>{docs?.title ?? name}</h1>
       <p class="tagline">{docs?.tagline ?? component.description}</p>
-      <div class="mt-2 border border-[var(--chrome)] bg-[var(--paper)] p-4">
-        <StoryPreview componentName={name} client:visible />
+      <div class="preview-box mt-2 border border-[var(--chrome)] bg-[var(--paper)] p-4">
+        <StoryPreview componentName={name} storyName={docs?.previewStory} client:visible />
       </div>
     </header>
 
@@ -93,5 +98,19 @@ const sectionData = sections.map((sectionName) => ({
       <h2>Props</h2>
       <PropsTable props={props} />
     </section>
+
+    <!-- Prev/Next Navigation -->
+    <nav class="component-nav">
+      {prevComponent ? (
+        <a href={`/ui/components/${prevComponent.name}`} class="component-nav-link">
+          ← {prevComponent.docs.title}
+        </a>
+      ) : <div />}
+      {nextComponent ? (
+        <a href={`/ui/components/${nextComponent.name}`} class="component-nav-link next">
+          {nextComponent.docs.title} →
+        </a>
+      ) : <div />}
+    </nav>
   </div>
 </Layout>
