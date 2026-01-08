@@ -27,7 +27,7 @@ import { twMerge } from "tailwind-merge";
 import { Button } from "./button";
 import { Checkbox } from "./checkbox";
 import { Input } from "./input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./table";
+import { Table } from "./table";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
@@ -161,11 +161,11 @@ export function DataTable<TData, TValue>({
 
       <div className="overflow-x-auto border border-[var(--chrome)] bg-[var(--paper)]">
         <Table className="min-w-full">
-          <TableHeader>
+          <Table.Header>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <Table.Row key={headerGroup.id}>
                 {selectable && (
-                  <TableHead className="w-12">
+                  <Table.Head className="w-12">
                     <Checkbox
                       checked={
                         table.getIsAllPageRowsSelected() ||
@@ -174,14 +174,14 @@ export function DataTable<TData, TValue>({
                       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                       aria-label="Select all"
                     />
-                  </TableHead>
+                  </Table.Head>
                 )}
                 {headerGroup.headers.map((header) => {
                   const canSort = header.column.getCanSort();
                   const sortDirection = header.column.getIsSorted();
 
                   return (
-                    <TableHead
+                    <Table.Head
                       key={header.id}
                       className={canSort ? "cursor-pointer select-none" : ""}
                       style={{ width: header.getSize() }}
@@ -203,16 +203,16 @@ export function DataTable<TData, TValue>({
                           )}
                         </div>
                       )}
-                    </TableHead>
+                    </Table.Head>
                   );
                 })}
-              </TableRow>
+              </Table.Row>
             ))}
-          </TableHeader>
-          <TableBody>
+          </Table.Header>
+          <Table.Body>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
+                <Table.Row
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() => onRowClick?.(row.original)}
@@ -225,7 +225,7 @@ export function DataTable<TData, TValue>({
                   )}
                 >
                   {selectable && (
-                    <TableCell
+                    <Table.Cell
                       onClick={(e) => e.stopPropagation()}
                       className={compact ? "py-2" : ""}
                     >
@@ -234,30 +234,30 @@ export function DataTable<TData, TValue>({
                         onCheckedChange={(value) => row.toggleSelected(!!value)}
                         aria-label="Select row"
                       />
-                    </TableCell>
+                    </Table.Cell>
                   )}
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell
+                    <Table.Cell
                       key={cell.id}
                       className={compact ? "py-2" : ""}
                       style={{ width: cell.column.getSize() }}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
+                    </Table.Cell>
                   ))}
-                </TableRow>
+                </Table.Row>
               ))
             ) : (
-              <TableRow>
-                <TableCell
+              <Table.Row>
+                <Table.Cell
                   colSpan={columns.length + (selectable ? 1 : 0)}
                   className="h-64 text-center"
                 >
                   {emptyState || <div className="text-[var(--steel)]">{emptyMessage}</div>}
-                </TableCell>
-              </TableRow>
+                </Table.Cell>
+              </Table.Row>
             )}
-          </TableBody>
+          </Table.Body>
         </Table>
       </div>
 

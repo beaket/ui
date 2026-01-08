@@ -127,6 +127,41 @@ export const PreventClose: Story = {
   },
 };
 
+export const FullScreen: Story = {
+  args: {
+    fullScreen: true,
+    side: "left",
+    trigger: <Button>Open Full Screen</Button>,
+    children: (
+      <>
+        <Sheet.Header>
+          <Sheet.Title>Mobile Navigation</Sheet.Title>
+          <Sheet.Description>Full screen sheet for mobile navigation menus.</Sheet.Description>
+        </Sheet.Header>
+        <div className="flex flex-col gap-2 py-4">
+          <a href="#" className="block py-2 text-[var(--ink)] hover:text-[var(--signal-blue)]">
+            Home
+          </a>
+          <a href="#" className="block py-2 text-[var(--ink)] hover:text-[var(--signal-blue)]">
+            Products
+          </a>
+          <a href="#" className="block py-2 text-[var(--ink)] hover:text-[var(--signal-blue)]">
+            About
+          </a>
+          <a href="#" className="block py-2 text-[var(--ink)] hover:text-[var(--signal-blue)]">
+            Contact
+          </a>
+        </div>
+        <Sheet.Footer>
+          <Sheet.Close>
+            <Button variant="outline">Close</Button>
+          </Sheet.Close>
+        </Sheet.Footer>
+      </>
+    ),
+  },
+};
+
 function ControlledSheetExample() {
   const [open, setOpen] = useState(false);
 
@@ -215,6 +250,18 @@ export const AllStates = () => (
       <Sheet.Footer>
         <Sheet.Close>
           <Button>Got it</Button>
+        </Sheet.Close>
+      </Sheet.Footer>
+    </Sheet>
+
+    <Sheet fullScreen side="left" trigger={<Button variant="success">Full Screen</Button>}>
+      <Sheet.Header>
+        <Sheet.Title>Full Screen Sheet</Sheet.Title>
+        <Sheet.Description>Takes up full width.</Sheet.Description>
+      </Sheet.Header>
+      <Sheet.Footer>
+        <Sheet.Close>
+          <Button variant="outline">Close</Button>
         </Sheet.Close>
       </Sheet.Footer>
     </Sheet>

@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Eye, EyeOff, Mail, Search, X } from "lucide-react";
+import { useState } from "react";
 import { expect, fn, userEvent, within } from "storybook/test";
 import { Input } from "./input";
 
@@ -73,6 +75,66 @@ export const Invalid: Story = {
   },
 };
 
+export const WithPrefix: Story = {
+  args: {
+    placeholder: "Search...",
+    prefix: <Search />,
+  },
+};
+
+export const WithSuffix: Story = {
+  args: {
+    placeholder: "Email address",
+    suffix: <Mail />,
+  },
+};
+
+export const WithPrefixAndSuffix: Story = {
+  render: () => {
+    const [value, setValue] = useState("");
+    return (
+      <Input
+        placeholder="Search..."
+        prefix={<Search />}
+        suffix={
+          value && (
+            <button
+              type="button"
+              onClick={() => setValue("")}
+              className="cursor-pointer hover:text-[var(--ink)]"
+            >
+              <X />
+            </button>
+          )
+        }
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+    );
+  },
+};
+
+export const PasswordToggle: Story = {
+  render: () => {
+    const [showPassword, setShowPassword] = useState(false);
+    return (
+      <Input
+        type={showPassword ? "text" : "password"}
+        placeholder="Password"
+        suffix={
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="cursor-pointer hover:text-[var(--ink)]"
+          >
+            {showPassword ? <EyeOff /> : <Eye />}
+          </button>
+        }
+      />
+    );
+  },
+};
+
 // Compositions for docs
 export const AllStates = () => (
   <div className="flex w-64 flex-col gap-4">
@@ -81,6 +143,8 @@ export const AllStates = () => (
     <Input placeholder="Disabled" disabled />
     <Input defaultValue="Read-only" readOnly />
     <Input defaultValue="Invalid" aria-invalid="true" />
+    <Input placeholder="With prefix" prefix={<Search />} />
+    <Input placeholder="With suffix" suffix={<Mail />} />
   </div>
 );
 

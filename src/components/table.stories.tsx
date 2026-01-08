@@ -1,15 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-  TableSectionHeader,
-} from "./table";
+import { Table } from "./table";
 
 const meta: Meta<typeof Table> = {
   title: "UI/Table",
@@ -40,24 +30,24 @@ const invoices = [
 export const Default: Story = {
   render: () => (
     <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Invoice</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>Invoice</Table.Head>
+          <Table.Head>Status</Table.Head>
+          <Table.Head>Method</Table.Head>
+          <Table.Head className="text-right">Amount</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
         {invoices.map((invoice) => (
-          <TableRow key={invoice.id}>
-            <TableCell className="font-medium">{invoice.id}</TableCell>
-            <TableCell>{invoice.status}</TableCell>
-            <TableCell>{invoice.method}</TableCell>
-            <TableCell className="text-right">{invoice.amount}</TableCell>
-          </TableRow>
+          <Table.Row key={invoice.id}>
+            <Table.Cell className="font-medium">{invoice.id}</Table.Cell>
+            <Table.Cell>{invoice.status}</Table.Cell>
+            <Table.Cell>{invoice.method}</Table.Cell>
+            <Table.Cell className="text-right">{invoice.amount}</Table.Cell>
+          </Table.Row>
         ))}
-      </TableBody>
+      </Table.Body>
     </Table>
   ),
 };
@@ -65,25 +55,25 @@ export const Default: Story = {
 export const WithCaption: Story = {
   render: () => (
     <Table>
-      <TableCaption>A list of recent invoices.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Invoice</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+      <Table.Caption>A list of recent invoices.</Table.Caption>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>Invoice</Table.Head>
+          <Table.Head>Status</Table.Head>
+          <Table.Head>Method</Table.Head>
+          <Table.Head className="text-right">Amount</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
         {invoices.slice(0, 3).map((invoice) => (
-          <TableRow key={invoice.id}>
-            <TableCell className="font-medium">{invoice.id}</TableCell>
-            <TableCell>{invoice.status}</TableCell>
-            <TableCell>{invoice.method}</TableCell>
-            <TableCell className="text-right">{invoice.amount}</TableCell>
-          </TableRow>
+          <Table.Row key={invoice.id}>
+            <Table.Cell className="font-medium">{invoice.id}</Table.Cell>
+            <Table.Cell>{invoice.status}</Table.Cell>
+            <Table.Cell>{invoice.method}</Table.Cell>
+            <Table.Cell className="text-right">{invoice.amount}</Table.Cell>
+          </Table.Row>
         ))}
-      </TableBody>
+      </Table.Body>
     </Table>
   ),
 };
@@ -91,30 +81,30 @@ export const WithCaption: Story = {
 export const WithFooter: Story = {
   render: () => (
     <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Invoice</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>Invoice</Table.Head>
+          <Table.Head>Status</Table.Head>
+          <Table.Head>Method</Table.Head>
+          <Table.Head className="text-right">Amount</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
         {invoices.map((invoice) => (
-          <TableRow key={invoice.id}>
-            <TableCell className="font-medium">{invoice.id}</TableCell>
-            <TableCell>{invoice.status}</TableCell>
-            <TableCell>{invoice.method}</TableCell>
-            <TableCell className="text-right">{invoice.amount}</TableCell>
-          </TableRow>
+          <Table.Row key={invoice.id}>
+            <Table.Cell className="font-medium">{invoice.id}</Table.Cell>
+            <Table.Cell>{invoice.status}</Table.Cell>
+            <Table.Cell>{invoice.method}</Table.Cell>
+            <Table.Cell className="text-right">{invoice.amount}</Table.Cell>
+          </Table.Row>
         ))}
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">¥175,000</TableCell>
-        </TableRow>
-      </TableFooter>
+      </Table.Body>
+      <Table.Footer>
+        <Table.Row>
+          <Table.Cell colSpan={3}>Total</Table.Cell>
+          <Table.Cell className="text-right">¥175,000</Table.Cell>
+        </Table.Row>
+      </Table.Footer>
     </Table>
   ),
 };
@@ -122,24 +112,24 @@ export const WithFooter: Story = {
 export const WithShadow: Story = {
   render: () => (
     <Table shadow>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Invoice</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>Invoice</Table.Head>
+          <Table.Head>Status</Table.Head>
+          <Table.Head>Method</Table.Head>
+          <Table.Head className="text-right">Amount</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
         {invoices.slice(0, 3).map((invoice) => (
-          <TableRow key={invoice.id}>
-            <TableCell className="font-medium">{invoice.id}</TableCell>
-            <TableCell>{invoice.status}</TableCell>
-            <TableCell>{invoice.method}</TableCell>
-            <TableCell className="text-right">{invoice.amount}</TableCell>
-          </TableRow>
+          <Table.Row key={invoice.id}>
+            <Table.Cell className="font-medium">{invoice.id}</Table.Cell>
+            <Table.Cell>{invoice.status}</Table.Cell>
+            <Table.Cell>{invoice.method}</Table.Cell>
+            <Table.Cell className="text-right">{invoice.amount}</Table.Cell>
+          </Table.Row>
         ))}
-      </TableBody>
+      </Table.Body>
     </Table>
   ),
 };
@@ -147,37 +137,37 @@ export const WithShadow: Story = {
 export const WithSectionHeader: Story = {
   render: () => (
     <Table shadow>
-      <TableHeader>
-        <TableRow>
-          <TableHead>SKU</TableHead>
-          <TableHead>Product</TableHead>
-          <TableHead>Category</TableHead>
-          <TableHead className="text-right">Price</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow>
-          <TableCell className="font-mono text-xs">SPEC-001</TableCell>
-          <TableCell>Widget Pro</TableCell>
-          <TableCell>Hardware</TableCell>
-          <TableCell className="text-right font-mono">¥7,500</TableCell>
-        </TableRow>
-        <TableSectionHeader>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>SKU</Table.Head>
+          <Table.Head>Product</Table.Head>
+          <Table.Head>Category</Table.Head>
+          <Table.Head className="text-right">Price</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        <Table.Row>
+          <Table.Cell className="font-mono text-xs">SPEC-001</Table.Cell>
+          <Table.Cell>Widget Pro</Table.Cell>
+          <Table.Cell>Hardware</Table.Cell>
+          <Table.Cell className="text-right font-mono">¥7,500</Table.Cell>
+        </Table.Row>
+        <Table.SectionHeader>
           <th colSpan={4}>Accessories</th>
-        </TableSectionHeader>
-        <TableRow>
-          <TableCell className="font-mono text-xs">SPEC-002</TableCell>
-          <TableCell>USB Cable</TableCell>
-          <TableCell>Accessory</TableCell>
-          <TableCell className="text-right font-mono">Incl.</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell className="font-mono text-xs">SPEC-003</TableCell>
-          <TableCell>Power Adapter</TableCell>
-          <TableCell>Accessory</TableCell>
-          <TableCell className="text-right font-mono">¥1,500</TableCell>
-        </TableRow>
-      </TableBody>
+        </Table.SectionHeader>
+        <Table.Row>
+          <Table.Cell className="font-mono text-xs">SPEC-002</Table.Cell>
+          <Table.Cell>USB Cable</Table.Cell>
+          <Table.Cell>Accessory</Table.Cell>
+          <Table.Cell className="text-right font-mono">Incl.</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell className="font-mono text-xs">SPEC-003</Table.Cell>
+          <Table.Cell>Power Adapter</Table.Cell>
+          <Table.Cell>Accessory</Table.Cell>
+          <Table.Cell className="text-right font-mono">¥1,500</Table.Cell>
+        </Table.Row>
+      </Table.Body>
     </Table>
   ),
 };
@@ -188,52 +178,52 @@ export const AllVariants = () => (
     <div>
       <h3 className="mb-2 text-sm font-medium">Basic Table</h3>
       <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead className="text-right">Salary</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell>Alice</TableCell>
-            <TableCell>Developer</TableCell>
-            <TableCell className="text-right">¥12,000,000</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Bob</TableCell>
-            <TableCell>Designer</TableCell>
-            <TableCell className="text-right">¥10,000,000</TableCell>
-          </TableRow>
-        </TableBody>
+        <Table.Header>
+          <Table.Row>
+            <Table.Head>Name</Table.Head>
+            <Table.Head>Role</Table.Head>
+            <Table.Head className="text-right">Salary</Table.Head>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>Alice</Table.Cell>
+            <Table.Cell>Developer</Table.Cell>
+            <Table.Cell className="text-right">¥12,000,000</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Bob</Table.Cell>
+            <Table.Cell>Designer</Table.Cell>
+            <Table.Cell className="text-right">¥10,000,000</Table.Cell>
+          </Table.Row>
+        </Table.Body>
       </Table>
     </div>
     <div>
       <h3 className="mb-2 text-sm font-medium">With Footer</h3>
       <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Item</TableHead>
-            <TableHead className="text-right">Price</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell>Product A</TableCell>
-            <TableCell className="text-right">¥5,000</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Product B</TableCell>
-            <TableCell className="text-right">¥7,500</TableCell>
-          </TableRow>
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell>Total</TableCell>
-            <TableCell className="text-right">¥12,500</TableCell>
-          </TableRow>
-        </TableFooter>
+        <Table.Header>
+          <Table.Row>
+            <Table.Head>Item</Table.Head>
+            <Table.Head className="text-right">Price</Table.Head>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>Product A</Table.Cell>
+            <Table.Cell className="text-right">¥5,000</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Product B</Table.Cell>
+            <Table.Cell className="text-right">¥7,500</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+        <Table.Footer>
+          <Table.Row>
+            <Table.Cell>Total</Table.Cell>
+            <Table.Cell className="text-right">¥12,500</Table.Cell>
+          </Table.Row>
+        </Table.Footer>
       </Table>
     </div>
   </div>

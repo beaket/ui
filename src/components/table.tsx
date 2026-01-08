@@ -22,7 +22,7 @@ export function Table({ className, shadow, ...props }: TableProps) {
   );
 }
 
-export function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
+function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
@@ -35,7 +35,7 @@ export function TableHeader({ className, ...props }: React.ComponentProps<"thead
   );
 }
 
-export function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
+function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
   return (
     <tbody
       data-slot="table-body"
@@ -45,7 +45,7 @@ export function TableBody({ className, ...props }: React.ComponentProps<"tbody">
   );
 }
 
-export function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
+function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   return (
     <tfoot
       data-slot="table-footer"
@@ -58,7 +58,7 @@ export function TableFooter({ className, ...props }: React.ComponentProps<"tfoot
   );
 }
 
-export function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
+function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   return (
     <tr
       data-slot="table-row"
@@ -71,7 +71,7 @@ export function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   );
 }
 
-export function TableHead({ className, ...props }: React.ComponentProps<"th">) {
+function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   return (
     <th
       data-slot="table-head"
@@ -84,7 +84,7 @@ export function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   );
 }
 
-export function TableCell({ className, ...props }: React.ComponentProps<"td">) {
+function TableCell({ className, ...props }: React.ComponentProps<"td">) {
   return (
     <td
       data-slot="table-cell"
@@ -97,7 +97,7 @@ export function TableCell({ className, ...props }: React.ComponentProps<"td">) {
   );
 }
 
-export function TableSectionHeader({ className, ...props }: React.ComponentProps<"tr">) {
+function TableSectionHeader({ className, ...props }: React.ComponentProps<"tr">) {
   return (
     <tr
       data-slot="table-section-header"
@@ -110,7 +110,7 @@ export function TableSectionHeader({ className, ...props }: React.ComponentProps
   );
 }
 
-export function TableCaption({ className, ...props }: React.ComponentProps<"caption">) {
+function TableCaption({ className, ...props }: React.ComponentProps<"caption">) {
   return (
     <caption
       data-slot="table-caption"
@@ -119,3 +119,12 @@ export function TableCaption({ className, ...props }: React.ComponentProps<"capt
     />
   );
 }
+
+Table.Header = TableHeader;
+Table.Body = TableBody;
+Table.Footer = TableFooter;
+Table.Row = TableRow;
+Table.Head = TableHead;
+Table.Cell = TableCell;
+Table.SectionHeader = TableSectionHeader;
+Table.Caption = TableCaption;
