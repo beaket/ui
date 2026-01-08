@@ -5,8 +5,17 @@ import prompts from "prompts";
 import { fileURLToPath } from "url";
 import { writeConfig, type BeaketConfig } from "../utils/config.ts";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const CSS_VARIABLES = fs.readFileSync(path.join(__dirname, "..", "css-variables.css"), "utf-8");
+const cliRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
+const repoRoot = path.join(cliRoot, "..", "..");
+
+function loadCssVariables(): string {
+  // npm package: copied file exists
+  const copiedPath = path.join(cliRoot, "src", "css-variables.css");
+  if (fs.existsSync(copiedPath)) return fs.readFileSync(copiedPath, "utf-8");
+
+  // Development: read from repo source
+  return fs.readFileSync(path.join(repoRoot, "src", "css-variables.css"), "utf-8");
+}
 
 interface TsConfig {
   compilerOptions?: {
@@ -130,7 +139,7 @@ export async function init(options: InitOptions) {
     if (await fs.pathExists(cssPath)) {
       const cssContent = await fs.readFile(cssPath, "utf-8");
       if (!cssContent.includes("Beaket UI Design System")) {
-        await fs.writeFile(cssPath, cssContent + CSS_VARIABLES);
+        await fs.writeFile(cssPath, cssContent + loadCssVariables());
         console.log(pc.green("✔"), `Added CSS variables to ${response.css}`);
       } else {
         console.log(pc.yellow("ℹ"), "CSS variables already exist");
