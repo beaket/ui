@@ -24,7 +24,7 @@ async function detectAliasPath(): Promise<string> {
         if (paths?.["@/*"]) {
           const aliasPath = paths["@/*"][0];
           // "./src/*" -> "src", "./*" -> ""
-          const prefix = aliasPath.replace(/^\.\//, "").replace(/\/\*$/, "");
+          const prefix = aliasPath.replace(/^\.\/|\/?\*$/g, "");
           return prefix ? `${prefix}/components/ui` : "components/ui";
         }
       } catch {
