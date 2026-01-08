@@ -15,7 +15,11 @@ program
   .description("CLI for adding Beaket UI components to your project")
   .version(version);
 
-program.command("init").description("Initialize Beaket UI in your project").action(init);
+program
+  .command("init")
+  .description("Initialize Beaket UI in your project")
+  .option("-y, --yes", "Use defaults without prompting")
+  .action(init);
 
 program
   .command("add")
