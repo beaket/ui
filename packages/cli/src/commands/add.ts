@@ -8,7 +8,7 @@ interface AddOptions {
   overwrite?: boolean;
 }
 
-export async function add(componentName: string, options: AddOptions) {
+export async function add(componentNames: string[], options: AddOptions) {
   console.log();
 
   // Read config
@@ -23,10 +23,16 @@ export async function add(componentName: string, options: AddOptions) {
   const registry = await fetchRegistry();
   console.log(pc.green("✔"), "Checking registry.");
 
-  const componentDef = registry.components.find((c) => c.name === componentName);
+  // Validate all components exist
+  const notFound: string[] = [];
+  const componentDefs = componentNames.map((name) => {
+    const def = registry.components.find((c) => c.name === name);
+    if (!def) notFound.push(name);
+    return def;
+  });
 
-  if (!componentDef) {
-    console.log(pc.red("Error:"), `Component "${componentName}" not found.`);
+  if (notFound.length > 0) {
+    console.log(pc.red("Error:"), `Component(s) not found: ${notFound.join(", ")}`);
     console.log();
     console.log("Available components:");
     registry.components.forEach((c) => {
@@ -35,35 +41,51 @@ export async function add(componentName: string, options: AddOptions) {
     process.exit(1);
   }
 
-  // Install dependencies
-  if (componentDef.dependencies.length > 0) {
-    await installDependencies(componentDef.dependencies);
+  // Collect all unique dependencies
+  const allDependencies = new Set<string>();
+  for (const def of componentDefs) {
+    if (def) {
+      for (const dep of def.dependencies) {
+        allDependencies.add(dep);
+      }
+    }
+  }
+
+  // Install dependencies once
+  if (allDependencies.size > 0) {
+    await installDependencies([...allDependencies]);
     console.log(pc.green("✔"), "Installing dependencies.");
   }
 
-  // Fetch component files
-  const files = await fetchComponent(componentDef);
-
-  // Write files
+  // Fetch and write all component files
   const componentsDir = path.join(process.cwd(), config.components);
-  const { written, skipped } = await writeComponentFiles(componentsDir, files, options.overwrite);
+  const allWritten: string[] = [];
+  const allSkipped: string[] = [];
 
-  // Show skipped files
-  if (skipped.length > 0) {
-    console.log(
-      pc.yellow("ℹ"),
-      `Skipped ${skipped.length} file(s): (use --overwrite to overwrite)`,
-    );
-    skipped.forEach((f) => console.log(`  - ${f}`));
+  for (const def of componentDefs) {
+    if (!def) continue;
+    const files = await fetchComponent(def);
+    const { written, skipped } = await writeComponentFiles(componentsDir, files, options.overwrite);
+    allWritten.push(...written);
+    allSkipped.push(...skipped);
   }
 
-  if (written.length === 0) {
+  // Show skipped files
+  if (allSkipped.length > 0) {
+    console.log(
+      pc.yellow("ℹ"),
+      `Skipped ${allSkipped.length} file(s): (use --overwrite to overwrite)`,
+    );
+    allSkipped.forEach((f) => console.log(`  - ${f}`));
+  }
+
+  if (allWritten.length === 0) {
     console.log();
     return;
   }
 
   console.log();
   console.log("Added:");
-  written.forEach((f) => console.log(pc.cyan(`  ${f}`)));
+  allWritten.forEach((f) => console.log(pc.cyan(`  ${f}`)));
   console.log();
 }
