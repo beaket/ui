@@ -199,6 +199,29 @@ summary:focus-visible {
   text-decoration: underline;
 }
 
+/* Site footer */
+.site-footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--chrome);
+  font-size: 0.6875rem;
+  color: var(--steel);
+}
+
+.site-footer a {
+  color: var(--steel);
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.footer-sep {
+  margin: 0 0.5rem;
+}
+
 /* Sidebar toggle (hidden on desktop) */
 .sidebar-header {
   display: flex;

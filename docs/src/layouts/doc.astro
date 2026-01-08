@@ -9,6 +9,7 @@ interface Props {
 const { title = 'Beaket UI' } = Astro.props;
 const currentPath = Astro.url.pathname;
 const components = registry.components;
+const currentYear = new Date().getFullYear();
 ---
 
 <!doctype html>
@@ -54,6 +55,15 @@ const components = registry.components;
 
       <main class="main">
         <slot />
+        <footer class="site-footer">
+          <span>© {currentYear} Beaket</span>
+          <span class="footer-sep">·</span>
+          <a href="https://github.com/beaket/ui/blob/main/LICENSE">MIT License</a>
+          <span class="footer-sep">·</span>
+          <a href="https://github.com/beaket/ui">GitHub</a>
+          <span class="footer-sep">·</span>
+          <a href="https://www.npmjs.com/package/@beaket/ui">npm</a>
+        </footer>
       </main>
     </div>
     <script>
