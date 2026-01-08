@@ -2,8 +2,11 @@ import fs from "fs-extra";
 import path from "path";
 import pc from "picocolors";
 import prompts from "prompts";
-import { CSS_VARIABLES } from "../generated/css-variables.ts";
+import { fileURLToPath } from "url";
 import { writeConfig, type BeaketConfig } from "../utils/config.ts";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const CSS_VARIABLES = fs.readFileSync(path.join(__dirname, "..", "css-variables.css"), "utf-8");
 
 interface TsConfig {
   compilerOptions?: {
