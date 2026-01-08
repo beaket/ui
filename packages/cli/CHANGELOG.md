@@ -1,5 +1,15 @@
 # @beaket/ui
 
+## 1.5.1
+
+### Patch Changes
+
+- 1d6083e: Fix consistent form control borders and navigation active text
+  - Standardize border color to --graphite for Checkbox, Select, Textarea
+  - Remove meaningless hover border changes
+  - Add text-inverse utility for navigation active state
+  - Fix docs global styles conflicting with component styles
+
 ## 1.5.0
 
 ### Minor Changes
