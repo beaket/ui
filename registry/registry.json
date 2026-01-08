@@ -24,7 +24,7 @@
         "title": "Breadcrumb",
         "tagline": "A navigation trail showing the user's location within a site hierarchy.",
         "sections": ["AllVariants"],
-        "usage": "<Breadcrumb><Breadcrumb.List><Breadcrumb.Item><Breadcrumb.Link href=\"/\">Home</Breadcrumb.Link></Breadcrumb.Item></Breadcrumb.List></Breadcrumb>",
+        "usage": "<Breadcrumb>\n  <Breadcrumb.List>\n    <Breadcrumb.Item>\n      <Breadcrumb.Link href=\"/\">Home</Breadcrumb.Link>\n    </Breadcrumb.Item>\n  </Breadcrumb.List>\n</Breadcrumb>",
         "previewStory": "Default"
       }
     },
@@ -38,7 +38,7 @@
         "title": "Navigation",
         "tagline": "A primary navigation component with active state indicators.",
         "sections": ["AllVariants"],
-        "usage": "<Navigation><Navigation.List><Navigation.Item><Navigation.Link href=\"/\" active>Home</Navigation.Link></Navigation.Item></Navigation.List></Navigation>",
+        "usage": "<Navigation>\n  <Navigation.List>\n    <Navigation.Item>\n      <Navigation.Link href=\"/\" active>Home</Navigation.Link>\n    </Navigation.Item>\n  </Navigation.List>\n</Navigation>",
         "previewStory": "Default"
       }
     },
@@ -66,7 +66,7 @@
         "title": "Avatar",
         "tagline": "A visual representation of a user with image and fallback support.",
         "sections": ["AllStates", "CustomSizes", "AvatarGroup"],
-        "usage": "<Avatar><Avatar.Image src=\"/user.png\" alt=\"User\" /><Avatar.Fallback>JD</Avatar.Fallback></Avatar>",
+        "usage": "<Avatar>\n  <Avatar.Image src=\"/user.png\" alt=\"User\" />\n  <Avatar.Fallback>JD</Avatar.Fallback>\n</Avatar>",
         "previewStory": "AvatarGroup"
       }
     },
@@ -155,7 +155,7 @@
         "title": "Radio",
         "tagline": "A control for selecting one option from a set of choices.",
         "sections": ["AllStates"],
-        "usage": "<RadioGroup defaultValue=\"option1\"><RadioItem value=\"option1\" /><RadioItem value=\"option2\" /></RadioGroup>",
+        "usage": "<RadioGroup defaultValue=\"option1\">\n  <RadioItem value=\"option1\" />\n  <RadioItem value=\"option2\" />\n</RadioGroup>",
         "previewStory": "AllStates"
       }
     },
@@ -169,7 +169,7 @@
         "title": "Select",
         "tagline": "A dropdown for selecting from a list of options.",
         "sections": ["AllStates", "WithGroups"],
-        "usage": "<Select><Select.Trigger><Select.Value placeholder=\"Select...\" /></Select.Trigger><Select.Content><Select.Item value=\"1\">Option</Select.Item></Select.Content></Select>",
+        "usage": "<Select>\n  <Select.Trigger>\n    <Select.Value placeholder=\"Select...\" />\n  </Select.Trigger>\n  <Select.Content>\n    <Select.Item value=\"1\">Option</Select.Item>\n  </Select.Content>\n</Select>",
         "previewStory": "Default"
       }
     },
@@ -216,7 +216,7 @@
         "title": "Table",
         "tagline": "A semantic HTML table with styled components.",
         "sections": ["AllVariants"],
-        "usage": "<Table><TableHeader><TableRow><TableHead>Column</TableHead></TableRow></TableHeader><TableBody><TableRow><TableCell>Data</TableCell></TableRow></TableBody></Table>",
+        "usage": "<Table>\n  <TableHeader>\n    <TableRow>\n      <TableHead>Column</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>Data</TableCell>\n    </TableRow>\n  </TableBody>\n</Table>",
         "previewStory": "Default",
         "span": 2
       }
@@ -231,7 +231,7 @@
         "title": "Card",
         "tagline": "A versatile container for grouping related content and actions.",
         "sections": ["AllStates"],
-        "usage": "<Card><Card.Header><Card.Title>Title</Card.Title></Card.Header><Card.Content>Content</Card.Content></Card>",
+        "usage": "<Card>\n  <Card.Header>\n    <Card.Title>Title</Card.Title>\n  </Card.Header>\n  <Card.Content>Content</Card.Content>\n</Card>",
         "previewStory": "Default"
       }
     },
@@ -245,7 +245,7 @@
         "title": "Tabs",
         "tagline": "A set of layered sections of content that display one panel at a time.",
         "sections": ["AllStates"],
-        "usage": "<Tabs defaultValue=\"tab1\"><Tabs.List><Tabs.Trigger value=\"tab1\">Tab 1</Tabs.Trigger></Tabs.List><Tabs.Content value=\"tab1\">Content</Tabs.Content></Tabs>",
+        "usage": "<Tabs defaultValue=\"tab1\">\n  <Tabs.List>\n    <Tabs.Trigger value=\"tab1\">Tab 1</Tabs.Trigger>\n  </Tabs.List>\n  <Tabs.Content value=\"tab1\">Content</Tabs.Content>\n</Tabs>",
         "previewStory": "Default"
       }
     },
@@ -273,7 +273,7 @@
         "title": "Tooltip",
         "tagline": "A popup that displays information related to an element on hover.",
         "sections": ["AllStates", "Positions"],
-        "usage": "<TooltipProvider><Tooltip><Tooltip.Trigger>Hover me</Tooltip.Trigger><Tooltip.Content>Tooltip text</Tooltip.Content></Tooltip></TooltipProvider>",
+        "usage": "<TooltipProvider>\n  <Tooltip>\n    <Tooltip.Trigger>Hover me</Tooltip.Trigger>\n    <Tooltip.Content>Tooltip text</Tooltip.Content>\n  </Tooltip>\n</TooltipProvider>",
         "previewStory": "Default"
       }
     },
@@ -301,7 +301,7 @@
         "title": "Dialog",
         "tagline": "A modal dialog for confirmations, forms, and alerts.",
         "sections": ["AllStates"],
-        "usage": "<Dialog trigger={<Button>Open</Button>}><Dialog.Header><Dialog.Title>Title</Dialog.Title></Dialog.Header></Dialog>",
+        "usage": "<Dialog trigger={<Button>Open</Button>}>\n  <Dialog.Header>\n    <Dialog.Title>Title</Dialog.Title>\n  </Dialog.Header>\n</Dialog>",
         "previewStory": "Default"
       }
     },
@@ -315,7 +315,7 @@
         "title": "Sheet",
         "tagline": "A slide-out panel that can appear from any edge of the screen.",
         "sections": ["AllStates"],
-        "usage": "<Sheet trigger={<Button>Open</Button>}><Sheet.Header><Sheet.Title>Title</Sheet.Title></Sheet.Header></Sheet>",
+        "usage": "<Sheet trigger={<Button>Open</Button>}>\n  <Sheet.Header>\n    <Sheet.Title>Title</Sheet.Title>\n  </Sheet.Header>\n</Sheet>",
         "previewStory": "Default"
       }
     },
@@ -329,7 +329,7 @@
         "title": "DropdownMenu",
         "tagline": "A menu of actions or options triggered by a button.",
         "sections": ["AllStates"],
-        "usage": "<DropdownMenu><DropdownMenu.Trigger asChild><Button>Open</Button></DropdownMenu.Trigger><DropdownMenu.Content><DropdownMenu.Item>Action</DropdownMenu.Item></DropdownMenu.Content></DropdownMenu>",
+        "usage": "<DropdownMenu>\n  <DropdownMenu.Trigger asChild>\n    <Button>Open</Button>\n  </DropdownMenu.Trigger>\n  <DropdownMenu.Content>\n    <DropdownMenu.Item>Action</DropdownMenu.Item>\n  </DropdownMenu.Content>\n</DropdownMenu>",
         "previewStory": "Default"
       }
     },
