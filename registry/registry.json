@@ -181,14 +181,14 @@
     },
     {
       "name": "textarea",
-      "description": "Multi-line text input component with validation states",
+      "description": "Multi-line text input with auto-resize support",
       "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/textarea.tsx"],
       "docs": {
         "title": "Textarea",
-        "tagline": "A multi-line text input field for longer content.",
-        "sections": ["AllStates"],
+        "tagline": "A multi-line text input that automatically grows with content.",
+        "sections": ["AutoResize", "AllStates"],
         "previewStory": "Default"
       }
     },
