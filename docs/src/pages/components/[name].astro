@@ -62,7 +62,7 @@ const nextComponent = currentIndex < registry.components.length - 1 ? registry.c
       <h1>{docs?.title ?? name}</h1>
       <p class="tagline">{docs?.tagline ?? component.description}</p>
       <div class="preview-box mt-2 border border-[var(--chrome)] bg-[var(--paper)] p-4">
-        <StoryPreview componentName={name} client:visible />
+        <StoryPreview componentName={name} storyName={docs?.previewStory} client:visible />
       </div>
     </header>
 
