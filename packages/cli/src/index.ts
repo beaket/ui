@@ -1,12 +1,9 @@
-#!/usr/bin/env -S npx tsx
-// Test comment for changeset verification
 import { Command } from "commander";
-import { createRequire } from "module";
 import { add } from "./commands/add.ts";
 import { init } from "./commands/init.ts";
 
-const require = createRequire(import.meta.url);
-const { version } = require("../package.json");
+declare const __VERSION__: string;
+const version = __VERSION__;
 
 const program = new Command();
 

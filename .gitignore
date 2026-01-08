@@ -13,6 +13,3 @@ storybook-static
 # Claude
 .claude/
 
-# Generated/copied files (created at publish time)
-packages/cli/src/css-variables.css
-

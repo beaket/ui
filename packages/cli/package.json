@@ -4,15 +4,15 @@
   "description": "CLI tool for adding Beaket UI components to your project",
   "type": "module",
   "scripts": {
+    "build": "tsup",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "tsx ../../scripts/sync-css-variables.ts"
+    "prepublishOnly": "pnpm build"
   },
   "bin": {
-    "ui": "./bin/cli.js"
+    "ui": "./dist/index.js"
   },
   "files": [
-    "bin",
-    "src"
+    "dist"
   ],
   "keywords": [
     "react",
@@ -35,6 +35,7 @@
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^25.0.3",
-    "@types/prompts": "^2.4.9"
+    "@types/prompts": "^2.4.9",
+    "tsup": "^8.5.1"
   }
 }
