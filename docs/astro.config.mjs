@@ -3,6 +3,8 @@ import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import path from "path";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeSlug from "rehype-slug";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -21,6 +23,17 @@ export default defineConfig({
     shikiConfig: {
       theme: "gruvbox-dark-soft",
     },
+    rehypePlugins: [
+      rehypeSlug,
+      [
+        rehypeAutolinkHeadings,
+        {
+          behavior: "append",
+          content: { type: "text", value: "#" },
+          properties: { className: ["heading-anchor"] },
+        },
+      ],
+    ],
   },
   vite: {
     // @ts-expect-error - Vite version mismatch between root (7.x) and Astro (6.x)

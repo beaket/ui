@@ -92,6 +92,19 @@ h2 {
   border-bottom: 1px solid var(--chrome);
   padding-bottom: 0.25rem;
 }
+.heading-anchor {
+  margin-left: 0.5rem;
+  color: var(--chrome);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+h2:hover .heading-anchor {
+  opacity: 1;
+}
+.heading-anchor:hover {
+  color: var(--ink);
+}
 h3 {
   font-size: 0.875rem;
   font-weight: 500;
@@ -115,9 +128,11 @@ code {
   font-size: 0.8125rem;
   background: var(--frost);
   padding: 0.125rem 0.25rem;
+  border-bottom: 1px solid var(--chrome);
 }
 
 pre {
+  position: relative;
   padding: 0.75rem;
   overflow-x: auto;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -127,6 +142,36 @@ pre {
 pre code {
   background: none;
   padding: 0;
+  border-bottom: none;
+}
+
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.625rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--paper);
+  border: 1px solid var(--chrome);
+  color: var(--steel);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+pre:hover .copy-button {
+  opacity: 1;
+}
+.copy-button:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.copy-button:active {
+  background: var(--frost);
+}
+.copy-button.copied {
+  color: var(--signal-green);
+  border-color: var(--signal-green);
 }
 
 a:not([data-slot]) {

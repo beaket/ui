@@ -6,26 +6,34 @@ import { writeConfig, type BeaketConfig } from "../utils/config.ts";
 
 const CSS_VARIABLES = `
 /* Beaket UI Design System */
+@theme {
+  --color-inverse: var(--paper);
+  --shadow-offset: 2px 2px 0px 0px var(--chrome);
+  --shadow-offset-dark: 2px 2px 0px 0px var(--aluminum);
+  --shadow-offset-hover: 3px 3px 0px 0px var(--chrome);
+  --shadow-offset-active: 1px 1px 0px 0px var(--chrome);
+}
+
 :root {
-  --branch: #1C1F24;
-  --ink: #0D0D0D;
-  --paper: #F8F8F8;
-  --steel: #6B6B6B;
-  --chrome: #C8C8C8;
-  --graphite: #1A1A1A;
-  --iron: #2D2D2D;
+  --graphite: #0d0d0d;
+  --ink: #1a1a1a;
+  --branch: #1c1f24;
+  --iron: #2d2d2d;
   --slate: #404040;
   --zinc: #525252;
-  --aluminum: #9E9E9E;
-  --silver: #DEDEDE;
-  --platinum: #F0F0F0;
-  --frost: #F5F5F5;
-  --signal-blue: #2B6CB0;
-  --signal-red: #D32F2F;
-  --signal-green: #137752;
-  --signal-amber: #A86800;
-  --signal-purple: #6F2DA8;
-  --signal-cyan: #1A6B7C;
+  --steel: #595959;
+  --aluminum: #9e9e9e;
+  --chrome: #d0d0d0;
+  --silver: #dedede;
+  --platinum: #e8e8e8;
+  --frost: #f5f5f5;
+  --paper: #fafafa;
+  --signal-blue: #00449e;
+  --signal-red: #c41e1e;
+  --signal-green: #00794c;
+  --signal-amber: #b8860b;
+  --signal-purple: #6f2da8;
+  --signal-cyan: #1a6b7c;
 }
 `;
 
