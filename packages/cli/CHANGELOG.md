@@ -1,5 +1,15 @@
 # @beaket/ui
 
+## 1.8.0
+
+### Minor Changes
+
+- 6460127: Add -y flag to init command for non-interactive mode
+
+### Patch Changes
+
+- dca002d: Fix bun detection to use bun.lock instead of bun.lockb
+
 ## 1.7.0
 
 ### Minor Changes
