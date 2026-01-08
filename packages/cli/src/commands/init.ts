@@ -135,14 +135,14 @@ export async function init() {
     process.exit(1);
   }
 
-  // Write beaket.json (only components path)
+  // Write beaket.ui.json (only components path)
   const config: BeaketConfig = {
     $schema: "https://beaket.dev/schema.json",
     components: response.components,
   };
 
   await writeConfig(config);
-  console.log(pc.green("✔"), "Created beaket.json");
+  console.log(pc.green("✔"), "Created beaket.ui.json");
 
   // Inject CSS variables into Tailwind CSS file
   if (response.css) {

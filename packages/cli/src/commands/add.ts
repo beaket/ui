@@ -14,7 +14,7 @@ export async function add(componentName: string, options: AddOptions) {
   // Read config
   const config = await getConfig();
   if (!config) {
-    console.log(pc.red("Error:"), "beaket.json not found.");
+    console.log(pc.red("Error:"), "beaket.ui.json not found.");
     console.log("Run", pc.cyan("npx @beaket/ui init"), "first.");
     process.exit(1);
   }

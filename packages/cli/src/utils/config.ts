@@ -6,7 +6,7 @@ export interface BeaketConfig {
   components: string;
 }
 
-const CONFIG_FILE = "beaket.json";
+const CONFIG_FILE = "beaket.ui.json";
 
 export async function getConfig(): Promise<BeaketConfig | null> {
   const configPath = path.join(process.cwd(), CONFIG_FILE);
