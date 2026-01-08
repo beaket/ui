@@ -13,3 +13,6 @@ storybook-static
 # Claude
 .claude/
 
+# Generated files
+packages/cli/src/generated/
+

@@ -4,7 +4,8 @@
   "description": "CLI tool for adding Beaket UI components to your project",
   "type": "module",
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "tsx ../../scripts/sync-css-variables.ts"
   },
   "bin": {
     "ui": "./bin/cli.js"

@@ -22,7 +22,7 @@ const lines = cssContent.split("\n");
 const cleanedContent = lines.slice(5).join("\n").trim();
 
 const tsContent = `// Auto-generated from src/css-variables.css
-// Do not edit manually. Run: pnpm sync:css
+// Do not edit manually. Run: pnpm sync-css
 
 export const CSS_VARIABLES = \`
 /* Beaket UI Design System */
