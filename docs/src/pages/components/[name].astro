@@ -38,7 +38,7 @@ const parsedSources = storySource ? extractExports(storySource) : new Map();
 
 // Generate usage code
 const pascalName = name.charAt(0).toUpperCase() + name.slice(1);
-const usageCode = `import { ${pascalName} } from "@beaket/ui/${name}"
+const usageCode = `import { ${pascalName} } from "@/components/ui/${name}"
 
 ${docs?.usage ?? `<${pascalName} />`}`;
 

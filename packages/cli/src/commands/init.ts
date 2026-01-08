@@ -4,6 +4,75 @@ import pc from "picocolors";
 import prompts from "prompts";
 import { writeConfig, type BeaketConfig } from "../utils/config.ts";
 
+interface TsConfig {
+  compilerOptions?: {
+    paths?: Record<string, string[]>;
+  };
+}
+
+async function detectAliasPath(): Promise<string> {
+  const cwd = process.cwd();
+
+  // Try to read tsconfig.json or tsconfig.app.json
+  for (const configFile of ["tsconfig.json", "tsconfig.app.json"]) {
+    const configPath = path.join(cwd, configFile);
+    if (await fs.pathExists(configPath)) {
+      try {
+        const content = await fs.readFile(configPath, "utf-8");
+        const tsconfig: TsConfig = JSON.parse(content);
+        const paths = tsconfig.compilerOptions?.paths;
+        if (paths?.["@/*"]) {
+          const aliasPath = paths["@/*"][0];
+          // "./src/*" -> "src", "./*" -> ""
+          const prefix = aliasPath.replace(/^\.\//, "").replace(/\/\*$/, "");
+          return prefix ? `${prefix}/components/ui` : "components/ui";
+        }
+      } catch {
+        // Ignore parse errors
+      }
+    }
+  }
+
+  // Fallback: detect from package.json
+  const pkgPath = path.join(cwd, "package.json");
+  if (await fs.pathExists(pkgPath)) {
+    try {
+      const content = await fs.readFile(pkgPath, "utf-8");
+      const pkg = JSON.parse(content);
+      const deps = { ...pkg.dependencies, ...pkg.devDependencies };
+      // Next.js uses root alias by default
+      if (deps.next) {
+        return "components/ui";
+      }
+    } catch {
+      // Ignore parse errors
+    }
+  }
+
+  // Default to src/components/ui (Vite style)
+  return "src/components/ui";
+}
+
+async function detectCssPath(): Promise<string> {
+  const cwd = process.cwd();
+  const pkgPath = path.join(cwd, "package.json");
+
+  if (await fs.pathExists(pkgPath)) {
+    try {
+      const content = await fs.readFile(pkgPath, "utf-8");
+      const pkg = JSON.parse(content);
+      const deps = { ...pkg.dependencies, ...pkg.devDependencies };
+      if (deps.next) {
+        return "app/globals.css";
+      }
+    } catch {
+      // Ignore parse errors
+    }
+  }
+
+  return "src/index.css";
+}
+
 const CSS_VARIABLES = `
 /* Beaket UI Design System */
 @theme {
@@ -42,18 +111,22 @@ export async function init() {
   console.log(pc.bold("Initializing Beaket UI..."));
   console.log();
 
+  // Auto-detect defaults based on project structure
+  const detectedComponentsPath = await detectAliasPath();
+  const detectedCssPath = await detectCssPath();
+
   const response = await prompts([
     {
       type: "text",
       name: "components",
       message: "Where should components be installed?",
-      initial: "src/components/ui",
+      initial: detectedComponentsPath,
     },
     {
       type: "text",
       name: "css",
       message: "Where is your Tailwind CSS file?",
-      initial: "src/index.css",
+      initial: detectedCssPath,
     },
   ]);
 
