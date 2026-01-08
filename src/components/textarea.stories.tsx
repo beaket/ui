@@ -14,7 +14,7 @@ const meta: Meta<typeof Textarea> = {
     docs: {
       description: {
         component:
-          "A multi-line text input component with support for validation states. Extends native textarea with consistent styling and accessibility features.",
+          "A multi-line text input component with auto-resize support. Automatically grows based on content by default.",
       },
     },
   },
@@ -27,6 +27,18 @@ export const Default: Story = {
   args: {
     placeholder: "Type something...",
     disabled: false,
+    autoResize: true,
+    rows: 2,
+  },
+  argTypes: {
+    autoResize: {
+      control: "boolean",
+      description: "Automatically resize based on content",
+    },
+    rows: {
+      control: { type: "number", min: 1, max: 20 },
+      description: "Initial number of visible rows",
+    },
   },
 };
 
@@ -53,16 +65,25 @@ export const AllStates: Story = {
   ),
 };
 
-export const WithRows: Story = {
+export const AutoResize: Story = {
   render: () => (
     <div className="flex max-w-sm flex-col gap-4">
       <div className="space-y-1.5">
-        <Label htmlFor="textarea-small">Small (3 rows)</Label>
-        <Textarea id="textarea-small" rows={3} placeholder="3 rows" />
+        <Label htmlFor="textarea-auto">Auto Resize (default)</Label>
+        <Textarea
+          id="textarea-auto"
+          placeholder="Type multiple lines and watch it grow..."
+          defaultValue={"Line 1\nLine 2\nLine 3"}
+        />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="textarea-large">Large (8 rows)</Label>
-        <Textarea id="textarea-large" rows={8} placeholder="8 rows" />
+        <Label htmlFor="textarea-fixed">Fixed Height (autoResize=false)</Label>
+        <Textarea
+          id="textarea-fixed"
+          autoResize={false}
+          rows={4}
+          placeholder="Fixed height with manual resize handle"
+        />
       </div>
     </div>
   ),
