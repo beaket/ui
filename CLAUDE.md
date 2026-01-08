@@ -15,6 +15,41 @@ This is a **copy-paste component library** (like shadcn/ui). Users copy individu
    - `dependencies`: External packages (e.g., `@radix-ui/react-checkbox`)
    - `registryDependencies`: Other components from this library (e.g., `button`)
 
+## CSS Architecture
+
+### File Structure
+
+```
+src/
+├── css-variables.css   # Core tokens (colors, shadows) - injected by CLI
+└── styles.css          # Full design system (imports css-variables.css)
+```
+
+### Ownership Model
+
+When users run `npx @beaket/ui init`, the CLI injects `css-variables.css` content into their main CSS file.
+
+**After init, this CSS belongs to the user:**
+
+- Users are free to modify colors, shadows, and tokens
+- The library will not automatically update these values
+- When the library updates tokens, users should check the CHANGELOG and manually update if needed
+
+**Why this design:**
+
+- Users own their design tokens completely
+- No unexpected style changes from library updates
+- Clear boundary: library provides initial tokens, user maintains them
+
+### Core vs Extended Tokens
+
+| File                | Contents                                 | User Gets           |
+| ------------------- | ---------------------------------------- | ------------------- |
+| `css-variables.css` | Neutral palette, signal colors, shadows  | Yes (via init)      |
+| `styles.css`        | Functional mappings, typography, spacing | No (Storybook only) |
+
+This separation keeps the injected CSS minimal (~44 lines) while the full design system is available for reference.
+
 ## Design Philosophy (Brutalist)
 
 This library follows a **brutalist design system**:

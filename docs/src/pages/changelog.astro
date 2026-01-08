@@ -1,0 +1,61 @@
+---
+import Layout from '../layouts/doc.astro';
+import { getCollection, render } from 'astro:content';
+
+// Get changelog from content collection
+const entries = await getCollection('changelog');
+const entry = entries[0];
+const { Content } = await render(entry);
+---
+
+<Layout title="Changelog">
+  <h1>Changelog</h1>
+  <p class="changelog-intro">All notable changes to Beaket UI are documented here.</p>
+
+  <div class="changelog-content">
+    <Content />
+  </div>
+</Layout>
+
+<style>
+  .changelog-intro {
+    color: var(--steel);
+    margin-bottom: 28px;
+  }
+
+  .changelog-content :global(h1) {
+    display: none;
+  }
+
+  .changelog-content :global(h2) {
+    margin-top: 28px;
+    padding-top: 14px;
+    border-top: 1px solid var(--chrome);
+  }
+
+  .changelog-content :global(h3) {
+    margin-top: 14px;
+    color: var(--slate);
+  }
+
+  .changelog-content :global(ul) {
+    margin: 7px 0;
+    padding-left: 14px;
+  }
+
+  .changelog-content :global(li) {
+    margin: 5.6px 0;
+  }
+
+  .changelog-content :global(code) {
+    background: var(--frost);
+    padding: 2px 4px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+
+  .changelog-content :global(pre code) {
+    background: none;
+    padding: 0;
+  }
+</style>
