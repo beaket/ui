@@ -1,5 +1,15 @@
 # @beaket/ui
 
+## 1.6.0
+
+### Minor Changes
+
+- 1b61c60: Auto-detect component path based on tsconfig alias configuration
+
+### Patch Changes
+
+- 6ffa8c6: Fix CLI init to include @theme block with shadow utilities for Tailwind CSS 4
+
 ## 1.5.1
 
 ### Patch Changes
