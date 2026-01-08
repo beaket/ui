@@ -1,16 +1,28 @@
 # Beaket UI
 
-Brutalist component library. No gradients, no shadows, no decoration—just functional React components built on Tailwind CSS.
+Brutalist component library for React + Tailwind CSS.
 
-**Documentation:** https://beaket.github.io/ui/
-
-## Quick Start
+## Development
 
 ```bash
-npx @beaket/ui init
-npx @beaket/ui add button
+pnpm install
+pnpm dev        # Storybook at localhost:6006
+```
+
+## Structure
+
+```
+src/components/     # Component source files
+registry/           # Component registry for CLI
+packages/cli/       # @beaket/ui CLI
+docs/               # Documentation site
 ```
 
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+## Links
+
+- [Documentation](https://beaket.github.io/ui/)
+- [npm](https://www.npmjs.com/package/@beaket/ui)

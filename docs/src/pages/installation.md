@@ -57,10 +57,14 @@ export default defineConfig({
 npx @beaket/ui init
 ```
 
-6. Add a component:
+6. Add components:
 
 ```bash
+# Add a single component
 npx @beaket/ui add button
+
+# Add multiple components at once
+npx @beaket/ui add alert button label
 ```
 
 ## Next.js
@@ -73,8 +77,23 @@ Tailwind CSS is pre-configured in Next.js.
 npx @beaket/ui init
 ```
 
-2. Add a component:
+2. Add components:
 
 ```bash
 npx @beaket/ui add button
 ```
+
+## CLI Options
+
+Use `--help` to see available options:
+
+```bash
+npx @beaket/ui --help
+npx @beaket/ui init --help
+npx @beaket/ui add --help
+```
+
+Common options:
+
+- `init -y` - Skip prompts and use defaults
+- `add --overwrite` - Overwrite existing component files
