@@ -1,5 +1,13 @@
 # @beaket/ui
 
+## 1.9.1
+
+### Patch Changes
+
+- [#194](https://github.com/beaket/ui/pull/194) [`8c73b0b`](https://github.com/beaket/ui/commit/8c73b0be3977873eada02c39c0891a66421e5436) Thanks [@jihnma](https://github.com/jihnma)! - Improve focus visibility for Switch and Tabs components by using outline-based focus indicators instead of subtle border color changes
+
+- [#192](https://github.com/beaket/ui/pull/192) [`6c2e1cd`](https://github.com/beaket/ui/commit/6c2e1cdff06baf9ff972c61cb7cbed6c0897573a) Thanks [@jihnma](https://github.com/jihnma)! - Replace hardcoded `white` with palette tokens in Input, Table, and Badge components
+
 ## 1.9.0
 
 ### Minor Changes
