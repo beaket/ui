@@ -14,7 +14,7 @@ export interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>,
 
 const inputBaseStyles = [
   "h-9 w-full px-3 text-sm",
-  "bg-white text-[var(--ink)]",
+  "bg-[var(--paper)] text-[var(--ink)]",
   "border border-[var(--graphite)]",
   "placeholder:text-[var(--steel)]",
   "focus:ring-2 focus:ring-[var(--signal-blue)] focus:ring-offset-1 focus:outline-none",
