@@ -8,6 +8,8 @@ on:
       - "src/**"
       - "packages/**"
       - ".changeset/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
