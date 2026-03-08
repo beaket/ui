@@ -41,7 +41,7 @@ function TabsTrigger({ className, ...props }: React.ComponentProps<typeof TabsPr
         "inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 px-2 py-1 text-sm font-medium whitespace-nowrap transition-colors",
         "border border-transparent text-[var(--ink)]",
         "data-[state=active]:bg-[var(--ink)] data-[state=active]:text-[var(--paper)]",
-        "focus-visible:border-[var(--signal-blue)] focus-visible:outline-none",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--signal-blue)]",
         "disabled:pointer-events-none disabled:text-[var(--steel)]",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className,
