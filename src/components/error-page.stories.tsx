@@ -4,7 +4,7 @@ import { Button } from "./button";
 import { ErrorPage } from "./error-page";
 
 const meta: Meta<typeof ErrorPage> = {
-  title: "Components/ErrorPage",
+  title: "UI/ErrorPage",
   component: ErrorPage,
   tags: ["autodocs"],
   parameters: {

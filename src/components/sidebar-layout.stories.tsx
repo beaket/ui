@@ -3,7 +3,7 @@ import { expect, within } from "storybook/test";
 import { SidebarLayout } from "./sidebar-layout";
 
 const meta: Meta<typeof SidebarLayout> = {
-  title: "Components/SidebarLayout",
+  title: "UI/SidebarLayout",
   component: SidebarLayout,
   tags: ["autodocs"],
 };

@@ -3,7 +3,7 @@ import { expect, within } from "storybook/test";
 import { NavigationProgress } from "./navigation-progress";
 
 const meta: Meta<typeof NavigationProgress> = {
-  title: "Components/NavigationProgress",
+  title: "UI/NavigationProgress",
   component: NavigationProgress,
   tags: ["autodocs"],
   parameters: {

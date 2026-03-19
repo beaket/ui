@@ -5,7 +5,7 @@ import { Button } from "./button";
 import { ConfirmationDialog } from "./confirmation-dialog";
 
 const meta: Meta<typeof ConfirmationDialog> = {
-  title: "Components/ConfirmationDialog",
+  title: "UI/ConfirmationDialog",
   component: ConfirmationDialog,
   tags: ["autodocs"],
 };

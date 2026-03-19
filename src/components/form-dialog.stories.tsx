@@ -7,7 +7,7 @@ import { Input } from "./input";
 import { Label } from "./label";
 
 const meta: Meta<typeof FormDialog> = {
-  title: "Components/FormDialog",
+  title: "UI/FormDialog",
   component: FormDialog,
   tags: ["autodocs"],
 };

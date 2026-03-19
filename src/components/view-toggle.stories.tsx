@@ -29,7 +29,7 @@ const items = [
 ];
 
 const meta: Meta<typeof ViewToggle> = {
-  title: "Components/ViewToggle",
+  title: "UI/ViewToggle",
   component: ViewToggle,
   tags: ["autodocs"],
 };
