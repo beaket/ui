@@ -1,4 +1,7 @@
 name: Upload Chromatic
+permissions:
+  contents: read
+  statuses: write
 on:
   push:
     branches:
