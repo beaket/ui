@@ -45,4 +45,16 @@
   --shadow-offset-dark: 2px 2px 0px 0px var(--color-aluminum);
   --shadow-offset-hover: 3px 3px 0px 0px var(--color-chrome);
   --shadow-offset-active: 1px 1px 0px 0px var(--color-chrome);
+
+  /* Animations */
+  --animate-navigation-progress: navigation-progress 1s ease-in-out infinite;
+}
+
+@keyframes navigation-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
 }
