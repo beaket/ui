@@ -336,6 +336,97 @@
         "previewStory": "FullFeatured",
         "span": 3
       }
+    },
+    {
+      "name": "skeleton",
+      "description": "Loading placeholder with pulse animation",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/skeleton.tsx"],
+      "docs": {
+        "title": "Skeleton",
+        "tagline": "An animated placeholder for content that is loading.",
+        "sections": ["AllStates"],
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "view-toggle",
+      "description": "Toggle button group for switching between views",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/view-toggle.tsx"],
+      "docs": {
+        "title": "ViewToggle",
+        "tagline": "A button group for toggling between view modes.",
+        "sections": ["AllStates"],
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "navigation-progress",
+      "description": "Indeterminate progress bar for page navigation",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/navigation-progress.tsx"],
+      "docs": {
+        "title": "NavigationProgress",
+        "tagline": "An indeterminate progress bar shown during page navigation.",
+        "sections": ["AllStates"],
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "page-header",
+      "description": "Page header with title, count, and action slot",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/page-header.tsx"],
+      "docs": {
+        "title": "PageHeader",
+        "tagline": "A simple page header with title, optional count, and action slot.",
+        "sections": ["AllStates"],
+        "previewStory": "WithAction"
+      }
+    },
+    {
+      "name": "error-page",
+      "description": "Full-page error display with code, message, and optional action",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/error-page.tsx"],
+      "docs": {
+        "title": "ErrorPage",
+        "tagline": "A full-page error display for HTTP errors and error boundaries.",
+        "sections": ["AllStates"],
+        "previewStory": "WithAction"
+      }
+    },
+    {
+      "name": "sidebar-layout",
+      "description": "Responsive sidebar layout with content and sidebar slots",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/sidebar-layout.tsx"],
+      "docs": {
+        "title": "SidebarLayout",
+        "tagline": "A responsive layout with content area and sidebar.",
+        "sections": ["AllStates"],
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "confirmation-dialog",
+      "description": "Pre-built confirmation dialog with warning support and loading state",
+      "dependencies": [],
+      "registryDependencies": ["dialog", "button", "alert"],
+      "files": ["components/confirmation-dialog.tsx"],
+      "docs": {
+        "title": "ConfirmationDialog",
+        "tagline": "A ready-to-use confirmation dialog for destructive or important actions.",
+        "sections": ["AllStates"],
+        "previewStory": "Default"
+      }
     }
   ]
 }
