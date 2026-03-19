@@ -29,7 +29,7 @@ export function RadioItem({ className, ...props }: RadioItemProps) {
     <RadioGroupPrimitive.Item
       data-slot="radio-item"
       className={cn(
-        "peer border-chrome size-4 shrink-0 rounded-full border",
+        "group peer border-chrome size-4 shrink-0 rounded-full border",
         "bg-paper",
         "hover:border-steel",
         "focus-visible:outline-signal-blue focus-visible:outline-2 focus-visible:outline-offset-2",
@@ -45,7 +45,7 @@ export function RadioItem({ className, ...props }: RadioItemProps) {
         data-slot="radio-indicator"
         className="flex items-center justify-center"
       >
-        <span className="bg-ink data-[disabled]:bg-steel size-2 rounded-full" />
+        <span className="bg-ink group-disabled:bg-steel size-2 rounded-full" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   );

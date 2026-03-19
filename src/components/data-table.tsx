@@ -184,6 +184,7 @@ export function DataTable<TData, TValue>({
                   return (
                     <Table.Head
                       key={header.id}
+                      scope="col"
                       className={canSort ? "cursor-pointer select-none" : ""}
                       style={{ width: header.getSize() }}
                       onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
