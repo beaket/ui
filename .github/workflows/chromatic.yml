@@ -24,6 +24,7 @@ on:
 
 jobs:
   test:
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -31,7 +32,7 @@ jobs:
           fetch-depth: 0 # Required for Chromatic to compare with baseline
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
 
       - name: Use Node.js
         uses: actions/setup-node@v6
