@@ -187,6 +187,15 @@ export function DataTable<TData, TValue>({
                       className={canSort ? "cursor-pointer select-none" : ""}
                       style={{ width: header.getSize() }}
                       onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
+                      aria-sort={
+                        canSort
+                          ? sortDirection === "asc"
+                            ? "ascending"
+                            : sortDirection === "desc"
+                              ? "descending"
+                              : "none"
+                          : undefined
+                      }
                     >
                       {header.isPlaceholder ? null : (
                         <div className="flex items-center gap-2">

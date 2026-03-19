@@ -32,7 +32,7 @@ function SelectTrigger({ className, size = "default", children, ...props }: Sele
       className={cn(
         "flex w-full items-center justify-between gap-2",
         "border-graphite bg-paper text-ink border px-3 py-2 text-sm",
-        "focus:border-signal-blue focus:outline-none",
+        "focus-visible:border-signal-blue focus-visible:outline-none",
         "disabled:bg-frost disabled:text-steel disabled:cursor-not-allowed disabled:border-dashed",
         "aria-[invalid=true]:border-signal-red",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0",

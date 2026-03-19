@@ -9,8 +9,8 @@ export interface ViewToggleItem<T extends string> {
   value: T;
   /** Icon to display */
   icon: ReactNode;
-  /** Accessible label for the button */
-  label?: string;
+  /** Accessible label for the button (required for icon-only buttons) */
+  label: string;
 }
 
 export interface ViewToggleProps<T extends string> {

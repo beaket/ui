@@ -5,6 +5,12 @@ const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 export function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div data-slot="skeleton" className={cn("bg-frost animate-pulse", className)} {...props} />
+    <div
+      data-slot="skeleton"
+      role="status"
+      aria-label="Loading"
+      className={cn("bg-frost animate-pulse", className)}
+      {...props}
+    />
   );
 }
