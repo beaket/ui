@@ -24,10 +24,23 @@ export function Avatar({ className, ...props }: Props) {
   );
 }
 
-function AvatarImage({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
+function AvatarImage({
+  className,
+  alt,
+  ...props
+}: React.ComponentProps<typeof AvatarPrimitive.Image>) {
+  if (process.env.NODE_ENV !== "production") {
+    if (!alt) {
+      console.warn(
+        "Avatar.Image: `alt` prop is missing. Provide descriptive alt text for accessibility.",
+      );
+    }
+  }
+
   return (
     <AvatarPrimitive.Image
       data-slot="avatar-image"
+      alt={alt}
       className={cn("aspect-square size-full", className)}
       {...props}
     />
