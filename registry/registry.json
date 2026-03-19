@@ -366,7 +366,7 @@
     {
       "name": "navigation-progress",
       "description": "Indeterminate progress bar for page navigation",
-      "dependencies": [],
+      "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/navigation-progress.tsx"],
       "docs": {
@@ -418,7 +418,7 @@
     {
       "name": "confirmation-dialog",
       "description": "Pre-built confirmation dialog with warning support and loading state",
-      "dependencies": ["clsx", "tailwind-merge"],
+      "dependencies": [],
       "registryDependencies": ["dialog", "button", "alert"],
       "files": ["components/confirmation-dialog.tsx"],
       "docs": {

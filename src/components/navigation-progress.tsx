@@ -1,4 +1,9 @@
-export interface NavigationProgressProps {
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
+
+export interface NavigationProgressProps extends React.ComponentProps<"div"> {
   /** Whether the progress bar is active */
   active: boolean;
 }
@@ -18,7 +23,7 @@ export interface NavigationProgressProps {
  * }
  * ```
  */
-export function NavigationProgress({ active }: NavigationProgressProps) {
+export function NavigationProgress({ active, className, ...props }: NavigationProgressProps) {
   if (!active) return null;
 
   return (
@@ -26,7 +31,8 @@ export function NavigationProgress({ active }: NavigationProgressProps) {
       data-slot="navigation-progress"
       role="progressbar"
       aria-label="Loading"
-      className="bg-ink/20 fixed top-0 right-0 left-0 z-50 h-0.5 overflow-hidden"
+      className={cn("bg-chrome fixed top-0 right-0 left-0 z-50 h-0.5 overflow-hidden", className)}
+      {...props}
     >
       <div className="animate-navigation-progress bg-ink h-full w-1/3 will-change-transform" />
     </div>

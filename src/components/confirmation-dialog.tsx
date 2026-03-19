@@ -1,10 +1,6 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import { Alert } from "./alert";
 import { Button } from "./button";
 import { Dialog } from "./dialog";
-
-const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 export interface ConfirmationDialogProps {
   /** Controlled open state */
@@ -36,8 +32,6 @@ export interface ConfirmationDialogProps {
   confirmDisabled?: boolean;
   /** Optional content to render between description and footer */
   children?: React.ReactNode;
-  /** Additional CSS classes for the dialog */
-  className?: string;
 }
 
 export function ConfirmationDialog({

@@ -29,16 +29,21 @@ export function ViewToggle<T extends string>({
   onChange,
   items,
   className,
-}: ViewToggleProps<T>) {
+  ...props
+}: ViewToggleProps<T> & Omit<React.ComponentProps<"div">, "onChange">) {
   return (
-    <div data-slot="view-toggle" className={cn("border-chrome flex h-8 border", className)}>
+    <div
+      data-slot="view-toggle"
+      className={cn("border-chrome flex h-8 border", className)}
+      {...props}
+    >
       {items.map((item) => (
         <button
           key={item.value}
           type="button"
           onClick={() => onChange(item.value)}
           className={cn(
-            "flex items-center justify-center px-2 [&_svg]:size-4",
+            "focus-visible:outline-signal-blue flex items-center justify-center px-2 focus-visible:outline-2 focus-visible:outline-offset-2 [&_svg]:size-4",
             value === item.value ? "bg-ink text-paper" : "hover:bg-frost",
           )}
           aria-label={item.label}

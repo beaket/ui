@@ -58,7 +58,7 @@ export function FormDialog({
   );
 }
 
-export interface FormDialogFooterProps {
+interface FormDialogFooterProps {
   /** Whether the form is currently submitting */
   isSubmitting: boolean;
   /** Submit button label */
@@ -100,19 +100,24 @@ function FormDialogFooter({
   );
 }
 
-export interface FormDialogErrorProps {
+interface FormDialogErrorProps {
   /** Error message to display. When null/undefined, nothing is rendered. */
   error: string | null | undefined;
+  /** Additional CSS classes */
+  className?: string;
 }
 
 /**
  * Standard error display for form dialogs.
  */
-function FormDialogError({ error }: FormDialogErrorProps) {
+function FormDialogError({ error, className }: FormDialogErrorProps) {
   if (!error) return null;
 
   return (
-    <div data-slot="form-dialog-error" className="border-signal-red bg-frost border px-3 py-2.5">
+    <div
+      data-slot="form-dialog-error"
+      className={cn("border-signal-red bg-frost border px-3 py-2.5", className)}
+    >
       <p className="text-signal-red text-sm">{error}</p>
     </div>
   );
