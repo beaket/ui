@@ -17,34 +17,29 @@
    * =========================================== */
 
   /* Text */
-  --color-text-primary: var(--graphite);
-  --color-text-secondary: var(--steel);
-  --color-text-muted: var(--aluminum);
-  --color-text-inverse: var(--paper);
-  --color-text-link: var(--signal-blue);
+  --color-text-primary: var(--color-graphite);
+  --color-text-secondary: var(--color-steel);
+  --color-text-muted: var(--color-muted);
+  --color-text-inverse: var(--color-paper);
+  --color-text-link: var(--color-signal-blue);
 
   /* Backgrounds */
-  --color-bg-primary: var(--paper);
-  --color-bg-secondary: var(--frost);
-  --color-bg-tertiary: var(--platinum);
-  --color-bg-inverse: var(--ink);
-  --color-bg-hover: var(--frost);
-  --color-bg-active: var(--platinum);
+  --color-bg-primary: var(--color-paper);
+  --color-bg-secondary: var(--color-frost);
+  --color-bg-tertiary: var(--color-platinum);
+  --color-bg-inverse: var(--color-ink);
+  --color-bg-hover: var(--color-frost);
+  --color-bg-active: var(--color-platinum);
 
   /* Borders */
-  --color-border-default: var(--chrome);
-  --color-border-strong: var(--graphite);
-  --color-border-muted: var(--silver);
+  --color-border-default: var(--color-chrome);
+  --color-border-strong: var(--color-graphite);
+  --color-border-muted: var(--color-silver);
 
   /* ===========================================
    * TYPOGRAPHY
    * Type scale and font stacks
    * =========================================== */
-
-  /* Font families */
-  --font-sans:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "SF Mono", "Roboto Mono", Menlo, Monaco, Consolas, monospace;
 
   /* Type scale */
   --text-xs: 0.6875rem; /* 11px */
@@ -81,15 +76,6 @@
   --space-6: 1.75rem; /* 28px - large */
   --space-7: 2.625rem; /* 42px - section */
   --space-8: 3.5rem; /* 56px - page */
-
-  /* ===========================================
-   * SHADOWS
-   * Offset shadow system for brutalist depth
-   * =========================================== */
-
-  --shadow-offset: 2px 2px 0px 0px var(--chrome);
-  --shadow-offset-dark: 2px 2px 0px 0px var(--aluminum);
-  --shadow-offset-none: none;
 
   /* ===========================================
    * BORDERS

@@ -10,14 +10,14 @@ const alertVariants = cva(
   {
     variants: {
       variant: {
-        note: "bg-[var(--paper)] text-[var(--ink)] border-[var(--signal-blue)] [&>svg]:text-[var(--signal-blue)] [&_[data-slot=alert-description]]:text-[var(--steel)]",
-        tip: "bg-[var(--paper)] text-[var(--ink)] border-[var(--signal-green)] [&>svg]:text-[var(--signal-green)] [&_[data-slot=alert-description]]:text-[var(--steel)]",
+        note: "bg-paper text-ink border-signal-blue [&>svg]:text-signal-blue [&_[data-slot=alert-description]]:text-steel",
+        tip: "bg-paper text-ink border-signal-green [&>svg]:text-signal-green [&_[data-slot=alert-description]]:text-steel",
         important:
-          "bg-[var(--paper)] text-[var(--ink)] border-[var(--signal-purple)] [&>svg]:text-[var(--signal-purple)] [&_[data-slot=alert-description]]:text-[var(--steel)]",
+          "bg-paper text-ink border-signal-purple [&>svg]:text-signal-purple [&_[data-slot=alert-description]]:text-steel",
         warning:
-          "bg-[var(--paper)] text-[var(--ink)] border-[var(--signal-amber)] [&>svg]:text-[var(--signal-amber)] [&_[data-slot=alert-description]]:text-[var(--steel)]",
+          "bg-paper text-ink border-signal-amber [&>svg]:text-signal-amber [&_[data-slot=alert-description]]:text-steel",
         caution:
-          "bg-[var(--paper)] text-[var(--ink)] border-[var(--signal-red)] [&>svg]:text-[var(--signal-red)] [&_[data-slot=alert-description]]:text-[var(--steel)]",
+          "bg-paper text-ink border-signal-red [&>svg]:text-signal-red [&_[data-slot=alert-description]]:text-steel",
       },
     },
     defaultVariants: {

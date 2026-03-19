@@ -38,7 +38,7 @@ function BreadcrumbLink({ className, ...props }: React.ComponentProps<"a">) {
   return (
     <a
       data-slot="breadcrumb-link"
-      className={cn("text-[var(--signal-blue)] underline hover:text-[var(--ink)]", className)}
+      className={cn("text-signal-blue hover:text-ink underline", className)}
       {...props}
     />
   );
@@ -48,7 +48,7 @@ function BreadcrumbSeparator({ className, children, ...props }: React.ComponentP
   return (
     <span
       data-slot="breadcrumb-separator"
-      className={cn("text-[var(--steel)]", className)}
+      className={cn("text-steel", className)}
       aria-hidden="true"
       {...props}
     >
@@ -61,7 +61,7 @@ function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
       data-slot="breadcrumb-page"
-      className={cn("font-medium text-[var(--ink)]", className)}
+      className={cn("text-ink font-medium", className)}
       aria-current="page"
       {...props}
     />

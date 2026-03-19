@@ -35,15 +35,15 @@ export const Sizes: Story = {
     <div className="flex items-center gap-4">
       <div className="flex flex-col items-center gap-2">
         <Switch size="sm" defaultChecked aria-label="Small switch" />
-        <span className="text-xs text-[var(--steel)]">Small</span>
+        <span className="text-steel text-xs">Small</span>
       </div>
       <div className="flex flex-col items-center gap-2">
         <Switch size="md" defaultChecked aria-label="Medium switch" />
-        <span className="text-xs text-[var(--steel)]">Medium</span>
+        <span className="text-steel text-xs">Medium</span>
       </div>
       <div className="flex flex-col items-center gap-2">
         <Switch size="lg" defaultChecked aria-label="Large switch" />
-        <span className="text-xs text-[var(--steel)]">Large</span>
+        <span className="text-steel text-xs">Large</span>
       </div>
     </div>
   ),

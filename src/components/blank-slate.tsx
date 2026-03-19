@@ -64,14 +64,14 @@ export function BlankSlate({ icon, title, description, children, className }: Bl
   return (
     <div data-slot="blank-slate" className={cn("py-12 text-center", className)}>
       {IconComponent && (
-        <div data-slot="blank-slate-icon" className="mb-4 flex justify-center text-[var(--steel)]">
-          <IconComponent size={48} />
+        <div data-slot="blank-slate-icon" className="text-steel mb-4 flex justify-center">
+          <IconComponent size={48} aria-hidden="true" />
         </div>
       )}
-      <h1 data-slot="blank-slate-title" className="mb-2 text-2xl font-bold text-[var(--ink)]">
+      <h1 data-slot="blank-slate-title" className="text-ink mb-2 text-2xl font-bold">
         {title}
       </h1>
-      <p data-slot="blank-slate-description" className="mb-4 text-[var(--steel)]">
+      <p data-slot="blank-slate-description" className="text-steel mb-4">
         {description}
       </p>
       {children && (

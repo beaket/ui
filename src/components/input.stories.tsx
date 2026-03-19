@@ -101,7 +101,7 @@ export const WithPrefixAndSuffix: Story = {
             <button
               type="button"
               onClick={() => setValue("")}
-              className="cursor-pointer hover:text-[var(--ink)]"
+              className="hover:text-ink cursor-pointer"
             >
               <X />
             </button>
@@ -125,7 +125,7 @@ export const PasswordToggle: Story = {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="cursor-pointer hover:text-[var(--ink)]"
+            className="hover:text-ink cursor-pointer"
           >
             {showPassword ? <EyeOff /> : <Eye />}
           </button>

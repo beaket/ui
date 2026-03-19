@@ -14,13 +14,13 @@ export interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>,
 
 const inputBaseStyles = [
   "h-9 w-full px-3 text-sm",
-  "bg-[var(--paper)] text-[var(--ink)]",
-  "border border-[var(--graphite)]",
-  "placeholder:text-[var(--steel)]",
-  "focus:ring-2 focus:ring-[var(--signal-blue)] focus:ring-offset-1 focus:outline-none",
-  "disabled:cursor-not-allowed disabled:border-dashed disabled:border-[var(--chrome)] disabled:bg-[var(--frost)] disabled:text-[var(--steel)]",
-  "aria-[invalid=true]:border-[var(--signal-red)] aria-[invalid=true]:focus:ring-[var(--signal-red)]",
-  "read-only:bg-[var(--frost)] read-only:text-[var(--steel)]",
+  "bg-paper text-ink",
+  "border border-graphite",
+  "placeholder:text-steel",
+  "focus:ring-2 focus:ring-signal-blue focus:ring-offset-1 focus:outline-none",
+  "disabled:cursor-not-allowed disabled:border-dashed disabled:border-chrome disabled:bg-frost disabled:text-steel",
+  "aria-[invalid=true]:border-signal-red aria-[invalid=true]:focus:ring-signal-red",
+  "read-only:bg-frost read-only:text-steel",
 ].join(" ");
 
 export function Input({ className, type = "text", prefix, suffix, ...props }: Props) {
@@ -35,7 +35,7 @@ export function Input({ className, type = "text", prefix, suffix, ...props }: Pr
       {prefix && (
         <span
           data-slot="input-prefix"
-          className="pointer-events-none absolute left-3 flex items-center text-[var(--steel)] [&_svg]:size-4"
+          className="text-steel pointer-events-none absolute left-3 flex items-center [&_svg]:size-4"
         >
           {prefix}
         </span>
@@ -49,7 +49,7 @@ export function Input({ className, type = "text", prefix, suffix, ...props }: Pr
       {suffix && (
         <span
           data-slot="input-suffix"
-          className="absolute right-3 flex items-center text-[var(--steel)] [&_svg]:size-4"
+          className="text-steel absolute right-3 flex items-center [&_svg]:size-4"
         >
           {suffix}
         </span>

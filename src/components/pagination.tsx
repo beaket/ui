@@ -90,9 +90,9 @@ export function Pagination({
 
   const pageNumbers = getPageNumbers();
   const buttonBaseClass = "px-3 py-1 border text-sm transition-colors";
-  const buttonActiveClass = "bg-[var(--ink)] text-[var(--paper)] border-[var(--ink)]";
-  const buttonInactiveClass = "border-[var(--chrome)] hover:bg-[var(--frost)]";
-  const buttonDisabledClass = "border-[var(--chrome)] text-[var(--steel)] cursor-not-allowed";
+  const buttonActiveClass = "bg-ink text-paper border-ink";
+  const buttonInactiveClass = "border-chrome hover:bg-frost";
+  const buttonDisabledClass = "border-chrome text-steel cursor-not-allowed";
 
   return (
     <nav
@@ -128,7 +128,7 @@ export function Pagination({
             <span
               key={pageNum}
               data-slot="pagination-ellipsis"
-              className="px-2 py-1 text-[var(--steel)]"
+              className="text-steel px-2 py-1"
               aria-hidden="true"
             >
               ...

@@ -44,7 +44,7 @@ export const Default: Story = {
           </Sheet.Description>
         </Sheet.Header>
         <div className="py-4">
-          <p className="text-sm text-[var(--steel)]">Sheet content goes here.</p>
+          <p className="text-steel text-sm">Sheet content goes here.</p>
         </div>
         <Sheet.Footer>
           <Sheet.Close>
@@ -68,7 +68,7 @@ export const LeftSide: Story = {
           <Sheet.Description>This sheet slides in from the left.</Sheet.Description>
         </Sheet.Header>
         <div className="py-4">
-          <p className="text-sm text-[var(--steel)]">Navigation menu or sidebar content.</p>
+          <p className="text-steel text-sm">Navigation menu or sidebar content.</p>
         </div>
       </>
     ),
@@ -139,16 +139,16 @@ export const FullScreen: Story = {
           <Sheet.Description>Full screen sheet for mobile navigation menus.</Sheet.Description>
         </Sheet.Header>
         <div className="flex flex-col gap-2 py-4">
-          <a href="#" className="block py-2 text-[var(--ink)] hover:text-[var(--signal-blue)]">
+          <a href="#" className="text-ink hover:text-signal-blue block py-2">
             Home
           </a>
-          <a href="#" className="block py-2 text-[var(--ink)] hover:text-[var(--signal-blue)]">
+          <a href="#" className="text-ink hover:text-signal-blue block py-2">
             Products
           </a>
-          <a href="#" className="block py-2 text-[var(--ink)] hover:text-[var(--signal-blue)]">
+          <a href="#" className="text-ink hover:text-signal-blue block py-2">
             About
           </a>
-          <a href="#" className="block py-2 text-[var(--ink)] hover:text-[var(--signal-blue)]">
+          <a href="#" className="text-ink hover:text-signal-blue block py-2">
             Contact
           </a>
         </div>
@@ -169,9 +169,7 @@ function ControlledSheetExample() {
     <div className="flex flex-col gap-4">
       <div className="flex gap-2">
         <Button onClick={() => setOpen(true)}>Open Sheet</Button>
-        <span className="self-center text-sm text-[var(--steel)]">
-          Sheet is {open ? "open" : "closed"}
-        </span>
+        <span className="text-steel self-center text-sm">Sheet is {open ? "open" : "closed"}</span>
       </div>
       <Sheet open={open} onOpenChange={setOpen}>
         <Sheet.Header>

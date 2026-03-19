@@ -29,17 +29,13 @@ export const Default: Story = {
       <Tabs.Content value="account">
         <div className="p-4">
           <h3 className="font-medium">Account Settings</h3>
-          <p className="mt-2 text-sm text-[var(--steel)]">
-            Manage your account settings and preferences.
-          </p>
+          <p className="text-steel mt-2 text-sm">Manage your account settings and preferences.</p>
         </div>
       </Tabs.Content>
       <Tabs.Content value="password">
         <div className="p-4">
           <h3 className="font-medium">Password Settings</h3>
-          <p className="mt-2 text-sm text-[var(--steel)]">
-            Update your password and security settings.
-          </p>
+          <p className="text-steel mt-2 text-sm">Update your password and security settings.</p>
         </div>
       </Tabs.Content>
     </Tabs>
@@ -56,16 +52,16 @@ export const MultipleTabs: Story = {
         <Tabs.Trigger value="settings">Settings</Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content value="overview">
-        <div className="p-4 text-sm text-[var(--steel)]">Overview content</div>
+        <div className="text-steel p-4 text-sm">Overview content</div>
       </Tabs.Content>
       <Tabs.Content value="analytics">
-        <div className="p-4 text-sm text-[var(--steel)]">Analytics content</div>
+        <div className="text-steel p-4 text-sm">Analytics content</div>
       </Tabs.Content>
       <Tabs.Content value="reports">
-        <div className="p-4 text-sm text-[var(--steel)]">Reports content</div>
+        <div className="text-steel p-4 text-sm">Reports content</div>
       </Tabs.Content>
       <Tabs.Content value="settings">
-        <div className="p-4 text-sm text-[var(--steel)]">Settings content</div>
+        <div className="text-steel p-4 text-sm">Settings content</div>
       </Tabs.Content>
     </Tabs>
   ),
@@ -82,13 +78,13 @@ export const WithDisabled: Story = {
         <Tabs.Trigger value="another">Another</Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content value="active">
-        <div className="p-4 text-sm text-[var(--steel)]">This tab is active.</div>
+        <div className="text-steel p-4 text-sm">This tab is active.</div>
       </Tabs.Content>
       <Tabs.Content value="disabled">
-        <div className="p-4 text-sm text-[var(--steel)]">You cannot see this.</div>
+        <div className="text-steel p-4 text-sm">You cannot see this.</div>
       </Tabs.Content>
       <Tabs.Content value="another">
-        <div className="p-4 text-sm text-[var(--steel)]">Another tab content.</div>
+        <div className="text-steel p-4 text-sm">Another tab content.</div>
       </Tabs.Content>
     </Tabs>
   ),
@@ -104,10 +100,10 @@ export const AllStates = () => (
           <Tabs.Trigger value="tab2">Second</Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="tab1">
-          <div className="p-4 text-sm text-[var(--steel)]">First tab content</div>
+          <div className="text-steel p-4 text-sm">First tab content</div>
         </Tabs.Content>
         <Tabs.Content value="tab2">
-          <div className="p-4 text-sm text-[var(--steel)]">Second tab content</div>
+          <div className="text-steel p-4 text-sm">Second tab content</div>
         </Tabs.Content>
       </Tabs>
     </div>
@@ -123,10 +119,10 @@ export const AllStates = () => (
           <Tabs.Trigger value="enabled2">Also Enabled</Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="enabled1">
-          <div className="p-4 text-sm text-[var(--steel)]">First enabled tab</div>
+          <div className="text-steel p-4 text-sm">First enabled tab</div>
         </Tabs.Content>
         <Tabs.Content value="enabled2">
-          <div className="p-4 text-sm text-[var(--steel)]">Second enabled tab</div>
+          <div className="text-steel p-4 text-sm">Second enabled tab</div>
         </Tabs.Content>
       </Tabs>
     </div>
@@ -141,16 +137,16 @@ export const AllStates = () => (
           <Tabs.Trigger value="t4">Tab 4</Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="t1">
-          <div className="p-4 text-sm text-[var(--steel)]">Content 1</div>
+          <div className="text-steel p-4 text-sm">Content 1</div>
         </Tabs.Content>
         <Tabs.Content value="t2">
-          <div className="p-4 text-sm text-[var(--steel)]">Content 2</div>
+          <div className="text-steel p-4 text-sm">Content 2</div>
         </Tabs.Content>
         <Tabs.Content value="t3">
-          <div className="p-4 text-sm text-[var(--steel)]">Content 3</div>
+          <div className="text-steel p-4 text-sm">Content 3</div>
         </Tabs.Content>
         <Tabs.Content value="t4">
-          <div className="p-4 text-sm text-[var(--steel)]">Content 4</div>
+          <div className="text-steel p-4 text-sm">Content 4</div>
         </Tabs.Content>
       </Tabs>
     </div>

@@ -2,43 +2,47 @@
  * Beaket UI Design System - Core Variables
  * This file is the single source of truth for CSS variables.
  * Used by: styles.css (via @import) and CLI init command (via build script)
+ *
+ * BREAKING CHANGE: Colors now use --color-* prefix (Tailwind v4 convention).
+ * Components use clean utilities: bg-paper, text-ink, border-chrome
  */
 
 @theme {
-  --color-inverse: var(--paper);
-  --shadow-offset: 2px 2px 0px 0px var(--chrome);
-  --shadow-offset-dark: 2px 2px 0px 0px var(--aluminum);
-  --shadow-offset-hover: 3px 3px 0px 0px var(--chrome);
-  --shadow-offset-active: 1px 1px 0px 0px var(--chrome);
-}
-
-:root {
   /* Neutral palette */
-  --graphite: #0d0d0d;
-  --ink: #1a1a1a;
-  --branch: #1c1f24;
-  --iron: #2d2d2d;
-  --slate: #404040;
-  --zinc: #525252;
-  --steel: #595959;
-  --aluminum: #9e9e9e;
-  --chrome: #d0d0d0;
-  --silver: #dedede;
-  --platinum: #e8e8e8;
-  --frost: #f5f5f5;
-  --paper: #fafafa;
+  --color-graphite: #0d0d0d;
+  --color-ink: #1a1a1a;
+  --color-branch: #1c1f24;
+  --color-iron: #2d2d2d;
+  --color-slate: #404040;
+  --color-zinc: #525252;
+  --color-steel: #595959;
+  --color-muted: #737373;
+  --color-aluminum: #9e9e9e;
+  --color-chrome: #d4d4d4;
+  --color-silver: #dedede;
+  --color-platinum: #ebebeb;
+  --color-frost: #f5f5f5;
+  --color-paper: #fafafa;
+  --color-inverse: var(--color-paper);
 
   /* Signal colors */
-  --signal-blue: #00449e;
-  --signal-red: #c41e1e;
-  --signal-red-hover: #b71c1c;
-  --signal-red-active: #9a1919;
-  --signal-green: #00794c;
-  --signal-green-hover: #0f5f42;
-  --signal-green-active: #0a4a32;
-  --signal-amber: #b8860b;
-  --signal-amber-hover: #9a7209;
-  --signal-amber-active: #7a5a07;
-  --signal-purple: #6f2da8;
-  --signal-cyan: #1a6b7c;
+  --color-signal-blue: #1a56a0;
+  --color-signal-red: #c41e1e;
+  --color-signal-red-hover: #b71c1c;
+  --color-signal-red-active: #9a1919;
+  --color-signal-red-text: #b91c1c;
+  --color-signal-green: #00794c;
+  --color-signal-green-hover: #0f5f42;
+  --color-signal-green-active: #0a4a32;
+  --color-signal-amber: #b8860b;
+  --color-signal-amber-hover: #9a7209;
+  --color-signal-amber-active: #7a5a07;
+  --color-signal-purple: #6f2da8;
+  --color-signal-cyan: #1a6b7c;
+
+  /* Shadows (offset only, no blur) */
+  --shadow-offset: 2px 2px 0px 0px var(--color-chrome);
+  --shadow-offset-dark: 2px 2px 0px 0px var(--color-aluminum);
+  --shadow-offset-hover: 3px 3px 0px 0px var(--color-chrome);
+  --shadow-offset-active: 1px 1px 0px 0px var(--color-chrome);
 }
