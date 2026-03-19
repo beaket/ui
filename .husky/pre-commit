@@ -1,3 +1,4 @@
 # Format staged files and re-add them to include the formatting changes in the commit
 FILES=$(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g')
-[ -n "$FILES" ] && prettier $FILES --write --ignore-unknown && git add $FILES
+[ -z "$FILES" ] && exit 0
+prettier $FILES --write --ignore-unknown && git add $FILES
