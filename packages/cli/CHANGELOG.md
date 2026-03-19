@@ -1,5 +1,47 @@
 # @beaket/ui
 
+## 2.0.0
+
+### Major Changes
+
+- [#230](https://github.com/beaket/ui/pull/230) [`5dda5cf`](https://github.com/beaket/ui/commit/5dda5cf106ac8982dafd1d633209949d46e1a5e8) Thanks [@jihnma](https://github.com/jihnma)! - BREAKING: Migrate CSS variables to Tailwind v4 `@theme` convention with `--color-*` prefix
+  - CSS tokens moved from `:root` to `@theme` block with `--color-*` prefix
+  - Components now use clean Tailwind utilities (`bg-paper` instead of `bg-[var(--paper)]`)
+  - Unified color token values with Beaket app (chrome, platinum, signal-blue)
+  - Added `--color-muted` ([#737373](https://github.com/beaket/ui/issues/737373)) for WCAG AA-compliant muted text (replaces aluminum for text)
+  - Added `--color-signal-red-text` (#b91c1c) for accessible red text on light backgrounds
+  - Accessibility improvements across all components:
+    - BlankSlate: decorative icons marked `aria-hidden`
+    - Navigation: default `aria-label` on nav landmark
+    - Button: spinner wrapped with `aria-live="polite"`
+    - Switch: disabled state uses border-dashed pattern instead of opacity
+    - DataTable: search input has `aria-label`
+    - Checkbox: indeterminate state with Minus icon and ARIA support
+
+### Minor Changes
+
+- [#232](https://github.com/beaket/ui/pull/232) [`18ebbb6`](https://github.com/beaket/ui/commit/18ebbb6fa1ab7278192f6bb40a8cd5aa4c6770ca) Thanks [@jihnma](https://github.com/jihnma)! - Add 7 new components extracted from Beaket app
+  - **Skeleton**: Loading placeholder with pulse animation
+  - **ViewToggle**: Generic toggle button group for switching between views
+  - **NavigationProgress**: Indeterminate progress bar for page navigation
+  - **PageHeader**: Page header with title, count, and action slot
+  - **ErrorPage**: Full-page error display with code, message, and action
+  - **SidebarLayout**: Responsive layout with content and sidebar slots
+  - **ConfirmationDialog**: Pre-built confirmation dialog with warning and loading state
+
+### Patch Changes
+
+- [#233](https://github.com/beaket/ui/pull/233) [`c71d810`](https://github.com/beaket/ui/commit/c71d810f75b41133f47e530d7e4f840cac9fd6cc) Thanks [@jihnma](https://github.com/jihnma)! - Fix accessibility and UX issues across 9 components
+  - DataTable: add `aria-sort` on sortable headers and `scope="col"` for screen reader table navigation
+  - ViewToggle: make `label` required for icon-only buttons (a11y)
+  - Skeleton: add `role="status"` and `aria-label` for screen readers
+  - Select: fix focus ring to use `focus-visible:` consistently
+  - Badge: add missing `data-slot="badge"`
+  - Avatar: add dev warning when `alt` prop is missing on Avatar.Image
+  - Radio: fix broken disabled indicator dot color using `group-disabled` pattern
+  - Navigation: add `transition-shadow`, `active:shadow-offset-active`, suppress shadow/hover when active
+  - Switch: fix disabled+checked state showing green, improve thumb contrast when disabled
+
 ## 1.9.1
 
 ### Patch Changes
