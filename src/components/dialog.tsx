@@ -98,11 +98,11 @@ export function Dialog({
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay
           data-slot="dialog-overlay"
-          className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-40 bg-[var(--ink)]/50"
+          className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 bg-ink/50 fixed inset-0 z-40"
         />
         <DialogPrimitive.Content
           data-slot="dialog-content"
-          className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 shadow-offset-dark fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 border border-[var(--chrome)] bg-[var(--paper)] p-6 sm:max-w-lg"
+          className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 shadow-offset-dark border-chrome bg-paper fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 border p-6 sm:max-w-lg"
           onInteractOutside={preventClose ? (e) => e.preventDefault() : undefined}
           onEscapeKeyDown={preventClose ? (e) => e.preventDefault() : undefined}
         >
@@ -110,7 +110,7 @@ export function Dialog({
           {!hideCloseButton && (
             <DialogPrimitive.Close
               data-slot="dialog-close"
-              className="absolute top-4 right-4 text-[var(--steel)] transition-colors hover:text-[var(--ink)] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--signal-blue)] disabled:pointer-events-none"
+              className="text-steel hover:text-ink focus-visible:outline-signal-blue absolute top-4 right-4 transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none"
               aria-label="Close dialog"
             >
               <X className="size-4" aria-hidden="true" />
@@ -126,7 +126,7 @@ function DialogTitle({ className, ...props }: React.ComponentProps<typeof Dialog
   return (
     <DialogPrimitive.Title
       data-slot="dialog-title"
-      className={cn("text-xl leading-7 font-semibold text-[var(--ink)]", className)}
+      className={cn("text-ink text-xl leading-7 font-semibold", className)}
       {...props}
     />
   );
@@ -139,7 +139,7 @@ function DialogDescription({
   return (
     <DialogPrimitive.Description
       data-slot="dialog-description"
-      className={cn("text-sm text-[var(--steel)]", className)}
+      className={cn("text-steel text-sm", className)}
       {...props}
     />
   );

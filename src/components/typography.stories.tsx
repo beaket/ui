@@ -13,48 +13,44 @@ const typeScale = [
 
 function Typography() {
   return (
-    <div className="min-h-screen bg-[var(--paper)] p-6">
+    <div className="bg-paper min-h-screen p-6">
       <div className="max-w-3xl">
         {/* Header */}
-        <div className="mb-8 border-b border-[var(--chrome)] pb-4">
-          <h1 className="text-2xl font-bold text-[var(--ink)]">Typography</h1>
-          <p className="mt-1 text-sm text-[var(--steel)]">
+        <div className="border-chrome mb-8 border-b pb-4">
+          <h1 className="text-ink text-2xl font-bold">Typography</h1>
+          <p className="text-steel mt-1 text-sm">
             System fonts. 4px baseline grid. Functional hierarchy.
           </p>
         </div>
 
         {/* Font Stack */}
         <section className="mb-8">
-          <h2 className="mb-3 text-xs font-bold tracking-wider text-[var(--steel)] uppercase">
-            Font Stack
-          </h2>
-          <div className="border border-[var(--chrome)] bg-[var(--frost)] p-4">
-            <code className="block text-xs text-[var(--ink)]">
+          <h2 className="text-steel mb-3 text-xs font-bold tracking-wider uppercase">Font Stack</h2>
+          <div className="border-chrome bg-frost border p-4">
+            <code className="text-ink block text-xs">
               -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif
             </code>
-            <code className="mt-2 block text-xs text-[var(--ink)]">
-              <span className="text-[var(--steel)]">Mono:</span> ui-monospace, SFMono-Regular, "SF
-              Mono", Menlo, monospace
+            <code className="text-ink mt-2 block text-xs">
+              <span className="text-steel">Mono:</span> ui-monospace, SFMono-Regular, "SF Mono",
+              Menlo, monospace
             </code>
           </div>
         </section>
 
         {/* Type Scale */}
         <section className="mb-8">
-          <h2 className="mb-3 text-xs font-bold tracking-wider text-[var(--steel)] uppercase">
-            Type Scale
-          </h2>
-          <div className="divide-y divide-[var(--chrome)] border border-[var(--chrome)]">
+          <h2 className="text-steel mb-3 text-xs font-bold tracking-wider uppercase">Type Scale</h2>
+          <div className="divide-chrome border-chrome divide-y border">
             {typeScale.map((type) => (
-              <div key={type.element} className="bg-[var(--paper)] p-4">
+              <div key={type.element} className="bg-paper p-4">
                 <div className="mb-2 flex items-baseline justify-between">
-                  <code className="text-xs text-[var(--signal-blue)]">&lt;{type.element}&gt;</code>
-                  <span className="text-xs text-[var(--aluminum)]">
+                  <code className="text-signal-blue text-xs">&lt;{type.element}&gt;</code>
+                  <span className="text-muted text-xs">
                     {type.size} / {type.lineHeight}
                   </span>
                 </div>
                 <div
-                  className="text-[var(--ink)]"
+                  className="text-ink"
                   style={{
                     fontSize: type.size,
                     lineHeight: type.lineHeight,
@@ -69,7 +65,7 @@ function Typography() {
                     ? "const brutalist = true;"
                     : "The quick brown fox jumps over the lazy dog"}
                 </div>
-                <div className="mt-2 text-xs text-[var(--aluminum)]">{type.usage}</div>
+                <div className="text-muted mt-2 text-xs">{type.usage}</div>
               </div>
             ))}
           </div>
@@ -77,22 +73,23 @@ function Typography() {
 
         {/* Baseline Grid */}
         <section className="mb-8">
-          <h2 className="mb-3 text-xs font-bold tracking-wider text-[var(--steel)] uppercase">
+          <h2 className="text-steel mb-3 text-xs font-bold tracking-wider uppercase">
             Baseline Grid
           </h2>
-          <p className="mb-3 text-xs text-[var(--aluminum)]">
+          <p className="text-muted mb-3 text-xs">
             All spacing uses 4px increments. Line heights align to the grid.
           </p>
           <div
-            className="relative border border-[var(--chrome)] p-4"
+            className="border-chrome relative border p-4"
             style={{
-              backgroundImage: "linear-gradient(to bottom, var(--chrome) 1px, transparent 1px)",
+              backgroundImage:
+                "linear-gradient(to bottom, var(--color-chrome) 1px, transparent 1px)",
               backgroundSize: "100% 4px",
             }}
           >
-            <div className="relative bg-[var(--paper)]">
+            <div className="bg-paper relative">
               <h3
-                className="text-[var(--ink)]"
+                className="text-ink"
                 style={{
                   fontSize: "20px",
                   lineHeight: "28px",
@@ -103,13 +100,13 @@ function Typography() {
                 Heading aligns to grid
               </h3>
               <p
-                className="text-[var(--ink)]"
+                className="text-ink"
                 style={{ fontSize: "14px", lineHeight: "24px", marginBottom: "16px" }}
               >
                 Body text with 24px line-height. Each line sits on the 4px baseline grid. Margins
                 are multiples of 4px to maintain vertical rhythm throughout the interface.
               </p>
-              <p className="text-[var(--steel)]" style={{ fontSize: "12px", lineHeight: "16px" }}>
+              <p className="text-steel" style={{ fontSize: "12px", lineHeight: "16px" }}>
                 Small text caption at 12px/16px
               </p>
             </div>
@@ -118,15 +115,15 @@ function Typography() {
 
         {/* Spacing Reference */}
         <section className="mb-8">
-          <h2 className="mb-3 text-xs font-bold tracking-wider text-[var(--steel)] uppercase">
+          <h2 className="text-steel mb-3 text-xs font-bold tracking-wider uppercase">
             Spacing Scale
           </h2>
-          <div className="divide-y divide-[var(--chrome)] border border-[var(--chrome)]">
+          <div className="divide-chrome border-chrome divide-y border">
             {[4, 8, 12, 16, 20, 24, 32, 40, 48].map((px) => (
-              <div key={px} className="flex items-center bg-[var(--paper)] p-3">
-                <code className="w-16 text-xs text-[var(--ink)]">{px}px</code>
-                <div className="h-3 bg-[var(--signal-blue)]" style={{ width: px * 2 }} />
-                <span className="ml-3 text-xs text-[var(--aluminum)]">{px / 4} baseline units</span>
+              <div key={px} className="bg-paper flex items-center p-3">
+                <code className="text-ink w-16 text-xs">{px}px</code>
+                <div className="bg-signal-blue h-3" style={{ width: px * 2 }} />
+                <span className="text-muted ml-3 text-xs">{px / 4} baseline units</span>
               </div>
             ))}
           </div>
@@ -134,11 +131,11 @@ function Typography() {
 
         {/* Design Rules */}
         <section>
-          <h2 className="mb-3 text-xs font-bold tracking-wider text-[var(--steel)] uppercase">
+          <h2 className="text-steel mb-3 text-xs font-bold tracking-wider uppercase">
             Typography Rules
           </h2>
-          <div className="border border-[var(--chrome)] bg-[var(--frost)] p-4">
-            <ul className="space-y-2 text-xs text-[var(--ink)]">
+          <div className="border-chrome bg-frost border p-4">
+            <ul className="text-ink space-y-2 text-xs">
               <li>
                 <strong>System fonts only</strong> — No custom web fonts
               </li>
@@ -150,11 +147,11 @@ function Typography() {
               </li>
               <li>
                 <strong>Ink for text</strong> — Primary text uses{" "}
-                <code className="text-[var(--signal-blue)]">var(--ink)</code>
+                <code className="text-signal-blue">text-ink</code>
               </li>
               <li>
                 <strong>Steel for secondary</strong> — Muted text uses{" "}
-                <code className="text-[var(--signal-blue)]">var(--steel)</code>
+                <code className="text-signal-blue">text-steel</code>
               </li>
             </ul>
           </div>
@@ -185,21 +182,19 @@ type Story = StoryObj<typeof Typography>;
 export const Default: Story = {};
 
 export const TypeScale = () => (
-  <div className="bg-[var(--paper)] p-6">
-    <h2 className="mb-3 text-xs font-bold tracking-wider text-[var(--steel)] uppercase">
-      Type Scale
-    </h2>
-    <div className="max-w-xl divide-y divide-[var(--chrome)] border border-[var(--chrome)]">
+  <div className="bg-paper p-6">
+    <h2 className="text-steel mb-3 text-xs font-bold tracking-wider uppercase">Type Scale</h2>
+    <div className="divide-chrome border-chrome max-w-xl divide-y border">
       {typeScale.map((type) => (
-        <div key={type.element} className="bg-[var(--paper)] p-4">
+        <div key={type.element} className="bg-paper p-4">
           <div className="mb-2 flex items-baseline justify-between">
-            <code className="text-xs text-[var(--signal-blue)]">&lt;{type.element}&gt;</code>
-            <span className="text-xs text-[var(--aluminum)]">
+            <code className="text-signal-blue text-xs">&lt;{type.element}&gt;</code>
+            <span className="text-muted text-xs">
               {type.size} / {type.lineHeight}
             </span>
           </div>
           <div
-            className="text-[var(--ink)]"
+            className="text-ink"
             style={{
               fontSize: type.size,
               lineHeight: type.lineHeight,
@@ -221,33 +216,30 @@ export const TypeScale = () => (
 );
 
 export const BaselineGrid = () => (
-  <div className="bg-[var(--paper)] p-6">
-    <h2 className="mb-3 text-xs font-bold tracking-wider text-[var(--steel)] uppercase">
+  <div className="bg-paper p-6">
+    <h2 className="text-steel mb-3 text-xs font-bold tracking-wider uppercase">
       Baseline Grid (4px)
     </h2>
     <div
-      className="max-w-xl border border-[var(--chrome)] p-4"
+      className="border-chrome max-w-xl border p-4"
       style={{
-        backgroundImage: "linear-gradient(to bottom, var(--chrome) 1px, transparent 1px)",
+        backgroundImage: "linear-gradient(to bottom, var(--color-chrome) 1px, transparent 1px)",
         backgroundSize: "100% 4px",
       }}
     >
       <h3
-        className="bg-[var(--paper)] text-[var(--ink)]"
+        className="bg-paper text-ink"
         style={{ fontSize: "20px", lineHeight: "28px", fontWeight: 600, marginBottom: "8px" }}
       >
         Heading text
       </h3>
       <p
-        className="bg-[var(--paper)] text-[var(--ink)]"
+        className="bg-paper text-ink"
         style={{ fontSize: "14px", lineHeight: "24px", marginBottom: "16px" }}
       >
         Body text aligns to the 4px grid. Line heights and margins are always multiples of 4.
       </p>
-      <p
-        className="bg-[var(--paper)] text-[var(--steel)]"
-        style={{ fontSize: "12px", lineHeight: "16px" }}
-      >
+      <p className="bg-paper text-steel" style={{ fontSize: "12px", lineHeight: "16px" }}>
         Caption text at 12px/16px
       </p>
     </div>
@@ -255,15 +247,13 @@ export const BaselineGrid = () => (
 );
 
 export const SpacingScale = () => (
-  <div className="bg-[var(--paper)] p-6">
-    <h2 className="mb-3 text-xs font-bold tracking-wider text-[var(--steel)] uppercase">
-      Spacing Scale
-    </h2>
-    <div className="max-w-md divide-y divide-[var(--chrome)] border border-[var(--chrome)]">
+  <div className="bg-paper p-6">
+    <h2 className="text-steel mb-3 text-xs font-bold tracking-wider uppercase">Spacing Scale</h2>
+    <div className="divide-chrome border-chrome max-w-md divide-y border">
       {[4, 8, 12, 16, 24, 32, 48].map((px) => (
-        <div key={px} className="flex items-center bg-[var(--paper)] p-3">
-          <code className="w-12 text-xs text-[var(--ink)]">{px}px</code>
-          <div className="h-3 bg-[var(--signal-blue)]" style={{ width: px * 2 }} />
+        <div key={px} className="bg-paper flex items-center p-3">
+          <code className="text-ink w-12 text-xs">{px}px</code>
+          <div className="bg-signal-blue h-3" style={{ width: px * 2 }} />
         </div>
       ))}
     </div>

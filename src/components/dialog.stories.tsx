@@ -38,7 +38,7 @@ export const Default: Story = {
             This is a dialog description that provides additional context.
           </Dialog.Description>
         </Dialog.Header>
-        <p className="text-sm text-[var(--graphite)]">
+        <p className="text-graphite text-sm">
           Dialog content goes here. You can put any content inside.
         </p>
         <Dialog.Footer>
@@ -114,24 +114,24 @@ export const WithForm: Story = {
         </Dialog.Header>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <label htmlFor="name" className="text-sm font-medium text-[var(--ink)]">
+            <label htmlFor="name" className="text-ink text-sm font-medium">
               Name
             </label>
             <input
               id="name"
               defaultValue="John Doe"
-              className="h-9 border border-[var(--chrome)] bg-[var(--paper)] px-3 text-sm text-[var(--ink)] placeholder:text-[var(--steel)] focus:ring-2 focus:ring-[var(--signal-blue)] focus:outline-none"
+              className="border-chrome bg-paper text-ink placeholder:text-steel focus:ring-signal-blue h-9 border px-3 text-sm focus:ring-2 focus:outline-none"
             />
           </div>
           <div className="grid gap-2">
-            <label htmlFor="email" className="text-sm font-medium text-[var(--ink)]">
+            <label htmlFor="email" className="text-ink text-sm font-medium">
               Email
             </label>
             <input
               id="email"
               type="email"
               defaultValue="john@example.com"
-              className="h-9 border border-[var(--chrome)] bg-[var(--paper)] px-3 text-sm text-[var(--ink)] placeholder:text-[var(--steel)] focus:ring-2 focus:ring-[var(--signal-blue)] focus:outline-none"
+              className="border-chrome bg-paper text-ink placeholder:text-steel focus:ring-signal-blue h-9 border px-3 text-sm focus:ring-2 focus:outline-none"
             />
           </div>
         </div>
@@ -176,9 +176,7 @@ function ControlledDialogExample() {
     <div className="flex flex-col gap-4">
       <div className="flex gap-2">
         <Button onClick={() => setOpen(true)}>Open Dialog</Button>
-        <span className="self-center text-sm text-[var(--steel)]">
-          Dialog is {open ? "open" : "closed"}
-        </span>
+        <span className="text-steel self-center text-sm">Dialog is {open ? "open" : "closed"}</span>
       </div>
       <Dialog open={open} onOpenChange={setOpen}>
         <Dialog.Header>
@@ -221,7 +219,7 @@ export const AllStates = () => (
       <div className="py-4">
         <input
           placeholder="Enter something..."
-          className="h-9 w-full border border-[var(--chrome)] bg-[var(--paper)] px-3 text-sm"
+          className="border-chrome bg-paper h-9 w-full border px-3 text-sm"
         />
       </div>
       <Dialog.Footer>

@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 function NavigationRoot({ className, ...props }: React.ComponentProps<"nav">) {
-  return <nav data-slot="navigation" className={cn("", className)} {...props} />;
+  return <nav data-slot="navigation" aria-label="Main" className={cn("", className)} {...props} />;
 }
 
 function NavigationList({ className, ...props }: React.ComponentProps<"ul">) {
@@ -33,10 +33,10 @@ function NavigationLink({ className, active, ...props }: NavigationLinkProps) {
       data-active={active || undefined}
       className={cn(
         "inline-block min-w-[80px] px-4 py-1 text-center text-sm no-underline",
-        "border border-[var(--graphite)] bg-white text-[var(--ink)]",
+        "border-graphite bg-paper text-ink border",
         "shadow-offset hover:shadow-offset-hover",
-        "hover:bg-[var(--frost)]",
-        "data-[active]:text-inverse data-[active]:bg-[var(--ink)]",
+        "hover:bg-frost",
+        "data-[active]:text-inverse data-[active]:bg-ink",
         className,
       )}
       aria-current={active ? "page" : undefined}

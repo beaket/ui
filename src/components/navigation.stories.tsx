@@ -103,7 +103,7 @@ export const VerticalLayout: Story = {
 export const AllVariants = () => (
   <div className="space-y-6">
     <div>
-      <p className="mb-2 text-xs text-[var(--steel)]">Horizontal navigation</p>
+      <p className="text-steel mb-2 text-xs">Horizontal navigation</p>
       <Navigation>
         <Navigation.List>
           <Navigation.Item>
@@ -121,7 +121,7 @@ export const AllVariants = () => (
       </Navigation>
     </div>
     <div>
-      <p className="mb-2 text-xs text-[var(--steel)]">Vertical navigation</p>
+      <p className="text-steel mb-2 text-xs">Vertical navigation</p>
       <Navigation>
         <Navigation.List className="w-48 flex-col">
           <Navigation.Item>

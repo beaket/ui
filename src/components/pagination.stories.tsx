@@ -112,7 +112,7 @@ export const AllStates = () => (
 
     <div>
       <h3 className="mb-4 text-sm font-medium">Single Page (Hidden)</h3>
-      <p className="text-sm text-[var(--steel)]">Pagination is hidden when totalPages = 1</p>
+      <p className="text-steel text-sm">Pagination is hidden when totalPages = 1</p>
       <Pagination page={1} totalPages={1} buildPageUrl={buildPageUrl} />
     </div>
   </div>

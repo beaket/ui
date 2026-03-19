@@ -50,7 +50,11 @@ export function Button({
         children
       ) : (
         <>
-          {loading && <Spinner />}
+          {loading && (
+            <span aria-live="polite">
+              <Spinner />
+            </span>
+          )}
           {children}
         </>
       )}
@@ -66,8 +70,8 @@ const buttonVariants = cva(
     "shadow-offset",
     "hover:shadow-offset-hover",
     "active:shadow-offset-active",
-    "disabled:shadow-none disabled:cursor-not-allowed disabled:border-dashed disabled:border-[var(--chrome)] disabled:bg-[var(--frost)] disabled:text-[var(--steel)]",
-    "focus-visible:outline-2 focus-visible:outline-[var(--signal-blue)] focus-visible:outline-offset-2",
+    "disabled:shadow-none disabled:cursor-not-allowed disabled:border-dashed disabled:border-chrome disabled:bg-frost disabled:text-steel",
+    "focus-visible:outline-2 focus-visible:outline-signal-blue focus-visible:outline-offset-2",
     "[&_svg]:size-4",
     "transition-shadow duration-100",
   ].join(" "),
@@ -75,22 +79,20 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-[var(--branch)] text-[var(--paper)] border border-[var(--branch)] hover:bg-[var(--iron)] hover:border-[var(--iron)] active:bg-[var(--ink)] disabled:text-[var(--steel)] no-underline",
+          "bg-branch text-paper border border-branch hover:bg-iron hover:border-iron active:bg-ink disabled:text-steel no-underline",
         destructive:
-          "bg-[var(--signal-red)] text-[var(--paper)] border border-[var(--signal-red)] hover:bg-[var(--signal-red-hover)] hover:border-[var(--signal-red-hover)] active:bg-[var(--signal-red-active)] disabled:text-[var(--steel)] no-underline",
-        outline:
-          "border border-[var(--chrome)] bg-transparent text-[var(--ink)] hover:bg-[var(--frost)] active:bg-[var(--platinum)]",
-        secondary:
-          "bg-[var(--frost)] text-[var(--ink)] border border-[var(--chrome)] hover:bg-[var(--platinum)] active:bg-[var(--silver)]",
+          "bg-signal-red text-paper border border-signal-red hover:bg-signal-red-hover hover:border-signal-red-hover active:bg-signal-red-active disabled:text-steel no-underline",
+        outline: "border border-chrome bg-transparent text-ink hover:bg-frost active:bg-platinum",
+        secondary: "bg-frost text-ink border border-chrome hover:bg-platinum active:bg-silver",
         ghost:
-          "text-[var(--ink)] hover:bg-[var(--frost)] active:bg-[var(--platinum)] shadow-none hover:shadow-none active:shadow-none",
-        link: "text-[var(--signal-blue)] underline-offset-4 hover:underline shadow-none hover:shadow-none active:shadow-none",
+          "text-ink hover:bg-frost active:bg-platinum shadow-none hover:shadow-none active:shadow-none",
+        link: "text-signal-blue underline-offset-4 hover:underline shadow-none hover:shadow-none active:shadow-none",
         success:
-          "bg-[var(--signal-green)] text-[var(--paper)] border border-[var(--signal-green)] hover:bg-[var(--signal-green-hover)] hover:border-[var(--signal-green-hover)] active:bg-[var(--signal-green-active)] disabled:text-[var(--steel)] no-underline",
+          "bg-signal-green text-paper border border-signal-green hover:bg-signal-green-hover hover:border-signal-green-hover active:bg-signal-green-active disabled:text-steel no-underline",
         stark:
-          "border border-[var(--ink)] bg-transparent text-[var(--ink)] hover:bg-[var(--ink)] hover:text-[var(--paper)] active:bg-[var(--graphite)]",
+          "border border-ink bg-transparent text-ink hover:bg-ink hover:text-paper active:bg-graphite",
         warning:
-          "bg-[var(--signal-amber)] text-[var(--graphite)] border border-[var(--signal-amber)] hover:bg-[var(--signal-amber-hover)] hover:border-[var(--signal-amber-hover)] active:bg-[var(--signal-amber-active)] disabled:text-[var(--steel)] no-underline",
+          "bg-signal-amber text-graphite border border-signal-amber hover:bg-signal-amber-hover hover:border-signal-amber-hover active:bg-signal-amber-active disabled:text-steel no-underline",
       },
       size: {
         sm: "h-8 px-3 text-xs",

@@ -23,14 +23,14 @@ export function Blockquote({
   return (
     <blockquote
       data-slot="blockquote"
-      className={cn("my-4 border-l border-[var(--graphite)] py-1 pl-3", className)}
+      className={cn("border-graphite my-4 border-l py-1 pl-3", className)}
       cite={cite}
       {...props}
     >
       <div className="text-sm leading-relaxed italic">{children}</div>
       {(author || authorTitle) && (
-        <footer className="mt-2 text-sm text-[var(--steel)]">
-          {author && <strong className="block text-[var(--ink)]">{author}</strong>}
+        <footer className="text-steel mt-2 text-sm">
+          {author && <strong className="text-ink block">{author}</strong>}
           {authorTitle && <span>{authorTitle}</span>}
         </footer>
       )}

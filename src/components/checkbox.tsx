@@ -1,6 +1,6 @@
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { type ClassValue, clsx } from "clsx";
-import { Check } from "lucide-react";
+import { Check, Minus } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
@@ -15,13 +15,14 @@ export function Checkbox({ className, ...props }: Props) {
     <CheckboxPrimitive.Root
       data-slot="checkbox"
       className={cn(
-        "peer size-4 shrink-0 border border-[var(--graphite)]",
-        "bg-[var(--paper)]",
-        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--signal-blue)]",
-        "data-[state=checked]:border-[var(--ink)] data-[state=checked]:bg-[var(--ink)] data-[state=checked]:text-[var(--paper)]",
-        "disabled:cursor-not-allowed disabled:border-dashed disabled:border-[var(--chrome)] disabled:bg-[var(--frost)] disabled:text-[var(--steel)] disabled:hover:border-[var(--chrome)]",
-        "disabled:data-[state=checked]:border-[var(--chrome)] disabled:data-[state=checked]:bg-[var(--frost)] disabled:data-[state=checked]:text-[var(--steel)]",
-        "aria-[invalid=true]:border-[var(--signal-red)]",
+        "group peer border-graphite size-4 shrink-0 border",
+        "bg-paper",
+        "focus-visible:outline-signal-blue focus-visible:outline-2 focus-visible:outline-offset-2",
+        "data-[state=checked]:border-ink data-[state=checked]:bg-ink data-[state=checked]:text-paper",
+        "data-[state=indeterminate]:border-ink data-[state=indeterminate]:bg-ink data-[state=indeterminate]:text-paper",
+        "disabled:border-chrome disabled:bg-frost disabled:text-steel disabled:hover:border-chrome disabled:cursor-not-allowed disabled:border-dashed",
+        "disabled:data-[state=checked]:border-chrome disabled:data-[state=checked]:bg-frost disabled:data-[state=checked]:text-steel",
+        "aria-[invalid=true]:border-signal-red",
         className,
       )}
       {...props}
@@ -30,7 +31,8 @@ export function Checkbox({ className, ...props }: Props) {
         data-slot="checkbox-indicator"
         className="flex items-center justify-center text-current"
       >
-        <Check className="size-3" />
+        <Check className="size-3 group-data-[state=indeterminate]:hidden" />
+        <Minus className="hidden size-3 group-data-[state=indeterminate]:block" />
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   );

@@ -36,12 +36,12 @@ export function Textarea({ className, autoResize = true, onInput, ...props }: Pr
       ref={textareaRef}
       data-slot="textarea"
       className={cn(
-        "w-full border border-[var(--graphite)] bg-[var(--paper)] px-3 py-2 text-sm text-[var(--ink)]",
-        "placeholder:text-[var(--steel)]",
-        "focus:ring-2 focus:ring-[var(--signal-blue)] focus:ring-offset-1 focus:outline-none",
-        "disabled:cursor-not-allowed disabled:border-dashed disabled:border-[var(--chrome)] disabled:bg-[var(--frost)] disabled:text-[var(--steel)]",
-        "read-only:cursor-default read-only:bg-[var(--frost)]",
-        "aria-[invalid=true]:border-[var(--signal-red)] aria-[invalid=true]:focus:ring-[var(--signal-red)]",
+        "border-graphite bg-paper text-ink w-full border px-3 py-2 text-sm",
+        "placeholder:text-steel",
+        "focus:ring-signal-blue focus:ring-2 focus:ring-offset-1 focus:outline-none",
+        "disabled:border-chrome disabled:bg-frost disabled:text-steel disabled:cursor-not-allowed disabled:border-dashed",
+        "read-only:bg-frost read-only:cursor-default",
+        "aria-[invalid=true]:border-signal-red aria-[invalid=true]:focus:ring-signal-red",
         autoResize && "resize-none overflow-hidden",
         className,
       )}

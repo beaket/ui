@@ -120,12 +120,12 @@ export function Sheet({
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay
           data-slot="sheet-overlay"
-          className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-40 bg-[var(--ink)]/50"
+          className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 bg-ink/50 fixed inset-0 z-40"
         />
         <DialogPrimitive.Content
           data-slot="sheet-content"
           className={cn(
-            "shadow-offset-dark fixed z-50 gap-4 border border-[var(--chrome)] bg-[var(--paper)] p-4",
+            "shadow-offset-dark border-chrome bg-paper fixed z-50 gap-4 border p-4",
             fullScreen ? sidePositionsFullScreen[side] : sidePositions[side],
             sideAnimations[side],
           )}
@@ -135,7 +135,7 @@ export function Sheet({
           {children}
           <DialogPrimitive.Close
             data-slot="sheet-close"
-            className="absolute top-4 right-4 text-[var(--steel)] transition-colors hover:text-[var(--ink)] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--signal-blue)] disabled:pointer-events-none"
+            className="text-steel hover:text-ink focus-visible:outline-signal-blue absolute top-4 right-4 transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none"
             aria-label="Close sheet"
           >
             <X className="size-4" aria-hidden="true" />
@@ -150,7 +150,7 @@ function SheetTitle({ className, ...props }: React.ComponentProps<typeof DialogP
   return (
     <DialogPrimitive.Title
       data-slot="sheet-title"
-      className={cn("text-xl leading-7 font-semibold text-[var(--ink)]", className)}
+      className={cn("text-ink text-xl leading-7 font-semibold", className)}
       {...props}
     />
   );
@@ -163,7 +163,7 @@ function SheetDescription({
   return (
     <DialogPrimitive.Description
       data-slot="sheet-description"
-      className={cn("text-sm text-[var(--steel)]", className)}
+      className={cn("text-steel text-sm", className)}
       {...props}
     />
   );

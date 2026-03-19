@@ -20,14 +20,14 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-[var(--ink)] text-[var(--paper)] border-[var(--ink)]",
-        secondary: "bg-[var(--frost)] text-[var(--ink)] border-[var(--chrome)]",
-        success: "bg-[var(--signal-green)] text-[var(--paper)] border-[var(--signal-green)]",
-        error: "bg-[var(--signal-red)] text-[var(--paper)] border-[var(--signal-red)]",
-        info: "bg-[var(--signal-blue)] text-[var(--paper)] border-[var(--signal-blue)]",
-        outline: "bg-transparent text-[var(--ink)] border-[var(--chrome)]",
-        warning: "bg-[var(--signal-amber)] text-[var(--graphite)] border-[var(--signal-amber)]",
-        code: "font-mono bg-[var(--frost)] text-[var(--ink)] border-[var(--chrome)]",
+        default: "bg-ink text-paper border-ink",
+        secondary: "bg-frost text-ink border-chrome",
+        success: "bg-signal-green text-paper border-signal-green",
+        error: "bg-signal-red text-paper border-signal-red",
+        info: "bg-signal-blue text-paper border-signal-blue",
+        outline: "bg-transparent text-ink border-chrome",
+        warning: "bg-signal-amber text-graphite border-signal-amber",
+        code: "font-mono bg-frost text-ink border-chrome",
       },
     },
     defaultVariants: {

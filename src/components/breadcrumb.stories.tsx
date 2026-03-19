@@ -95,7 +95,7 @@ export const CustomSeparator: Story = {
 export const AllVariants = () => (
   <div className="space-y-4">
     <div>
-      <p className="mb-2 text-xs text-[var(--steel)]">Default separator</p>
+      <p className="text-steel mb-2 text-xs">Default separator</p>
       <Breadcrumb>
         <Breadcrumb.List>
           <Breadcrumb.Item>
@@ -109,7 +109,7 @@ export const AllVariants = () => (
       </Breadcrumb>
     </div>
     <div>
-      <p className="mb-2 text-xs text-[var(--steel)]">Chevron separator</p>
+      <p className="text-steel mb-2 text-xs">Chevron separator</p>
       <Breadcrumb>
         <Breadcrumb.List>
           <Breadcrumb.Item>
