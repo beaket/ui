@@ -30,7 +30,7 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.6.0",
     "@changesets/cli": "^2.30.0",
-    "@chromatic-com/storybook": "5.0.1",
+    "@chromatic-com/storybook": "5.0.2",
     "@storybook/addon-a11y": "10.2.10",
     "@storybook/addon-docs": "10.2.10",
     "@storybook/addon-onboarding": "10.2.10",
