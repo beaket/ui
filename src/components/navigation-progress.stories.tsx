@@ -18,6 +18,17 @@ export const Default: Story = {
   args: {
     active: true,
   },
+  render: (args) => (
+    <div className="border-chrome bg-paper relative h-32 border">
+      <NavigationProgress {...args} className="!relative" />
+      <div className="p-6 pt-4">
+        <p className="text-steel text-sm">
+          The progress bar animates at the top. In production it uses <code>fixed</code>{" "}
+          positioning.
+        </p>
+      </div>
+    </div>
+  ),
 };
 
 export const Inactive: Story = {
@@ -27,10 +38,12 @@ export const Inactive: Story = {
 };
 
 export const AllStates = () => (
-  <div className="relative min-h-[100px]">
-    <NavigationProgress active={true} />
-    <div className="p-6">
-      <p className="text-steel text-sm">The progress bar is shown at the top of the viewport.</p>
+  <div className="border-chrome bg-paper relative h-32 border">
+    <NavigationProgress active={true} className="!relative" />
+    <div className="p-6 pt-4">
+      <p className="text-steel text-sm">
+        Active state — the bar slides across the top of the container.
+      </p>
     </div>
   </div>
 );
