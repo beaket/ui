@@ -427,19 +427,6 @@
         "sections": ["AllStates"],
         "previewStory": "Default"
       }
-    },
-    {
-      "name": "form-dialog",
-      "description": "Dialog wrapper for forms with submission state handling",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "registryDependencies": ["dialog", "button"],
-      "files": ["components/form-dialog.tsx"],
-      "docs": {
-        "title": "FormDialog",
-        "tagline": "A dialog wrapper for forms with auto-close and submission state handling.",
-        "sections": ["AllStates"],
-        "previewStory": "Default"
-      }
     }
   ]
 }
