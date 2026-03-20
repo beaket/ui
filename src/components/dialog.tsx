@@ -110,7 +110,7 @@ export function Dialog({
           {!hideCloseButton && (
             <DialogPrimitive.Close
               data-slot="dialog-close"
-              className="text-steel hover:text-ink focus-visible:outline-signal-blue absolute top-4 right-4 transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none"
+              className="text-steel hover:text-ink focus-visible:outline-signal-blue absolute top-4 right-4 transition-colors before:absolute before:inset-[-14px] before:content-[''] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none"
               aria-label="Close dialog"
             >
               <X className="size-4" aria-hidden="true" />

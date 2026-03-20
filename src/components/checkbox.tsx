@@ -15,7 +15,7 @@ export function Checkbox({ className, ...props }: Props) {
     <CheckboxPrimitive.Root
       data-slot="checkbox"
       className={cn(
-        "group peer border-graphite size-4 shrink-0 border",
+        "group peer border-graphite relative size-4 shrink-0 border before:absolute before:inset-[-14px] before:content-['']",
         "bg-paper",
         "focus-visible:outline-signal-blue focus-visible:outline-2 focus-visible:outline-offset-2",
         "data-[state=checked]:border-ink data-[state=checked]:bg-ink data-[state=checked]:text-paper",
