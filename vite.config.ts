@@ -12,6 +12,9 @@ const dirname =
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  optimizeDeps: {
+    include: ["lucide-react"],
+  },
   resolve: {
     alias: {
       "@": path.resolve(dirname, "./src"),
