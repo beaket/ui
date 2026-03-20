@@ -22,7 +22,7 @@ import {
   ChevronsRight,
   Search,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { Button } from "./button";
 import { Checkbox } from "./checkbox";
@@ -135,12 +135,17 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const tableRef = useRef(table);
+  tableRef.current = table;
+
   useEffect(() => {
     if (selectable && onSelectionChange) {
-      const selectedRows = table.getFilteredSelectedRowModel().rows.map((row) => row.original);
+      const selectedRows = tableRef.current
+        .getFilteredSelectedRowModel()
+        .rows.map((row) => row.original);
       onSelectionChange(selectedRows);
     }
-  }, [rowSelection, selectable, onSelectionChange, table]);
+  }, [rowSelection, selectable, onSelectionChange]);
 
   return (
     <div className={className}>
@@ -227,6 +232,18 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() => onRowClick?.(row.original)}
+                  onKeyDown={
+                    onRowClick
+                      ? (e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            onRowClick(row.original);
+                          }
+                        }
+                      : undefined
+                  }
+                  tabIndex={onRowClick ? 0 : undefined}
+                  role={onRowClick ? "button" : undefined}
                   onMouseEnter={() => onRowMouseEnter?.(row.original)}
                   onMouseLeave={() => onRowMouseLeave?.(row.original)}
                   className={cn(

@@ -13,6 +13,12 @@ interface Props {
   preventClose?: boolean;
 
   /**
+   * When true, hides the X close button in the top-right corner.
+   * Useful with preventClose when you want users to use only action buttons.
+   */
+  hideCloseButton?: boolean;
+
+  /**
    * Element that opens the sheet when clicked.
    * Optional - if not provided, sheet must be controlled via open/onOpenChange props.
    */
@@ -77,6 +83,7 @@ export function Sheet({
   children,
   trigger,
   preventClose = false,
+  hideCloseButton = false,
   open,
   onOpenChange,
   closeWhen,
@@ -133,13 +140,15 @@ export function Sheet({
           onEscapeKeyDown={preventClose ? (e) => e.preventDefault() : undefined}
         >
           {children}
-          <DialogPrimitive.Close
-            data-slot="sheet-close"
-            className="text-steel hover:text-ink focus-visible:outline-signal-blue absolute top-4 right-4 transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none"
-            aria-label="Close sheet"
-          >
-            <X className="size-4" aria-hidden="true" />
-          </DialogPrimitive.Close>
+          {!hideCloseButton && (
+            <DialogPrimitive.Close
+              data-slot="sheet-close"
+              className="text-steel hover:text-ink focus-visible:outline-signal-blue absolute top-4 right-4 transition-colors before:absolute before:inset-[-14px] before:content-[''] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none"
+              aria-label="Close sheet"
+            >
+              <X className="size-4" aria-hidden="true" />
+            </DialogPrimitive.Close>
+          )}
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     </DialogPrimitive.Root>

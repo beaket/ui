@@ -36,13 +36,16 @@ export function Button({
   children,
   mono = false,
   asChild = false,
+  type,
   ...props
 }: Props) {
   const Comp = asChild ? Slot : "button";
 
   return (
     <Comp
+      data-slot="button"
       className={cn(buttonVariants({ variant, size, mono }), className)}
+      type={!asChild ? (type ?? "button") : undefined}
       disabled={!asChild ? disabled || loading : undefined}
       {...props}
     >

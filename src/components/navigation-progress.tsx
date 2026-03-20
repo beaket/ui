@@ -31,6 +31,7 @@ export function NavigationProgress({ active, className, ...props }: NavigationPr
       data-slot="navigation-progress"
       role="progressbar"
       aria-label="Loading"
+      aria-valuetext="Loading"
       className={cn("bg-chrome fixed top-0 right-0 left-0 z-50 h-0.5 overflow-hidden", className)}
       {...props}
     >

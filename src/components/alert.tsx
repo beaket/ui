@@ -62,10 +62,7 @@ export function Alert({ className, variant = "note", title, children, ...props }
       {...props}
     >
       <Icon />
-      <div
-        data-slot="alert-title"
-        className="col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight"
-      >
+      <div data-slot="alert-title" className="col-start-2 min-h-4 font-medium tracking-tight">
         {displayTitle}
       </div>
       {children && (

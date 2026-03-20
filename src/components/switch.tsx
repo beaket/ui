@@ -6,7 +6,7 @@ import { twMerge } from "tailwind-merge";
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 const switchVariants = cva(
-  "group peer inline-flex shrink-0 cursor-pointer items-center p-0.5 transition-colors outline-none data-[state=checked]:bg-signal-green data-[state=unchecked]:bg-chrome focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal-blue disabled:cursor-not-allowed disabled:border-dashed disabled:border-chrome disabled:bg-frost disabled:data-[state=checked]:bg-frost border border-chrome",
+  "group peer inline-flex shrink-0 cursor-pointer items-center p-0.5 transition-colors outline-none data-[state=checked]:bg-signal-green data-[state=unchecked]:bg-chrome focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal-blue disabled:cursor-not-allowed disabled:border-dashed disabled:border-chrome disabled:bg-frost disabled:data-[state=checked]:bg-frost border border-chrome relative before:absolute before:inset-[-14px] before:content-['']",
   {
     variants: {
       size: {
