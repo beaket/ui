@@ -338,19 +338,6 @@
       }
     },
     {
-      "name": "view-toggle",
-      "description": "Toggle button group for switching between views",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "registryDependencies": [],
-      "files": ["components/view-toggle.tsx"],
-      "docs": {
-        "title": "ViewToggle",
-        "tagline": "A button group for toggling between view modes.",
-        "sections": ["AllStates"],
-        "previewStory": "Default"
-      }
-    },
-    {
       "name": "navigation-progress",
       "description": "Indeterminate progress bar for page navigation",
       "dependencies": ["clsx", "tailwind-merge"],
