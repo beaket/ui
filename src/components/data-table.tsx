@@ -247,7 +247,8 @@ export function DataTable<TData, TValue>({
                   onMouseEnter={() => onRowMouseEnter?.(row.original)}
                   onMouseLeave={() => onRowMouseLeave?.(row.original)}
                   className={cn(
-                    onRowClick && "cursor-pointer",
+                    onRowClick &&
+                      "focus-visible:outline-signal-blue cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-[-2px]",
                     compact && "h-10",
                     getRowClassName?.(row.original),
                   )}
