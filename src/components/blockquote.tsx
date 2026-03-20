@@ -23,7 +23,7 @@ export function Blockquote({
   return (
     <blockquote
       data-slot="blockquote"
-      className={cn("border-graphite my-4 border-l py-1 pl-3", className)}
+      className={cn("border-graphite my-4 border-l-2 py-1 pl-3", className)}
       cite={cite}
       {...props}
     >

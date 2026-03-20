@@ -17,9 +17,9 @@ const inputBaseStyles = [
   "bg-paper text-ink",
   "border border-graphite",
   "placeholder:text-steel",
-  "focus:ring-2 focus:ring-signal-blue focus:ring-offset-1 focus:outline-none",
+  "focus-visible:outline-2 focus-visible:outline-signal-blue focus-visible:outline-offset-2",
   "disabled:cursor-not-allowed disabled:border-dashed disabled:border-chrome disabled:bg-frost disabled:text-steel",
-  "aria-[invalid=true]:border-signal-red aria-[invalid=true]:focus:ring-signal-red",
+  "aria-[invalid=true]:border-signal-red aria-[invalid=true]:focus-visible:outline-signal-red",
   "read-only:bg-frost read-only:text-steel",
 ].join(" ");
 

@@ -38,10 +38,10 @@ export function Textarea({ className, autoResize = true, onInput, ...props }: Pr
       className={cn(
         "border-graphite bg-paper text-ink w-full border px-3 py-2 text-sm",
         "placeholder:text-steel",
-        "focus:ring-signal-blue focus:ring-2 focus:ring-offset-1 focus:outline-none",
+        "focus-visible:outline-signal-blue focus-visible:outline-2 focus-visible:outline-offset-2",
         "disabled:border-chrome disabled:bg-frost disabled:text-steel disabled:cursor-not-allowed disabled:border-dashed",
         "read-only:bg-frost read-only:cursor-default",
-        "aria-[invalid=true]:border-signal-red aria-[invalid=true]:focus:ring-signal-red",
+        "aria-[invalid=true]:border-signal-red aria-[invalid=true]:focus-visible:outline-signal-red",
         autoResize && "resize-none overflow-hidden",
         className,
       )}

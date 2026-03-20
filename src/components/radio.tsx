@@ -29,7 +29,7 @@ export function RadioItem({ className, ...props }: RadioItemProps) {
     <RadioGroupPrimitive.Item
       data-slot="radio-item"
       className={cn(
-        "group peer border-chrome size-4 shrink-0 rounded-full border",
+        "group peer border-graphite size-4 shrink-0 rounded-full border",
         "bg-paper",
         "hover:border-steel",
         "focus-visible:outline-signal-blue focus-visible:outline-2 focus-visible:outline-offset-2",
