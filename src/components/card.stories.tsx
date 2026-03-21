@@ -90,7 +90,7 @@ export const AllStates = () => (
       <Card.Content>
         <p className="text-steel text-sm">Some content here.</p>
       </Card.Content>
-      <Card.Footer className="gap-2">
+      <Card.Footer>
         <Button variant="outline">Cancel</Button>
         <Button>Save</Button>
       </Card.Footer>
