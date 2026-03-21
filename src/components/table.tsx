@@ -73,7 +73,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "text-ink h-9 px-1.5 py-1 text-left align-middle font-semibold whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "text-ink h-10 px-4 py-2 text-left align-middle font-semibold whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className,
       )}
       {...props}
@@ -86,7 +86,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "px-1.5 py-1 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "px-4 py-2.5 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className,
       )}
       {...props}
@@ -99,7 +99,7 @@ function TableSectionHeader({ className, ...props }: React.ComponentProps<"tr">)
     <tr
       data-slot="table-section-header"
       className={cn(
-        "bg-platinum [&>th]:border-chrome [&>th]:border-y [&>th]:px-1.5 [&>th]:py-1 [&>th]:font-semibold",
+        "bg-platinum [&>th]:border-chrome [&>th]:border-y [&>th]:px-4 [&>th]:py-2 [&>th]:font-semibold",
         className,
       )}
       {...props}
