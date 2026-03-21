@@ -13,7 +13,7 @@ function CardRoot({ className, shadow, ...props }: CardRootProps) {
     <div
       data-slot="card"
       className={cn(
-        "border-chrome bg-paper text-ink flex flex-col gap-0 border",
+        "border-chrome bg-surface-1 text-ink flex flex-col gap-0 border",
         shadow && "shadow-offset",
         className,
       )}
