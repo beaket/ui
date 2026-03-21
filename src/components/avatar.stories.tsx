@@ -37,6 +37,15 @@ export const FallbackOnly: Story = {
   ),
 };
 
+export const WithShadow: Story = {
+  render: () => (
+    <Avatar shadow>
+      <Avatar.Image src="https://github.com/beaket.png" alt="@beaket" />
+      <Avatar.Fallback>BK</Avatar.Fallback>
+    </Avatar>
+  ),
+};
+
 // Compositions for docs
 export const AllStates = () => (
   <div className="flex items-center gap-4">
@@ -58,6 +67,12 @@ export const AllStates = () => (
         <Avatar.Fallback>A</Avatar.Fallback>
       </Avatar>
       <span className="text-steel text-xs">Single Letter</span>
+    </div>
+    <div className="flex flex-col items-center gap-2">
+      <Avatar shadow>
+        <Avatar.Fallback>SH</Avatar.Fallback>
+      </Avatar>
+      <span className="text-steel text-xs">Shadow</span>
     </div>
   </div>
 );
@@ -143,6 +158,21 @@ export const FallbackTest: Story = {
     const fallback = canvas.getByText("FB");
 
     await expect(fallback).toBeInTheDocument();
+  },
+};
+
+export const ShadowTest: Story = {
+  render: () => (
+    <Avatar shadow>
+      <Avatar.Fallback>SH</Avatar.Fallback>
+    </Avatar>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const avatar = canvas.getByText("SH").closest("[data-slot='avatar']");
+
+    await expect(avatar).toBeInTheDocument();
+    await expect(avatar).toHaveClass("shadow-offset");
   },
 };
 

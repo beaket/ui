@@ -9,14 +9,17 @@ interface Props extends React.ComponentProps<typeof AvatarPrimitive.Root> {
    * Additional CSS classes to apply to the avatar container
    */
   className?: string;
+  /** Add offset shadow to the avatar */
+  shadow?: boolean;
 }
 
-export function Avatar({ className, ...props }: Props) {
+export function Avatar({ className, shadow, ...props }: Props) {
   return (
     <AvatarPrimitive.Root
       data-slot="avatar"
       className={cn(
         "border-chrome relative flex size-10 shrink-0 overflow-hidden border",
+        shadow && "shadow-offset",
         className,
       )}
       {...props}
