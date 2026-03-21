@@ -40,6 +40,11 @@
   --color-signal-purple: #6f2da8;
   --color-signal-cyan: #1a6b7c;
 
+  /* Surface layers (visual depth) */
+  --color-surface-0: #eeeeee;
+  --color-surface-1: #fafafa;
+  --color-surface-2: #ffffff;
+
   /* Shadows (offset only, no blur) */
   --shadow-offset: 2px 2px 0px 0px var(--color-chrome);
   --shadow-offset-dark: 2px 2px 0px 0px var(--color-aluminum);

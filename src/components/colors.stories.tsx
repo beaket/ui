@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const colors = {
   brand: [{ name: "Branch", variable: "--color-branch", hex: "#1c1f24", usage: "Brand identity" }],
+  surface: [
+    { name: "Surface 0", variable: "--color-surface-0", hex: "#eeeeee", usage: "Page background" },
+    { name: "Surface 1", variable: "--color-surface-1", hex: "#fafafa", usage: "Cards, panels" },
+    { name: "Surface 2", variable: "--color-surface-2", hex: "#ffffff", usage: "Nested/elevated" },
+  ],
   neutral: [
     { name: "Graphite", variable: "--color-graphite", hex: "#0d0d0d", usage: "Darkest tone" },
     { name: "Ink", variable: "--color-ink", hex: "#1a1a1a", usage: "Primary text" },
@@ -44,7 +49,16 @@ function ColorSwatch({
   hex: string;
   usage: string;
 }) {
-  const isLight = ["Paper", "Frost", "Platinum", "Silver", "Chrome"].includes(name);
+  const isLight = [
+    "Paper",
+    "Frost",
+    "Platinum",
+    "Silver",
+    "Chrome",
+    "Surface 0",
+    "Surface 1",
+    "Surface 2",
+  ].includes(name);
 
   return (
     <div className="border-chrome border">
@@ -82,6 +96,21 @@ function Colors() {
           <h2 className="text-steel mb-3 text-xs font-bold tracking-wider uppercase">Brand</h2>
           <div className="grid grid-cols-4 gap-3">
             {colors.brand.map((color) => (
+              <ColorSwatch key={color.variable} {...color} />
+            ))}
+          </div>
+        </section>
+
+        {/* Surface Layers */}
+        <section className="mb-8">
+          <h2 className="text-steel mb-3 text-xs font-bold tracking-wider uppercase">
+            Surface Layers
+          </h2>
+          <p className="text-muted mb-3 text-xs">
+            Visual depth: page &rarr; cards &rarr; elevated elements.
+          </p>
+          <div className="grid grid-cols-3 gap-3">
+            {colors.surface.map((color) => (
               <ColorSwatch key={color.variable} {...color} />
             ))}
           </div>
@@ -134,6 +163,25 @@ function Colors() {
                 <code className="text-signal-blue">bg-paper</code>, never raw hex
               </li>
             </ul>
+          </div>
+        </section>
+
+        {/* Surface Depth Demo */}
+        <section className="mb-8">
+          <h2 className="text-steel mb-3 text-xs font-bold tracking-wider uppercase">
+            Surface Depth Demo
+          </h2>
+          <p className="text-muted mb-3 text-xs">
+            Nested surfaces create visual hierarchy without decoration.
+          </p>
+          <div className="bg-surface-0 border-chrome border p-6">
+            <code className="text-muted text-xs">bg-surface-0 — page</code>
+            <div className="border-chrome bg-surface-1 mt-2 border p-4">
+              <code className="text-muted text-xs">bg-surface-1 — card</code>
+              <div className="border-chrome bg-surface-2 mt-2 border p-3">
+                <code className="text-muted text-xs">bg-surface-2 — dropdown / nested</code>
+              </div>
+            </div>
           </div>
         </section>
 

@@ -132,7 +132,7 @@ export function Sheet({
         <DialogPrimitive.Content
           data-slot="sheet-content"
           className={cn(
-            "shadow-offset-dark border-chrome bg-paper fixed z-50 gap-4 border p-4",
+            "shadow-offset-dark border-chrome bg-surface-1 fixed z-50 gap-4 border p-4",
             fullScreen ? sidePositionsFullScreen[side] : sidePositions[side],
             sideAnimations[side],
           )}

@@ -165,7 +165,7 @@ export function DataTable<TData, TValue>({
         </div>
       )}
 
-      <div className="border-chrome bg-paper overflow-x-auto border">
+      <div className="border-chrome bg-surface-1 overflow-x-auto border">
         <Table className="min-w-full">
           <Table.Header>
             {table.getHeaderGroups().map((headerGroup) => (

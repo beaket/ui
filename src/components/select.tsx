@@ -59,7 +59,7 @@ function SelectContent({
       <SelectPrimitive.Content
         data-slot="select-content"
         className={cn(
-          "border-chrome bg-paper relative z-50 max-h-96 min-w-[8rem] overflow-hidden border",
+          "border-chrome bg-surface-2 relative z-50 max-h-96 min-w-[8rem] overflow-hidden border",
           "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
           className,
         )}

@@ -10,14 +10,14 @@ const alertVariants = cva(
   {
     variants: {
       variant: {
-        note: "bg-paper text-ink border-signal-blue [&>svg]:text-signal-blue [&_[data-slot=alert-description]]:text-steel",
-        tip: "bg-paper text-ink border-signal-green [&>svg]:text-signal-green [&_[data-slot=alert-description]]:text-steel",
+        note: "bg-surface-1 text-ink border-signal-blue [&>svg]:text-signal-blue [&_[data-slot=alert-description]]:text-steel",
+        tip: "bg-surface-1 text-ink border-signal-green [&>svg]:text-signal-green [&_[data-slot=alert-description]]:text-steel",
         important:
-          "bg-paper text-ink border-signal-purple [&>svg]:text-signal-purple [&_[data-slot=alert-description]]:text-steel",
+          "bg-surface-1 text-ink border-signal-purple [&>svg]:text-signal-purple [&_[data-slot=alert-description]]:text-steel",
         warning:
-          "bg-paper text-ink border-signal-amber [&>svg]:text-signal-amber [&_[data-slot=alert-description]]:text-steel",
+          "bg-surface-1 text-ink border-signal-amber [&>svg]:text-signal-amber [&_[data-slot=alert-description]]:text-steel",
         caution:
-          "bg-paper text-ink border-signal-red [&>svg]:text-signal-red [&_[data-slot=alert-description]]:text-steel",
+          "bg-surface-1 text-ink border-signal-red [&>svg]:text-signal-red [&_[data-slot=alert-description]]:text-steel",
       },
     },
     defaultVariants: {
