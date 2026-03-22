@@ -9,80 +9,48 @@ title: Installation
 
 - React 18+
 - Tailwind CSS 4+
+- TypeScript
 
-## Vite
+## Setup
 
-1. Install Tailwind CSS:
+### Vite
 
-```bash
-npm install -D tailwindcss @tailwindcss/vite
-```
-
-2. Update `vite.config.ts`:
-
-```ts
-import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
-import path from "path";
-import { defineConfig } from "vite";
-
-export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
-});
-```
-
-3. Add to `compilerOptions` in `tsconfig.app.json`:
+Configure the `@` path alias:
 
 ```json
+// tsconfig.app.json → compilerOptions
 "baseUrl": ".",
 "paths": {
   "@/*": ["./src/*"]
 }
 ```
 
-4. Add to `src/index.css`:
+### Next.js
 
-```css
-@import "tailwindcss";
-```
+Path aliases are pre-configured.
 
-5. Initialize Beaket UI:
+## Initialize
 
 ```bash
 npx @beaket/ui init
 ```
 
-This adds [design tokens](/ui/tokens) (colors, shadows) to your CSS file.
-
-6. Add components:
+Or with a [theme](/ui/themes):
 
 ```bash
-# Add a single component
-npx @beaket/ui add button
-
-# Add multiple components at once
-npx @beaket/ui add alert button label
+npx @beaket/ui init --theme tobacco
 ```
 
-## Next.js
-
-Tailwind CSS is pre-configured in Next.js.
-
-1. Initialize Beaket UI:
-
-```bash
-npx @beaket/ui init
-```
-
-2. Add components:
+## Add Components
 
 ```bash
 npx @beaket/ui add button
 ```
 
-See [CLI](/ui/cli) for all available options.
+Components are copied to `@/components/ui/`:
+
+```tsx
+import { Button } from "@/components/ui/button";
+```
+
+See [CLI](/ui/cli) for all options.

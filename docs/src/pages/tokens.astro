@@ -1,0 +1,77 @@
+---
+import Layout from '../layouts/doc.astro';
+import { TokenTable } from '../components/token-table';
+
+const neutrals = [
+  { name: "--graphite", value: "#030509", usage: "Deepest tone" },
+  { name: "--ink", value: "#080b12", usage: "Primary text" },
+  { name: "--branch", value: "#05070d", usage: "Brand surfaces" },
+  { name: "--iron", value: "#282b30", usage: "Dark borders" },
+  { name: "--slate", value: "#3e4146", usage: "Dark secondary" },
+  { name: "--zinc", value: "#53565c", usage: "Dark muted" },
+  { name: "--steel", value: "#686b70", usage: "Secondary text" },
+  { name: "--muted", value: "#7a7d82", usage: "Muted text" },
+  { name: "--aluminum", value: "#a0a3a8", usage: "Decorative, shadows" },
+  { name: "--chrome", value: "#c0c5cc", usage: "Primary border" },
+  { name: "--silver", value: "#d5d8dd", usage: "Light border" },
+  { name: "--platinum", value: "#e8eaed", usage: "Light background" },
+  { name: "--frost", value: "#f3f4f6", usage: "Hover, inputs" },
+  { name: "--paper", value: "#ffffff", usage: "Primary background" },
+];
+
+const signals = [
+  { name: "--signal-blue", value: "#1565c0", usage: "Links, info" },
+  { name: "--signal-red", value: "#d32f2f", usage: "Error, destructive" },
+  { name: "--signal-green", value: "#0d7c66", usage: "Success" },
+  { name: "--signal-amber", value: "#c49000", usage: "Warning" },
+  { name: "--signal-purple", value: "#6a1b9a", usage: "Accent" },
+  { name: "--signal-cyan", value: "#00838f", usage: "Info alternate" },
+];
+
+const surfaces = [
+  { name: "--surface-0", value: "#eff0f2", usage: "Page background" },
+  { name: "--surface-1", value: "#f8f8fa", usage: "Cards, panels" },
+  { name: "--surface-2", value: "#ffffff", usage: "Nested, elevated" },
+];
+
+const shadows = [
+  { name: "--shadow-offset", value: "1px 1px 0 0 chrome", usage: "Default interactive" },
+  { name: "--shadow-offset-hover", value: "2px 2px 0 0 chrome", usage: "Hover" },
+  { name: "--shadow-offset-active", value: "0px 0px 0 0 chrome", usage: "Active/pressed" },
+  { name: "--shadow-offset-dark", value: "1px 1px 0 0 aluminum", usage: "Overlays" },
+];
+---
+
+<Layout title="Design Tokens">
+
+<h1>Design Tokens</h1>
+
+<p>The <code>init</code> command adds design tokens to your CSS file. After initialization, you own them — customize freely. Values shown are Porcelain (default). See <a href="/ui/themes">Themes</a> for other presets.</p>
+
+<h2>Neutral</h2>
+
+<TokenTable tokens={neutrals} />
+
+<p>Use as Tailwind utilities: <code>bg-paper</code>, <code>text-ink</code>, <code>border-chrome</code>, etc.</p>
+
+<h2>Signal Colors</h2>
+
+<TokenTable tokens={signals} />
+
+<p>Each has <code>hover</code> and <code>active</code> variants (e.g., <code>--signal-red-hover</code>). Use as <code>bg-signal-red</code>, <code>text-signal-blue</code>, etc.</p>
+
+<h2>Surface Layers</h2>
+
+<TokenTable tokens={surfaces} />
+
+<h2>Shadows</h2>
+
+<TokenTable tokens={shadows} showSwatch={false} />
+
+<p>Use as <code>shadow-offset</code>, <code>hover:shadow-offset-hover</code>, <code>active:shadow-offset-active</code>. Size and color vary by theme.</p>
+
+<h2>Customization</h2>
+
+<p>After <code>init</code>, these tokens are yours. The library will not update them automatically. Check the <a href="/ui/changelog">Changelog</a> when updating.</p>
+
+</Layout>

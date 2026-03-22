@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/doc.astro';
+import { ThemeAppMock } from '../components/theme-app-mock';
+---
+
+<Layout title="Themes">
+
+<h1>Themes</h1>
+
+<p>Same components, different world. <strong>Pick one in the sidebar.</strong></p>
+
+<div class="theme-showcase">
+  <ThemeAppMock client:load />
+</div>
+
+</Layout>
+
+<style>
+  :global(.main) {
+    max-width: none;
+  }
+  .theme-showcase {
+    margin-top: 1rem;
+  }
+</style>
