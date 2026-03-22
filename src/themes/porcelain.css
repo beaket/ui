@@ -1,10 +1,7 @@
 /*
- * Beaket UI Design System - Core Variables (Porcelain)
- * This file is the single source of truth for CSS variables.
- * Used by: styles.css (via @import) and CLI init command (via build script)
- *
- * BREAKING CHANGE: Colors now use --color-* prefix (Tailwind v4 convention).
- * Components use clean utilities: bg-paper, text-ink, border-chrome
+ * Beaket UI Design System - Porcelain Theme
+ * Industrial precision. Etched on control panels in black synthetic lacquer.
+ * Pure white, cold blue-black ink, ghostly shadows, teal accent.
  */
 
 @theme {

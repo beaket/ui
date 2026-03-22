@@ -1,0 +1,62 @@
+/*
+ * Beaket UI Design System - Marigold Theme
+ * A neon sign snapping on. Screen-printed posters in a design studio.
+ * Pure white canvas, ink-black heavy shadows, maximum saturation signals.
+ */
+
+@theme {
+  /* Neutral palette */
+  --color-graphite: #0a0a0a;
+  --color-ink: #121212;
+  --color-branch: #1a1a1a;
+  --color-iron: #262626;
+  --color-slate: #3a3a3a;
+  --color-zinc: #4e4e4e;
+  --color-steel: #5a5a5a;
+  --color-muted: #6e6e6e;
+  --color-aluminum: #949494;
+  --color-chrome: #c0c0c0;
+  --color-silver: #cfcfcf;
+  --color-platinum: #e0e0e0;
+  --color-frost: #f0f0f0;
+  --color-paper: #ffffff;
+  --color-inverse: var(--color-paper);
+
+  /* Signal colors — LOUD, unique hues, poster-print */
+  --color-signal-blue: #0055ff;
+  --color-signal-red: #f24e1e;
+  --color-signal-red-hover: #d94519;
+  --color-signal-red-active: #c03d15;
+  --color-signal-red-text: #d94519;
+  --color-signal-green: #0acf83;
+  --color-signal-green-hover: #08b572;
+  --color-signal-green-active: #069b62;
+  --color-signal-amber: #ff9500;
+  --color-signal-amber-hover: #e08400;
+  --color-signal-amber-active: #c07200;
+  --color-signal-purple: #a259ff;
+  --color-signal-cyan: #00bcd4;
+
+  /* Surface layers (visual depth) */
+  --color-surface-0: #ebebeb;
+  --color-surface-1: #f8f8f8;
+  --color-surface-2: #ffffff;
+
+  /* Shadows — ink-black, heavy, graphic */
+  --shadow-offset: 3px 3px 0px 0px var(--color-ink);
+  --shadow-offset-dark: 3px 3px 0px 0px var(--color-graphite);
+  --shadow-offset-hover: 4px 4px 0px 0px var(--color-ink);
+  --shadow-offset-active: 1px 1px 0px 0px var(--color-ink);
+
+  /* Animations */
+  --animate-navigation-progress: navigation-progress 1s ease-in-out infinite;
+}
+
+@keyframes navigation-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}

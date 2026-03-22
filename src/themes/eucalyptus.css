@@ -1,0 +1,62 @@
+/*
+ * Beaket UI Design System - Eucalyptus Theme
+ * Enterprise titanium. Navy ink, blue-gray surfaces, structured shadows.
+ * Cold precision for office and productivity applications.
+ */
+
+@theme {
+  /* Neutral palette */
+  --color-graphite: #0a1025;
+  --color-ink: #162036;
+  --color-branch: #1c2a42;
+  --color-iron: #243250;
+  --color-slate: #2f3f58;
+  --color-zinc: #384d68;
+  --color-steel: #3d5170;
+  --color-muted: #5a6d88;
+  --color-aluminum: #8295ae;
+  --color-chrome: #c0cddb;
+  --color-silver: #cdd8e4;
+  --color-platinum: #dce3ed;
+  --color-frost: #eff2f8;
+  --color-paper: #f8f9fc;
+  --color-inverse: var(--color-paper);
+
+  /* Signal colors — enterprise, structured */
+  --color-signal-blue: #2563eb;
+  --color-signal-red: #dc2626;
+  --color-signal-red-hover: #c52222;
+  --color-signal-red-active: #ae1e1e;
+  --color-signal-red-text: #c52222;
+  --color-signal-green: #059669;
+  --color-signal-green-hover: #047857;
+  --color-signal-green-active: #036145;
+  --color-signal-amber: #d97706;
+  --color-signal-amber-hover: #b96505;
+  --color-signal-amber-active: #995304;
+  --color-signal-purple: #7c3aed;
+  --color-signal-cyan: #0891b2;
+
+  /* Surface layers (visual depth) */
+  --color-surface-0: #e6ebf2;
+  --color-surface-1: #f8f9fc;
+  --color-surface-2: #ffffff;
+
+  /* Shadows — blue-gray, structured */
+  --shadow-offset: 2px 2px 0px 0px var(--color-chrome);
+  --shadow-offset-dark: 2px 2px 0px 0px var(--color-aluminum);
+  --shadow-offset-hover: 3px 3px 0px 0px var(--color-chrome);
+  --shadow-offset-active: 1px 1px 0px 0px var(--color-chrome);
+
+  /* Animations */
+  --animate-navigation-progress: navigation-progress 1s ease-in-out infinite;
+}
+
+@keyframes navigation-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}

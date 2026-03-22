@@ -1,0 +1,62 @@
+/*
+ * Beaket UI Design System - Tobacco Theme
+ * Golden hour in a library. Pampas warmth, terracotta accent.
+ * Warm gray-cream surface, brown shadows, earthy signals.
+ */
+
+@theme {
+  /* Neutral palette */
+  --color-graphite: #111110;
+  --color-ink: #1a1a18;
+  --color-branch: #222120;
+  --color-iron: #312f2c;
+  --color-slate: #46443e;
+  --color-zinc: #585650;
+  --color-steel: #5e5d54;
+  --color-muted: #6b6a60;
+  --color-aluminum: #9c9a90;
+  --color-chrome: #d0cec5;
+  --color-silver: #dddbd3;
+  --color-platinum: #e8e7e0;
+  --color-frost: #edece6;
+  --color-paper: #f4f3ee;
+  --color-inverse: var(--color-paper);
+
+  /* Signal colors — warm, earthy, terracotta red */
+  --color-signal-blue: #3a5f9e;
+  --color-signal-red: #c15f3c;
+  --color-signal-red-hover: #ab5435;
+  --color-signal-red-active: #94482e;
+  --color-signal-red-text: #ab5435;
+  --color-signal-green: #4a8a5e;
+  --color-signal-green-hover: #3d744f;
+  --color-signal-green-active: #305e40;
+  --color-signal-amber: #b8860b;
+  --color-signal-amber-hover: #9c7209;
+  --color-signal-amber-active: #7d5e10;
+  --color-signal-purple: #845aa0;
+  --color-signal-cyan: #2a7e82;
+
+  /* Surface layers (visual depth) */
+  --color-surface-0: #e8e7e0;
+  --color-surface-1: #f4f3ee;
+  --color-surface-2: #faf9f5;
+
+  /* Shadows — warm brown, grounded */
+  --shadow-offset: 2px 2px 0px 0px var(--color-iron);
+  --shadow-offset-dark: 2px 2px 0px 0px var(--color-slate);
+  --shadow-offset-hover: 3px 3px 0px 0px var(--color-iron);
+  --shadow-offset-active: 1px 1px 0px 0px var(--color-iron);
+
+  /* Animations */
+  --animate-navigation-progress: navigation-progress 1s ease-in-out infinite;
+}
+
+@keyframes navigation-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
