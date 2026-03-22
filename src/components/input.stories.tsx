@@ -138,13 +138,13 @@ export const PasswordToggle: Story = {
 // Compositions for docs
 export const AllStates = () => (
   <div className="flex flex-col gap-3">
-    <Input />
+    <Input placeholder="Enter text..." aria-label="Text input" />
     <div>
-      <Input defaultValue="Invalid" aria-invalid="true" />
+      <Input defaultValue="Invalid" aria-invalid="true" aria-label="Invalid input example" />
       <span className="text-signal-red-text mt-1 block text-xs">This field is required</span>
     </div>
     <Input disabled placeholder="Disabled" />
-    <Input placeholder="Search" suffix={<Search />} />
+    <Input placeholder="Search" suffix={<Search />} aria-label="Search" />
   </div>
 );
 

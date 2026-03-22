@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface StoryMeta {
   component: ComponentType;
@@ -19,17 +19,43 @@ const storyModules = import.meta.glob<Record<string, unknown>>(
 interface StoryPreviewProps {
   componentName: string;
   storyName?: string;
+  eager?: boolean;
 }
 
-export function StoryPreview({ componentName, storyName = "Default" }: StoryPreviewProps) {
+export function StoryPreview({
+  componentName,
+  storyName = "Default",
+  eager = false,
+}: StoryPreviewProps) {
   const [Story, setStory] = useState<{
     Component: ComponentType | null;
     args?: Record<string, unknown>;
     isComposition: boolean;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isVisible, setIsVisible] = useState(eager);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (eager) return;
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [eager]);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
     const loadStory = async () => {
       const path = Object.keys(storyModules).find((p) =>
         p.includes(`/${componentName}.stories.tsx`),
@@ -51,22 +77,18 @@ export function StoryPreview({ componentName, storyName = "Default" }: StoryPrev
         }
 
         if (typeof story === "function") {
-          // Composition component (e.g., export const AllStates = () => ...)
           setStory({
             Component: story as ComponentType,
             isComposition: true,
           });
         } else if (typeof story === "object" && story !== null) {
-          // StoryObj
           const storyObj = story as StoryObj;
           if (storyObj.render) {
-            // StoryObj with render function
             setStory({
               Component: storyObj.render as ComponentType,
               isComposition: true,
             });
           } else {
-            // StoryObj with args
             setStory({
               Component: meta?.component ?? null,
               args: storyObj.args,
@@ -80,14 +102,14 @@ export function StoryPreview({ componentName, storyName = "Default" }: StoryPrev
     };
 
     loadStory();
-  }, [componentName, storyName]);
+  }, [isVisible, componentName, storyName]);
 
   if (error) {
     return <span className="text-[var(--steel)]">{error}</span>;
   }
 
   if (!Story) {
-    return <span className="text-[var(--steel)]">Loading...</span>;
+    return <div ref={containerRef} />;
   }
 
   const { Component, args, isComposition } = Story;

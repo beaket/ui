@@ -165,7 +165,7 @@ export function DataTable<TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <Table.Row key={headerGroup.id}>
                 {selectable && (
-                  <Table.Head className="w-12">
+                  <Table.Head className="w-12 py-3">
                     <Checkbox
                       checked={
                         table.getIsAllPageRowsSelected() ||
@@ -188,7 +188,6 @@ export function DataTable<TData, TValue>({
                       style={{ width: header.getSize() }}
                       onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
                       tabIndex={canSort ? 0 : undefined}
-                      role={canSort ? "button" : undefined}
                       onKeyDown={
                         canSort
                           ? (e: React.KeyboardEvent) => {
@@ -262,7 +261,7 @@ export function DataTable<TData, TValue>({
                   {selectable && (
                     <Table.Cell
                       onClick={(e) => e.stopPropagation()}
-                      className={compact ? "py-2" : ""}
+                      className={compact ? "py-2" : "py-3.5"}
                     >
                       <Checkbox
                         checked={row.getIsSelected()}
