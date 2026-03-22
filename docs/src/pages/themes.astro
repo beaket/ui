@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/doc.astro';
 import { ThemeAppMock } from '../components/theme-app-mock';
-import { Code } from 'astro:components';
+import CodeBlock from '../components/code-block.astro';
 ---
 
 <Layout title="Themes">
@@ -30,7 +30,7 @@ import { Code } from 'astro:components';
 
 <p>Import a theme in your CSS. All design tokens and dark mode are included.</p>
 
-<Code code={`@import "@beaket/ui/themes/porcelain.css";`} lang="css" />
+<CodeBlock code={`@import "@beaket/ui/themes/porcelain.css";`} lang="css" />
 
 <h2>Dark mode</h2>
 
@@ -44,7 +44,7 @@ import { Code } from 'astro:components';
 
 <p>To override OS detection, set <code>beaket-color-scheme</code> in <code>localStorage</code>:</p>
 
-<Code code={`// Force dark
+<CodeBlock code={`// Force dark
 localStorage.setItem("beaket-color-scheme", "dark");
 
 // Force light
