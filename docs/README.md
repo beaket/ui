@@ -1,43 +1,50 @@
-# Astro Starter Kit: Minimal
+# Beaket UI — Docs
 
-```sh
-pnpm create astro@latest -- --template minimal
+Documentation site for `@beaket/ui`, built with [Astro](https://astro.build) + React + Tailwind CSS 4.
+
+Deployed at **https://beaket.github.io/ui**
+
+## Development
+
+```bash
+# from the repo root
+pnpm install
+cd docs
+pnpm dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+The dev server starts at `http://localhost:4321/ui/`.
 
-## 🚀 Project Structure
+## Scripts
 
-Inside of your Astro project, you'll see the following folders and files:
+| Command          | Description                                |
+| :--------------- | :----------------------------------------- |
+| `pnpm dev`       | Generate props data, then start dev server |
+| `pnpm build`     | Build static site to `dist/`               |
+| `pnpm preview`   | Preview the production build locally       |
+| `pnpm typecheck` | Generate props data and run `astro check`  |
 
-```text
-/
-├── public/
+## Structure
+
+```
+docs/
+├── scripts/
+│   └── generate-props.ts   # auto-generates component prop tables
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── components/          # docs-specific UI (theme switcher, showcase, etc.)
+│   ├── layouts/             # doc.astro layout with sidebar nav
+│   ├── pages/
+│   │   ├── index.astro      # landing / component showcase
+│   │   ├── installation.md
+│   │   ├── cli.md
+│   │   ├── design-rules.astro
+│   │   ├── tokens.astro
+│   │   ├── themes.astro
+│   │   ├── changelog.astro
+│   │   └── components/      # per-component pages (auto-routed)
+│   └── styles/
+├── public/
+└── astro.config.mjs
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                | Action                                           |
-| :--------------------- | :----------------------------------------------- |
-| `pnpm install`         | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+The `@/` alias resolves to `../src/` (the main component library source), so docs pages can import components directly.
