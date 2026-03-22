@@ -6,31 +6,31 @@
 
 @theme {
   /* Neutral palette */
-  --color-graphite: #030509;
-  --color-ink: #080b12;
-  --color-branch: #05070d;
-  --color-iron: #282b30;
-  --color-slate: #3e4146;
-  --color-zinc: #53565c;
-  --color-steel: #686b70;
-  --color-muted: #7a7d82;
-  --color-aluminum: #a0a3a8;
-  --color-chrome: #c0c5cc;
-  --color-silver: #d5d8dd;
-  --color-platinum: #e8eaed;
+  --color-graphite: #030508;
+  --color-ink: #080b10;
+  --color-branch: #05070c;
+  --color-iron: #282b2f;
+  --color-slate: #3e4145;
+  --color-zinc: #53565b;
+  --color-steel: #686b6f;
+  --color-muted: #7a7d81;
+  --color-aluminum: #a0a3a7;
+  --color-chrome: #c0c4ca;
+  --color-silver: #d5d8dc;
+  --color-platinum: #e8eaec;
   --color-frost: #f3f4f6;
   --color-paper: #ffffff;
   --color-inverse: var(--color-paper);
 
   /* Signal colors — cold, precise, teal accent */
-  --color-signal-blue: #0c6daa;
+  --color-signal-blue: #0c6bae;
   --color-signal-red: #c41028;
   --color-signal-red-hover: #a80d22;
   --color-signal-red-active: #8c0b1c;
   --color-signal-red-text: #a80d22;
-  --color-signal-green: #0a7855;
-  --color-signal-green-hover: #08644a;
-  --color-signal-green-active: #06503c;
+  --color-signal-green: #0a7653;
+  --color-signal-green-hover: #086248;
+  --color-signal-green-active: #064e3a;
   --color-signal-amber: #b58a00;
   --color-signal-amber-hover: #9a7500;
   --color-signal-amber-active: #7f6000;
@@ -38,8 +38,8 @@
   --color-signal-cyan: #007e8c;
 
   /* Surface layers (visual depth) */
-  --color-surface-0: #eff0f2;
-  --color-surface-1: #f8f8fa;
+  --color-surface-0: #eff0f1;
+  --color-surface-1: #f8f8f9;
   --color-surface-2: #ffffff;
 
   /* Shadows — ghostly, precise */
@@ -50,6 +50,51 @@
 
   /* Animations */
   --animate-navigation-progress: navigation-progress 1s ease-in-out infinite;
+}
+
+/*
+ * Dark mode — X-ray lightbox.
+ * Cold blue-steel instruments in a dark examination room.
+ * Neutrals tinted cold blue-black. Ghostly shadows become spectral.
+ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Neutral palette — cold blue-tinted for clinical dark precision */
+    --color-graphite: #e6eaee;
+    --color-ink: #dce0e6;
+    --color-branch: #c8d0da;
+    --color-iron: #b4bcc6;
+    --color-slate: #9ca4b2;
+    --color-zinc: #848c9e;
+    --color-steel: #6c7486;
+    --color-muted: #586070;
+    --color-aluminum: #3e4454;
+    --color-chrome: #2a303e;
+    --color-silver: #1e242e;
+    --color-platinum: #161a22;
+    --color-frost: #0e1016;
+    --color-paper: #06080c;
+
+    /* Signal colors — cold, brightened for dark canvas */
+    --color-signal-blue: #1a8ed8;
+    --color-signal-red: #e03040;
+    --color-signal-red-hover: #c82a38;
+    --color-signal-red-active: #b02430;
+    --color-signal-red-text: #f04852;
+    --color-signal-green: #10a66e;
+    --color-signal-green-hover: #0e8e5e;
+    --color-signal-green-active: #0c764e;
+    --color-signal-amber: #d4a010;
+    --color-signal-amber-hover: #b88c0e;
+    --color-signal-amber-active: #9c780c;
+    --color-signal-purple: #7e3ec4;
+    --color-signal-cyan: #1aa0b8;
+
+    /* Surface layers — elevation = lighter */
+    --color-surface-0: #0c0e15;
+    --color-surface-1: #12141d;
+    --color-surface-2: #1a1c27;
+  }
 }
 
 @keyframes navigation-progress {

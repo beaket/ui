@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import pkg from '../../../packages/cli/package.json';
 import registry from '../../../registry/registry.json';
-import { ThemeSwitcher } from '../components/theme-switcher';
+import { ThemeSwitcher, DarkModeToggle } from '../components/theme-switcher';
 
 interface Props {
   title?: string;
@@ -35,7 +35,10 @@ const currentYear = new Date().getFullYear();
 
         <div class="sidebar-nav">
           <div class="sidebar-section">
-            <div class="sidebar-section-title">Theme</div>
+            <div class="sidebar-section-title" style="display: flex; align-items: center; justify-content: space-between;">
+              Theme
+              <DarkModeToggle client:load />
+            </div>
             <ThemeSwitcher client:load />
           </div>
 
