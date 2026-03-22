@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/doc.astro';
+---
+
+<Layout title="Design Rules">
+
+<h1>Design Rules</h1>
+
+<p>Beaket UI is a brutalist design system. These rules explain why things look the way they do — and what to preserve when you customize.</p>
+
+<h2>No decoration</h2>
+
+<p>No gradients. No border-radius (except Radio). No blur shadows. No opacity for styling. If it's a border, show the border. If it's a shadow, make it structural.</p>
+
+<h2>Shadows signal state</h2>
+
+<p>Offset shadows are not decoration — they communicate interactivity. Default is present, hover grows, active shrinks, disabled removes. This is the system's primary state language.</p>
+
+<h2>One pattern, everywhere</h2>
+
+<p>Same focus ring on every component: <code>outline-2 outline-signal-blue outline-offset-2</code>. Same disabled style everywhere: <code>border-dashed border-chrome bg-frost text-steel</code>. Users learn the system once and trust it completely.</p>
+
+<h2>Own it, keep it right</h2>
+
+<p>You own the code after installation. Every component accepts <code>className</code> — customize freely. But preserve touch targets (44px+), keyboard navigation, and ARIA attributes. The invisible quality matters most.</p>
+
+</Layout>
