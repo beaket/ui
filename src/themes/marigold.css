@@ -22,20 +22,20 @@
   --color-paper: #ffffff;
   --color-inverse: var(--color-paper);
 
-  /* Signal colors — LOUD, unique hues, poster-print */
-  --color-signal-blue: #0055ff;
-  --color-signal-red: #f24e1e;
-  --color-signal-red-hover: #d94519;
-  --color-signal-red-active: #c03d15;
-  --color-signal-red-text: #d94519;
-  --color-signal-green: #0acf83;
-  --color-signal-green-hover: #08b572;
-  --color-signal-green-active: #069b62;
-  --color-signal-amber: #ff9500;
-  --color-signal-amber-hover: #e08400;
-  --color-signal-amber-active: #c07200;
-  --color-signal-purple: #a259ff;
-  --color-signal-cyan: #00bcd4;
+  /* Signal colors — LOUD, max saturation, screen-print ink */
+  --color-signal-blue: #0044ee;
+  --color-signal-red: #e82010;
+  --color-signal-red-hover: #cc1c0e;
+  --color-signal-red-active: #b0180c;
+  --color-signal-red-text: #cc1c0e;
+  --color-signal-green: #008050;
+  --color-signal-green-hover: #006a42;
+  --color-signal-green-active: #005535;
+  --color-signal-amber: #f07800;
+  --color-signal-amber-hover: #d06800;
+  --color-signal-amber-active: #b05800;
+  --color-signal-purple: #8b22ff;
+  --color-signal-cyan: #00b4cc;
 
   /* Surface layers (visual depth) */
   --color-surface-0: #ebebeb;
