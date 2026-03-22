@@ -1,7 +1,7 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { type ClassValue, clsx } from "clsx";
 import { X } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
@@ -91,38 +91,43 @@ export function Sheet({
   fullScreen = false,
 }: Props) {
   const [internalOpen, setInternalOpen] = useState(false);
-
   const isControlled = open !== undefined;
-
-  if (process.env.NODE_ENV !== "production") {
-    if (isControlled && !onOpenChange) {
-      console.warn(
-        "Sheet: `open` prop provided without `onOpenChange`. The sheet will be read-only.",
-      );
-    }
-  }
-
   const sheetOpen = isControlled ? open : internalOpen;
-  const sheetOnOpenChange = useCallback(
-    (value: boolean) => {
-      if (onOpenChange) {
-        onOpenChange(value);
-      }
-      if (!isControlled) {
-        setInternalOpen(value);
-      }
-    },
-    [isControlled, onOpenChange],
-  );
 
+  const onOpenChangeRef = useRef(onOpenChange);
+  onOpenChangeRef.current = onOpenChange;
+
+  const hasWarnedRef = useRef(false);
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production") {
+      if (isControlled && !onOpenChange && !hasWarnedRef.current) {
+        console.warn(
+          "Sheet: `open` prop provided without `onOpenChange`. The sheet will be read-only.",
+        );
+        hasWarnedRef.current = true;
+      }
+    }
+  }, [isControlled, onOpenChange]);
+
+  // Auto-close when closeWhen becomes truthy
   useEffect(() => {
     if (closeWhen) {
-      sheetOnOpenChange(false);
+      if (isControlled) {
+        onOpenChangeRef.current?.(false);
+      } else {
+        setInternalOpen(false);
+        onOpenChangeRef.current?.(false);
+      }
     }
-  }, [closeWhen, sheetOnOpenChange]);
+  }, [closeWhen, isControlled]);
+
+  const handleOpenChange = (value: boolean) => {
+    onOpenChangeRef.current?.(value);
+    if (!isControlled) setInternalOpen(value);
+  };
 
   return (
-    <DialogPrimitive.Root open={sheetOpen} onOpenChange={sheetOnOpenChange}>
+    <DialogPrimitive.Root open={sheetOpen} onOpenChange={handleOpenChange}>
       {trigger && <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger>}
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay

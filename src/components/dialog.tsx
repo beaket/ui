@@ -1,7 +1,7 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { type ClassValue, clsx } from "clsx";
 import { X } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
@@ -60,40 +60,43 @@ export function Dialog({
   closeWhen,
 }: Props) {
   const [internalOpen, setInternalOpen] = useState(false);
-
   const isControlled = open !== undefined;
-
-  // Warn in dev mode if controlled without onOpenChange
-  if (process.env.NODE_ENV !== "production") {
-    if (isControlled && !onOpenChange) {
-      console.warn(
-        "Dialog: `open` prop provided without `onOpenChange`. The dialog will be read-only.",
-      );
-    }
-  }
-
   const dialogOpen = isControlled ? open : internalOpen;
-  const dialogOnOpenChange = useCallback(
-    (value: boolean) => {
-      if (onOpenChange) {
-        onOpenChange(value);
+
+  const onOpenChangeRef = useRef(onOpenChange);
+  onOpenChangeRef.current = onOpenChange;
+
+  const hasWarnedRef = useRef(false);
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production") {
+      if (isControlled && !onOpenChange && !hasWarnedRef.current) {
+        console.warn(
+          "Dialog: `open` prop provided without `onOpenChange`. The dialog will be read-only.",
+        );
+        hasWarnedRef.current = true;
       }
-      if (!isControlled) {
-        setInternalOpen(value);
-      }
-    },
-    [isControlled, onOpenChange],
-  );
+    }
+  }, [isControlled, onOpenChange]);
 
   // Auto-close when closeWhen becomes truthy
   useEffect(() => {
     if (closeWhen) {
-      dialogOnOpenChange(false);
+      if (isControlled) {
+        onOpenChangeRef.current?.(false);
+      } else {
+        setInternalOpen(false);
+        onOpenChangeRef.current?.(false);
+      }
     }
-  }, [closeWhen, dialogOnOpenChange]);
+  }, [closeWhen, isControlled]);
+
+  const handleOpenChange = (value: boolean) => {
+    onOpenChangeRef.current?.(value);
+    if (!isControlled) setInternalOpen(value);
+  };
 
   return (
-    <DialogPrimitive.Root open={dialogOpen} onOpenChange={dialogOnOpenChange}>
+    <DialogPrimitive.Root open={dialogOpen} onOpenChange={handleOpenChange}>
       {trigger && <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger>}
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay

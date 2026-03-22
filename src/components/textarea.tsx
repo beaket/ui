@@ -16,11 +16,20 @@ interface Props extends React.ComponentProps<"textarea"> {
   autoResize?: boolean;
 }
 
-export function Textarea({ className, autoResize = true, onInput, ...props }: Props) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+export function Textarea({ className, autoResize = true, onInput, ref, ...props }: Props) {
+  const internalRef = useRef<HTMLTextAreaElement>(null);
+  const externalRef = useRef(ref);
+  externalRef.current = ref;
+
+  const mergedRef = useCallback((node: HTMLTextAreaElement | null) => {
+    internalRef.current = node;
+    const extRef = externalRef.current;
+    if (typeof extRef === "function") extRef(node);
+    else if (extRef) extRef.current = node;
+  }, []);
 
   const adjustHeight = useCallback(() => {
-    const textarea = textareaRef.current;
+    const textarea = internalRef.current;
     if (!textarea || !autoResize) return;
 
     textarea.style.height = "auto";
@@ -33,7 +42,7 @@ export function Textarea({ className, autoResize = true, onInput, ...props }: Pr
 
   return (
     <textarea
-      ref={textareaRef}
+      ref={mergedRef}
       data-slot="textarea"
       className={cn(
         "border-graphite bg-paper text-ink w-full border px-3 py-2 text-sm",
