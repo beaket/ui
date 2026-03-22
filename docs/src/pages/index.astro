@@ -19,7 +19,7 @@ const currentYear = new Date().getFullYear();
   </head>
   <body class="min-h-screen bg-paper">
     <main class="mx-auto max-w-4xl p-4">
-      <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
+      <div class="home-theme-bar">
         <ThemeSwitcher client:load layout="inline" />
       </div>
       <ComponentShowcase client:load components={registry.components} version={pkg.version} />

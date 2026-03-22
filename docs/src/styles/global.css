@@ -301,6 +301,12 @@ a:not([data-slot]) {
   margin: 0 0.5rem;
 }
 
+.home-theme-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
 /* Sidebar toggle (hidden on desktop) */
 .sidebar-header {
   display: flex;
@@ -311,13 +317,15 @@ a:not([data-slot]) {
 .sidebar-toggle {
   display: none;
   background: none;
-  border: 1px solid var(--chrome);
+  border: none;
   cursor: pointer;
   margin-left: auto;
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-family: inherit;
-  color: var(--ink);
+  color: var(--steel);
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* Responsive: Mobile (<768px) */
@@ -334,7 +342,7 @@ a:not([data-slot]) {
     height: auto;
     border-right: none;
     border-bottom: 1px solid var(--chrome);
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 1rem;
     overflow-y: visible;
     background: var(--paper);
   }
@@ -353,10 +361,15 @@ a:not([data-slot]) {
   }
 
   .sidebar-toggle {
-    display: flex;
-    align-items: center;
-    min-height: 44px;
-    padding: 0.25rem 0.5rem;
+    display: block;
+    position: relative;
+    padding: 0;
+  }
+
+  .sidebar-toggle::before {
+    content: '';
+    position: absolute;
+    inset: -12px -8px;
   }
 
   .sidebar-nav {
@@ -396,6 +409,10 @@ a:not([data-slot]) {
     max-width: 100%;
   }
 
+  body {
+    font-size: 16px;
+  }
+
   pre {
     font-size: 0.75rem;
   }
@@ -416,10 +433,25 @@ a:not([data-slot]) {
 
   /* Prev/next nav touch targets */
   .component-nav-link {
-    padding: 0.5rem 0;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
+    position: relative;
+  }
+
+  .component-nav-link::before {
+    content: '';
+    position: absolute;
+    inset: -12px -8px;
+  }
+
+  /* Home page theme bar sticky on mobile */
+  .home-theme-bar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--paper);
+    margin: 0 -1rem;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--chrome);
+    margin-bottom: 0.75rem;
   }
 
   /* Responsive preview boxes */

@@ -147,7 +147,8 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
   if (layout === "inline") {
     return (
       <nav aria-label="Theme" className="flex items-center gap-2">
-        <ul className="m-0 flex list-none gap-2 p-0">
+        {/* Desktop: button row */}
+        <ul className="m-0 hidden list-none gap-2 p-0 sm:flex">
           {baseThemes.map((name) => (
             <li key={name}>
               <button
@@ -162,6 +163,18 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
             </li>
           ))}
         </ul>
+        {/* Mobile: select */}
+        <select
+          value={active}
+          onChange={(e) => handleClick(e.target.value)}
+          className="border-graphite text-ink border bg-transparent px-2 py-1 text-xs sm:hidden"
+        >
+          {baseThemes.map((name) => (
+            <option key={name} value={name}>
+              {themeLabels[name]}
+            </option>
+          ))}
+        </select>
         <button
           type="button"
           onClick={toggleDark}
