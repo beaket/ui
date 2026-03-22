@@ -44,6 +44,8 @@ const variantTitles = {
 
 interface AlertProps
   extends Omit<React.ComponentProps<"div">, "title">, VariantProps<typeof alertVariants> {
+  /** note | tip | important | warning | caution. Semantic variant that controls color and icon */
+  variant?: "note" | "tip" | "important" | "warning" | "caution";
   /**
    * Title text for the alert. If not provided, displays the variant name capitalized.
    */

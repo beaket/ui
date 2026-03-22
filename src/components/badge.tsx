@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge";
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 export interface Props extends React.HTMLAttributes<HTMLSpanElement> {
-  /** Badge style variant */
+  /** default | secondary | success | error | info | outline | warning | code. Badge style variant */
   variant?: "default" | "secondary" | "success" | "error" | "info" | "outline" | "warning" | "code";
 }
 

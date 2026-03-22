@@ -63,7 +63,7 @@ function DropdownMenuItem({
    */
   inset?: boolean;
   /**
-   * Visual style variant of the menu item
+   * default | destructive. Visual style variant of the menu item
    */
   variant?: "default" | "destructive";
 }) {
