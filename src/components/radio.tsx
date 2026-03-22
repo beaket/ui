@@ -36,7 +36,7 @@ export function RadioItem({ className, ...props }: RadioItemProps) {
         "data-[state=checked]:border-ink",
         "disabled:border-chrome disabled:bg-frost disabled:hover:border-chrome disabled:cursor-not-allowed disabled:border-dashed",
         "disabled:data-[state=checked]:border-chrome",
-        "aria-[invalid=true]:border-signal-red",
+        "aria-[invalid=true]:border-signal-red aria-[invalid=true]:focus-visible:outline-signal-red",
         className,
       )}
       {...props}

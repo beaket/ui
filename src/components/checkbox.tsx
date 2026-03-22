@@ -22,7 +22,7 @@ export function Checkbox({ className, ...props }: Props) {
         "data-[state=indeterminate]:border-ink data-[state=indeterminate]:bg-ink data-[state=indeterminate]:text-paper",
         "disabled:border-chrome disabled:bg-frost disabled:text-steel disabled:hover:border-chrome disabled:cursor-not-allowed disabled:border-dashed",
         "disabled:data-[state=checked]:border-chrome disabled:data-[state=checked]:bg-frost disabled:data-[state=checked]:text-steel",
-        "aria-[invalid=true]:border-signal-red",
+        "aria-[invalid=true]:border-signal-red aria-[invalid=true]:focus-visible:outline-signal-red",
         className,
       )}
       {...props}

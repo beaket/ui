@@ -89,8 +89,9 @@ export function Pagination({
   };
 
   const pageNumbers = getPageNumbers();
-  const buttonBaseClass = "px-3 py-1 border text-sm transition-colors";
-  const buttonActiveClass = "bg-ink text-paper border-ink";
+  const buttonBaseClass =
+    "flex items-center justify-center h-8 px-3 border text-sm transition-colors";
+  const buttonActiveClass = "bg-branch text-paper border-branch";
   const buttonInactiveClass = "border-chrome hover:bg-frost";
   const buttonDisabledClass = "border-chrome text-steel cursor-not-allowed";
 

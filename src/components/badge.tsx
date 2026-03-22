@@ -22,7 +22,7 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-ink text-paper border-ink",
+        default: "bg-branch text-paper border-branch",
         secondary: "bg-frost text-ink border-chrome",
         success: "bg-signal-green text-paper border-signal-green",
         error: "bg-signal-red text-paper border-signal-red",

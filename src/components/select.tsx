@@ -34,7 +34,7 @@ function SelectTrigger({ className, size = "default", children, ...props }: Sele
         "border-graphite bg-paper text-ink border px-3 py-2 text-sm",
         "focus-visible:outline-signal-blue focus-visible:outline-2 focus-visible:outline-offset-2",
         "disabled:bg-frost disabled:text-steel disabled:border-chrome disabled:cursor-not-allowed disabled:border-dashed",
-        "aria-[invalid=true]:border-signal-red",
+        "aria-[invalid=true]:border-signal-red aria-[invalid=true]:focus-visible:outline-signal-red",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0",
         className,
       )}
@@ -59,7 +59,7 @@ function SelectContent({
       <SelectPrimitive.Content
         data-slot="select-content"
         className={cn(
-          "border-chrome bg-surface-2 relative z-50 max-h-96 min-w-[8rem] overflow-hidden border",
+          "shadow-offset border-ink bg-surface-2 relative z-50 max-h-96 min-w-[8rem] overflow-hidden border",
           "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
           className,
         )}
@@ -98,8 +98,8 @@ function SelectItem({
       className={cn(
         "relative flex w-full cursor-default items-center gap-2 select-none",
         "text-ink py-1.5 pr-8 pl-2 text-sm outline-none",
-        "focus:bg-frost",
-        "data-[highlighted]:bg-frost",
+        "focus:bg-ink focus:text-paper",
+        "data-[highlighted]:bg-ink data-[highlighted]:text-paper",
         "data-[disabled]:text-steel data-[disabled]:pointer-events-none",
         className,
       )}

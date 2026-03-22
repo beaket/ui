@@ -12,19 +12,9 @@ import {
   type VisibilityState,
 } from "@tanstack/react-table";
 import { clsx, type ClassValue } from "clsx";
-import {
-  ArrowDown,
-  ArrowUp,
-  ArrowUpDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-  Search,
-} from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { Button } from "./button";
 import { Checkbox } from "./checkbox";
 import { Input } from "./input";
 import { Table } from "./table";
@@ -309,47 +299,52 @@ export function DataTable<TData, TValue>({
               ` (${table.getFilteredSelectedRowModel().rows.length} selected)`}
           </div>
 
-          <div className="flex items-center gap-1">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
-              aria-label="First page"
-            >
-              <ChevronsLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
+          <nav className="flex items-center gap-1" aria-label="Table pagination">
+            <button
+              type="button"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
+              className={cn(
+                "flex h-8 items-center justify-center border px-3 text-sm transition-colors",
+                table.getCanPreviousPage()
+                  ? "border-chrome hover:bg-frost cursor-pointer"
+                  : "border-chrome text-steel cursor-not-allowed",
+              )}
               aria-label="Previous page"
             >
               <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <span className="px-4 text-sm">
-              Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount() || 1}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
+            </button>
+            {Array.from({ length: table.getPageCount() }, (_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => table.setPageIndex(i)}
+                className={cn(
+                  "cursor-pointer border px-3 py-1 text-sm transition-colors",
+                  table.getState().pagination.pageIndex === i
+                    ? "bg-branch text-paper border-branch"
+                    : "border-chrome hover:bg-frost",
+                )}
+                aria-current={table.getState().pagination.pageIndex === i ? "page" : undefined}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              type="button"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
+              className={cn(
+                "flex h-8 items-center justify-center border px-3 text-sm transition-colors",
+                table.getCanNextPage()
+                  ? "border-chrome hover:bg-frost cursor-pointer"
+                  : "border-chrome text-steel cursor-not-allowed",
+              )}
               aria-label="Next page"
             >
               <ChevronRight className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
-              aria-label="Last page"
-            >
-              <ChevronsRight className="h-4 w-4" />
-            </Button>
-          </div>
+            </button>
+          </nav>
         </div>
       )}
     </div>
