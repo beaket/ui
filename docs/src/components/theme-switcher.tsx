@@ -167,6 +167,7 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
         <select
           value={active}
           onChange={(e) => handleClick(e.target.value)}
+          aria-label="Theme"
           className="border-graphite text-ink border bg-transparent px-2 py-1 text-xs sm:hidden"
         >
           {baseThemes.map((name) => (

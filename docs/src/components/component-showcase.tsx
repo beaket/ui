@@ -28,10 +28,10 @@ export function ComponentShowcase({ components, version }: ComponentShowcaseProp
             <span className="text-ink text-sm font-bold tracking-wide uppercase">Beaket UI</span>
             <span className="text-steel ml-1.5 text-[10px]">v{version}</span>
           </div>
-          <p className="text-steel m-0 mt-3 text-xs">
+          <p className="text-steel m-0 mt-3 text-sm leading-relaxed">
             Brutalist React components.
             <br />
-            Copy to your project.
+            Copy-paste into your project.
           </p>
         </div>
         <div className="bg-branch text-paper mt-4 inline-block px-3 py-1.5 text-xs font-bold">
@@ -40,9 +40,10 @@ export function ComponentShowcase({ components, version }: ComponentShowcaseProp
       </a>
 
       {/* Component Cards */}
-      {components.map((component) => {
+      {components.map((component, index) => {
         const span = component.docs.span ?? 1;
         const spanClass = span === 3 ? "col-span-full" : span === 2 ? "sm:col-span-2" : "";
+        const previewHeight = span >= 2 ? "h-[260px]" : "h-[120px]";
         return (
           <div key={component.name} className={`bg-paper p-4 ${spanClass}`}>
             <a
@@ -52,10 +53,13 @@ export function ComponentShowcase({ components, version }: ComponentShowcaseProp
             >
               {component.docs.title} →
             </a>
-            <div className="mt-3 [&_[data-slot=input-wrapper]]:w-full [&_[data-slot=input]]:w-full [&_[data-slot=select]]:w-full [&_ul]:justify-start [&>*]:m-0">
+            <div
+              className={`mt-3 ${previewHeight} overflow-hidden [&_[data-slot=input-wrapper]]:w-full [&_[data-slot=input]]:w-full [&_[data-slot=select]]:w-full [&_ul]:justify-start [&>*]:m-0`}
+            >
               <StoryPreview
                 componentName={component.name}
                 storyName={component.docs.previewStory}
+                eager={index < 6}
               />
             </div>
           </div>

@@ -156,6 +156,7 @@ export function Pagination(props: PaginationProps) {
         <span
           data-slot="pagination-prev"
           className={cn(buttonBaseClass, buttonDisabledClass)}
+          role="link"
           aria-disabled="true"
           aria-label="Previous page"
         >
@@ -236,6 +237,7 @@ export function Pagination(props: PaginationProps) {
         <span
           data-slot="pagination-next"
           className={cn(buttonBaseClass, buttonDisabledClass)}
+          role="link"
           aria-disabled="true"
           aria-label="Next page"
         >
