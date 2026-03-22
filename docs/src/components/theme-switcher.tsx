@@ -249,18 +249,15 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
         <ul className="m-0 flex list-none gap-2 p-0">
           {Object.keys(themeTokens).map((name) => (
             <li key={name}>
-              <a
+              <button
+                type="button"
                 data-slot="theme-link"
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleClick(name);
-                }}
+                onClick={() => handleClick(name)}
                 data-active={active === name || undefined}
-                className="border-graphite bg-paper text-ink shadow-offset hover:shadow-offset-hover active:shadow-offset-active hover:bg-frost data-[active]:text-paper data-[active]:bg-branch data-[active]:hover:bg-branch inline-block cursor-pointer border px-2 py-0.5 text-left text-xs no-underline transition-shadow duration-100 data-[active]:shadow-none data-[active]:hover:shadow-none"
+                className="border-graphite text-ink shadow-offset hover:shadow-offset-hover active:shadow-offset-active hover:bg-frost data-[active]:text-paper data-[active]:bg-branch data-[active]:hover:bg-branch inline-block cursor-pointer border bg-transparent px-2 py-0.5 text-left text-xs no-underline transition-shadow duration-100 data-[active]:shadow-none data-[active]:hover:shadow-none"
               >
                 {themeLabels[name]}
-              </a>
+              </button>
             </li>
           ))}
         </ul>
@@ -273,14 +270,11 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
       {Object.keys(themeTokens).map((name) => {
         const chromeColor = themeTokens[name]["--color-chrome"];
         return (
-          <a
+          <button
+            type="button"
             key={name}
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              handleClick(name);
-            }}
-            className={`sidebar-link${active === name ? "active" : ""}`}
+            onClick={() => handleClick(name)}
+            className={`sidebar-link${active === name ? "active" : ""} bg-transparent`}
             style={{ display: "flex", alignItems: "center", gap: "6px" }}
           >
             <span
@@ -294,7 +288,7 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
               }}
             />
             {themeLabels[name]}
-          </a>
+          </button>
         );
       })}
     </>

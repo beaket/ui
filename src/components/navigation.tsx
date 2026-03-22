@@ -36,6 +36,7 @@ function NavigationLink({ className, active, ...props }: NavigationLinkProps) {
         "border-graphite bg-paper text-ink border",
         "shadow-offset hover:shadow-offset-hover active:shadow-offset-active",
         "hover:bg-frost",
+        "focus-visible:outline-signal-blue focus-visible:outline-2 focus-visible:outline-offset-2",
         "transition-shadow duration-100",
         "data-[active]:text-inverse data-[active]:bg-branch data-[active]:hover:bg-branch data-[active]:shadow-none data-[active]:hover:shadow-none",
         className,

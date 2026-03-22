@@ -38,7 +38,12 @@ function BreadcrumbLink({ className, ...props }: React.ComponentProps<"a">) {
   return (
     <a
       data-slot="breadcrumb-link"
-      className={cn("text-signal-blue hover:text-ink underline", className)}
+      className={cn(
+        "text-signal-blue hover:text-ink underline",
+        "focus-visible:outline-signal-blue focus-visible:outline-2 focus-visible:outline-offset-2",
+        "relative before:absolute before:inset-[-8px] before:content-['']",
+        className,
+      )}
       {...props}
     />
   );

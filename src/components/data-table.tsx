@@ -183,6 +183,18 @@ export function DataTable<TData, TValue>({
                       className={canSort ? "cursor-pointer select-none" : ""}
                       style={{ width: header.getSize() }}
                       onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
+                      tabIndex={canSort ? 0 : undefined}
+                      role={canSort ? "button" : undefined}
+                      onKeyDown={
+                        canSort
+                          ? (e: React.KeyboardEvent) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                header.column.getToggleSortingHandler()?.(e as any);
+                              }
+                            }
+                          : undefined
+                      }
                       aria-sort={
                         canSort
                           ? sortDirection === "asc"
@@ -305,7 +317,7 @@ export function DataTable<TData, TValue>({
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
               className={cn(
-                "flex h-8 items-center justify-center border px-3 text-sm transition-colors",
+                "relative flex h-8 items-center justify-center border px-3 text-sm transition-colors before:absolute before:inset-[-8px] before:content-['']",
                 table.getCanPreviousPage()
                   ? "border-chrome hover:bg-frost cursor-pointer"
                   : "border-chrome text-steel cursor-not-allowed",
@@ -320,7 +332,7 @@ export function DataTable<TData, TValue>({
                 type="button"
                 onClick={() => table.setPageIndex(i)}
                 className={cn(
-                  "cursor-pointer border px-3 py-1 text-sm transition-colors",
+                  "relative cursor-pointer border px-3 py-1 text-sm transition-colors before:absolute before:inset-[-8px] before:content-['']",
                   table.getState().pagination.pageIndex === i
                     ? "bg-branch text-paper border-branch"
                     : "border-chrome hover:bg-frost",
@@ -335,7 +347,7 @@ export function DataTable<TData, TValue>({
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
               className={cn(
-                "flex h-8 items-center justify-center border px-3 text-sm transition-colors",
+                "relative flex h-8 items-center justify-center border px-3 text-sm transition-colors before:absolute before:inset-[-8px] before:content-['']",
                 table.getCanNextPage()
                   ? "border-chrome hover:bg-frost cursor-pointer"
                   : "border-chrome text-steel cursor-not-allowed",

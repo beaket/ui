@@ -21,7 +21,7 @@ export function ComponentShowcase({ components, version }: ComponentShowcaseProp
       <a
         href="/ui/installation"
         data-slot="branding-card"
-        className="shadow-offset hover:shadow-offset-hover active:shadow-offset-active flex flex-col justify-between border-2 border-[var(--ink)] bg-[var(--paper)] p-4 no-underline transition-shadow outline-none"
+        className="shadow-offset hover:shadow-offset-hover active:shadow-offset-active border-ink bg-paper flex flex-col justify-between border-2 p-4 no-underline transition-shadow outline-none"
       >
         <div>
           <div className="flex items-center gap-1.5">
@@ -76,18 +76,16 @@ export function ComponentShowcase({ components, version }: ComponentShowcaseProp
                 fill="currentColor"
               />
             </svg>
-            <span className="text-sm font-bold tracking-wide text-[var(--ink)] uppercase">
-              Beaket UI
-            </span>
-            <span className="text-[10px] text-[var(--steel)]">v{version}</span>
+            <span className="text-ink text-sm font-bold tracking-wide uppercase">Beaket UI</span>
+            <span className="text-steel text-[10px]">v{version}</span>
           </div>
-          <p className="m-0 mt-3 text-xs text-[var(--steel)]">
+          <p className="text-steel m-0 mt-3 text-xs">
             Brutalist React components.
             <br />
             Copy to your project.
           </p>
         </div>
-        <div className="mt-4 inline-block bg-[var(--branch)] px-3 py-1.5 text-xs font-bold text-[var(--paper)]">
+        <div className="bg-branch text-paper mt-4 inline-block px-3 py-1.5 text-xs font-bold">
           → Get Started
         </div>
       </a>
@@ -97,11 +95,11 @@ export function ComponentShowcase({ components, version }: ComponentShowcaseProp
         const span = component.docs.span ?? 1;
         const spanClass = span === 3 ? "col-span-full" : span === 2 ? "sm:col-span-2" : "";
         return (
-          <div key={component.name} className={`bg-[var(--paper)] p-4 ${spanClass}`}>
+          <div key={component.name} className={`bg-paper p-4 ${spanClass}`}>
             <a
               data-slot="component-link"
               href={`/ui/components/${component.name}`}
-              className="inline text-xs font-semibold tracking-wide text-[var(--ink)] uppercase underline decoration-transparent underline-offset-2 outline-none hover:decoration-[var(--ink)]"
+              className="text-ink hover:decoration-ink inline text-xs font-semibold tracking-wide uppercase underline decoration-transparent underline-offset-2 outline-none"
             >
               {component.docs.title} →
             </a>

@@ -90,7 +90,7 @@ export function Pagination({
 
   const pageNumbers = getPageNumbers();
   const buttonBaseClass =
-    "flex items-center justify-center h-8 px-3 border text-sm transition-colors";
+    "flex items-center justify-center h-8 px-3 border text-sm transition-colors relative before:absolute before:inset-[-8px] before:content-['']";
   const buttonActiveClass = "bg-branch text-paper border-branch";
   const buttonInactiveClass = "border-chrome hover:bg-frost";
   const buttonDisabledClass = "border-chrome text-steel cursor-not-allowed";

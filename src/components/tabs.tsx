@@ -42,7 +42,7 @@ function TabsTrigger({ className, ...props }: React.ComponentProps<typeof TabsPr
         "text-ink border border-transparent",
         "data-[state=active]:bg-branch data-[state=active]:text-paper",
         "focus-visible:outline-signal-blue focus-visible:outline-2 focus-visible:outline-offset-2",
-        "disabled:text-steel disabled:pointer-events-none",
+        "disabled:border-chrome disabled:bg-frost disabled:text-steel disabled:pointer-events-none disabled:border-dashed",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}

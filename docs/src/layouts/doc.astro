@@ -17,7 +17,7 @@ const currentYear = new Date().getFullYear();
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/ui/favicon.svg" />
     <title>{title} - Beaket UI</title>
     <script is:inline src="/ui/theme-init.js"></script>
@@ -89,6 +89,7 @@ const currentYear = new Date().getFullYear();
         const button = document.createElement('button');
         button.className = 'copy-button';
         button.textContent = 'Copy';
+        button.setAttribute('aria-label', 'Copy code');
         button.addEventListener('click', async () => {
           const code = pre.querySelector('code')?.textContent || pre.textContent || '';
           await navigator.clipboard.writeText(code);

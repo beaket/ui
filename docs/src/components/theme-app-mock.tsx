@@ -12,7 +12,7 @@ export function ThemeAppMock() {
           </nav>
         </div>
         <div className="flex items-center gap-2">
-          <span className="bg-signal-green border-signal-green border px-2 py-0.5 text-xs font-bold text-white">
+          <span className="bg-signal-green border-signal-green text-paper border px-2 py-0.5 text-xs font-bold">
             Live
           </span>
           <span className="bg-frost border-chrome text-ink border px-2 py-0.5 text-xs">
@@ -45,7 +45,7 @@ export function ThemeAppMock() {
             <div className="flex items-center justify-between">
               <span className="text-steel text-xs">API</span>
               <span
-                className="bg-signal-green text-xs text-white"
+                className="bg-signal-green text-paper text-xs"
                 style={{ padding: "1px 6px", fontWeight: 700 }}
               >
                 OK
@@ -63,7 +63,7 @@ export function ThemeAppMock() {
             <div className="flex items-center justify-between">
               <span className="text-steel text-xs">Errors</span>
               <span
-                className="bg-signal-red text-xs text-white"
+                className="bg-signal-red text-paper text-xs"
                 style={{ padding: "1px 6px", fontWeight: 700 }}
               >
                 1
@@ -75,7 +75,7 @@ export function ThemeAppMock() {
         {/* Main content */}
         <div className="flex-1 p-4">
           {/* Stats row */}
-          <div className="mb-4 grid grid-cols-3 gap-3">
+          <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {[
               { label: "Revenue", value: "$12,840", change: "+14%", positive: true },
               { label: "Users", value: "1,284", change: "+8%", positive: true },
@@ -97,7 +97,7 @@ export function ThemeAppMock() {
           </div>
 
           {/* Content area: table + form side by side */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
             {/* Table */}
             <div className="border-chrome bg-paper shadow-offset border">
               <div className="border-chrome border-b px-3 py-2">
@@ -152,7 +152,10 @@ export function ThemeAppMock() {
                             padding: "1px 6px",
                             backgroundColor: row.color,
                             borderColor: row.color,
-                            color: row.status === "Pending" ? "var(--color-graphite)" : "#fff",
+                            color:
+                              row.status === "Pending"
+                                ? "var(--color-graphite)"
+                                : "var(--color-paper)",
                           }}
                         >
                           {row.status}
@@ -221,7 +224,7 @@ export function ThemeAppMock() {
                   Reset
                 </button>
                 <button
-                  className="bg-signal-red border-signal-red shadow-offset border px-3 py-1.5 text-xs font-semibold text-white"
+                  className="bg-signal-red border-signal-red shadow-offset text-paper border px-3 py-1.5 text-xs font-semibold"
                   style={{ cursor: "pointer" }}
                 >
                   Delete
