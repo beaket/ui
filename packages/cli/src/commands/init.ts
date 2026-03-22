@@ -2,8 +2,22 @@ import fs from "fs-extra";
 import path from "path";
 import pc from "picocolors";
 import prompts from "prompts";
-import CSS_VARIABLES from "../../../../src/css-variables.css";
+import CSS_DEFAULT from "../../../../src/css-variables.css";
+import CSS_EUCALYPTUS from "../../../../src/themes/eucalyptus.css";
+import CSS_MARIGOLD from "../../../../src/themes/marigold.css";
+import CSS_PORCELAIN from "../../../../src/themes/porcelain.css";
+import CSS_TOBACCO from "../../../../src/themes/tobacco.css";
 import { writeConfig, type BeaketConfig } from "../utils/config.ts";
+
+const THEME_CSS: Record<string, string> = {
+  porcelain: CSS_PORCELAIN,
+  tobacco: CSS_TOBACCO,
+  marigold: CSS_MARIGOLD,
+  eucalyptus: CSS_EUCALYPTUS,
+  default: CSS_DEFAULT,
+};
+
+const VALID_THEMES = Object.keys(THEME_CSS);
 
 interface TsConfig {
   compilerOptions?: {
@@ -76,6 +90,7 @@ async function detectCssPath(): Promise<string> {
 
 interface InitOptions {
   yes?: boolean;
+  theme?: string;
 }
 
 export async function init(options: InitOptions) {
@@ -83,15 +98,28 @@ export async function init(options: InitOptions) {
   console.log(pc.bold("Initializing Beaket UI..."));
   console.log();
 
+  // Validate --theme flag early
+  if (options.theme && !VALID_THEMES.includes(options.theme)) {
+    console.log(
+      pc.red("Error:"),
+      `Invalid theme "${options.theme}". Choose from: ${VALID_THEMES.join(", ")}`,
+    );
+    process.exit(1);
+  }
+
   const detectedComponentsPath = await detectAliasPath();
   const detectedCssPath = await detectCssPath();
 
-  let response: { components: string; css: string };
+  let response: { components: string; css: string; theme: string };
 
   if (options.yes) {
-    response = { components: detectedComponentsPath, css: detectedCssPath };
+    response = {
+      components: detectedComponentsPath,
+      css: detectedCssPath,
+      theme: options.theme || "porcelain",
+    };
   } else {
-    response = await prompts([
+    const answers = await prompts([
       {
         type: "text",
         name: "components",
@@ -104,31 +132,52 @@ export async function init(options: InitOptions) {
         message: "Where is your Tailwind CSS file?",
         initial: detectedCssPath,
       },
+      {
+        type: options.theme ? null : "select",
+        name: "theme",
+        message: "Choose a theme",
+        choices: [
+          { title: "Porcelain — pure white, cold precision, teal accent", value: "porcelain" },
+          { title: "Tobacco — warm pampas cream, terracotta, brown shadows", value: "tobacco" },
+          { title: "Marigold — pure white, ink-black shadows, loud signals", value: "marigold" },
+          { title: "Eucalyptus — titanium blue-gray, navy ink, enterprise", value: "eucalyptus" },
+        ],
+        initial: 0,
+      },
     ]);
 
-    if (!response.components) {
+    if (!answers.components) {
       console.log(pc.red("Cancelled."));
       process.exit(1);
     }
+
+    response = {
+      components: answers.components,
+      css: answers.css,
+      theme: options.theme || answers.theme || "porcelain",
+    };
   }
 
-  // Write beaket.ui.json (only components path)
+  // Write beaket.ui.json
   const config: BeaketConfig = {
     $schema: "https://beaket.dev/schema.json",
     components: response.components,
+    theme: response.theme,
   };
 
   await writeConfig(config);
   console.log(pc.green("✔"), "Created beaket.ui.json");
 
   // Inject CSS variables into Tailwind CSS file
+  const selectedCss = THEME_CSS[response.theme];
   if (response.css) {
     const cssPath = path.join(process.cwd(), response.css);
     if (await fs.pathExists(cssPath)) {
       const cssContent = await fs.readFile(cssPath, "utf-8");
       if (!cssContent.includes("Beaket UI Design System")) {
-        await fs.writeFile(cssPath, cssContent + CSS_VARIABLES);
+        await fs.writeFile(cssPath, cssContent + selectedCss);
         console.log(pc.green("✔"), `Added CSS variables to ${response.css}`);
+        console.log(pc.green("✔"), `Using ${response.theme} theme`);
       } else {
         console.log(pc.yellow("ℹ"), "CSS variables already exist");
       }

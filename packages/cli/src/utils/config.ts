@@ -4,6 +4,7 @@ import path from "path";
 export interface BeaketConfig {
   $schema?: string;
   components: string;
+  theme?: string;
 }
 
 const CONFIG_FILE = "beaket.ui.json";
