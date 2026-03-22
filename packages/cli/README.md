@@ -1,53 +1,59 @@
 # @beaket/ui
 
-CLI for adding Beaket UI components to your project.
+Copy-paste component library for React. Brutalist design system with multiple themes.
 
-**Documentation:** https://beaket.github.io/ui/
+Components are copied into your project — you own the code.
 
-## Usage
+[Documentation](https://beaket.github.io/ui/) · [Themes](https://beaket.github.io/ui/themes) · [Components](https://beaket.github.io/ui/components)
+
+## Quick Start
 
 ```bash
 npx @beaket/ui init
 npx @beaket/ui add button
+```
+
+```tsx
+import { Button } from "@/components/ui/button";
 ```
 
 ## Requirements
 
 - React 18+
-- Tailwind CSS
+- Tailwind CSS 4+
+- TypeScript
 
-## Commands
+Supports **Vite** and **Next.js**. Paths and CSS files are auto-detected.
 
-| Command                     | Description                      |
-| --------------------------- | -------------------------------- |
-| `init`                      | Setup project configuration      |
-| `init -y`                   | Setup with defaults (no prompts) |
-| `add <component>`           | Add a component                  |
-| `add <component> [more...]` | Add multiple components at once  |
+## CLI Reference
 
-## Examples
+### `init`
+
+Set up configuration, select a theme, and inject CSS tokens.
 
 ```bash
-# Initialize with prompts
-npx @beaket/ui init
-
-# Initialize with defaults (skip prompts)
-npx @beaket/ui init -y
-
-# Add a single component
-npx @beaket/ui add button
-
-# Add multiple components
-npx @beaket/ui add alert button label input
-
-# Overwrite existing files
-npx @beaket/ui add button --overwrite
+npx @beaket/ui init [options]
 ```
 
-## Help
+| Option           | Description                                              |
+| ---------------- | -------------------------------------------------------- |
+| `-y, --yes`      | Skip prompts, use defaults                               |
+| `--theme <name>` | Pre-select a [theme](https://beaket.github.io/ui/themes) |
+
+Creates `beaket.ui.json` in your project root.
+
+### `add`
+
+Add [components](https://beaket.github.io/ui/components) to your project. Dependencies are installed automatically.
 
 ```bash
-npx @beaket/ui --help
-npx @beaket/ui init --help
-npx @beaket/ui add --help
+npx @beaket/ui add <components...> [options]
 ```
+
+| Option            | Description              |
+| ----------------- | ------------------------ |
+| `-o, --overwrite` | Overwrite existing files |
+
+## License
+
+MIT
