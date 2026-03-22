@@ -301,6 +301,12 @@ a:not([data-slot]) {
   margin: 0 0.5rem;
 }
 
+.home-theme-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
 /* Sidebar toggle (hidden on desktop) */
 .sidebar-header {
   display: flex;
@@ -311,36 +317,15 @@ a:not([data-slot]) {
 .sidebar-toggle {
   display: none;
   background: none;
-  border: 1px solid var(--chrome);
-  padding: 0.25rem;
+  border: none;
   cursor: pointer;
   margin-left: auto;
-}
-
-.sidebar-toggle-icon {
-  display: block;
-  width: 14px;
-  height: 2px;
-  background: var(--ink);
-  position: relative;
-}
-
-.sidebar-toggle-icon::before,
-.sidebar-toggle-icon::after {
-  content: "";
-  position: absolute;
-  width: 14px;
-  height: 2px;
-  background: var(--ink);
-  left: 0;
-}
-
-.sidebar-toggle-icon::before {
-  top: -5px;
-}
-
-.sidebar-toggle-icon::after {
-  top: 5px;
+  font-size: 0.6875rem;
+  font-family: inherit;
+  color: var(--steel);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* Responsive: Mobile (<768px) */
@@ -350,13 +335,16 @@ a:not([data-slot]) {
   }
 
   .sidebar {
-    position: static;
+    position: sticky;
+    top: 0;
+    z-index: 50;
     width: 100%;
     height: auto;
     border-right: none;
     border-bottom: 1px solid var(--chrome);
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 1rem;
     overflow-y: visible;
+    background: var(--paper);
   }
 
   .sidebar-header {
@@ -374,6 +362,14 @@ a:not([data-slot]) {
 
   .sidebar-toggle {
     display: block;
+    position: relative;
+    padding: 0;
+  }
+
+  .sidebar-toggle::before {
+    content: "";
+    position: absolute;
+    inset: -12px -8px;
   }
 
   .sidebar-nav {
@@ -398,6 +394,13 @@ a:not([data-slot]) {
   .sidebar-link {
     display: block;
     padding: 0.25rem 0;
+    position: relative;
+  }
+
+  .sidebar-link::before {
+    content: "";
+    position: absolute;
+    inset: -8px -12px;
   }
 
   .main {
@@ -406,12 +409,49 @@ a:not([data-slot]) {
     max-width: 100%;
   }
 
+  body {
+    font-size: 16px;
+  }
+
   pre {
     font-size: 0.75rem;
   }
 
   table {
     font-size: 0.75rem;
+  }
+
+  /* Smooth scroll for props table on touch */
+  .props-table-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Copy button always visible on touch devices */
+  .copy-button {
+    visibility: visible;
+  }
+
+  /* Prev/next nav touch targets */
+  .component-nav-link {
+    position: relative;
+  }
+
+  .component-nav-link::before {
+    content: "";
+    position: absolute;
+    inset: -12px -8px;
+  }
+
+  /* Home page theme bar sticky on mobile */
+  .home-theme-bar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--paper);
+    margin: 0 -1rem;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--chrome);
+    margin-bottom: 0.75rem;
   }
 
   /* Responsive preview boxes */
