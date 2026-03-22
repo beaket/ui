@@ -194,11 +194,11 @@ pre code {
   border: 1px solid var(--chrome);
   color: var(--steel);
   cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.15s;
+  visibility: hidden;
 }
-pre:hover .copy-button {
-  opacity: 1;
+pre:hover .copy-button,
+pre:focus-within .copy-button {
+  visibility: visible;
 }
 .copy-button:hover {
   color: var(--ink);

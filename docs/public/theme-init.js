@@ -1,5 +1,6 @@
+// AUTO-SYNC: This file must match docs/src/data/theme-tokens.json
 // Runs before page render to prevent theme flash on navigation.
-// Must be kept in sync with theme-switcher.tsx themeTokens.
+// This is a self-contained copy because <script> tags in <head> cannot import modules.
 (function () {
   var themes = {
     porcelain: {
