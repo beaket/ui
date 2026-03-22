@@ -281,12 +281,20 @@ export const PaginationTest: Story = {
     await userEvent.click(nextButton);
 
     // Verify we're on page 2
-    const page2Info = canvas.getByText(/Page 2 of/);
+    const page2Info = canvas.getByText(/Showing 4 to 6 of/);
     await expect(page2Info).toBeInTheDocument();
 
+    // Page 2 button should be active
+    const page2Button = canvas.getByRole("button", { name: "2" });
+    await expect(page2Button).toHaveAttribute("aria-current", "page");
+
     // Go back to first page
-    const firstPageButton = canvas.getByRole("button", { name: "First page" });
-    await userEvent.click(firstPageButton);
+    const page1Button = canvas.getByRole("button", { name: "1" });
+    await userEvent.click(page1Button);
+
+    // Verify we're back on page 1
+    const page1Info = canvas.getByText(/Showing 1 to 3 of/);
+    await expect(page1Info).toBeInTheDocument();
   },
 };
 

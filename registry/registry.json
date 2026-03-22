@@ -300,7 +300,7 @@
     },
     {
       "name": "pagination",
-      "description": "Server-side pagination component using links for SSR-friendly navigation",
+      "description": "Pagination component with link and button modes for SSR and client-side navigation",
       "dependencies": ["clsx", "lucide-react", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/pagination.tsx"],
@@ -316,7 +316,7 @@
       "name": "data-table",
       "description": "Data table component built on TanStack Table with sorting, filtering, pagination, and row selection",
       "dependencies": ["@tanstack/react-table", "clsx", "tailwind-merge", "lucide-react"],
-      "registryDependencies": ["table", "button", "input", "checkbox"],
+      "registryDependencies": ["table", "button", "input", "checkbox", "pagination"],
       "files": ["components/data-table.tsx"],
       "docs": {
         "title": "DataTable",
