@@ -22,7 +22,7 @@ type Story = StoryObj<typeof Select>;
 
 export const Default: Story = {
   render: () => (
-    <div className="max-w-sm">
+    <div className="w-full">
       <Select>
         <Select.Trigger aria-label="Select a fruit">
           <Select.Value placeholder="Select a fruit" />

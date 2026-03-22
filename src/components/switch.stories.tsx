@@ -72,6 +72,13 @@ export const AllStates: Story = {
   ),
 };
 
+export const OnOff = () => (
+  <div className="flex items-center gap-3">
+    <Switch defaultChecked={false} aria-label="Off" />
+    <Switch defaultChecked={true} aria-label="On" />
+  </div>
+);
+
 export const WithLabel: Story = {
   render: () => {
     const ControlledSwitch = () => {

@@ -48,6 +48,12 @@ export const AllStates = () => (
   </div>
 );
 
+export const Preview = () => (
+  <div className="relative h-6">
+    <NavigationProgress active={true} className="!relative" />
+  </div>
+);
+
 export const RenderTest: Story = {
   args: {
     active: true,

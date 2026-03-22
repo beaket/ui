@@ -113,18 +113,17 @@ export const CustomSizes = () => (
 );
 
 export const AvatarGroup = () => (
-  <div className="flex -space-x-2">
-    <Avatar className="border-paper border-2">
-      <Avatar.Image src="https://github.com/beaket.png" alt="@beaket" />
+  <div className="flex gap-2">
+    <Avatar>
       <Avatar.Fallback>BK</Avatar.Fallback>
     </Avatar>
-    <Avatar className="border-paper border-2">
+    <Avatar>
       <Avatar.Fallback>JD</Avatar.Fallback>
     </Avatar>
-    <Avatar className="border-paper border-2">
+    <Avatar>
       <Avatar.Fallback>AB</Avatar.Fallback>
     </Avatar>
-    <Avatar className="border-paper border-2">
+    <Avatar>
       <Avatar.Fallback>+3</Avatar.Fallback>
     </Avatar>
   </div>

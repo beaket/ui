@@ -1,40 +1,45 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const colors = {
-  brand: [{ name: "Branch", variable: "--color-branch", hex: "#1c1f24", usage: "Brand identity" }],
+  brand: [{ name: "Branch", variable: "--color-branch", hex: "#05070d", usage: "Brand identity" }],
   surface: [
-    { name: "Surface 0", variable: "--color-surface-0", hex: "#eeeeee", usage: "Page background" },
-    { name: "Surface 1", variable: "--color-surface-1", hex: "#fafafa", usage: "Cards, panels" },
+    { name: "Surface 0", variable: "--color-surface-0", hex: "#eff0f2", usage: "Page background" },
+    { name: "Surface 1", variable: "--color-surface-1", hex: "#f8f8fa", usage: "Cards, panels" },
     { name: "Surface 2", variable: "--color-surface-2", hex: "#ffffff", usage: "Nested/elevated" },
   ],
   neutral: [
-    { name: "Graphite", variable: "--color-graphite", hex: "#0d0d0d", usage: "Darkest tone" },
-    { name: "Ink", variable: "--color-ink", hex: "#1a1a1a", usage: "Primary text" },
-    { name: "Iron", variable: "--color-iron", hex: "#2d2d2d", usage: "Dark accent" },
-    { name: "Slate", variable: "--color-slate", hex: "#404040", usage: "Dark secondary" },
-    { name: "Zinc", variable: "--color-zinc", hex: "#525252", usage: "Medium dark" },
-    { name: "Steel", variable: "--color-steel", hex: "#595959", usage: "Secondary text" },
-    { name: "Muted", variable: "--color-muted", hex: "#737373", usage: "Accessible muted text" },
-    { name: "Aluminum", variable: "--color-aluminum", hex: "#9e9e9e", usage: "Decorative only" },
-    { name: "Chrome", variable: "--color-chrome", hex: "#d4d4d4", usage: "Primary border" },
-    { name: "Silver", variable: "--color-silver", hex: "#dedede", usage: "Light border" },
-    { name: "Platinum", variable: "--color-platinum", hex: "#ebebeb", usage: "Light accent" },
-    { name: "Frost", variable: "--color-frost", hex: "#f5f5f5", usage: "Hover state" },
-    { name: "Paper", variable: "--color-paper", hex: "#fafafa", usage: "Primary surface" },
+    { name: "Graphite", variable: "--color-graphite", hex: "#030509", usage: "Darkest tone" },
+    { name: "Ink", variable: "--color-ink", hex: "#080b12", usage: "Primary text" },
+    { name: "Iron", variable: "--color-iron", hex: "#282b30", usage: "Dark accent" },
+    { name: "Slate", variable: "--color-slate", hex: "#3e4146", usage: "Dark secondary" },
+    { name: "Zinc", variable: "--color-zinc", hex: "#53565c", usage: "Medium dark" },
+    { name: "Steel", variable: "--color-steel", hex: "#686b70", usage: "Secondary text" },
+    { name: "Muted", variable: "--color-muted", hex: "#7a7d82", usage: "Accessible muted text" },
+    { name: "Aluminum", variable: "--color-aluminum", hex: "#a0a3a8", usage: "Decorative only" },
+    { name: "Chrome", variable: "--color-chrome", hex: "#c0c5cc", usage: "Primary border" },
+    { name: "Silver", variable: "--color-silver", hex: "#d5d8dd", usage: "Light border" },
+    { name: "Platinum", variable: "--color-platinum", hex: "#e8eaed", usage: "Light accent" },
+    { name: "Frost", variable: "--color-frost", hex: "#f3f4f6", usage: "Hover state" },
+    { name: "Paper", variable: "--color-paper", hex: "#ffffff", usage: "Primary surface" },
   ],
   signal: [
-    { name: "Blue", variable: "--color-signal-blue", hex: "#1a56a0", usage: "Information, links" },
-    { name: "Red", variable: "--color-signal-red", hex: "#c41e1e", usage: "Error, destructive" },
+    { name: "Blue", variable: "--color-signal-blue", hex: "#1565c0", usage: "Information, links" },
+    { name: "Red", variable: "--color-signal-red", hex: "#d32f2f", usage: "Error, destructive" },
     {
       name: "Red (text)",
       variable: "--color-signal-red-text",
-      hex: "#b91c1c",
+      hex: "#c62828",
       usage: "Red text (AAA on paper)",
     },
-    { name: "Green", variable: "--color-signal-green", hex: "#00794c", usage: "Success, positive" },
-    { name: "Amber", variable: "--color-signal-amber", hex: "#b8860b", usage: "Warning, caution" },
-    { name: "Purple", variable: "--color-signal-purple", hex: "#6f2da8", usage: "Accent, special" },
-    { name: "Cyan", variable: "--color-signal-cyan", hex: "#1a6b7c", usage: "Info alternate" },
+    {
+      name: "Green",
+      variable: "--color-signal-green",
+      hex: "#0d7c66",
+      usage: "Success, teal accent",
+    },
+    { name: "Amber", variable: "--color-signal-amber", hex: "#c49000", usage: "Warning, caution" },
+    { name: "Purple", variable: "--color-signal-purple", hex: "#6a1b9a", usage: "Accent, special" },
+    { name: "Cyan", variable: "--color-signal-cyan", hex: "#00838f", usage: "Info alternate" },
   ],
 };
 
@@ -261,6 +266,130 @@ export const SignalColors = () => (
       {colors.signal.map((color) => (
         <ColorSwatch key={color.variable} {...color} />
       ))}
+    </div>
+  </div>
+);
+
+const themePresets = {
+  porcelain: {
+    paper: "#ffffff",
+    frost: "#f3f4f6",
+    chrome: "#c0c5cc",
+    muted: "#7a7d82",
+    ink: "#080b12",
+    graphite: "#030509",
+    blue: "#1565c0",
+    red: "#d32f2f",
+    green: "#0d7c66",
+    amber: "#c49000",
+    purple: "#6a1b9a",
+    cyan: "#00838f",
+    shadowLabel: "1px chrome (ghostly)",
+  },
+  tobacco: {
+    paper: "#f4f3ee",
+    frost: "#edece6",
+    chrome: "#d0cec5",
+    muted: "#6b6a60",
+    ink: "#1a1a18",
+    graphite: "#111110",
+    blue: "#3a5f9e",
+    red: "#c15f3c",
+    green: "#4a8a5e",
+    amber: "#b8860b",
+    purple: "#845aa0",
+    cyan: "#2a7e82",
+    shadowLabel: "2px iron (brown)",
+  },
+  marigold: {
+    paper: "#ffffff",
+    frost: "#f0f0f0",
+    chrome: "#c0c0c0",
+    muted: "#6e6e6e",
+    ink: "#121212",
+    graphite: "#0a0a0a",
+    blue: "#0055ff",
+    red: "#f24e1e",
+    green: "#0acf83",
+    amber: "#ff9500",
+    purple: "#a259ff",
+    cyan: "#00bcd4",
+    shadowLabel: "3px ink (black)",
+  },
+  eucalyptus: {
+    paper: "#f8f9fc",
+    frost: "#eff2f8",
+    chrome: "#c0cddb",
+    muted: "#5a6d88",
+    ink: "#162036",
+    graphite: "#0a1025",
+    blue: "#2563eb",
+    red: "#dc2626",
+    green: "#059669",
+    amber: "#d97706",
+    purple: "#7c3aed",
+    cyan: "#0891b2",
+    shadowLabel: "2px chrome (blue-gray)",
+  },
+};
+
+const presetTokens = ["paper", "frost", "chrome", "muted", "ink", "graphite"] as const;
+const presetSignals = ["blue", "red", "green", "amber", "purple", "cyan"] as const;
+
+export const ThemePresets = () => (
+  <div className="bg-paper p-6">
+    <h2 className="text-steel mb-4 text-xs font-bold tracking-wider uppercase">Themes</h2>
+    <p className="text-muted mb-4 text-xs">
+      Four themes — neutrals, signals, and shadow geometry all change.
+    </p>
+    <div className="max-w-4xl space-y-5">
+      {(Object.entries(themePresets) as [string, Record<string, string>][]).map(
+        ([name, tokens]) => (
+          <div key={name}>
+            <div className="text-ink mb-1 text-xs font-semibold capitalize">
+              {name} <span className="text-muted font-normal">— shadow: {tokens.shadowLabel}</span>
+            </div>
+            <div className="flex gap-1">
+              {presetTokens.map((token) => {
+                const hex = tokens[token];
+                const isLight = ["paper", "frost", "chrome"].includes(token);
+                return (
+                  <div key={token} className="flex-1 text-center">
+                    <div
+                      className="border-chrome flex h-12 items-end justify-center border p-0.5"
+                      style={{ backgroundColor: hex }}
+                    >
+                      <span style={{ fontSize: 9, color: isLight ? "#1a1a1a" : "#fafafa" }}>
+                        {hex}
+                      </span>
+                    </div>
+                    <div className="text-steel mt-0.5" style={{ fontSize: 10 }}>
+                      {token}
+                    </div>
+                  </div>
+                );
+              })}
+              <div style={{ width: 4 }} />
+              {presetSignals.map((signal) => {
+                const hex = tokens[signal];
+                return (
+                  <div key={signal} className="text-center" style={{ width: 48 }}>
+                    <div
+                      className="flex h-12 items-end justify-center border p-0.5"
+                      style={{ backgroundColor: hex, borderColor: hex }}
+                    >
+                      <span style={{ fontSize: 9, color: "#ffffff" }}>{hex}</span>
+                    </div>
+                    <div className="text-steel mt-0.5" style={{ fontSize: 10 }}>
+                      {signal}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ),
+      )}
     </div>
   </div>
 );
