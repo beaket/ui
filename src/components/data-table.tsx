@@ -129,14 +129,17 @@ export function DataTable<TData, TValue>({
   const tableRef = useRef(table);
   tableRef.current = table;
 
+  const onSelectionChangeRef = useRef(onSelectionChange);
+  onSelectionChangeRef.current = onSelectionChange;
+
   useEffect(() => {
-    if (selectable && onSelectionChange) {
+    if (selectable && onSelectionChangeRef.current) {
       const selectedRows = tableRef.current
         .getFilteredSelectedRowModel()
         .rows.map((row) => row.original);
-      onSelectionChange(selectedRows);
+      onSelectionChangeRef.current(selectedRows);
     }
-  }, [rowSelection, selectable, onSelectionChange]);
+  }, [rowSelection, selectable]);
 
   return (
     <div className={className}>
