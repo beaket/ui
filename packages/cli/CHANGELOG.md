@@ -1,5 +1,60 @@
 # @beaket/ui
 
+## 2.1.0
+
+### Minor Changes
+
+- [#257](https://github.com/beaket/ui/pull/257) [`09debe5`](https://github.com/beaket/ui/commit/09debe548d70e6b454b69d5ffb7b4efd7215b673) Thanks [@jihnma](https://github.com/jihnma)! - Add dark mode variants for all themes (Porcelain, Tobacco, Marigold, Eucalyptus) with automatic OS detection via prefers-color-scheme and manual light/dark toggle in docs
+
+- [#260](https://github.com/beaket/ui/pull/260) [`2a240ce`](https://github.com/beaket/ui/commit/2a240ce68b56dfa88a7540ce6c235f5d1a155af0) Thanks [@jihnma](https://github.com/jihnma)! - Add button mode to Pagination component and refactor DataTable to use it
+
+  Pagination now supports `mode="button"` with an `onPageChange` callback for client-side pagination, in addition to the existing `mode="link"` (default) with `buildPageUrl` for SSR-friendly navigation.
+
+  DataTable's inline pagination has been replaced with the shared Pagination component, gaining ellipsis support for large page counts and ensuring visual consistency.
+
+- [#236](https://github.com/beaket/ui/pull/236) [`fa45480`](https://github.com/beaket/ui/commit/fa45480fab5ada0d3b6dd3fbb2b31c7e684ed5c2) Thanks [@jihnma](https://github.com/jihnma)! - Remove 5 composed components in favor of primitive-first philosophy
+
+  Removed: ConfirmationDialog, ErrorPage, SidebarLayout, BlankSlate, PageHeader
+
+  These components were fixed-layout compositions of existing primitives (Dialog, Button, Alert, etc.) that restricted user freedom. Users should compose their own layouts using the primitive components directly.
+
+- [#256](https://github.com/beaket/ui/pull/256) [`98083c3`](https://github.com/beaket/ui/commit/98083c33a888bf6ae38e09eb12044e308c88c7ba) Thanks [@jihnma](https://github.com/jihnma)! - Redesign signal colors across all themes for distinct personalities. Default green shifted from teal (167°) to emerald (150°) for clearer success recognition. Tobacco signals now use earthy pigments (indigo ink, brick, forest, ochre, plum, verdigris). Marigold pushed to max saturation with WCAG green fix (2.1:1 → ~5:1). Eucalyptus moved from Tailwind defaults to formal cobalt/crimson/jade/brass palette.
+
+- [#249](https://github.com/beaket/ui/pull/249) [`168128d`](https://github.com/beaket/ui/commit/168128dae03e6dd97f286366f4440906a5c8126a) Thanks [@jihnma](https://github.com/jihnma)! - Add surface layer tokens (`surface-0`, `surface-1`, `surface-2`) for visual depth between page, cards, and elevated elements. Surface containers (Card, Dialog, Sheet, Alert, Table) use `bg-surface-1`; floating overlays (DropdownMenu, Select popup) use `bg-surface-2`.
+
+- [#255](https://github.com/beaket/ui/pull/255) [`7e14e13`](https://github.com/beaket/ui/commit/7e14e13f321d3f5f80e3afbf15b7097fa3148893) Thanks [@jihnma](https://github.com/jihnma)! - Add four themes: Porcelain (cold precision, teal accent), Tobacco (warm pampas cream, terracotta), Marigold (loud poster-print signals, ink-black shadows), Eucalyptus (enterprise titanium blue-gray). Each transforms neutrals, signal colors, and shadow geometry. New `--theme` CLI flag. Interactive demo at `/themes`.
+
+### Patch Changes
+
+- [#239](https://github.com/beaket/ui/pull/239) [`7b6b49f`](https://github.com/beaket/ui/commit/7b6b49f92d517e03944a89346f9c0abe32a68e5b) Thanks [@jihnma](https://github.com/jihnma)! - Fix accessibility and consistency issues across 14 components
+  - DataTable: add keyboard support (Enter/Space) on clickable rows, optimize selection useEffect
+  - Button: add data-slot and default type="button"
+  - Alert: remove line-clamp-1 from title
+  - NavigationProgress: add aria-valuetext
+  - Sheet: add hideCloseButton prop for Dialog API parity
+  - Input, Textarea, Select: normalize focus indicators to focus-visible:outline
+  - Radio: align border weight with Checkbox (border-graphite)
+  - Tooltip: remove shadow-offset from dark surface
+  - Blockquote: use border-l-2 to match border-width-medium token
+  - Checkbox, Radio, Switch, Dialog/Sheet close: expand touch targets to 44px
+  - Select: add disabled:border-chrome to match other form controls
+
+- [#252](https://github.com/beaket/ui/pull/252) [`9d4f3e0`](https://github.com/beaket/ui/commit/9d4f3e0acc06c35834b8f267175973dffb70a555) Thanks [@jihnma](https://github.com/jihnma)! - fix: add missing `shadow` prop to Avatar for API consistency with Card and Table
+
+- [#250](https://github.com/beaket/ui/pull/250) [`e9c59f6`](https://github.com/beaket/ui/commit/e9c59f66e7843414ba47e8c73e8d643137f0995b) Thanks [@jihnma](https://github.com/jihnma)! - fix: add missing `gap-2` to `Card.Footer` so children are spaced correctly
+
+- [#266](https://github.com/beaket/ui/pull/266) [`04be083`](https://github.com/beaket/ui/commit/04be08310d8825dd5c9bdccfbde5a7e9b37d7825) Thanks [@jihnma](https://github.com/jihnma)! - Improve component prop documentation: extract compound component props (Card, Navigation, Tabs, Select, DropdownMenu), show enum literal values instead of "enum", filter className noise, fix ReactNode types showing as "any", and add inline option listings to JSDoc comments
+
+- [#269](https://github.com/beaket/ui/pull/269) [`8d8c31c`](https://github.com/beaket/ui/commit/8d8c31cb7f19267b46fffefa7ed83aa99562fa21) Thanks [@jihnma](https://github.com/jihnma)! - Fix accessibility issues in DataTable, Pagination, and Input components
+
+- [#240](https://github.com/beaket/ui/pull/240) [`5beb672`](https://github.com/beaket/ui/commit/5beb6723f57e892169e8b0c85b869c7c9f3d51d7) Thanks [@jihnma](https://github.com/jihnma)! - Add focus-visible indicator to DataTable clickable rows for keyboard navigation
+
+- [#264](https://github.com/beaket/ui/pull/264) [`7add468`](https://github.com/beaket/ui/commit/7add46849d67ac6732e55c0a0bbd3a5444558c92) Thanks [@jihnma](https://github.com/jihnma)! - fix: resolve React 19 ref collision in Textarea and stabilize effect dependencies in DataTable, Dialog, Sheet
+
+- [#253](https://github.com/beaket/ui/pull/253) [`cd1de9a`](https://github.com/beaket/ui/commit/cd1de9ae3249acdb5fa9316017ab70ffc5cef07f) Thanks [@jihnma](https://github.com/jihnma)! - fix: increase Switch `sm` size from 12×28px to 16×32px for better visibility
+
+- [#251](https://github.com/beaket/ui/pull/251) [`5d86371`](https://github.com/beaket/ui/commit/5d863718e7c840bec18be32f2f79b046e2a559c4) Thanks [@jihnma](https://github.com/jihnma)! - fix: increase default Table cell padding from px-1.5 py-1 to px-4 py-2/py-2.5 for better readability
+
 ## 2.0.0
 
 ### Major Changes
