@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export interface PaginationProps {
+interface PaginationBaseProps {
   /**
    * Current page number (1-indexed)
    */
@@ -14,11 +14,6 @@ export interface PaginationProps {
    * Total number of pages
    */
   totalPages: number;
-
-  /**
-   * Function to build URL for a given page number
-   */
-  buildPageUrl: (page: number) => string;
 
   /**
    * Additional CSS class for the container
@@ -32,17 +27,49 @@ export interface PaginationProps {
   maxPageButtons?: number;
 }
 
+interface PaginationLinkProps extends PaginationBaseProps {
+  /**
+   * Use link-based navigation (default).
+   * Renders `<a>` tags for SSR-friendly navigation.
+   */
+  mode?: "link";
+
+  /**
+   * Function to build URL for a given page number.
+   * Required when mode is "link".
+   */
+  buildPageUrl: (page: number) => string;
+
+  onPageChange?: never;
+}
+
+interface PaginationButtonProps extends PaginationBaseProps {
+  /**
+   * Use button-based navigation for client-side pagination.
+   * Renders `<button>` tags with onClick handlers.
+   */
+  mode: "button";
+
+  /**
+   * Callback when a page is selected.
+   * Required when mode is "button".
+   */
+  onPageChange: (page: number) => void;
+
+  buildPageUrl?: never;
+}
+
+export type PaginationProps = PaginationLinkProps | PaginationButtonProps;
+
 /**
- * Server-side pagination component using links.
- * Works with React Router's Link component for SSR-friendly navigation.
+ * Pagination component supporting both link and button modes.
+ * - `mode="link"` (default): renders `<a>` tags with `buildPageUrl` for SSR-friendly navigation.
+ * - `mode="button"`: renders `<button>` tags with `onPageChange` for client-side pagination.
  */
-export function Pagination({
-  page,
-  totalPages,
-  buildPageUrl,
-  className,
-  maxPageButtons = 5,
-}: PaginationProps) {
+export function Pagination(props: PaginationProps) {
+  const { page, totalPages, className, maxPageButtons = 5 } = props;
+  const isButtonMode = props.mode === "button";
+
   if (totalPages <= 1) return null;
 
   // Calculate which page numbers to show
@@ -95,6 +122,9 @@ export function Pagination({
   const buttonInactiveClass = "border-chrome hover:bg-frost";
   const buttonDisabledClass = "border-chrome text-steel cursor-not-allowed";
 
+  const hasPrev = page > 1;
+  const hasNext = page < totalPages;
+
   return (
     <nav
       data-slot="pagination"
@@ -102,10 +132,21 @@ export function Pagination({
       aria-label="Pagination"
     >
       {/* Previous button */}
-      {page > 1 ? (
+      {isButtonMode ? (
+        <button
+          type="button"
+          data-slot="pagination-prev"
+          className={cn(buttonBaseClass, hasPrev ? buttonInactiveClass : buttonDisabledClass)}
+          disabled={!hasPrev}
+          onClick={() => hasPrev && props.onPageChange(page - 1)}
+          aria-label="Previous page"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+      ) : hasPrev ? (
         <a
           data-slot="pagination-prev"
-          href={buildPageUrl(page - 1)}
+          href={props.buildPageUrl(page - 1)}
           className={cn(buttonBaseClass, buttonInactiveClass)}
           aria-label="Previous page"
         >
@@ -138,11 +179,30 @@ export function Pagination({
         }
 
         const isCurrentPage = pageNum === page;
+
+        if (isButtonMode) {
+          return (
+            <button
+              key={pageNum}
+              type="button"
+              data-slot="pagination-page"
+              className={cn(
+                buttonBaseClass,
+                isCurrentPage ? buttonActiveClass : buttonInactiveClass,
+              )}
+              onClick={() => props.onPageChange(pageNum)}
+              aria-current={isCurrentPage ? "page" : undefined}
+            >
+              {pageNum}
+            </button>
+          );
+        }
+
         return (
           <a
             key={pageNum}
             data-slot="pagination-page"
-            href={buildPageUrl(pageNum)}
+            href={props.buildPageUrl(pageNum)}
             className={cn(buttonBaseClass, isCurrentPage ? buttonActiveClass : buttonInactiveClass)}
             aria-current={isCurrentPage ? "page" : undefined}
           >
@@ -152,10 +212,21 @@ export function Pagination({
       })}
 
       {/* Next button */}
-      {page < totalPages ? (
+      {isButtonMode ? (
+        <button
+          type="button"
+          data-slot="pagination-next"
+          className={cn(buttonBaseClass, hasNext ? buttonInactiveClass : buttonDisabledClass)}
+          disabled={!hasNext}
+          onClick={() => hasNext && props.onPageChange(page + 1)}
+          aria-label="Next page"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      ) : hasNext ? (
         <a
           data-slot="pagination-next"
-          href={buildPageUrl(page + 1)}
+          href={props.buildPageUrl(page + 1)}
           className={cn(buttonBaseClass, buttonInactiveClass)}
           aria-label="Next page"
         >

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, within } from "storybook/test";
+import { useState } from "react";
+import { expect, userEvent, within } from "storybook/test";
 import { Pagination } from "./pagination";
 
 const meta: Meta<typeof Pagination> = {
@@ -24,7 +25,7 @@ const meta: Meta<typeof Pagination> = {
     docs: {
       description: {
         component:
-          "Server-side pagination component using links. Works with React Router's Link component for SSR-friendly navigation.",
+          "Pagination component supporting both link and button modes. Use link mode for SSR-friendly navigation, button mode for client-side pagination.",
       },
     },
   },
@@ -86,17 +87,17 @@ export const SinglePage: Story = {
 export const AllStates = () => (
   <div className="space-y-8">
     <div>
-      <h3 className="mb-4 text-sm font-medium">First Page</h3>
+      <h3 className="mb-4 text-sm font-medium">First Page (Link Mode)</h3>
       <Pagination page={1} totalPages={10} buildPageUrl={buildPageUrl} />
     </div>
 
     <div>
-      <h3 className="mb-4 text-sm font-medium">Middle Page</h3>
+      <h3 className="mb-4 text-sm font-medium">Middle Page (Link Mode)</h3>
       <Pagination page={5} totalPages={10} buildPageUrl={buildPageUrl} />
     </div>
 
     <div>
-      <h3 className="mb-4 text-sm font-medium">Last Page</h3>
+      <h3 className="mb-4 text-sm font-medium">Last Page (Link Mode)</h3>
       <Pagination page={10} totalPages={10} buildPageUrl={buildPageUrl} />
     </div>
 
@@ -114,6 +115,21 @@ export const AllStates = () => (
       <h3 className="mb-4 text-sm font-medium">Single Page (Hidden)</h3>
       <p className="text-steel text-sm">Pagination is hidden when totalPages = 1</p>
       <Pagination page={1} totalPages={1} buildPageUrl={buildPageUrl} />
+    </div>
+
+    <div>
+      <h3 className="mb-4 text-sm font-medium">Button Mode — First Page</h3>
+      <Pagination mode="button" page={1} totalPages={10} onPageChange={() => {}} />
+    </div>
+
+    <div>
+      <h3 className="mb-4 text-sm font-medium">Button Mode — Middle Page</h3>
+      <Pagination mode="button" page={5} totalPages={10} onPageChange={() => {}} />
+    </div>
+
+    <div>
+      <h3 className="mb-4 text-sm font-medium">Button Mode — Last Page</h3>
+      <Pagination mode="button" page={10} totalPages={10} onPageChange={() => {}} />
     </div>
   </div>
 );
@@ -188,5 +204,94 @@ export const LastPageTest: Story = {
     // Previous link should be active
     const prevLink = canvas.getByRole("link", { name: "Previous page" });
     await expect(prevLink).toHaveAttribute("href", "?page=9");
+  },
+};
+
+// --- Button mode stories ---
+
+const ButtonModeWrapper = ({ initialPage = 1, totalPages = 10 }) => {
+  const [page, setPage] = useState(initialPage);
+  return (
+    <div className="space-y-2">
+      <p className="text-steel text-sm" data-testid="page-info">
+        Page {page} of {totalPages}
+      </p>
+      <Pagination mode="button" page={page} totalPages={totalPages} onPageChange={setPage} />
+    </div>
+  );
+};
+
+export const ButtonMode = {
+  render: () => <ButtonModeWrapper initialPage={3} totalPages={10} />,
+};
+
+export const ButtonModeTest: StoryObj = {
+  render: () => <ButtonModeWrapper initialPage={1} totalPages={5} />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Previous button should be disabled on first page
+    const prevButton = canvas.getByRole("button", { name: "Previous page" });
+    await expect(prevButton).toBeDisabled();
+
+    // Next button should be enabled
+    const nextButton = canvas.getByRole("button", { name: "Next page" });
+    await expect(nextButton).toBeEnabled();
+
+    // Click next page
+    await userEvent.click(nextButton);
+
+    // Verify we moved to page 2
+    const pageInfo = canvas.getByTestId("page-info");
+    await expect(pageInfo).toHaveTextContent("Page 2 of 5");
+
+    // Previous button should now be enabled
+    await expect(canvas.getByRole("button", { name: "Previous page" })).toBeEnabled();
+
+    // Click page 4 directly
+    await userEvent.click(canvas.getByRole("button", { name: "4" }));
+    await expect(pageInfo).toHaveTextContent("Page 4 of 5");
+
+    // Click previous
+    await userEvent.click(canvas.getByRole("button", { name: "Previous page" }));
+    await expect(pageInfo).toHaveTextContent("Page 3 of 5");
+  },
+};
+
+export const ButtonModeFirstPageTest: StoryObj = {
+  render: () => <ButtonModeWrapper initialPage={1} totalPages={10} />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Previous button should be disabled (button, not span)
+    const prevButton = canvas.getByRole("button", { name: "Previous page" });
+    await expect(prevButton).toBeDisabled();
+
+    // Next button should be enabled
+    const nextButton = canvas.getByRole("button", { name: "Next page" });
+    await expect(nextButton).toBeEnabled();
+
+    // Page 1 should be marked as current
+    const page1 = canvas.getByRole("button", { name: "1" });
+    await expect(page1).toHaveAttribute("aria-current", "page");
+  },
+};
+
+export const ButtonModeLastPageTest: StoryObj = {
+  render: () => <ButtonModeWrapper initialPage={10} totalPages={10} />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Next button should be disabled
+    const nextButton = canvas.getByRole("button", { name: "Next page" });
+    await expect(nextButton).toBeDisabled();
+
+    // Previous button should be enabled
+    const prevButton = canvas.getByRole("button", { name: "Previous page" });
+    await expect(prevButton).toBeEnabled();
+
+    // Page 10 should be marked as current
+    const page10 = canvas.getByRole("button", { name: "10" });
+    await expect(page10).toHaveAttribute("aria-current", "page");
   },
 };

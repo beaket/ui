@@ -12,11 +12,12 @@ import {
   type VisibilityState,
 } from "@tanstack/react-table";
 import { clsx, type ClassValue } from "clsx";
-import { ArrowDown, ArrowUp, ArrowUpDown, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { Checkbox } from "./checkbox";
 import { Input } from "./input";
+import { Pagination } from "./pagination";
 import { Table } from "./table";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
@@ -311,52 +312,12 @@ export function DataTable<TData, TValue>({
               ` (${table.getFilteredSelectedRowModel().rows.length} selected)`}
           </div>
 
-          <nav className="flex items-center gap-1" aria-label="Table pagination">
-            <button
-              type="button"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              className={cn(
-                "relative flex h-8 items-center justify-center border px-3 text-sm transition-colors before:absolute before:inset-[-8px] before:content-['']",
-                table.getCanPreviousPage()
-                  ? "border-chrome hover:bg-frost cursor-pointer"
-                  : "border-chrome text-steel cursor-not-allowed",
-              )}
-              aria-label="Previous page"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            {Array.from({ length: table.getPageCount() }, (_, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => table.setPageIndex(i)}
-                className={cn(
-                  "relative cursor-pointer border px-3 py-1 text-sm transition-colors before:absolute before:inset-[-8px] before:content-['']",
-                  table.getState().pagination.pageIndex === i
-                    ? "bg-branch text-paper border-branch"
-                    : "border-chrome hover:bg-frost",
-                )}
-                aria-current={table.getState().pagination.pageIndex === i ? "page" : undefined}
-              >
-                {i + 1}
-              </button>
-            ))}
-            <button
-              type="button"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              className={cn(
-                "relative flex h-8 items-center justify-center border px-3 text-sm transition-colors before:absolute before:inset-[-8px] before:content-['']",
-                table.getCanNextPage()
-                  ? "border-chrome hover:bg-frost cursor-pointer"
-                  : "border-chrome text-steel cursor-not-allowed",
-              )}
-              aria-label="Next page"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </nav>
+          <Pagination
+            mode="button"
+            page={table.getState().pagination.pageIndex + 1}
+            totalPages={table.getPageCount()}
+            onPageChange={(p) => table.setPageIndex(p - 1)}
+          />
         </div>
       )}
     </div>
