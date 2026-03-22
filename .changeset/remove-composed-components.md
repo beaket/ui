@@ -1,5 +1,5 @@
 ---
-"@beaket/ui": major
+"@beaket/ui": minor
 ---
 
 Remove 5 composed components in favor of primitive-first philosophy

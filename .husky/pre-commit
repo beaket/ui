@@ -1,4 +1,22 @@
+# Block major changesets unless explicitly allowed
+if [ "$ALLOW_MAJOR" != "1" ]; then
+  MAJOR_FILES=$(git diff --cached --name-only --diff-filter=ACMR -- '.changeset/*.md' | while read f; do
+    grep -l '"@beaket/ui": major' "$f" 2>/dev/null
+  done)
+  if [ -n "$MAJOR_FILES" ]; then
+    echo ""
+    echo "BLOCKED: major version bump detected in changeset."
+    echo ""
+    echo "  $MAJOR_FILES"
+    echo ""
+    echo "Major bumps require explicit approval. See docs/git-rules.md."
+    echo "To override: ALLOW_MAJOR=1 git commit ..."
+    echo ""
+    exit 1
+  fi
+fi
+
 # Format staged files and re-add them to include the formatting changes in the commit
 FILES=$(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g')
 [ -z "$FILES" ] && exit 0
-prettier $FILES --write --ignore-unknown && git add $FILES
+npx prettier $FILES --write --ignore-unknown && git add $FILES
