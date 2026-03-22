@@ -367,7 +367,7 @@ a:not([data-slot]) {
   }
 
   .sidebar-toggle::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: -12px -8px;
   }
@@ -398,7 +398,7 @@ a:not([data-slot]) {
   }
 
   .sidebar-link::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: -8px -12px;
   }
@@ -437,7 +437,7 @@ a:not([data-slot]) {
   }
 
   .component-nav-link::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: -12px -8px;
   }
