@@ -22,20 +22,20 @@
   --color-paper: #f8f9fc;
   --color-inverse: var(--color-paper);
 
-  /* Signal colors — enterprise, structured */
-  --color-signal-blue: #2563eb;
-  --color-signal-red: #dc2626;
-  --color-signal-red-hover: #c52222;
-  --color-signal-red-active: #ae1e1e;
-  --color-signal-red-text: #c52222;
-  --color-signal-green: #059669;
-  --color-signal-green-hover: #047857;
-  --color-signal-green-active: #036145;
-  --color-signal-amber: #d97706;
-  --color-signal-amber-hover: #b96505;
-  --color-signal-amber-active: #995304;
-  --color-signal-purple: #7c3aed;
-  --color-signal-cyan: #0891b2;
+  /* Signal colors — deep cobalt, formal crimson, jade, brass */
+  --color-signal-blue: #1535c0;
+  --color-signal-red: #b81c38;
+  --color-signal-red-hover: #9e1830;
+  --color-signal-red-active: #841428;
+  --color-signal-red-text: #9e1830;
+  --color-signal-green: #0a7860;
+  --color-signal-green-hover: #086450;
+  --color-signal-green-active: #065040;
+  --color-signal-amber: #b87500;
+  --color-signal-amber-hover: #9c6300;
+  --color-signal-amber-active: #805200;
+  --color-signal-purple: #5b22c8;
+  --color-signal-cyan: #0078a8;
 
   /* Surface layers (visual depth) */
   --color-surface-0: #e6ebf2;
