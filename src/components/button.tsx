@@ -6,7 +6,7 @@ import { twMerge } from "tailwind-merge";
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  /** Button style variant */
+  /** primary | secondary | destructive | outline | ghost | link | success | stark | warning. Button style variant */
   variant?:
     | "primary"
     | "destructive"
@@ -17,7 +17,7 @@ export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     | "success"
     | "stark"
     | "warning";
-  /** Button size */
+  /** sm | md | lg | icon. Button size */
   size?: "sm" | "md" | "lg" | "icon";
   /** Shows a loading spinner and disables the button */
   loading?: boolean;

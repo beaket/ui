@@ -47,7 +47,7 @@ interface SwitchProps
   className?: string;
 
   /**
-   * Size of the switch
+   * sm | md | lg. Size of the switch
    */
   size?: "sm" | "md" | "lg";
 

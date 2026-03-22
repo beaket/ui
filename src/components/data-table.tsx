@@ -23,7 +23,7 @@ import { Table } from "./table";
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 export interface DataTableProps<TData, TValue> {
-  /** Column definitions using TanStack Table's ColumnDef */
+  /** Column definitions using TanStack Table's ColumnDef — see https://tanstack.com/table/latest/docs/guide/column-defs */
   columns: ColumnDef<TData, TValue>[];
   /** Array of data to display */
   data: TData[];

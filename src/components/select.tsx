@@ -19,7 +19,7 @@ function SelectValue(props: React.ComponentProps<typeof SelectPrimitive.Value>) 
 
 interface SelectTriggerProps extends React.ComponentProps<typeof SelectPrimitive.Trigger> {
   /**
-   * Size variant of the select trigger
+   * sm | default. Size variant of the select trigger
    */
   size?: "sm" | "default";
 }

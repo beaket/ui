@@ -45,7 +45,7 @@ interface Props {
   closeWhen?: unknown;
 
   /**
-   * Side from which the sheet slides in
+   * left | right | top | bottom. Side from which the sheet slides in
    */
   side?: "left" | "right" | "top" | "bottom";
 
