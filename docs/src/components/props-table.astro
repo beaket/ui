@@ -17,7 +17,7 @@ const { props } = Astro.props;
 {props.length === 0 ? (
   <p class="text-sm text-[var(--steel)]">—</p>
 ) : (
-  <div class="overflow-x-auto">
+  <div class="props-table-scroll overflow-x-auto">
   <table class="w-full min-w-[500px] font-mono text-xs">
     <thead>
       <tr class="border-b border-[var(--chrome)] text-left tracking-wide text-[var(--steel)] uppercase">

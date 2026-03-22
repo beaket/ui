@@ -312,35 +312,12 @@ a:not([data-slot]) {
   display: none;
   background: none;
   border: 1px solid var(--chrome);
-  padding: 0.25rem;
   cursor: pointer;
   margin-left: auto;
-}
-
-.sidebar-toggle-icon {
-  display: block;
-  width: 14px;
-  height: 2px;
-  background: var(--ink);
-  position: relative;
-}
-
-.sidebar-toggle-icon::before,
-.sidebar-toggle-icon::after {
-  content: "";
-  position: absolute;
-  width: 14px;
-  height: 2px;
-  background: var(--ink);
-  left: 0;
-}
-
-.sidebar-toggle-icon::before {
-  top: -5px;
-}
-
-.sidebar-toggle-icon::after {
-  top: 5px;
+  font-size: 0.75rem;
+  font-family: inherit;
+  color: var(--ink);
+  font-weight: 600;
 }
 
 /* Responsive: Mobile (<768px) */
@@ -350,13 +327,16 @@ a:not([data-slot]) {
   }
 
   .sidebar {
-    position: static;
+    position: sticky;
+    top: 0;
+    z-index: 50;
     width: 100%;
     height: auto;
     border-right: none;
     border-bottom: 1px solid var(--chrome);
     padding: 0.75rem 1rem;
     overflow-y: visible;
+    background: var(--paper);
   }
 
   .sidebar-header {
@@ -373,7 +353,10 @@ a:not([data-slot]) {
   }
 
   .sidebar-toggle {
-    display: block;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.25rem 0.5rem;
   }
 
   .sidebar-nav {
@@ -397,7 +380,10 @@ a:not([data-slot]) {
 
   .sidebar-link {
     display: block;
-    padding: 0.25rem 0;
+    padding: 0.5rem 0;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 
   .main {
@@ -412,6 +398,24 @@ a:not([data-slot]) {
 
   table {
     font-size: 0.75rem;
+  }
+
+  /* Smooth scroll for props table on touch */
+  .props-table-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Copy button always visible on touch devices */
+  .copy-button {
+    visibility: visible;
+  }
+
+  /* Prev/next nav touch targets */
+  .component-nav-link {
+    padding: 0.5rem 0;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
 
   /* Responsive preview boxes */
