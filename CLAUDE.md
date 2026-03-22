@@ -8,7 +8,7 @@ Copy-paste component library (like shadcn/ui). Package: `@beaket/ui`.
 
 - **Self-contained**: Each component includes its own `cn` utility. No shared imports.
 - **Dependencies in registry**: List npm packages in `registry/registry.json`.
-- **CSS tokens**: `src/css-variables.css` (injected by CLI), `src/styles.css` (Storybook only).
+- **CSS tokens**: `src/css-variables.css` (Storybook), `src/themes/*.css` (CLI injects one of these).
 
 ## Design Rules
 
@@ -21,8 +21,9 @@ Brutalist design system. No gradients, no border-radius (except Radio), no blur 
 | `focus-visible:outline-2 focus-visible:outline-signal-blue focus-visible:outline-offset-2` | Inconsistent focus patterns            |
 | `disabled:border-dashed disabled:border-chrome disabled:bg-frost disabled:text-steel`      | Inconsistent disabled patterns         |
 | `before:absolute before:inset-[-14px] before:content-['']` on small controls               | Touch targets below 44px               |
+| `bg-branch` for active nav/tabs/pagination/badges, `bg-ink` for text/tooltips/checked      | Using `bg-ink` for brand surfaces      |
 
-Shadow states: default `2px 2px`, hover `3px 3px`, active `1px 1px`, disabled `none`.
+Shadow states: default, hover (grows), active (shrinks), disabled `none`. Sizes vary by theme.
 
 ## Component Template
 

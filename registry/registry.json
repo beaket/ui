@@ -176,19 +176,19 @@
         "title": "Switch",
         "tagline": "A toggle for binary on/off states.",
         "sections": ["AllStates", "Sizes"],
-        "previewStory": "Default"
+        "previewStory": "OnOff"
       }
     },
     {
-      "name": "textarea",
-      "description": "Multi-line text input with auto-resize support",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "registryDependencies": [],
-      "files": ["components/textarea.tsx"],
+      "name": "dialog",
+      "description": "Modal dialog component for confirmations, forms, and alerts",
+      "dependencies": ["@radix-ui/react-dialog", "clsx", "lucide-react", "tailwind-merge"],
+      "registryDependencies": ["button"],
+      "files": ["components/dialog.tsx"],
       "docs": {
-        "title": "Textarea",
-        "tagline": "A multi-line text input that automatically grows with content.",
-        "sections": ["AutoResize", "AllStates"],
+        "title": "Dialog",
+        "tagline": "A modal dialog for confirmations, forms, and alerts.",
+        "sections": ["AllStates"],
         "previewStory": "Default"
       }
     },
@@ -233,6 +233,20 @@
       }
     },
     {
+      "name": "textarea",
+      "description": "Multi-line text input with auto-resize support",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/textarea.tsx"],
+      "docs": {
+        "title": "Textarea",
+        "tagline": "A multi-line text input that automatically grows with content.",
+        "sections": ["AutoResize", "AllStates"],
+        "previewStory": "Default",
+        "span": 2
+      }
+    },
+    {
       "name": "separator",
       "description": "Visual divider for separating content into sections",
       "dependencies": ["@radix-ui/react-separator", "clsx", "tailwind-merge"],
@@ -259,27 +273,14 @@
       }
     },
     {
-      "name": "pagination",
-      "description": "Server-side pagination component using links for SSR-friendly navigation",
-      "dependencies": ["clsx", "lucide-react", "tailwind-merge"],
+      "name": "dropdown-menu",
+      "description": "Dropdown menu component for actions, navigation, and selection",
+      "dependencies": ["@radix-ui/react-dropdown-menu", "clsx", "lucide-react", "tailwind-merge"],
       "registryDependencies": [],
-      "files": ["components/pagination.tsx"],
+      "files": ["components/dropdown-menu.tsx"],
       "docs": {
-        "title": "Pagination",
-        "tagline": "A navigation component for paginated content with ellipsis support.",
-        "sections": ["AllStates"],
-        "previewStory": "Default"
-      }
-    },
-    {
-      "name": "dialog",
-      "description": "Modal dialog component for confirmations, forms, and alerts",
-      "dependencies": ["@radix-ui/react-dialog", "clsx", "lucide-react", "tailwind-merge"],
-      "registryDependencies": ["button"],
-      "files": ["components/dialog.tsx"],
-      "docs": {
-        "title": "Dialog",
-        "tagline": "A modal dialog for confirmations, forms, and alerts.",
+        "title": "DropdownMenu",
+        "tagline": "A menu of actions or options triggered by a button.",
         "sections": ["AllStates"],
         "previewStory": "Default"
       }
@@ -298,16 +299,17 @@
       }
     },
     {
-      "name": "dropdown-menu",
-      "description": "Dropdown menu component for actions, navigation, and selection",
-      "dependencies": ["@radix-ui/react-dropdown-menu", "clsx", "lucide-react", "tailwind-merge"],
+      "name": "pagination",
+      "description": "Server-side pagination component using links for SSR-friendly navigation",
+      "dependencies": ["clsx", "lucide-react", "tailwind-merge"],
       "registryDependencies": [],
-      "files": ["components/dropdown-menu.tsx"],
+      "files": ["components/pagination.tsx"],
       "docs": {
-        "title": "DropdownMenu",
-        "tagline": "A menu of actions or options triggered by a button.",
+        "title": "Pagination",
+        "tagline": "A navigation component for paginated content with ellipsis support.",
         "sections": ["AllStates"],
-        "previewStory": "Default"
+        "previewStory": "Default",
+        "span": 2
       }
     },
     {
@@ -334,7 +336,7 @@
         "title": "Skeleton",
         "tagline": "An animated placeholder for content that is loading.",
         "sections": ["AllStates"],
-        "previewStory": "Default"
+        "previewStory": "CardPreview"
       }
     },
     {
@@ -347,7 +349,8 @@
         "title": "NavigationProgress",
         "tagline": "An indeterminate progress bar shown during page navigation.",
         "sections": ["AllStates"],
-        "previewStory": "Default"
+        "previewStory": "Preview",
+        "span": 2
       }
     }
   ]

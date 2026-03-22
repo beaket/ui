@@ -82,7 +82,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-branch text-paper border border-branch hover:bg-iron hover:border-iron active:bg-ink disabled:text-steel no-underline",
+          "bg-branch text-paper border border-branch hover:bg-graphite hover:border-graphite active:bg-ink disabled:text-steel no-underline",
         destructive:
           "bg-signal-red text-paper border border-signal-red hover:bg-signal-red-hover hover:border-signal-red-hover active:bg-signal-red-active disabled:text-steel no-underline",
         outline: "border border-chrome bg-transparent text-ink hover:bg-frost active:bg-platinum",

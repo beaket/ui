@@ -16,6 +16,7 @@ program
   .command("init")
   .description("Initialize Beaket UI in your project")
   .option("-y, --yes", "Use defaults without prompting")
+  .option("--theme <preset>", "Theme: porcelain, tobacco, marigold, or eucalyptus")
   .action(init);
 
 program

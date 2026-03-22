@@ -1,6 +1,19 @@
 @import "@/styles.css";
 @source "../../../src";
 
+/* Syntax highlighting — Porcelain defaults */
+:root {
+  --astro-code-foreground: #080b12;
+  --astro-code-background: #f3f4f6;
+  --astro-code-token-constant: #006d76;
+  --astro-code-token-string: #0d7c66;
+  --astro-code-token-string-expression: #0d7c66;
+  --astro-code-token-comment: #686b70;
+  --astro-code-token-keyword: #1565c0;
+  --astro-code-token-function: #6a1b9a;
+  --astro-code-token-punctuation: #686b70;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   background: var(--paper);
@@ -56,7 +69,7 @@ body {
   display: block;
   padding: 0.125rem 0;
   font-size: 0.75rem;
-  color: var(--steel);
+  color: var(--zinc);
   text-decoration: none;
 }
 .sidebar-link:hover {
@@ -96,22 +109,23 @@ h2 {
   margin-left: 0.5rem;
   color: var(--chrome);
   text-decoration: none;
-  opacity: 0;
-  transition: opacity 0.15s;
+  display: inline-block;
+  transition: color 0.15s;
 }
 h2:hover .heading-anchor {
-  opacity: 1;
+  color: var(--steel);
 }
 .heading-anchor:hover {
   color: var(--ink);
 }
 h3 {
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 0.8125rem;
+  font-weight: 600;
   margin: 1rem 0 0.5rem;
-  color: var(--ink);
+  color: var(--steel);
 }
-.main p {
+.main p,
+.main li {
   margin: 0.5rem 0;
   color: var(--steel);
 }
@@ -123,12 +137,36 @@ li {
   margin: 0.25rem 0;
 }
 
+.main > table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  margin: 0.5rem 0;
+  display: block;
+  overflow-x: auto;
+}
+th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--ink);
+  padding: 0.375rem 0.75rem;
+  border-bottom: 2px solid var(--graphite);
+  white-space: nowrap;
+}
+td {
+  padding: 0.375rem 0.75rem;
+  color: var(--steel);
+  border-bottom: 1px solid var(--chrome);
+}
+tr:last-child td {
+  border-bottom: none;
+}
+
 code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.8125rem;
-  background: var(--frost);
+  background: var(--platinum);
   padding: 0.125rem 0.25rem;
-  border-bottom: 1px solid var(--chrome);
 }
 
 pre {
@@ -138,11 +176,11 @@ pre {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.8125rem;
   margin: 0.5rem 0;
+  border: 1px solid var(--chrome);
 }
 pre code {
   background: none;
   padding: 0;
-  border-bottom: none;
 }
 
 .copy-button {
@@ -152,22 +190,23 @@ pre code {
   padding: 0.25rem 0.5rem;
   font-size: 0.625rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  background: var(--paper);
+  background: var(--astro-code-background, var(--frost));
   border: 1px solid var(--chrome);
   color: var(--steel);
   cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.15s;
+  visibility: hidden;
 }
-pre:hover .copy-button {
-  opacity: 1;
+pre:hover .copy-button,
+pre:focus-within .copy-button {
+  visibility: visible;
 }
 .copy-button:hover {
   color: var(--ink);
   border-color: var(--ink);
+  background: var(--platinum);
 }
 .copy-button:active {
-  background: var(--frost);
+  background: var(--chrome);
 }
 .copy-button.copied {
   color: var(--signal-green);
@@ -179,24 +218,19 @@ a:not([data-slot]) {
   text-decoration: none;
 }
 .main a:not([data-slot]) {
+  color: var(--signal-blue);
   text-decoration: underline;
 }
 .main a:not([data-slot]):hover {
   background: var(--frost);
 }
 .main a:not([data-slot]):focus {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--signal-blue);
   outline-offset: 2px;
 }
 
 /* Focus states */
 :focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 2px;
-}
-
-button:focus-visible,
-summary:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
@@ -373,6 +407,10 @@ summary:focus-visible {
   }
 
   pre {
+    font-size: 0.75rem;
+  }
+
+  table {
     font-size: 0.75rem;
   }
 

@@ -61,7 +61,7 @@ export function Alert({ className, variant = "note", title, children, ...props }
       className={cn(alertVariants({ variant }), className)}
       {...props}
     >
-      <Icon />
+      <Icon aria-hidden="true" />
       <div data-slot="alert-title" className="col-start-2 min-h-4 font-medium tracking-tight">
         {displayTitle}
       </div>

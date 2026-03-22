@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import pkg from '../../../packages/cli/package.json';
 import registry from '../../../registry/registry.json';
+import { ThemeSwitcher } from '../components/theme-switcher';
 
 interface Props {
   title?: string;
@@ -16,9 +17,10 @@ const currentYear = new Date().getFullYear();
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/ui/favicon.svg" />
     <title>{title} - Beaket UI</title>
+    <script is:inline src="/ui/theme-init.js"></script>
   </head>
   <body>
     <div class="layout">
@@ -33,10 +35,16 @@ const currentYear = new Date().getFullYear();
 
         <div class="sidebar-nav">
           <div class="sidebar-section">
+            <div class="sidebar-section-title">Theme</div>
+            <ThemeSwitcher client:load />
+          </div>
+
+          <div class="sidebar-section">
             <div class="sidebar-section-title">Getting Started</div>
             <a href="/ui/installation" class:list={["sidebar-link", { active: currentPath.includes('/installation') }]}>Installation</a>
             <a href="/ui/cli" class:list={["sidebar-link", { active: currentPath.includes('/cli') }]}>CLI</a>
             <a href="/ui/tokens" class:list={["sidebar-link", { active: currentPath.includes('/tokens') }]}>Design Tokens</a>
+            <a href="/ui/themes" class:list={["sidebar-link", { active: currentPath.includes('/themes') }]}>Themes</a>
           </div>
 
           <div class="sidebar-section">
@@ -49,6 +57,7 @@ const currentYear = new Date().getFullYear();
           <div class="sidebar-section">
             <a href="/ui/changelog" class:list={["sidebar-link", { active: currentPath.includes('/changelog') }]}>Changelog</a>
           </div>
+
 
         </div>
       </nav>
@@ -80,6 +89,7 @@ const currentYear = new Date().getFullYear();
         const button = document.createElement('button');
         button.className = 'copy-button';
         button.textContent = 'Copy';
+        button.setAttribute('aria-label', 'Copy code');
         button.addEventListener('click', async () => {
           const code = pre.querySelector('code')?.textContent || pre.textContent || '';
           await navigator.clipboard.writeText(code);

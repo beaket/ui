@@ -21,7 +21,7 @@ export default defineConfig({
   ],
   markdown: {
     shikiConfig: {
-      theme: "gruvbox-dark-soft",
+      theme: "css-variables",
     },
     rehypePlugins: [
       rehypeSlug,

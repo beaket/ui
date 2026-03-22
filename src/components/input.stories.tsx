@@ -137,14 +137,14 @@ export const PasswordToggle: Story = {
 
 // Compositions for docs
 export const AllStates = () => (
-  <div className="flex w-64 flex-col gap-4">
-    <Input placeholder="Default" />
-    <Input defaultValue="With value" />
-    <Input placeholder="Disabled" disabled />
-    <Input defaultValue="Read-only" readOnly />
-    <Input defaultValue="Invalid" aria-invalid="true" />
-    <Input placeholder="With prefix" prefix={<Search />} />
-    <Input placeholder="With suffix" suffix={<Mail />} />
+  <div className="flex flex-col gap-3">
+    <Input />
+    <div>
+      <Input defaultValue="Invalid" aria-invalid="true" />
+      <span className="text-signal-red-text mt-1 block text-xs">This field is required</span>
+    </div>
+    <Input disabled placeholder="Disabled" />
+    <Input placeholder="Search" suffix={<Search />} />
   </div>
 );
 

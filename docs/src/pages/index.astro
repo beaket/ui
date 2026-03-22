@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { ComponentShowcase } from '../components/component-showcase';
+import { ThemeSwitcher } from '../components/theme-switcher';
 import registry from '../../../registry/registry.json';
 import pkg from '../../../packages/cli/package.json';
 
@@ -14,9 +15,13 @@ const currentYear = new Date().getFullYear();
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Beaket UI</title>
     <link rel="icon" type="image/svg+xml" href="/ui/favicon.svg" />
+    <script is:inline src="/ui/theme-init.js"></script>
   </head>
-  <body class="min-h-screen bg-[var(--paper)]">
+  <body class="min-h-screen bg-paper">
     <main class="mx-auto max-w-4xl p-4">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
+        <ThemeSwitcher client:load layout="inline" />
+      </div>
       <ComponentShowcase client:load components={registry.components} version={pkg.version} />
       <footer class="site-footer mt-8">
         <span>© {currentYear} Beaket</span>

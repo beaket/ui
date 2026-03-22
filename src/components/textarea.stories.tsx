@@ -28,7 +28,7 @@ export const Default: Story = {
     placeholder: "Type something...",
     disabled: false,
     autoResize: true,
-    rows: 2,
+    rows: 4,
   },
   argTypes: {
     autoResize: {

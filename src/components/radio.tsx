@@ -34,9 +34,9 @@ export function RadioItem({ className, ...props }: RadioItemProps) {
         "hover:border-steel",
         "focus-visible:outline-signal-blue focus-visible:outline-2 focus-visible:outline-offset-2",
         "data-[state=checked]:border-ink",
-        "disabled:border-chrome disabled:bg-frost disabled:hover:border-chrome disabled:cursor-not-allowed disabled:border-dashed",
+        "disabled:border-chrome disabled:bg-frost disabled:text-steel disabled:hover:border-chrome disabled:cursor-not-allowed disabled:border-dashed",
         "disabled:data-[state=checked]:border-chrome",
-        "aria-[invalid=true]:border-signal-red",
+        "aria-[invalid=true]:border-signal-red aria-[invalid=true]:focus-visible:outline-signal-red",
         className,
       )}
       {...props}

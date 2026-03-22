@@ -16,24 +16,27 @@ interface ComponentShowcaseProps {
 
 export function ComponentShowcase({ components, version }: ComponentShowcaseProps) {
   return (
-    <div className="grid auto-rows-min grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {/* Branding Card */}
       <a
         href="/ui/installation"
-        className="bg-[var(--paper)] p-4 no-underline transition-colors outline-none hover:bg-[var(--frost)]"
+        data-slot="branding-card"
+        className="shadow-offset hover:shadow-offset-hover active:shadow-offset-active border-ink bg-paper flex flex-col justify-between border-2 p-4 no-underline transition-shadow outline-none"
       >
-        <h1 className="m-0 flex items-baseline gap-2 text-sm font-semibold tracking-wide text-[var(--ink)] uppercase">
-          Beaket UI
-          <span className="text-[10px] font-normal text-[var(--steel)] normal-case">
-            v{version}
-          </span>
-        </h1>
-        <p className="m-0 mt-1 text-xs text-[var(--steel)]">
-          Brutalist React components.
-          <br />
-          Copy to your project.
-        </p>
-        <div className="mt-4 text-xs text-[var(--steel)]">→ Get Started</div>
+        <div>
+          <div>
+            <span className="text-ink text-sm font-bold tracking-wide uppercase">Beaket UI</span>
+            <span className="text-steel ml-1.5 text-[10px]">v{version}</span>
+          </div>
+          <p className="text-steel m-0 mt-3 text-xs">
+            Brutalist React components.
+            <br />
+            Copy to your project.
+          </p>
+        </div>
+        <div className="bg-branch text-paper mt-4 inline-block px-3 py-1.5 text-xs font-bold">
+          → Get Started
+        </div>
       </a>
 
       {/* Component Cards */}
@@ -41,14 +44,15 @@ export function ComponentShowcase({ components, version }: ComponentShowcaseProp
         const span = component.docs.span ?? 1;
         const spanClass = span === 3 ? "col-span-full" : span === 2 ? "sm:col-span-2" : "";
         return (
-          <div key={component.name} className={`bg-[var(--paper)] p-4 ${spanClass}`}>
+          <div key={component.name} className={`bg-paper p-4 ${spanClass}`}>
             <a
+              data-slot="component-link"
               href={`/ui/components/${component.name}`}
-              className="mb-3 block text-xs font-semibold tracking-wide text-[var(--ink)] uppercase no-underline outline-none hover:bg-[var(--frost)]"
+              className="text-ink hover:decoration-ink inline text-xs font-semibold tracking-wide uppercase underline decoration-transparent underline-offset-2 outline-none"
             >
               {component.docs.title} →
             </a>
-            <div>
+            <div className="mt-3 [&_[data-slot=input-wrapper]]:w-full [&_[data-slot=input]]:w-full [&_[data-slot=select]]:w-full [&_ul]:justify-start [&>*]:m-0">
               <StoryPreview
                 componentName={component.name}
                 storyName={component.docs.previewStory}
