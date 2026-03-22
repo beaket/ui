@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/doc.astro';
 import { ThemeAppMock } from '../components/theme-app-mock';
+import { Code } from 'astro:components';
 ---
 
 <Layout title="Themes">
@@ -29,7 +30,7 @@ import { ThemeAppMock } from '../components/theme-app-mock';
 
 <p>Import a theme in your CSS. All design tokens and dark mode are included.</p>
 
-<pre><code>{`@import "@beaket/ui/themes/porcelain.css";`}</code></pre>
+<Code code={`@import "@beaket/ui/themes/porcelain.css";`} lang="css" />
 
 <h2>Dark mode</h2>
 
@@ -43,14 +44,14 @@ import { ThemeAppMock } from '../components/theme-app-mock';
 
 <p>To override OS detection, set <code>beaket-color-scheme</code> in <code>localStorage</code>:</p>
 
-<pre><code>{`// Force dark
+<Code code={`// Force dark
 localStorage.setItem("beaket-color-scheme", "dark");
 
 // Force light
 localStorage.setItem("beaket-color-scheme", "light");
 
 // Follow OS (default)
-localStorage.removeItem("beaket-color-scheme");`}</code></pre>
+localStorage.removeItem("beaket-color-scheme");`} lang="js" />
 
 </Layout>
 
