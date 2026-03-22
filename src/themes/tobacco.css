@@ -52,6 +52,51 @@
   --animate-navigation-progress: navigation-progress 1s ease-in-out infinite;
 }
 
+/*
+ * Dark mode — whiskey bar at midnight.
+ * Late-night library, amber reading lamps, worn leather.
+ * Warm sepia-tinted neutrals. Signals glow like stained glass.
+ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Neutral palette — warm sepia-tinted for intimate darkness */
+    --color-graphite: #eceae0;
+    --color-ink: #e2e0d6;
+    --color-branch: #d4d0c6;
+    --color-iron: #c0bcb2;
+    --color-slate: #a8a49a;
+    --color-zinc: #908c82;
+    --color-steel: #787468;
+    --color-muted: #646054;
+    --color-aluminum: #4a4840;
+    --color-chrome: #343230;
+    --color-silver: #282624;
+    --color-platinum: #1e1c1a;
+    --color-frost: #141312;
+    --color-paper: #0c0b0a;
+
+    /* Signal colors — warm stained glass glow */
+    --color-signal-blue: #5068c0;
+    --color-signal-red: #d04838;
+    --color-signal-red-hover: #b84030;
+    --color-signal-red-active: #a03828;
+    --color-signal-red-text: #e06050;
+    --color-signal-green: #48a850;
+    --color-signal-green-hover: #3c8e44;
+    --color-signal-green-active: #307438;
+    --color-signal-amber: #d09828;
+    --color-signal-amber-hover: #b48420;
+    --color-signal-amber-active: #987018;
+    --color-signal-purple: #a05088;
+    --color-signal-cyan: #28a890;
+
+    /* Surface layers — elevation = lighter */
+    --color-surface-0: #121110;
+    --color-surface-1: #1a1918;
+    --color-surface-2: #222120;
+  }
+}
+
 @keyframes navigation-progress {
   0% {
     transform: translateX(-100%);

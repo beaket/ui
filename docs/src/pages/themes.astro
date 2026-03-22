@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/doc.astro';
 import { ThemeAppMock } from '../components/theme-app-mock';
+import CodeBlock from '../components/code-block.astro';
 ---
 
 <Layout title="Themes">
@@ -12,6 +13,45 @@ import { ThemeAppMock } from '../components/theme-app-mock';
 <div class="theme-showcase">
   <ThemeAppMock client:load />
 </div>
+
+<h2>Available themes</h2>
+
+<table>
+  <thead>
+    <tr><th>Theme</th><th>Light</th><th>Dark</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Porcelain</td><td>Industrial precision</td><td>X-ray lightbox</td></tr>
+    <tr><td>Tobacco</td><td>Golden hour library</td><td>Whiskey bar at midnight</td></tr>
+    <tr><td>Marigold</td><td>Screen-printed poster</td><td>Neon signs at night</td></tr>
+    <tr><td>Eucalyptus</td><td>Enterprise titanium</td><td>Mission control</td></tr>
+  </tbody>
+</table>
+
+<p>Import a theme in your CSS. All design tokens and dark mode are included.</p>
+
+<CodeBlock code={`@import "@beaket/ui/themes/porcelain.css";`} lang="css" />
+
+<h2>Dark mode</h2>
+
+<p>Every theme ships with a dark variant. Import one CSS file and dark mode works automatically — no flags, no extra imports, no toggle configuration required.</p>
+
+<h3>How it works</h3>
+
+<p>Each theme file contains both light and dark tokens. Dark mode activates via <code>@media (prefers-color-scheme: dark)</code>, following the user's OS setting. Shadows auto-flip through token references — no overrides needed.</p>
+
+<h3>Manual control</h3>
+
+<p>To override OS detection, set <code>beaket-color-scheme</code> in <code>localStorage</code>:</p>
+
+<CodeBlock code={`// Force dark
+localStorage.setItem("beaket-color-scheme", "dark");
+
+// Force light
+localStorage.setItem("beaket-color-scheme", "light");
+
+// Follow OS (default)
+localStorage.removeItem("beaket-color-scheme");`} lang="js" />
 
 </Layout>
 

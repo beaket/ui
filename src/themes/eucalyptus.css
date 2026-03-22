@@ -52,6 +52,51 @@
   --animate-navigation-progress: navigation-progress 1s ease-in-out infinite;
 }
 
+/*
+ * Dark mode — mission control.
+ * Command center at night. Navy-blue darkness with structured panels.
+ * Navy-tinted neutrals. Signals glow with focused intensity.
+ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Neutral palette — navy-tinted for professional dark authority */
+    --color-graphite: #e8ecf4;
+    --color-ink: #dce2ec;
+    --color-branch: #c4cede;
+    --color-iron: #b0bace;
+    --color-slate: #98a2b8;
+    --color-zinc: #808aa2;
+    --color-steel: #687288;
+    --color-muted: #546070;
+    --color-aluminum: #3c4858;
+    --color-chrome: #283444;
+    --color-silver: #1e2836;
+    --color-platinum: #141a2a;
+    --color-frost: #0c1020;
+    --color-paper: #060a14;
+
+    /* Signal colors — professional, brightened for dark canvas */
+    --color-signal-blue: #3060e0;
+    --color-signal-red: #d43450;
+    --color-signal-red-hover: #bc2e46;
+    --color-signal-red-active: #a4283c;
+    --color-signal-red-text: #e84c64;
+    --color-signal-green: #14a878;
+    --color-signal-green-hover: #108e64;
+    --color-signal-green-active: #0c7450;
+    --color-signal-amber: #d89420;
+    --color-signal-amber-hover: #bc801c;
+    --color-signal-amber-active: #a06c18;
+    --color-signal-purple: #9454e8;
+    --color-signal-cyan: #2094c8;
+
+    /* Surface layers — elevation = lighter */
+    --color-surface-0: #0a0e1a;
+    --color-surface-1: #101422;
+    --color-surface-2: #18202e;
+  }
+}
+
 @keyframes navigation-progress {
   0% {
     transform: translateX(-100%);
