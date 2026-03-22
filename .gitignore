@@ -6,6 +6,9 @@ dist
 .npmrc
 .env
 
+# Astro
+.astro
+
 # Storybook
 *storybook.log
 storybook-static
