@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Cloud,
+  Code,
   CreditCard,
-  Github,
   Keyboard,
   LifeBuoy,
   LogOut,
@@ -126,7 +126,7 @@ export const WithSubmenus: Story = {
         </DropdownMenu.Group>
         <DropdownMenu.Separator />
         <DropdownMenu.Item>
-          <Github className="size-4" />
+          <Code className="size-4" />
           GitHub
         </DropdownMenu.Item>
         <DropdownMenu.Item>
