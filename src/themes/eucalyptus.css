@@ -34,6 +34,7 @@
   --color-signal-amber: #b87500;
   --color-signal-amber-hover: #9c6300;
   --color-signal-amber-active: #805200;
+  --color-signal-amber-text: #9c6300;
   --color-signal-purple: #5b22c8;
   --color-signal-cyan: #0078a8;
 
@@ -87,6 +88,7 @@
     --color-signal-amber: #d89420;
     --color-signal-amber-hover: #bc801c;
     --color-signal-amber-active: #a06c18;
+    --color-signal-amber-text: #e8a830;
     --color-signal-purple: #9454e8;
     --color-signal-cyan: #2094c8;
 

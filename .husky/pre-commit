@@ -1,7 +1,7 @@
 # Block major changesets unless explicitly allowed
 if [ "$ALLOW_MAJOR" != "1" ]; then
   MAJOR_FILES=$(git diff --cached --name-only --diff-filter=ACMR -- '.changeset/*.md' | while read f; do
-    grep -l '"@beaket/ui": major' "$f" 2>/dev/null
+    grep -l '"@beaket/ui": major' "$f" 2>/dev/null || true
   done)
   if [ -n "$MAJOR_FILES" ]; then
     echo ""

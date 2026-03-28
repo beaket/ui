@@ -34,9 +34,10 @@
   --color-signal-green: #0a7855;
   --color-signal-green-hover: #08644a;
   --color-signal-green-active: #06503c;
-  --color-signal-amber: #b58a00;
-  --color-signal-amber-hover: #9a7500;
-  --color-signal-amber-active: #7f6000;
+  --color-signal-amber: #d88810;
+  --color-signal-amber-hover: #bc7610;
+  --color-signal-amber-active: #a06510;
+  --color-signal-amber-text: #b86c00;
   --color-signal-purple: #6122aa;
   --color-signal-cyan: #007e8c;
 
