@@ -15,7 +15,7 @@ const alertVariants = cva(
         important:
           "bg-surface-1 text-ink border-signal-purple [&>svg]:text-signal-purple [&_[data-slot=alert-description]]:text-steel",
         warning:
-          "bg-surface-1 text-ink border-signal-amber [&>svg]:text-signal-amber [&_[data-slot=alert-description]]:text-steel",
+          "bg-surface-1 text-ink border-signal-amber-text [&>svg]:text-signal-amber-text [&_[data-slot=alert-description]]:text-steel",
         caution:
           "bg-surface-1 text-ink border-signal-red [&>svg]:text-signal-red [&_[data-slot=alert-description]]:text-steel",
       },
