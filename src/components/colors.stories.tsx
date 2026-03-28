@@ -41,7 +41,7 @@ const colors = {
     {
       name: "Amber (text)",
       variable: "--color-signal-amber-text",
-      hex: "#b07200",
+      hex: "#b86c00",
       usage: "Amber text/icon (AA on paper)",
     },
     { name: "Purple", variable: "--color-signal-purple", hex: "#6a1b9a", usage: "Accent, special" },
