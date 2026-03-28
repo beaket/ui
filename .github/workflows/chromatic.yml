@@ -23,7 +23,7 @@ on:
       - "tsconfig.json"
 
 jobs:
-  test:
+  chromatic:
     if: github.actor != 'renovate[bot]'
     runs-on: ubuntu-latest
     steps:
