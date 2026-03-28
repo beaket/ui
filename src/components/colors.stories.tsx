@@ -37,7 +37,7 @@ const colors = {
       hex: "#0d7c66",
       usage: "Success, teal accent",
     },
-    { name: "Amber", variable: "--color-signal-amber", hex: "#d89018", usage: "Warning, caution" },
+    { name: "Amber", variable: "--color-signal-amber", hex: "#d88810", usage: "Warning, caution" },
     {
       name: "Amber (text)",
       variable: "--color-signal-amber-text",
@@ -287,7 +287,7 @@ const themePresets = {
     blue: "#1565c0",
     red: "#d32f2f",
     green: "#0d7c66",
-    amber: "#d89018",
+    amber: "#d88810",
     purple: "#6a1b9a",
     cyan: "#00838f",
     shadowLabel: "1px chrome (ghostly)",
