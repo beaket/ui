@@ -6,6 +6,7 @@ interface ComponentData {
     title: string;
     previewStory: string;
     span?: number;
+    rowSpan?: number;
   };
 }
 
@@ -16,36 +17,43 @@ interface ComponentShowcaseProps {
 
 export function ComponentShowcase({ components, version }: ComponentShowcaseProps) {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div
+      className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      style={{ gridAutoRows: "190px", gridAutoFlow: "dense" }}
+    >
       {/* Branding Card */}
       <a
         href="/ui/installation"
         data-slot="branding-card"
-        className="shadow-offset hover:shadow-offset-hover active:shadow-offset-active border-ink bg-paper flex flex-col justify-between border-2 p-4 no-underline transition-shadow outline-none"
+        className="shadow-offset hover:shadow-offset-hover active:shadow-offset-active border-ink bg-branch flex flex-col justify-between border-2 p-4 no-underline transition-shadow outline-none"
       >
         <div>
           <div>
-            <span className="text-ink text-sm font-bold tracking-wide uppercase">Beaket UI</span>
-            <span className="text-steel ml-1.5 text-[10px]">v{version}</span>
+            <span className="text-paper text-sm font-bold tracking-wide uppercase">Beaket UI</span>
+            <span className="text-paper/60 ml-1.5 text-[10px]">v{version}</span>
           </div>
-          <p className="text-steel m-0 mt-3 text-sm leading-relaxed">
+          <p className="text-paper/80 m-0 mt-3 text-sm leading-relaxed">
             Brutalist React components.
             <br />
             Copy-paste into your project.
           </p>
         </div>
-        <div className="bg-branch text-paper mt-4 inline-block px-3 py-1.5 text-xs font-bold">
+        <div className="bg-paper text-ink mt-4 inline-block px-3 py-1.5 text-xs font-bold">
           → Get Started
         </div>
       </a>
 
       {/* Component Cards */}
       {components.map((component, index) => {
-        const span = component.docs.span ?? 1;
-        const spanClass = span === 3 ? "col-span-full" : span === 2 ? "sm:col-span-2" : "";
-        const previewHeight = span >= 2 ? "h-[260px]" : "h-[120px]";
+        const colSpan = component.docs.span ?? 1;
+        const rowSpan = component.docs.rowSpan ?? 1;
+        const colClass = colSpan === 3 ? "col-span-full" : colSpan === 2 ? "sm:col-span-2" : "";
         return (
-          <div key={component.name} className={`bg-paper p-4 ${spanClass}`}>
+          <div
+            key={component.name}
+            className={`border-chrome bg-surface-1 flex flex-col border p-4 ${colClass}`}
+            style={rowSpan > 1 ? { gridRow: `span ${rowSpan}` } : undefined}
+          >
             <a
               data-slot="component-link"
               href={`/ui/components/${component.name}`}
@@ -53,9 +61,7 @@ export function ComponentShowcase({ components, version }: ComponentShowcaseProp
             >
               {component.docs.title} →
             </a>
-            <div
-              className={`mt-3 ${previewHeight} overflow-hidden [&_[data-slot=input-wrapper]]:w-full [&_[data-slot=input]]:w-full [&_[data-slot=select]]:w-full [&_ul]:justify-start [&>*]:m-0`}
-            >
+            <div className="mt-3 min-h-0 flex-1 overflow-hidden [&_[data-slot=input-wrapper]]:w-full [&_[data-slot=input]]:w-full [&_[data-slot=select]]:w-full [&_ul]:justify-start [&>*]:m-0">
               <StoryPreview
                 componentName={component.name}
                 storyName={component.docs.previewStory}

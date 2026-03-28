@@ -93,7 +93,8 @@
         "title": "Button",
         "tagline": "Clickable button with multiple variants and sizes.",
         "sections": ["AllVariants", "AllSizes", "AllStates"],
-        "previewStory": "AllVariants"
+        "previewStory": "AllVariants",
+        "rowSpan": 2
       }
     },
     {
@@ -106,7 +107,8 @@
         "title": "Checkbox",
         "tagline": "A control for boolean input with checked and unchecked states.",
         "sections": ["AllStates"],
-        "previewStory": "AllStates"
+        "previewStory": "AllStates",
+        "rowSpan": 2
       }
     },
     {
@@ -119,7 +121,8 @@
         "title": "Input",
         "tagline": "A text input field for capturing user data.",
         "sections": ["AllStates", "AllTypes"],
-        "previewStory": "AllStates"
+        "previewStory": "AllStates",
+        "rowSpan": 2
       }
     },
     {
@@ -132,7 +135,8 @@
         "title": "Label",
         "tagline": "A semantic label for form controls with proper accessibility.",
         "sections": ["AllStates"],
-        "previewStory": "AllStates"
+        "previewStory": "AllStates",
+        "rowSpan": 2
       }
     },
     {
@@ -145,7 +149,8 @@
         "title": "Radio",
         "tagline": "A control for selecting one option from a set of choices.",
         "sections": ["AllStates"],
-        "previewStory": "AllStates"
+        "previewStory": "AllStates",
+        "rowSpan": 2
       }
     },
     {
@@ -229,7 +234,8 @@
         "title": "Tabs",
         "tagline": "A set of layered sections of content that display one panel at a time.",
         "sections": ["AllStates"],
-        "previewStory": "Default"
+        "previewStory": "Default",
+        "rowSpan": 2
       }
     },
     {
@@ -323,7 +329,8 @@
         "tagline": "A powerful data table with sorting, filtering, pagination, and selection.",
         "sections": ["AllFeatures"],
         "previewStory": "FullFeatured",
-        "span": 3
+        "span": 3,
+        "rowSpan": 2
       }
     },
     {
