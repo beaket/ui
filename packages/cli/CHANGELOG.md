@@ -1,5 +1,11 @@
 # @beaket/ui
 
+## 2.1.1
+
+### Patch Changes
+
+- [#287](https://github.com/beaket/ui/pull/287) [`5c50154`](https://github.com/beaket/ui/commit/5c5015472b029b31b64aa31ff8aca5350845f628) Thanks [@jihnma](https://github.com/jihnma)! - Brighten porcelain warning color from olive-toned #b58a00 to warm vintage amber #d89018. Add signal-amber-text token across all themes for accessible text/icon usage on light surfaces.
+
 ## 2.1.0
 
 ### Minor Changes
