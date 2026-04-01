@@ -3,8 +3,8 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "tsx scripts/generate-props.ts && astro dev",
-    "prebuild": "tsx scripts/generate-props.ts",
+    "dev": "tsx scripts/generate-theme-tokens.ts && tsx scripts/generate-props.ts && astro dev",
+    "prebuild": "tsx scripts/generate-theme-tokens.ts && tsx scripts/generate-props.ts",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",

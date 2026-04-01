@@ -1,129 +1,33 @@
 import { useState } from "react";
+import themeTokensData from "../data/theme-tokens.json";
 
-const themes = {
+const allTokens: Record<string, Record<string, string>> = themeTokensData;
+
+/** Metadata that cannot be derived from CSS */
+const themeMeta = {
   porcelain: {
     label: "Porcelain",
     subtitle: "Pure white, cold precision, teal accent",
-    tokens: {
-      "--color-graphite": "#030509",
-      "--color-ink": "#080b12",
-      "--color-branch": "#05070d",
-      "--color-iron": "#282b30",
-      "--color-slate": "#3e4146",
-      "--color-zinc": "#53565c",
-      "--color-steel": "#686b70",
-      "--color-muted": "#7a7d82",
-      "--color-aluminum": "#a0a3a8",
-      "--color-chrome": "#c0c5cc",
-      "--color-silver": "#d5d8dd",
-      "--color-platinum": "#e8eaed",
-      "--color-frost": "#f3f4f6",
-      "--color-paper": "#ffffff",
-      "--color-surface-0": "#eff0f2",
-      "--color-surface-1": "#f8f8fa",
-      "--color-surface-2": "#ffffff",
-      "--color-signal-blue": "#1565c0",
-      "--color-signal-red": "#d32f2f",
-      "--color-signal-green": "#0d7c66",
-      "--color-signal-amber": "#c49000",
-      "--color-signal-purple": "#6a1b9a",
-    },
-    shadow: { default: "1px 1px", hover: "2px 2px", active: "0px 0px" },
-    shadowColor: "chrome",
+    shadowNote: "1px chrome",
   },
   tobacco: {
     label: "Tobacco",
     subtitle: "Warm pampas cream, terracotta, brown shadows",
-    tokens: {
-      "--color-graphite": "#111110",
-      "--color-ink": "#1a1a18",
-      "--color-branch": "#222120",
-      "--color-iron": "#312f2c",
-      "--color-slate": "#46443e",
-      "--color-zinc": "#585650",
-      "--color-steel": "#5e5d54",
-      "--color-muted": "#6b6a60",
-      "--color-aluminum": "#9c9a90",
-      "--color-chrome": "#d0cec5",
-      "--color-silver": "#dddbd3",
-      "--color-platinum": "#e8e7e0",
-      "--color-frost": "#edece6",
-      "--color-paper": "#f4f3ee",
-      "--color-surface-0": "#e8e7e0",
-      "--color-surface-1": "#f4f3ee",
-      "--color-surface-2": "#faf9f5",
-      "--color-signal-blue": "#3a5f9e",
-      "--color-signal-red": "#c15f3c",
-      "--color-signal-green": "#4a8a5e",
-      "--color-signal-amber": "#b8860b",
-      "--color-signal-purple": "#845aa0",
-    },
-    shadow: { default: "2px 2px", hover: "3px 3px", active: "1px 1px" },
-    shadowColor: "iron",
+    shadowNote: "2px iron",
   },
   marigold: {
     label: "Marigold",
     subtitle: "Pure white, ink-black shadows, loud signals",
-    tokens: {
-      "--color-graphite": "#0a0a0a",
-      "--color-ink": "#121212",
-      "--color-branch": "#1a1a1a",
-      "--color-iron": "#262626",
-      "--color-slate": "#3a3a3a",
-      "--color-zinc": "#4e4e4e",
-      "--color-steel": "#5a5a5a",
-      "--color-muted": "#6e6e6e",
-      "--color-aluminum": "#949494",
-      "--color-chrome": "#c0c0c0",
-      "--color-silver": "#cfcfcf",
-      "--color-platinum": "#e0e0e0",
-      "--color-frost": "#f0f0f0",
-      "--color-paper": "#ffffff",
-      "--color-surface-0": "#ebebeb",
-      "--color-surface-1": "#f8f8f8",
-      "--color-surface-2": "#ffffff",
-      "--color-signal-blue": "#0055ff",
-      "--color-signal-red": "#f24e1e",
-      "--color-signal-green": "#0acf83",
-      "--color-signal-amber": "#ff9500",
-      "--color-signal-purple": "#a259ff",
-    },
-    shadow: { default: "3px 3px", hover: "4px 4px", active: "1px 1px" },
-    shadowColor: "ink",
+    shadowNote: "3px ink",
   },
   eucalyptus: {
     label: "Eucalyptus",
     subtitle: "Titanium blue-gray, navy ink, enterprise",
-    tokens: {
-      "--color-graphite": "#0a1025",
-      "--color-ink": "#162036",
-      "--color-branch": "#1c2a42",
-      "--color-iron": "#243250",
-      "--color-slate": "#2f3f58",
-      "--color-zinc": "#384d68",
-      "--color-steel": "#3d5170",
-      "--color-muted": "#5a6d88",
-      "--color-aluminum": "#8295ae",
-      "--color-chrome": "#c0cddb",
-      "--color-silver": "#cdd8e4",
-      "--color-platinum": "#dce3ed",
-      "--color-frost": "#eff2f8",
-      "--color-paper": "#f8f9fc",
-      "--color-surface-0": "#e6ebf2",
-      "--color-surface-1": "#f8f9fc",
-      "--color-surface-2": "#ffffff",
-      "--color-signal-blue": "#2563eb",
-      "--color-signal-red": "#dc2626",
-      "--color-signal-green": "#059669",
-      "--color-signal-amber": "#d97706",
-      "--color-signal-purple": "#7c3aed",
-    },
-    shadow: { default: "2px 2px", hover: "3px 3px", active: "1px 1px" },
-    shadowColor: "chrome",
+    shadowNote: "2px chrome",
   },
 } as const;
 
-type ThemeKey = keyof typeof themes;
+type ThemeKey = keyof typeof themeMeta;
 
 const neutralSwatches = [
   { key: "--color-paper", label: "Paper" },
@@ -142,31 +46,27 @@ const signalSwatches = [
   { key: "--color-signal-purple", label: "Purple" },
 ] as const;
 
-function buildThemeStyle(theme: (typeof themes)[ThemeKey]) {
+/** Pick --color-* and --shadow-* tokens for inline style (skip --astro-code-*) */
+function pickStyleTokens(tokens: Record<string, string>): Record<string, string> {
   const style: Record<string, string> = {};
-  for (const [key, value] of Object.entries(theme.tokens)) {
-    style[key] = value;
+  for (const [key, value] of Object.entries(tokens)) {
+    if (key.startsWith("--color-") || key.startsWith("--shadow-")) {
+      style[key] = value;
+    }
   }
-  const sc =
-    theme.tokens[`--color-${theme.shadowColor}` as keyof typeof theme.tokens] ||
-    theme.tokens["--color-chrome"];
-  style["--shadow-offset"] = `${theme.shadow.default} 0px 0px ${sc}`;
-  style["--shadow-offset-dark"] =
-    `${theme.shadow.default} 0px 0px ${theme.tokens["--color-aluminum"]}`;
-  style["--shadow-offset-hover"] = `${theme.shadow.hover} 0px 0px ${sc}`;
-  style["--shadow-offset-active"] = `${theme.shadow.active} 0px 0px ${sc}`;
   return style;
 }
 
 export function ThemeDemo() {
   const [active, setActive] = useState<ThemeKey>("porcelain");
-  const theme = themes[active];
-  const themeStyle = buildThemeStyle(theme);
+  const meta = themeMeta[active];
+  const tokens = allTokens[active];
+  const themeStyle = pickStyleTokens(tokens);
 
   return (
     <div>
       <div className="mb-6 flex flex-wrap gap-2">
-        {(Object.keys(themes) as ThemeKey[]).map((key) => (
+        {(Object.keys(themeMeta) as ThemeKey[]).map((key) => (
           <button
             key={key}
             onClick={() => setActive(key)}
@@ -177,14 +77,14 @@ export function ThemeDemo() {
             }
             style={{ cursor: "pointer" }}
           >
-            {themes[key].label}
+            {themeMeta[key].label}
           </button>
         ))}
       </div>
 
-      <p className="text-steel mb-1 text-sm font-semibold">{theme.subtitle}</p>
+      <p className="text-steel mb-1 text-sm font-semibold">{meta.subtitle}</p>
       <p className="text-muted mb-6 text-xs">
-        Shadow: {theme.shadow.default} {theme.shadowColor} | Paper: {theme.tokens["--color-paper"]}
+        Shadow: {meta.shadowNote} | Paper: {tokens["--color-paper"]}
       </p>
 
       <div className="border-chrome bg-surface-0 border-2 p-6" style={themeStyle}>
@@ -221,7 +121,7 @@ export function ThemeDemo() {
             </p>
             <div className="flex flex-wrap gap-2">
               {signalSwatches.map(({ key, label }) => {
-                const hex = theme.tokens[key as keyof typeof theme.tokens];
+                const hex = tokens[key];
                 return (
                   <span
                     key={key}
@@ -258,7 +158,7 @@ export function ThemeDemo() {
             </p>
             <div className="flex gap-1">
               {neutralSwatches.map(({ key, label }) => {
-                const hex = theme.tokens[key as keyof typeof theme.tokens];
+                const hex = tokens[key];
                 const isLight = ["Paper", "Frost", "Chrome"].includes(label);
                 return (
                   <div key={key} className="flex-1 text-center">
@@ -269,9 +169,7 @@ export function ThemeDemo() {
                       <span
                         style={{
                           fontSize: 9,
-                          color: isLight
-                            ? theme.tokens["--color-ink"]
-                            : theme.tokens["--color-paper"],
+                          color: isLight ? tokens["--color-ink"] : tokens["--color-paper"],
                         }}
                       >
                         {hex}
@@ -291,7 +189,7 @@ export function ThemeDemo() {
             </p>
             <div className="flex gap-1">
               {signalSwatches.map(({ key, label }) => {
-                const hex = theme.tokens[key as keyof typeof theme.tokens];
+                const hex = tokens[key];
                 return (
                   <div key={key} className="flex-1 text-center">
                     <div

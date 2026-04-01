@@ -1,45 +1,58 @@
 ---
 import Layout from '../layouts/doc.astro';
 import { TokenTable } from '../components/token-table';
+import themeTokensData from '../data/theme-tokens.json';
+
+const porcelain: Record<string, string> = themeTokensData.porcelain;
+
+/** Map display name (e.g. "--graphite") to CSS value from generated JSON */
+function val(name: string): string {
+  // Color tokens: --graphite → --color-graphite
+  const colorKey = `--color${name}`;
+  if (porcelain[colorKey]) return porcelain[colorKey];
+  // Shadow tokens: --shadow-offset → --shadow-offset (same key)
+  if (porcelain[name]) return porcelain[name];
+  return "";
+}
 
 const neutrals = [
-  { name: "--graphite", value: "#030509", usage: "Deepest tone" },
-  { name: "--ink", value: "#080b12", usage: "Primary text" },
-  { name: "--branch", value: "#05070d", usage: "Brand surfaces" },
-  { name: "--iron", value: "#282b30", usage: "Dark borders" },
-  { name: "--slate", value: "#3e4146", usage: "Dark secondary" },
-  { name: "--zinc", value: "#53565c", usage: "Dark muted" },
-  { name: "--steel", value: "#686b70", usage: "Secondary text" },
-  { name: "--muted", value: "#7a7d82", usage: "Muted text" },
-  { name: "--aluminum", value: "#a0a3a8", usage: "Decorative, shadows" },
-  { name: "--chrome", value: "#c0c5cc", usage: "Primary border" },
-  { name: "--silver", value: "#d5d8dd", usage: "Light border" },
-  { name: "--platinum", value: "#e8eaed", usage: "Light background" },
-  { name: "--frost", value: "#f3f4f6", usage: "Hover, inputs" },
-  { name: "--paper", value: "#ffffff", usage: "Primary background" },
-];
+  { name: "--graphite", usage: "Deepest tone" },
+  { name: "--ink", usage: "Primary text" },
+  { name: "--branch", usage: "Brand surfaces" },
+  { name: "--iron", usage: "Dark borders" },
+  { name: "--slate", usage: "Dark secondary" },
+  { name: "--zinc", usage: "Dark muted" },
+  { name: "--steel", usage: "Secondary text" },
+  { name: "--muted", usage: "Muted text" },
+  { name: "--aluminum", usage: "Decorative, shadows" },
+  { name: "--chrome", usage: "Primary border" },
+  { name: "--silver", usage: "Light border" },
+  { name: "--platinum", usage: "Light background" },
+  { name: "--frost", usage: "Hover, inputs" },
+  { name: "--paper", usage: "Primary background" },
+].map(t => ({ ...t, value: val(t.name) }));
 
 const signals = [
-  { name: "--signal-blue", value: "#1565c0", usage: "Links, info" },
-  { name: "--signal-red", value: "#d32f2f", usage: "Error, destructive" },
-  { name: "--signal-green", value: "#0d7c66", usage: "Success" },
-  { name: "--signal-amber", value: "#c49000", usage: "Warning" },
-  { name: "--signal-purple", value: "#6a1b9a", usage: "Accent" },
-  { name: "--signal-cyan", value: "#00838f", usage: "Info alternate" },
-];
+  { name: "--signal-blue", usage: "Links, info" },
+  { name: "--signal-red", usage: "Error, destructive" },
+  { name: "--signal-green", usage: "Success" },
+  { name: "--signal-amber", usage: "Warning" },
+  { name: "--signal-purple", usage: "Accent" },
+  { name: "--signal-cyan", usage: "Info alternate" },
+].map(t => ({ ...t, value: val(t.name) }));
 
 const surfaces = [
-  { name: "--surface-0", value: "#eff0f2", usage: "Page background" },
-  { name: "--surface-1", value: "#f8f8fa", usage: "Cards, panels" },
-  { name: "--surface-2", value: "#ffffff", usage: "Nested, elevated" },
-];
+  { name: "--surface-0", usage: "Page background" },
+  { name: "--surface-1", usage: "Cards, panels" },
+  { name: "--surface-2", usage: "Nested, elevated" },
+].map(t => ({ ...t, value: val(t.name) }));
 
 const shadows = [
-  { name: "--shadow-offset", value: "1px 1px 0 0 chrome", usage: "Default interactive" },
-  { name: "--shadow-offset-hover", value: "2px 2px 0 0 chrome", usage: "Hover" },
-  { name: "--shadow-offset-active", value: "0px 0px 0 0 chrome", usage: "Active/pressed" },
-  { name: "--shadow-offset-dark", value: "1px 1px 0 0 aluminum", usage: "Overlays" },
-];
+  { name: "--shadow-offset", usage: "Default interactive" },
+  { name: "--shadow-offset-hover", usage: "Hover" },
+  { name: "--shadow-offset-active", usage: "Active/pressed" },
+  { name: "--shadow-offset-dark", usage: "Overlays" },
+].map(t => ({ ...t, value: val(t.name) }));
 ---
 
 <Layout title="Design Tokens">
