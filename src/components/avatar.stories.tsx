@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, within } from "storybook/test";
+import { expect, waitFor, within } from "storybook/test";
 import { Avatar } from "./avatar";
 
 const meta: Meta<typeof Avatar> = {
@@ -128,6 +128,31 @@ export const AvatarGroup = () => (
     </Avatar>
   </div>
 );
+
+export const HydrationGuardTest: Story = {
+  render: () => (
+    <Avatar>
+      <Avatar.Image src="https://github.com/beaket.png" alt="@beaket" />
+      <Avatar.Fallback>HG</Avatar.Fallback>
+    </Avatar>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Avatar.Image defers rendering until after mount (hydration guard),
+    // so fallback should be visible initially, then image loads.
+    const fallback = canvas.getByText("HG");
+    await expect(fallback).toBeInTheDocument();
+
+    // Verify the image eventually renders after the hydration guard clears
+    await waitFor(
+      () => {
+        const img = canvasElement.querySelector("[data-slot='avatar-image']");
+        expect(img).toBeInTheDocument();
+      },
+      { timeout: 3000 },
+    );
+  },
+};
 
 // Interaction Tests
 export const RenderTest: Story = {

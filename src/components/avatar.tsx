@@ -1,8 +1,11 @@
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { type ClassValue, clsx } from "clsx";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
+
+let hydrated = false;
 
 interface Props extends React.ComponentProps<typeof AvatarPrimitive.Root> {
   /**
@@ -32,6 +35,16 @@ function AvatarImage({
   alt,
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
+  // Hydration guard: delay rendering until after mount to prevent React 19 SSR
+  // hydration mismatch. Radix's useIsHydrated (via useSyncExternalStore) returns
+  // true during client hydration in React 19, causing cached images to render
+  // <img> while the server rendered <span> (fallback). See #291.
+  const [mounted, setMounted] = useState(hydrated);
+  useEffect(() => {
+    if (!mounted) setMounted(true);
+    hydrated = true;
+  }, []);
+
   if (process.env.NODE_ENV !== "production") {
     if (!alt) {
       console.warn(
@@ -39,6 +52,8 @@ function AvatarImage({
       );
     }
   }
+
+  if (!mounted) return null;
 
   return (
     <AvatarPrimitive.Image
