@@ -186,6 +186,9 @@ importers:
       '@astrojs/check':
         specifier: ^0.9.6
         version: 0.9.8(prettier@3.8.1)(typescript@6.0.2)
+      '@types/node':
+        specifier: ^25.5.0
+        version: 25.5.0
       react-docgen-typescript:
         specifier: ^2.4.0
         version: 2.4.0(typescript@6.0.2)
