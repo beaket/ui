@@ -1,5 +1,15 @@
 # @beaket/ui
 
+## 2.1.2
+
+### Patch Changes
+
+- [#294](https://github.com/beaket/ui/pull/294) [`46aa6ec`](https://github.com/beaket/ui/commit/46aa6ec4315b101dff63c97b9403a06751930a81) Thanks [@jihnma](https://github.com/jihnma)! - fix: Avatar.Image hydration mismatch in React 19 SSR
+
+  Added hydration guard to `Avatar.Image` that defers rendering until after mount. This prevents React hydration error [#418](https://github.com/beaket/ui/issues/418) caused by `@radix-ui/react-use-is-hydrated` returning `true` during client hydration in React 19, which made cached images render `<img>` while the server rendered `<span>` (fallback).
+
+- [#296](https://github.com/beaket/ui/pull/296) [`7cc8d36`](https://github.com/beaket/ui/commit/7cc8d369368b4e944798b1ef7b8cac91709bb4e9) Thanks [@jihnma](https://github.com/jihnma)! - fix(porcelain): adjust warning (signal-amber) color from brownish #d88810 to orange-yellow #e09800 for better visual distinction
+
 ## 2.1.1
 
 ### Patch Changes
