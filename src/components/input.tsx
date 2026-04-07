@@ -10,6 +10,8 @@ export interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>,
   prefix?: React.ReactNode;
   /** Element to render after the input (e.g., icon or button) */
   suffix?: React.ReactNode;
+  /** Ref forwarded to the underlying input element */
+  ref?: React.Ref<HTMLInputElement>;
 }
 
 const inputBaseStyles = [
@@ -23,10 +25,16 @@ const inputBaseStyles = [
   "read-only:bg-frost read-only:text-steel",
 ].join(" ");
 
-export function Input({ className, type = "text", prefix, suffix, ...props }: Props) {
+export function Input({ className, type = "text", prefix, suffix, ref, ...props }: Props) {
   if (!prefix && !suffix) {
     return (
-      <input type={type} data-slot="input" className={cn(inputBaseStyles, className)} {...props} />
+      <input
+        ref={ref}
+        type={type}
+        data-slot="input"
+        className={cn(inputBaseStyles, className)}
+        {...props}
+      />
     );
   }
 
@@ -41,6 +49,7 @@ export function Input({ className, type = "text", prefix, suffix, ...props }: Pr
         </span>
       )}
       <input
+        ref={ref}
         type={type}
         data-slot="input"
         className={cn(inputBaseStyles, prefix && "pl-9", suffix && "pr-9", className)}

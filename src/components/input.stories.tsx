@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Eye, EyeOff, Mail, Search, X } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { expect, fn, userEvent, within } from "storybook/test";
 import { Input } from "./input";
 
@@ -222,5 +222,61 @@ export const ClearTest: Story = {
     await expect(input).toHaveValue("Clear me");
     await userEvent.clear(input);
     await expect(input).toHaveValue("");
+  },
+};
+
+export const RefTest: Story = {
+  render: () => {
+    const inputRef = useRef<HTMLInputElement>(null);
+    return (
+      <div className="flex flex-col gap-2">
+        <Input ref={inputRef} placeholder="Ref input" />
+        <button
+          type="button"
+          data-testid="focus-btn"
+          onClick={() => inputRef.current?.focus()}
+          className="border-graphite border px-3 py-1 text-sm"
+        >
+          Focus via ref
+        </button>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("textbox");
+    const button = canvas.getByTestId("focus-btn");
+
+    await expect(input).not.toHaveFocus();
+    await userEvent.click(button);
+    await expect(input).toHaveFocus();
+  },
+};
+
+export const RefWithPrefixTest: Story = {
+  render: () => {
+    const inputRef = useRef<HTMLInputElement>(null);
+    return (
+      <div className="flex flex-col gap-2">
+        <Input ref={inputRef} placeholder="Search..." prefix={<Search />} />
+        <button
+          type="button"
+          data-testid="focus-btn"
+          onClick={() => inputRef.current?.focus()}
+          className="border-graphite border px-3 py-1 text-sm"
+        >
+          Focus via ref
+        </button>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("textbox");
+    const button = canvas.getByTestId("focus-btn");
+
+    await expect(input).not.toHaveFocus();
+    await userEvent.click(button);
+    await expect(input).toHaveFocus();
   },
 };
