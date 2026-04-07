@@ -1,6 +1,7 @@
 import { Command } from "commander";
 import { add } from "./commands/add.ts";
 import { init } from "./commands/init.ts";
+import { theme } from "./commands/theme.ts";
 
 declare const __VERSION__: string;
 const version = __VERSION__;
@@ -25,5 +26,11 @@ program
   .argument("<components...>", "Component names to add")
   .option("-o, --overwrite", "Overwrite existing files")
   .action(add);
+
+program
+  .command("theme")
+  .description("Sync theme CSS tokens to your project")
+  .option("--theme <preset>", "Switch theme: porcelain, tobacco, marigold, or eucalyptus")
+  .action(theme);
 
 program.parse();
