@@ -3,6 +3,8 @@ import pc from "picocolors";
 import { getConfig } from "../utils/config.ts";
 import { installDependencies, writeComponentFiles } from "../utils/files.ts";
 import { fetchComponent, fetchRegistry } from "../utils/registry.ts";
+import { syncTheme } from "../utils/theme.ts";
+import { THEME_CSS } from "../utils/themes.ts";
 
 interface AddOptions {
   overwrite?: boolean;
@@ -87,5 +89,12 @@ export async function add(componentNames: string[], options: AddOptions) {
   console.log();
   console.log("Added:");
   allWritten.forEach((f) => console.log(pc.cyan(`  ${f}`)));
+
+  // Sync theme tokens
+  if (config.css) {
+    console.log();
+    await syncTheme(config, THEME_CSS, { overwrite: options.overwrite });
+  }
+
   console.log();
 }

@@ -4,6 +4,7 @@ import path from "path";
 export interface BeaketConfig {
   $schema?: string;
   components: string;
+  css?: string;
   theme?: string;
 }
 

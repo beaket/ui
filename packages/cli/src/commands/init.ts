@@ -2,22 +2,9 @@ import fs from "fs-extra";
 import path from "path";
 import pc from "picocolors";
 import prompts from "prompts";
-import CSS_DEFAULT from "../../../../src/css-variables.css";
-import CSS_EUCALYPTUS from "../../../../src/themes/eucalyptus.css";
-import CSS_MARIGOLD from "../../../../src/themes/marigold.css";
-import CSS_PORCELAIN from "../../../../src/themes/porcelain.css";
-import CSS_TOBACCO from "../../../../src/themes/tobacco.css";
 import { writeConfig, type BeaketConfig } from "../utils/config.ts";
-
-const THEME_CSS: Record<string, string> = {
-  porcelain: CSS_PORCELAIN,
-  tobacco: CSS_TOBACCO,
-  marigold: CSS_MARIGOLD,
-  eucalyptus: CSS_EUCALYPTUS,
-  default: CSS_DEFAULT,
-};
-
-const VALID_THEMES = Object.keys(THEME_CSS);
+import { replaceThemeInCss } from "../utils/theme.ts";
+import { THEME_CSS, VALID_THEMES } from "../utils/themes.ts";
 
 interface TsConfig {
   compilerOptions?: {
@@ -162,6 +149,7 @@ export async function init(options: InitOptions) {
   const config: BeaketConfig = {
     $schema: "https://beaket.dev/schema.json",
     components: response.components,
+    css: response.css || undefined,
     theme: response.theme,
   };
 
@@ -170,12 +158,20 @@ export async function init(options: InitOptions) {
 
   // Inject CSS variables into Tailwind CSS file
   const selectedCss = THEME_CSS[response.theme];
+  if (!selectedCss) {
+    console.log(pc.red("Error:"), `Unknown theme "${response.theme}".`);
+    process.exit(1);
+  }
   if (response.css) {
     const cssPath = path.join(process.cwd(), response.css);
     if (await fs.pathExists(cssPath)) {
       const cssContent = await fs.readFile(cssPath, "utf-8");
-      if (!cssContent.includes("Beaket UI Design System")) {
-        await fs.writeFile(cssPath, cssContent + selectedCss);
+      if (
+        !cssContent.includes("Beaket UI Design System") &&
+        !cssContent.includes("beaket:theme:start")
+      ) {
+        const { css } = replaceThemeInCss(cssContent, selectedCss);
+        await fs.writeFile(cssPath, css);
         console.log(pc.green("✔"), `Added CSS variables to ${response.css}`);
         console.log(pc.green("✔"), `Using ${response.theme} theme`);
       } else {
