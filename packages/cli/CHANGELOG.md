@@ -1,5 +1,13 @@
 # @beaket/ui
 
+## 2.2.0
+
+### Minor Changes
+
+- [#307](https://github.com/beaket/ui/pull/307) [`2603a9c`](https://github.com/beaket/ui/commit/2603a9c32d1a91b0909cb9c85a3f256817e28b69) Thanks [@jihnma](https://github.com/jihnma)! - Add ref prop support to Input component for direct DOM access (e.g. focus management)
+
+- [#309](https://github.com/beaket/ui/pull/309) [`4d95dec`](https://github.com/beaket/ui/commit/4d95dec0b762e4bc086f40d873dd95833834b7b4) Thanks [@jihnma](https://github.com/jihnma)! - Add theme token sync to CLI. Running `npx @beaket/ui add -o` now also updates outdated CSS design tokens. New `npx @beaket/ui theme` command for standalone theme sync and switching.
+
 ## 2.1.2
 
 ### Patch Changes
