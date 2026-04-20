@@ -8,7 +8,7 @@ const porcelain: Record<string, string> = themeTokensData.porcelain;
 /** Map display name (e.g. "--graphite") to CSS value from generated JSON */
 function val(name: string): string {
   // Color tokens: --graphite → --color-graphite
-  const colorKey = `--color${name}`;
+  const colorKey = name.replace(/^--/, "--color-");
   if (porcelain[colorKey]) return porcelain[colorKey];
   // Shadow tokens: --shadow-offset → --shadow-offset (same key)
   if (porcelain[name]) return porcelain[name];
