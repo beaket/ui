@@ -6,10 +6,10 @@
 
 @theme {
   /* Neutral palette */
-  --color-graphite: #0a1025;
-  --color-ink: #162036;
+  --color-graphite: #1e2638;
+  --color-ink: #0e1628;
   --color-branch: #1c2a42;
-  --color-iron: #243250;
+  --color-iron: #151d30;
   --color-slate: #2f3f58;
   --color-zinc: #384d68;
   --color-steel: #3d5170;
@@ -61,10 +61,10 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Neutral palette — navy-tinted for professional dark authority */
-    --color-graphite: #e8ecf4;
-    --color-ink: #dce2ec;
+    --color-graphite: #c6cdde;
+    --color-ink: #e8ecf4;
     --color-branch: #c4cede;
-    --color-iron: #b0bace;
+    --color-iron: #a6aec4;
     --color-slate: #98a2b8;
     --color-zinc: #808aa2;
     --color-steel: #687288;
@@ -74,7 +74,7 @@
     --color-silver: #1e2836;
     --color-platinum: #141a2a;
     --color-frost: #0c1020;
-    --color-paper: #060a14;
+    --color-paper: #0e1320;
 
     /* Signal colors — professional, brightened for dark canvas */
     --color-signal-blue: #3060e0;
