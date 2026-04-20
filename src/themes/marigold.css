@@ -7,10 +7,10 @@
 
 @theme {
   /* Neutral palette */
-  --color-graphite: #0a0a0a;
-  --color-ink: #121212;
+  --color-graphite: #1f1f1f;
+  --color-ink: #0a0a0a;
   --color-branch: #1a1a1a;
-  --color-iron: #262626;
+  --color-iron: #141414;
   --color-slate: #3a3a3a;
   --color-zinc: #4e4e4e;
   --color-steel: #5a5a5a;
@@ -45,8 +45,8 @@
   --color-surface-2: #ffffff;
 
   /* Shadows — ink-black, heavy, graphic */
-  --shadow-offset: 3px 3px 0px 0px var(--color-ink);
-  --shadow-offset-dark: 3px 3px 0px 0px var(--color-graphite);
+  --shadow-offset: 3px 3px 0px 0px var(--color-iron);
+  --shadow-offset-dark: 3px 3px 0px 0px var(--color-ink);
   --shadow-offset-hover: 4px 4px 0px 0px var(--color-ink);
   --shadow-offset-active: 1px 1px 0px 0px var(--color-ink);
 
@@ -63,10 +63,10 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Neutral palette — pure achromatic for maximum neon contrast */
-    --color-graphite: #f5f5f5;
-    --color-ink: #ececec;
+    --color-graphite: #d8d8d8;
+    --color-ink: #f5f5f5;
     --color-branch: #e0e0e0;
-    --color-iron: #d0d0d0;
+    --color-iron: #c0c0c0;
     --color-slate: #bfbfbf;
     --color-zinc: #acacac;
     --color-steel: #999999;
@@ -76,7 +76,7 @@
     --color-silver: #303030;
     --color-platinum: #222222;
     --color-frost: #161616;
-    --color-paper: #0a0a0a;
+    --color-paper: #101010;
 
     /* Signal colors — neon-bright for dark canvas */
     --color-signal-blue: #4488ff;

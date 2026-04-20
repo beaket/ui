@@ -33,7 +33,7 @@
 
   /* Borders */
   --color-border-default: var(--color-chrome);
-  --color-border-strong: var(--color-graphite);
+  --color-border-strong: var(--color-ink);
   --color-border-muted: var(--color-silver);
 
   /* ===========================================
@@ -85,4 +85,21 @@
   --border-width-medium: 2px;
   --radius-none: 0;
   --radius-full: 9999px; /* Only for Radio buttons */
+}
+
+/* ===========================================
+ * HIGH CONTRAST ESCAPE HATCH
+ * Restore maximum-contrast prose body for users who explicitly
+ * request it via OS-level `prefers-contrast: more`. Text-only —
+ * paper/iron/ink stay tuned so structural identity is preserved.
+ * =========================================== */
+@media (prefers-contrast: more) {
+  :root {
+    --color-graphite: #080b10;
+  }
+}
+@media (prefers-contrast: more) and (prefers-color-scheme: dark) {
+  :root {
+    --color-graphite: #e6eaee;
+  }
 }
