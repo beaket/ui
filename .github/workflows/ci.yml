@@ -23,6 +23,10 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install
+      - name: Check theme-tokens.json is in sync with src/themes/*.css
+        run: |
+          pnpm --filter docs exec tsx scripts/generate-theme-tokens.ts
+          git diff --exit-code docs/src/data/theme-tokens.json
       - name: Lint
         run: pnpm lint
       - name: Format
