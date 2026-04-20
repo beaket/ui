@@ -1,5 +1,34 @@
 # @beaket/ui
 
+## 2.3.0
+
+### Minor Changes
+
+- [#339](https://github.com/beaket/ui/pull/339) [`28ca093`](https://github.com/beaket/ui/commit/28ca093639c978ea207bc994a7a566cfb7e718f6) Thanks [@jihnma](https://github.com/jihnma)! - Re-tune prose body text color across all four themes to eliminate long-reading eye fatigue while preserving brutalist identity.
+
+  **Problem.** `graphite` on `frost`/`paper` was running at ~18–20.4:1 contrast — above the research-backed 10–15:1 sweet spot (Bauer & Cavonius, Lin & Huang) and higher than every major design system (Apple 16.7:1, GitHub 15.5:1, Linear 16.2:1, Notion 10.6:1, Medium 14:1). Excess contrast induces halation and is especially punishing on dense Japanese kanji strokes. `graphite` and `ink` were also nearly identical (ΔE<1) so the two tokens had collapsed semantically.
+
+  **Changes per theme (light / dark):**
+  - **Porcelain**: graphite `#030508 → #1e2229` / `#e6eaee → #c4cad4`; ink `#080b10 → #0a0d14` / `#dce0e6 → #e6eaee`; iron `#282b2f → #15191f` / `#b4bcc6 → #aab2bd`; dark paper `#06080c → #0d1117` (reduces dark-mode halation + re-adaptation fatigue).
+  - **Eucalyptus**: graphite `#0a1025 → #1e2638` / `#e8ecf4 → #c6cdde`; ink `[#162036](https://github.com/beaket/ui/issues/162036) → #0e1628` / `#dce2ec → #e8ecf4`; iron `[#243250](https://github.com/beaket/ui/issues/243250) → #151d30` / `#b0bace → #a6aec4`; dark paper `#060a14 → #0e1320`.
+  - **Marigold**: graphite `#0a0a0a → #1f1f1f` / `#f5f5f5 → #d8d8d8`; ink `[#121212](https://github.com/beaket/ui/issues/121212) → #0a0a0a` / `#ececec → #f5f5f5`; iron `[#262626](https://github.com/beaket/ui/issues/262626) → [#141414](https://github.com/beaket/ui/issues/141414)` / `#d0d0d0 → #c0c0c0`; dark paper `#0a0a0a → [#101010](https://github.com/beaket/ui/issues/101010)` (conservative — preserves neon identity). Shadow references rebound (`--shadow-offset` now uses `iron`; `-dark` variant uses `ink`) to keep the "ink-black heavy shadow" semantic intact after the ink/graphite value swap.
+  - **Tobacco**: graphite `[#111110](https://github.com/beaket/ui/issues/111110) → #26231e` / `#eceae0 → #cfcabc`; ink `#1a1a18 → #14130f` / `#e2e0d6 → #eceae0`; iron `#312f2c → #1c1a16` / `#c0bcb2 → #b4b0a6`; dark paper `#0c0b0a → #14130f`.
+
+  **Token semantics clarified (via values, not rename):**
+  - `graphite` = prose body (tuned for sustained reading, 13–14:1 light, ~12:1 dark).
+  - `ink` = UI primary / strong interactive (kept punchy — buttons, `bg-ink` tooltips, strong borders).
+  - `iron` = structural dark accent / shadow (moved below graphite on the dark axis to preserve scale distance now that graphite has softened).
+
+  **Other:**
+  - `--color-border-strong` rebound from `graphite` to `ink` so softening prose text does not weaken the brutalist border language.
+  - New `@media (prefers-contrast: more)` block in `styles.css` restores the original near-black `graphite` for users who request maximum contrast at the OS level (accessibility escape hatch).
+
+- [#338](https://github.com/beaket/ui/pull/338) [`15835aa`](https://github.com/beaket/ui/commit/15835aaa4d509c986f1639872ae17c4cfaef0843) Thanks [@jihnma](https://github.com/jihnma)! - Add `resizable` prop to `Textarea` so it can auto-grow with content while also letting the user drag the handle to make it taller. The manually dragged height becomes a floor — content can still push it larger but won't shrink it below the user's chosen size. Closes [#332](https://github.com/beaket/ui/issues/332).
+
+### Patch Changes
+
+- [#335](https://github.com/beaket/ui/pull/335) [`618f25b`](https://github.com/beaket/ui/commit/618f25b6c547e8cd98affd18aa1d0a212a0fe9dd) Thanks [@jihnma](https://github.com/jihnma)! - Fix CSS token duplication between `src/css-variables.css` and `src/themes/porcelain.css`. The two files had drifted out of sync (different hex values for `graphite`, `ink`, `signal-blue`, `signal-green`, surface layers) and `css-variables.css` lacked the dark-mode block. Removed `src/css-variables.css` and made `src/themes/porcelain.css` the single source of truth — `src/styles.css` now imports it directly.
+
 ## 2.2.0
 
 ### Minor Changes
