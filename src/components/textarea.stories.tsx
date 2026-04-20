@@ -77,6 +77,15 @@ export const AutoResize: Story = {
         />
       </div>
       <div className="space-y-1.5">
+        <Label htmlFor="textarea-resizable">Auto Resize + Manual (resizable)</Label>
+        <Textarea
+          id="textarea-resizable"
+          resizable
+          placeholder="Grows with content — drag the handle to make it taller."
+          defaultValue={"Line 1\nLine 2"}
+        />
+      </div>
+      <div className="space-y-1.5">
         <Label htmlFor="textarea-fixed">Fixed Height (autoResize=false)</Label>
         <Textarea
           id="textarea-fixed"
@@ -108,6 +117,17 @@ export const InteractionTest: Story = {
           data-testid="basic-textarea"
         />
       </div>
+      <div>
+        <Label htmlFor="test-resizable-textarea" className="sr-only">
+          Resizable textarea
+        </Label>
+        <Textarea
+          id="test-resizable-textarea"
+          resizable
+          placeholder="Resizable"
+          data-testid="resizable-textarea"
+        />
+      </div>
     </div>
   ),
   play: async ({ args, canvasElement }) => {
@@ -117,5 +137,10 @@ export const InteractionTest: Story = {
     await userEvent.type(basicTextarea, "Hello\nWorld");
     await expect(args.onChange).toHaveBeenCalled();
     await expect(basicTextarea).toHaveValue("Hello\nWorld");
+
+    const resizableTextarea = canvas.getByTestId("resizable-textarea") as HTMLTextAreaElement;
+    await expect(resizableTextarea).toHaveClass("resize-y");
+    await userEvent.type(resizableTextarea, "A\nB\nC");
+    await expect(resizableTextarea).toHaveValue("A\nB\nC");
   },
 };

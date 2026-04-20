@@ -14,9 +14,24 @@ interface Props extends React.ComponentProps<"textarea"> {
    * @default true
    */
   autoResize?: boolean;
+  /**
+   * Allow the user to manually resize the textarea vertically. When combined with
+   * `autoResize`, the textarea still grows with content but the user can drag it
+   * taller — the manual height becomes a floor that content can only exceed.
+   * @default false
+   */
+  resizable?: boolean;
 }
 
-export function Textarea({ className, autoResize = true, onInput, ref, ...props }: Props) {
+export function Textarea({
+  className,
+  autoResize = true,
+  resizable = false,
+  onInput,
+  onPointerUp,
+  ref,
+  ...props
+}: Props) {
   const internalRef = useRef<HTMLTextAreaElement>(null);
   const externalRef = useRef(ref);
   externalRef.current = ref;
@@ -28,17 +43,39 @@ export function Textarea({ className, autoResize = true, onInput, ref, ...props 
     else if (extRef) extRef.current = node;
   }, []);
 
+  const userHeightRef = useRef<number | null>(null);
+  const lastAppliedHeightRef = useRef<number | null>(null);
+
   const adjustHeight = useCallback(() => {
     const textarea = internalRef.current;
     if (!textarea || !autoResize) return;
 
     textarea.style.height = "auto";
-    textarea.style.height = `${textarea.scrollHeight}px`;
+    const contentHeight = textarea.scrollHeight;
+    const floor = userHeightRef.current ?? 0;
+    const next = Math.max(contentHeight, floor);
+    textarea.style.height = `${next}px`;
+    lastAppliedHeightRef.current = next;
   }, [autoResize]);
 
   useEffect(() => {
     adjustHeight();
   }, [adjustHeight, props.value, props.defaultValue]);
+
+  const handlePointerUp = useCallback(
+    (e: React.PointerEvent<HTMLTextAreaElement>) => {
+      onPointerUp?.(e);
+      if (!autoResize || !resizable) return;
+      const textarea = internalRef.current;
+      if (!textarea) return;
+      const current = textarea.offsetHeight;
+      if (lastAppliedHeightRef.current !== null && current !== lastAppliedHeightRef.current) {
+        userHeightRef.current = current;
+        adjustHeight();
+      }
+    },
+    [autoResize, resizable, onPointerUp, adjustHeight],
+  );
 
   return (
     <textarea
@@ -51,13 +88,16 @@ export function Textarea({ className, autoResize = true, onInput, ref, ...props 
         "disabled:border-chrome disabled:bg-frost disabled:text-steel disabled:cursor-not-allowed disabled:border-dashed",
         "read-only:bg-frost read-only:cursor-default",
         "aria-[invalid=true]:border-signal-red aria-[invalid=true]:focus-visible:outline-signal-red",
-        autoResize && "resize-none overflow-hidden",
+        autoResize && !resizable && "resize-none overflow-hidden",
+        autoResize && resizable && "resize-y overflow-hidden",
+        !autoResize && resizable && "resize-y",
         className,
       )}
       onInput={(e) => {
         adjustHeight();
         onInput?.(e);
       }}
+      onPointerUp={handlePointerUp}
       {...props}
     />
   );
