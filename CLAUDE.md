@@ -8,7 +8,7 @@ Copy-paste component library (like shadcn/ui). Package: `@beaket/ui`.
 
 - **Self-contained**: Each component includes its own `cn` utility. No shared imports.
 - **Dependencies in registry**: List npm packages in `registry/registry.json`.
-- **CSS tokens**: `src/css-variables.css` (Storybook), `src/themes/*.css` (CLI injects one of these).
+- **CSS tokens**: `src/themes/*.css`. Single source of truth — Storybook imports `porcelain.css` via `src/styles.css`; CLI injects the chosen theme at `init`.
 
 ## Design Rules
 
