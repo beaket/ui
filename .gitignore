@@ -9,6 +9,9 @@ dist
 # Astro
 .astro
 
+# Generated from src/themes/*.css by docs/scripts/generate-theme-tokens.ts
+docs/src/data/theme-tokens.json
+
 # Storybook
 *storybook.log
 storybook-static
