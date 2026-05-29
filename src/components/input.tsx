@@ -3,15 +3,11 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "prefix"> {
-  /** Additional CSS classes to apply to the input */
-  className?: string;
+export interface Props extends Omit<React.ComponentProps<"input">, "prefix"> {
   /** Element to render before the input (e.g., icon) */
   prefix?: React.ReactNode;
   /** Element to render after the input (e.g., icon or button) */
   suffix?: React.ReactNode;
-  /** Ref forwarded to the underlying input element */
-  ref?: React.Ref<HTMLInputElement>;
 }
 
 const inputBaseStyles = [
