@@ -1,5 +1,11 @@
 # @beaket/ui
 
+## 2.3.1
+
+### Patch Changes
+
+- [#409](https://github.com/beaket/ui/pull/409) [`785955d`](https://github.com/beaket/ui/commit/785955d7f043bd64125bbddd9dd73794f65417d7) Thanks [@jihnma](https://github.com/jihnma)! - Align `Input` props type with the rest of the library: extends `React.ComponentProps<"input">` instead of `React.InputHTMLAttributes<HTMLInputElement>`, matching `Textarea`. Removes redundant `className` and `ref` declarations (already inherited). No runtime behavior change. Closes [#333](https://github.com/beaket/ui/issues/333).
+
 ## 2.3.0
 
 ### Minor Changes
