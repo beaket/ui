@@ -4,6 +4,8 @@ dist
 
 # Environment
 .npmrc
+# but track the repo-root .npmrc (provenance=true); package/home ones stay ignored
+!/.npmrc
 .env
 
 # Astro
