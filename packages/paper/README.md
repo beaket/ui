@@ -58,9 +58,10 @@ const editor = createEditor(document.querySelector("#editor")!, {
 
 ## Design context
 
-See [`docs/DECISIONS.md`](./docs/DECISIONS.md) for the load-bearing architecture decisions —
-the composing guard contract, the table subview model, CJK typography (including the font-stack
-trap), the consumer-config extensibility model, and the porcelain token reconciliation.
+See [`docs/DECISIONS.md`](https://github.com/beaket/ui/blob/main/packages/paper/docs/DECISIONS.md) for
+the load-bearing architecture decisions — the composing guard contract, the table subview model, CJK
+typography (including the font-stack trap), the consumer-config extensibility model, and the porcelain
+token reconciliation.
 
 ## Styling
 

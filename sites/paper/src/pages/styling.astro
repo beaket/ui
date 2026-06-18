@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/base.astro';
+
+const cssCode = `.my-editor-wrapper {
+  --beaket-paper-accent: #0c6bae;     /* links, focus, selection tint */
+  --beaket-paper-ink: #232a35;        /* body text + caret */
+  --beaket-paper-paper: #ffffff;      /* rendered surface */
+  --beaket-paper-font: Georgia, serif;
+  --beaket-paper-font-size: 18px;
+  --beaket-paper-measure: 42rem;      /* max line width; default none = full width */
+}`;
+---
+
+<Base title="Styling — Paper">
+  <h1>Styling</h1>
+
+  <p>
+    The editor ships its own visual tokens via a CodeMirror theme scoped to <code>.cm-editor</code>, so
+    it works standalone — no CSS file to import.
+  </p>
+
+  <h2 id="tokens">CSS variables</h2>
+  <p>
+    Every token resolves through <code>var(--beaket-paper-X, …)</code>. Set any of them on
+    <code>:root</code> or any ancestor of the editor and it follows — no <code>!important</code>, no
+    specificity fights:
+  </p>
+  <pre><code>{cssCode}</code></pre>
+  <blockquote>
+    <code>letter-spacing</code> is intentionally <strong>not</strong> exposed — negative spacing breaks
+    mixed-script CJK, so it is fixed at <code>0</code> (a CJK-first guard).
+  </blockquote>
+
+  <h2 id="bridge">Design-token bridge</h2>
+  <p>
+    If the host app already exposes a <code>--color-*</code> design-token palette, the editor bridges to
+    it automatically — including dark mode — with no setup, so it inherits your theme. Each token
+    resolves three tiers deep: <code>var(--beaket-paper-X, var(--color-Y, default))</code> — your
+    explicit override first, then the host palette, then a built-in default.
+  </p>
+
+  <h2 id="escape">Escape hatches</h2>
+  <p>For anything the variables don't cover:</p>
+  <ul>
+    <li>Style the stable <code>.cm-*</code> class hooks directly — e.g. <code>.cm-table-widget</code>, <code>.cm-slash-menu</code>, <code>.cm-md-copy</code>.</li>
+    <li>Reach the underlying CodeMirror <code>EditorView</code> via <code>ref.current.getView()</code> to add your own extensions or theme.</li>
+  </ul>
+</Base>

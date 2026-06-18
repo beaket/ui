@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/base.astro';
+const base = import.meta.env.BASE_URL;
+const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p);
+---
+
+<Base title="API Reference — Paper">
+  <h1>API Reference</h1>
+
+  <h2 id="props"><code>&lt;BeaketPaper&gt;</code> props</h2>
+  <p>Import from <code>@beaket/paper/react</code>. All props are optional.</p>
+  <table>
+    <thead><tr><th>Prop</th><th>Type</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>defaultValue</code></td><td><code>string</code></td><td>Initial markdown document. <strong>Not live</strong> — the editor is uncontrolled; replace the whole doc via <code>ref.setValue()</code>.</td></tr>
+      <tr><td><code>onChange</code></td><td><code>(value: string) =&gt; void</code></td><td>Full markdown on <strong>user edits only</strong>. Fired once after IME composition settles; <code>setValue</code> does not echo back. No internal debounce.</td></tr>
+      <tr><td><code>highlights</code></td><td><code>HighlightInput[]</code></td><td>Highlight/annotation ranges. <strong>Live</strong> prop — re-resolved on change (deferred during IME).</td></tr>
+      <tr><td><code>activeHighlightId</code></td><td><code>string | null</code></td><td>The hovered/selected highlight id. Live prop for declarative visual sync.</td></tr>
+      <tr><td><code>onHighlightStatusChange</code></td><td><code>(m: Map&lt;string, AnchorStatus&gt;) =&gt; void</code></td><td>Re-resolution status of highlights (mainly on load/delete).</td></tr>
+      <tr><td><code>onHighlightClick</code></td><td><code>(id: string) =&gt; void</code></td><td>A highlight was clicked — e.g. open a comment panel.</td></tr>
+      <tr><td><code>onSelect</code></td><td><code>(sel: SelectionInfo | null) =&gt; void</code></td><td>Selection report <code>&#123; text, anchor, rect &#125;</code>, <code>null</code> when empty. Draw a floating toolbar from <code>rect</code>.</td></tr>
+      <tr><td><code>onInsertImage</code></td><td><code>ImageResolver</code></td><td>Decides the URL for a dropped/pasted image. Upload/storage is yours. Default: in-session <code>blob:</code> URL.</td></tr>
+      <tr><td><code>slashItems</code></td><td><code>SlashItemsConfig</code></td><td>Customize the <code>/</code> menu. Array = full replacement; <code>(defaults) =&gt; items</code> = derive from defaults (recommended).</td></tr>
+      <tr><td><code>className</code></td><td><code>string</code></td><td>Class on the editor container element.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="handle">Imperative handle (<code>ref</code>)</h2>
+  <p>The <code>ref</code> exposes a <code>BeaketPaperHandle</code>:</p>
+  <table>
+    <thead><tr><th>Method</th><th>Returns</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>getValue()</code></td><td><code>string</code></td><td>Current markdown document.</td></tr>
+      <tr><td><code>setValue(md)</code></td><td><code>void</code></td><td>Replace the whole document. Deferred until an active IME composition settles. Does not fire <code>onChange</code>.</td></tr>
+      <tr><td><code>focus()</code></td><td><code>void</code></td><td>Focus the editor.</td></tr>
+      <tr><td><code>getSelection()</code></td><td><code>&#123; from, to, text &#125; | null</code></td><td>Current selection in source coordinates; <code>null</code> when empty.</td></tr>
+      <tr><td><code>getView()</code></td><td><code>EditorView</code></td><td>Escape hatch — the raw CodeMirror 6 <code>EditorView</code>. No cross-version guarantees.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="core">Core <code>createEditor(parent, options)</code></h2>
+  <p>The vanilla core takes the mount element and an <code>EditorOptions</code> object, returning the CodeMirror <code>EditorView</code>. The React props above map onto these (minus the React-specific <code>highlights</code> / <code>activeHighlightId</code> / <code>className</code> wiring):</p>
+  <table>
+    <thead><tr><th>Option</th><th>Type</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>doc</code></td><td><code>string</code></td><td>Initial markdown (the core's name for <code>defaultValue</code>). Empty if omitted.</td></tr>
+      <tr><td><code>onChange</code></td><td><code>(value: string) =&gt; void</code></td><td>Same contract as the React prop.</td></tr>
+      <tr><td><code>onInsertImage</code></td><td><code>ImageResolver</code></td><td>Image placement resolver.</td></tr>
+      <tr><td><code>slashItems</code></td><td><code>SlashItemsConfig</code></td><td>Slash-menu customization.</td></tr>
+      <tr><td><code>onSelect</code></td><td><code>(sel: SelectionInfo | null) =&gt; void</code></td><td>Selection report.</td></tr>
+      <tr><td><code>onHighlightStatusChange</code> / <code>onHighlightClick</code></td><td>callbacks</td><td>Highlight surface. The highlight <em>list</em> is set imperatively via <code>setHighlightsEffect</code>.</td></tr>
+    </tbody>
+  </table>
+
+  <p class="next"><a href={withBase('styling')}>Styling →</a></p>
+</Base>
+
+<style>
+  .next { margin-top: 2.5rem; font-weight: 600; }
+</style>

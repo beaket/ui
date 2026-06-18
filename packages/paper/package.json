@@ -38,6 +38,9 @@
     "url": "git+https://github.com/beaket/ui.git",
     "directory": "packages/paper"
   },
+  "homepage": "https://github.com/beaket/ui/tree/main/packages/paper#readme",
+  "bugs": "https://github.com/beaket/ui/issues",
+  "author": "Beaket",
   "dependencies": {
     "@codemirror/commands": "^6.10.3",
     "@codemirror/lang-markdown": "^6.5.0",

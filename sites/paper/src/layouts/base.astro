@@ -9,7 +9,20 @@ const {
   title = 'Paper — markdown-first editor',
   description = 'A markdown-first, CJK-first Live Preview editor built on CodeMirror 6. Standalone npm package.',
 } = Astro.props;
+
 const base = import.meta.env.BASE_URL;
+const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p);
+const path = Astro.url.pathname.replace(/\/$/, '');
+const homePath = base.replace(/\/$/, '');
+
+const nav = [
+  { href: withBase(''), label: 'Introduction', seg: '' },
+  { href: withBase('installation'), label: 'Installation', seg: 'installation' },
+  { href: withBase('usage'), label: 'Usage', seg: 'usage' },
+  { href: withBase('api'), label: 'API Reference', seg: 'api' },
+  { href: withBase('styling'), label: 'Styling', seg: 'styling' },
+];
+const isActive = (seg: string) => (seg === '' ? path === homePath : path.endsWith('/' + seg));
 const year = new Date().getFullYear();
 ---
 
@@ -25,7 +38,7 @@ const year = new Date().getFullYear();
   <body>
     <header class="masthead">
       <div class="masthead-inner">
-        <a href={base} class="brand">Paper</a>
+        <a href={withBase('')} class="brand">Paper</a>
         <span class="brand-sub">@beaket/paper</span>
         <nav class="masthead-links">
           <a href="https://www.npmjs.com/package/@beaket/paper">npm</a>
@@ -34,21 +47,37 @@ const year = new Date().getFullYear();
       </div>
     </header>
 
-    <main class="wrap">
-      <slot />
-    </main>
+    <div class="layout">
+      <aside class="sidebar">
+        <button class="sidebar-toggle" aria-label="Toggle navigation" aria-expanded="false">Menu ▾</button>
+        <nav class="sidebar-nav">
+          {nav.map((item) => (
+            <a href={item.href} class:list={['sidebar-link', { active: isActive(item.seg) }]}>{item.label}</a>
+          ))}
+        </nav>
+      </aside>
 
-    <footer>
-      <div class="footer-inner">
-        <span>© {year} Beaket</span>
-        <span>·</span>
-        <a href="https://github.com/beaket/ui/blob/main/LICENSE">MIT License</a>
-        <span>·</span>
-        <a href="https://beaket.github.io/ui/">Beaket UI</a>
-      </div>
-    </footer>
+      <main class="content">
+        <slot />
+        <footer class="page-footer">
+          <span>© {year} Beaket</span>
+          <span>·</span>
+          <a href="https://github.com/beaket/ui/blob/main/LICENSE">MIT License</a>
+          <span>·</span>
+          <a href="https://www.npmjs.com/package/@beaket/paper">npm</a>
+        </footer>
+      </main>
+    </div>
 
     <script>
+      // Mobile nav toggle
+      const toggle = document.querySelector('.sidebar-toggle');
+      const nav = document.querySelector('.sidebar-nav');
+      toggle?.addEventListener('click', () => {
+        const open = nav?.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', String(!!open));
+      });
+
       // Copy buttons on code blocks
       document.querySelectorAll('pre').forEach((pre) => {
         const button = document.createElement('button');

@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/base.astro';
+const base = import.meta.env.BASE_URL;
+const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p);
+
+const reactCode = `import { BeaketPaper, type BeaketPaperHandle } from "@beaket/paper/react";
+import { useRef } from "react";
+
+function Editor() {
+  const ref = useRef<BeaketPaperHandle>(null);
+  return (
+    <BeaketPaper
+      ref={ref}
+      defaultValue={"# Hello\\n\\nStart writing…"}
+      onChange={(markdown) => console.log(markdown)}
+    />
+  );
+}`;
+
+const setValueCode = `// Replace the whole document (e.g. after loading from a server).
+// Deferred until any active IME composition settles; does not fire onChange.
+ref.current?.setValue("# Loaded document\\n\\n…");
+
+// Read the current markdown on demand.
+const markdown = ref.current?.getValue();`;
+
+const coreCode = `import { createEditor } from "@beaket/paper";
+
+const editor = createEditor(document.querySelector("#editor")!, {
+  doc: "# Hello",
+  onChange: (markdown) => console.log(markdown),
+});`;
+---
+
+<Base title="Usage — Paper">
+  <h1>Usage</h1>
+
+  <h2 id="react">React</h2>
+  <pre><code>{reactCode}</code></pre>
+  <p>
+    The editor is <strong>uncontrolled</strong>: pass <code>defaultValue</code> for the initial
+    document and call <code>ref.current.setValue(...)</code> to replace it programmatically.
+    <code>onChange</code> fires with the full markdown on user edits only — it is IME-guarded, and
+    <code>setValue</code> does not echo back through it. There is no internal debounce, so debouncing
+    (e.g. before autosave) is yours to add.
+  </p>
+
+  <h3>Reading &amp; replacing the document</h3>
+  <pre><code>{setValueCode}</code></pre>
+  <p>
+    For anything the curated handle does not expose, <code>ref.current.getView()</code> returns the
+    underlying CodeMirror <code>EditorView</code> as an escape hatch. See the
+    <a href={withBase('api')}>API Reference</a> for the full prop and handle surface.
+  </p>
+
+  <h2 id="core">Framework-agnostic core</h2>
+  <p>The core has zero React. Mount it onto any element and it returns the CodeMirror <code>EditorView</code>:</p>
+  <pre><code>{coreCode}</code></pre>
+  <p>
+    The core takes <code>doc</code> where the React wrapper takes <code>defaultValue</code>; the
+    callback options (<code>onChange</code>, <code>onSelect</code>, <code>onInsertImage</code>,
+    <code>slashItems</code>) are shared. The React-only props (<code>highlights</code>,
+    <code>activeHighlightId</code>, <code>className</code>) are wiring on top of the core surface.
+  </p>
+
+  <p class="next"><a href={withBase('api')}>API Reference →</a></p>
+</Base>
+
+<style>
+  .next { margin-top: 2.5rem; font-weight: 600; }
+</style>

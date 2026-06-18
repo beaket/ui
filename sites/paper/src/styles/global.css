@@ -101,8 +101,89 @@ pre code {
   align-items: baseline;
   gap: 1rem;
   padding: 1.1rem 1.5rem;
-  max-width: 860px;
+  max-width: 1080px;
   margin: 0 auto;
+}
+
+/* Layout: sidebar + content */
+.layout {
+  display: flex;
+  max-width: 1080px;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+.sidebar {
+  width: 210px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  padding: 2.25rem 1.25rem;
+}
+.sidebar-toggle {
+  display: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  background: none;
+  border: none;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 0;
+}
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.sidebar-link {
+  display: block;
+  padding: 0.35rem 0.6rem;
+  color: var(--steel);
+  font-size: 14px;
+  border-left: 2px solid transparent;
+}
+.sidebar-link:hover {
+  color: var(--ink);
+  text-decoration: none;
+  background: var(--frost);
+}
+.sidebar-link.active {
+  color: var(--ink);
+  font-weight: 600;
+  border-left-color: var(--accent);
+  background: var(--frost);
+}
+.content {
+  flex: 1;
+  min-width: 0;
+  max-width: 760px;
+  padding: 2.25rem 2.5rem 4rem;
+}
+
+@media (max-width: 820px) {
+  .layout {
+    flex-direction: column;
+  }
+  .sidebar {
+    position: static;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--chrome);
+  }
+  .sidebar-toggle {
+    display: block;
+  }
+  .sidebar-nav {
+    display: none;
+    margin-top: 0.75rem;
+  }
+  .sidebar-nav.open {
+    display: flex;
+  }
+  .content {
+    padding: 1.5rem 1.5rem 3rem;
+    max-width: none;
+  }
 }
 .brand {
   font-size: 22px;
@@ -155,9 +236,6 @@ pre code {
 }
 
 /* Content */
-main {
-  padding-bottom: 5rem;
-}
 h2 {
   font-size: 1.5rem;
   letter-spacing: -0.02em;
@@ -192,16 +270,12 @@ th {
   background: var(--frost);
 }
 
-footer {
-  border-top: 2px solid var(--ink);
-  background: var(--paper);
+.page-footer {
+  margin-top: 3.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--chrome);
   color: var(--steel);
   font-size: 13px;
-}
-.footer-inner {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 1.25rem 1.5rem;
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
