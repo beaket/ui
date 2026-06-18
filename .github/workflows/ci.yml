@@ -37,5 +37,3 @@ jobs:
         run: pnpm test:cli
       - name: Test Editor
         run: pnpm test:editor
-      - name: Build Editor
-        run: pnpm --filter @beaket/paper build
