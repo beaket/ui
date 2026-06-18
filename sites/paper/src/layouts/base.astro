@@ -1,0 +1,108 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = 'Paper — markdown-first editor',
+  description = 'A markdown-first, CJK-first Live Preview editor built on CodeMirror 6. Standalone npm package.',
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL;
+const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p);
+const path = Astro.url.pathname.replace(/\/$/, '');
+const homePath = base.replace(/\/$/, '');
+
+const nav = [
+  { href: withBase(''), label: 'Introduction', seg: '' },
+  { href: withBase('installation'), label: 'Installation', seg: 'installation' },
+  { href: withBase('usage'), label: 'Usage', seg: 'usage' },
+  { href: withBase('api'), label: 'API Reference', seg: 'api' },
+  { href: withBase('styling'), label: 'Styling', seg: 'styling' },
+];
+const isActive = (seg: string) => (seg === '' ? path === homePath : path.endsWith('/' + seg));
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="masthead-inner">
+        <a href={withBase('')} class="brand">Paper</a>
+        <span class="brand-sub">@beaket/paper</span>
+        <nav class="masthead-links">
+          <a href="https://www.npmjs.com/package/@beaket/paper">npm</a>
+          <a href="https://github.com/beaket/ui/tree/main/packages/paper">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <button class="sidebar-toggle" aria-label="Toggle navigation" aria-expanded="false">Menu ▾</button>
+        <nav class="sidebar-nav">
+          {nav.map((item) => (
+            <a href={item.href} class:list={['sidebar-link', { active: isActive(item.seg) }]}>{item.label}</a>
+          ))}
+        </nav>
+      </aside>
+
+      <main class="content">
+        <slot />
+        <footer class="page-footer">
+          <span>© {year} Beaket</span>
+          <span>·</span>
+          <a href="https://github.com/beaket/ui/blob/main/LICENSE">MIT License</a>
+          <span>·</span>
+          <a href="https://www.npmjs.com/package/@beaket/paper">npm</a>
+        </footer>
+      </main>
+    </div>
+
+    <script>
+      // Mobile nav toggle
+      const toggle = document.querySelector('.sidebar-toggle');
+      const nav = document.querySelector('.sidebar-nav');
+      toggle?.addEventListener('click', () => {
+        const open = nav?.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', String(!!open));
+      });
+
+      // Copy buttons on code blocks
+      document.querySelectorAll('pre').forEach((pre) => {
+        const button = document.createElement('button');
+        button.textContent = 'Copy';
+        button.setAttribute('aria-label', 'Copy code');
+        Object.assign(button.style, {
+          position: 'absolute',
+          top: '0.5rem',
+          right: '0.5rem',
+          font: 'inherit',
+          fontSize: '12px',
+          padding: '0.15rem 0.5rem',
+          background: 'var(--paper)',
+          color: 'var(--ink)',
+          border: '1px solid var(--chrome)',
+          cursor: 'pointer',
+        });
+        pre.style.position = 'relative';
+        button.addEventListener('click', async () => {
+          await navigator.clipboard.writeText(pre.querySelector('code')?.textContent || pre.textContent || '');
+          button.textContent = 'Copied';
+          setTimeout(() => (button.textContent = 'Copy'), 1500);
+        });
+        pre.appendChild(button);
+      });
+    </script>
+  </body>
+</html>

@@ -23,6 +23,14 @@ jobs:
         run: pnpm install
       - name: Build docs
         run: pnpm --filter docs build
+      - name: Build @beaket/paper
+        run: pnpm --filter @beaket/paper build
+      - name: Build Paper site
+        run: pnpm --filter paper-site build
+      - name: Nest Paper site under /ui/paper
+        run: |
+          mkdir -p docs/dist/paper
+          cp -R sites/paper/dist/. docs/dist/paper/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:

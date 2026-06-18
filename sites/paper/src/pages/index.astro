@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/base.astro';
+import { EditorPlayground } from '../components/editor-playground';
+const base = import.meta.env.BASE_URL;
+const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p);
+---
+
+<Base title="Paper — markdown-first editor">
+  <section class="hero">
+    <h1>Write markdown<br />the way it reads.</h1>
+    <p>
+      <strong>Paper</strong> is a markdown-first, CJK-first <strong>Live Preview</strong> editor built
+      on CodeMirror 6. The text is the single source of truth — only the line under your cursor shows
+      raw syntax, everything else renders. The Obsidian model, as a standalone npm package.
+    </p>
+    <div class="badges">
+      <span class="badge">CodeMirror 6</span>
+      <span class="badge">CJK-first</span>
+      <span class="badge">Framework-agnostic core + React</span>
+      <span class="badge">Uncontrolled by design</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="playground-frame">
+      <EditorPlayground client:only="react" />
+    </div>
+    <p class="hint">Type <code>/</code> for the slash menu · drop an image · paste a table · change the accent &amp; font.</p>
+  </section>
+
+  <h2>How it works</h2>
+  <p>
+    The markdown text is the single source of truth — the rendered view is derived. Only the line under
+    the cursor shows raw syntax; everything else renders inline. Tables are the one exception: their
+    structural syntax stays permanently hidden and editing happens inside a shared CodeMirror subview,
+    so undo and IME composition stay a single system.
+  </p>
+  <p>
+    The React wrapper is <strong>uncontrolled</strong> by design, which keeps the text as the source of
+    truth at the API boundary. There is a framework-agnostic core with zero React, plus a thin React
+    wrapper on top.
+  </p>
+
+  <p class="next"><a href={withBase('installation')}>Installation →</a></p>
+</Base>
+
+<style>
+  .playground-frame {
+    background: var(--frost);
+    padding: 1rem 1.25rem 1.25rem;
+  }
+  .hint {
+    font-size: 13px;
+    color: var(--steel);
+    margin-top: 0.75rem;
+  }
+  .next {
+    margin-top: 2.5rem;
+    font-weight: 600;
+  }
+</style>

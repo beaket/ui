@@ -35,3 +35,5 @@ jobs:
         run: pnpm typecheck
       - name: Test CLI
         run: pnpm test:cli
+      - name: Test Editor
+        run: pnpm test:editor
