@@ -1,4 +1,4 @@
-# @beaket/editor
+# @beaket/paper
 
 A markdown-first, CJK-first **Live Preview** editor, built on CodeMirror 6.
 
@@ -14,7 +14,7 @@ so undo and IME composition stay a single system.
 ## Install
 
 ```sh
-npm install @beaket/editor
+npm install @beaket/paper
 # React wrapper also needs react / react-dom (optional peer deps)
 npm install react react-dom
 ```
@@ -24,13 +24,13 @@ npm install react react-dom
 ### React
 
 ```tsx
-import { BeaketEditor, type BeaketEditorHandle } from "@beaket/editor/react";
+import { BeaketPaper, type BeaketPaperHandle } from "@beaket/paper/react";
 import { useRef } from "react";
 
 function Editor() {
-  const ref = useRef<BeaketEditorHandle>(null);
+  const ref = useRef<BeaketPaperHandle>(null);
   return (
-    <BeaketEditor
+    <BeaketPaper
       ref={ref}
       defaultValue="# Hello\n\nStart writing…"
       onChange={(markdown) => console.log(markdown)}
@@ -48,11 +48,10 @@ the curated handle does not expose, `ref.current.getView()` returns the underlyi
 ### Framework-agnostic core
 
 ```ts
-import { createEditor } from "@beaket/editor";
+import { createEditor } from "@beaket/paper";
 
-const editor = createEditor({
-  parent: document.querySelector("#editor")!,
-  defaultValue: "# Hello",
+const editor = createEditor(document.querySelector("#editor")!, {
+  doc: "# Hello",
   onChange: (markdown) => console.log(markdown),
 });
 ```
@@ -71,30 +70,30 @@ powerful.
 
 ### 1. Override CSS variables (the main surface)
 
-Every token resolves through `var(--beaket-editor-X, …)`. Set any of these **anywhere above the
+Every token resolves through `var(--beaket-paper-X, …)`. Set any of these **anywhere above the
 editor** (`:root`, a wrapper element, etc.) and the editor follows — no `!important`, no specificity
 fights:
 
 ```css
 .my-editor-wrapper {
   /* Brand & surface */
-  --beaket-editor-accent: #0c6bae; /* links, focus, selection tint, active UI */
-  --beaket-editor-ink: #232a35; /* body text + caret */
-  --beaket-editor-paper: #ffffff; /* rendered surface */
-  --beaket-editor-canvas: #fbfcfd; /* writing canvas (cool near-white) */
+  --beaket-paper-accent: #0c6bae; /* links, focus, selection tint, active UI */
+  --beaket-paper-ink: #232a35; /* body text + caret */
+  --beaket-paper-paper: #ffffff; /* rendered surface */
+  --beaket-paper-canvas: #fbfcfd; /* writing canvas (cool near-white) */
 
   /* Typography — commonly tuned for writing */
-  --beaket-editor-font: Georgia, serif;
-  --beaket-editor-font-size: 18px;
-  --beaket-editor-line-height: 1.7;
-  --beaket-editor-measure: 42rem; /* max line width; default `none` = full width */
+  --beaket-paper-font: Georgia, serif;
+  --beaket-paper-font-size: 18px;
+  --beaket-paper-line-height: 1.7;
+  --beaket-paper-measure: 42rem; /* max line width; default `none` = full width */
 
   /* Code syntax colors */
-  --beaket-editor-syntax-keyword: #cf222e;
-  --beaket-editor-syntax-string: #0a3069;
+  --beaket-paper-syntax-keyword: #cf222e;
+  --beaket-paper-syntax-string: #0a3069;
   /* …-number, -function, -type, -comment, -tag */
 
-  /* Neutral palette (borders, muted text): --beaket-editor-chrome / -silver / -platinum /
+  /* Neutral palette (borders, muted text): --beaket-paper-chrome / -silver / -platinum /
      -aluminum / -muted / -steel / -slate, plus -frost, -surface, -shadow */
 }
 ```
@@ -105,7 +104,7 @@ fights:
 ### 2. Use it inside `@beaket/ui` (zero config)
 
 When rendered within `@beaket/ui`'s porcelain theme, the editor's tokens bridge to porcelain's
-`--color-*` variables automatically (the second tier of `var(--beaket-editor-X, var(--color-Y,
+`--color-*` variables automatically (the second tier of `var(--beaket-paper-X, var(--color-Y,
 default))`), so it matches the design system — including dark mode for the bridged tokens — with no
 setup.
 

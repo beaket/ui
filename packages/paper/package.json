@@ -1,6 +1,6 @@
 {
-  "name": "@beaket/editor",
-  "version": "0.1.0",
+  "name": "@beaket/paper",
+  "version": "0.0.0",
   "description": "Markdown-first, CJK-first Live Preview editor. Framework-agnostic core + thin React wrapper.",
   "type": "module",
   "exports": {
@@ -27,18 +27,16 @@
     "prepublishOnly": "pnpm build"
   },
   "keywords": [
-    "editor",
     "markdown",
-    "codemirror",
-    "cjk",
-    "live-preview",
-    "react"
+    "editor",
+    "component",
+    "wysiwyg"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/beaket/ui",
-    "directory": "packages/editor"
+    "url": "git+https://github.com/beaket/ui.git",
+    "directory": "packages/paper"
   },
   "dependencies": {
     "@codemirror/commands": "^6.10.3",

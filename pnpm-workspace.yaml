@@ -1,6 +1,7 @@
 packages:
   - packages/*
   - docs
+  - sites/*
 
 minimumReleaseAge: 0
 

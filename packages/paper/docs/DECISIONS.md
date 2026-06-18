@@ -1,4 +1,4 @@
-# `@beaket/editor` — architecture decisions
+# `@beaket/paper` — architecture decisions
 
 A markdown-first, CJK-first Live Preview editor. This is the distilled, load-bearing design
 context for the package. It was seeded from the `sandbox-beaket-editor` prototype's 14 ADRs during
@@ -42,7 +42,7 @@ migration (2026-06-17); only the decisions that constrain future work are kept h
   _ingestion_ is delegated to the consumer (`onInsertImage`). Slash items are a declarative consumer
   contract with a transformer override; privileged built-ins are kept separate.
 - **Package shape.** Two layers: a framework-agnostic **core** (`createEditor`, zero React) plus a
-  thin **React wrapper** (`<BeaketEditor>`). Uncontrolled (`defaultValue` + `ref.setValue()`);
+  thin **React wrapper** (`<BeaketPaper>`). Uncontrolled (`defaultValue` + `ref.setValue()`);
   `onChange` emits full markdown on user edits only (IME-guarded; `setValue` does not echo). A
   curated `ref` handle with a `getView()` escape hatch. Shipped as a **standalone npm package**, not
   a copy-paste registry component — so it is exempt from the monorepo's component checklist (no
@@ -64,19 +64,19 @@ The design separates **tokens** (a customization contract, exposed as CSS variab
 **structure** (widget layout, decoration rules — implementation detail, kept in JS).
 
 `theme.ts` is the single source of token truth. Every token resolves through a fallback chain whose
-public, documented surface is the `--beaket-editor-*` name — extensions never read it; they use the
+public, documented surface is the `--beaket-paper-*` name — extensions never read it; they use the
 short internal name (`var(--ink)` etc.) and the mapping lives in one place.
 
-- **Porcelain-bridged tokens** → 3-tier: `var(--beaket-editor-X, var(--color-Y, default))`.
+- **Porcelain-bridged tokens** → 3-tier: `var(--beaket-paper-X, var(--color-Y, default))`.
   1. explicit consumer override (editor-owned public name — no need to know porcelain's names),
   2. porcelain bridge (matches `@beaket/ui` for free, inherits its dark-mode block),
   3. built-in default (self-sufficient standalone).
-- **Editor-owned tokens** → 2-tier: `var(--beaket-editor-X, default)` (typography, `--canvas`,
+- **Editor-owned tokens** → 2-tier: `var(--beaket-paper-X, default)` (typography, `--canvas`,
   `--surface`, `--syn-*`). No porcelain equivalent; each needs a dark value when dark mode lands.
 
-Three customization tiers for consumers: (1) override `--beaket-editor-*` variables, (2) render
+Three customization tiers for consumers: (1) override `--beaket-paper-*` variables, (2) render
 inside porcelain for a zero-config match, (3) escape hatches — the stable `.cm-*` class hooks and
-`getView()`. Typography (`--beaket-editor-font` / `-font-size` / `-line-height` / `-measure`) is
+`getView()`. Typography (`--beaket-paper-font` / `-font-size` / `-line-height` / `-measure`) is
 variabilized because writers tune it; `letter-spacing` is deliberately **not** exposed (negative
 spacing breaks mixed-script CJK).
 

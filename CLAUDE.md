@@ -4,6 +4,13 @@ Copy-paste component library (like shadcn/ui). Package: `@beaket/ui`.
 
 **When creating or updating components, read `.impeccable.md` for design context and principles.**
 
+## Two kinds of packages in this monorepo
+
+1. **Registry components** (`src/components/*`) — copy-paste, distributed via the CLI's `add`, self-contained with their own `cn`. These follow the **Required Checklist** below.
+2. **Standalone npm packages** (`packages/*`) — published to npm and `npm install`ed, not copied. Currently `@beaket/ui` (the CLI, in `packages/cli`) and `@beaket/paper` (the markdown editor, in `packages/paper`).
+
+The editor (`@beaket/paper`) is **exempt from the component checklist** — no registry entry, no `.stories.tsx`, no `cn`/Tailwind. It ships its own CodeMirror theme + types. Its docs are a **standalone Astro site** at `sites/paper/` (own landing/brand + live playground), separate from the `@beaket/ui` docs in `docs/`. Both kinds release through the same changeset flow.
+
 ## Architecture
 
 - **Self-contained**: Each component includes its own `cn` utility. No shared imports.

@@ -234,7 +234,7 @@ importers:
         specifier: ^8.5.1
         version: 8.5.1(jiti@2.6.1)(postcss@8.5.15)(tsx@4.22.3)(typescript@6.0.3)(yaml@2.8.3)
 
-  packages/editor:
+  packages/paper:
     dependencies:
       '@codemirror/commands':
         specifier: ^6.10.3
@@ -285,6 +285,37 @@ importers:
       vitest:
         specifier: 4.1.7
         version: 4.1.7(@types/node@25.9.1)(@vitest/browser-playwright@4.1.7)(@vitest/coverage-v8@4.1.7)(jsdom@29.1.1)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.6.1)(tsx@4.22.3)(yaml@2.8.3))
+
+  sites/paper:
+    dependencies:
+      '@astrojs/react':
+        specifier: ^5.0.1
+        version: 5.0.6(@types/node@25.9.1)(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(jiti@2.6.1)(lightningcss@1.32.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(tsx@4.22.3)(yaml@2.8.3)
+      '@beaket/paper':
+        specifier: workspace:*
+        version: link:../../packages/paper
+      astro:
+        specifier: ^6.0.0
+        version: 6.4.2(@types/node@25.9.1)(jiti@2.6.1)(lightningcss@1.32.0)(rollup@4.60.4)(tsx@4.22.3)(yaml@2.8.3)
+      react:
+        specifier: 19.2.6
+        version: 19.2.6
+      react-dom:
+        specifier: 19.2.6
+        version: 19.2.6(react@19.2.6)
+    devDependencies:
+      '@astrojs/check':
+        specifier: ^0.9.6
+        version: 0.9.9(prettier@3.8.3)(typescript@6.0.3)
+      '@types/react':
+        specifier: 19.2.15
+        version: 19.2.15
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.15)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
 
 packages:
 

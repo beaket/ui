@@ -15,7 +15,7 @@
     "typecheck": "tsc --noEmit && pnpm -r typecheck",
     "test": "vitest",
     "test:cli": "./scripts/test-cli.sh",
-    "test:editor": "pnpm --filter @beaket/editor test",
+    "test:editor": "pnpm --filter @beaket/paper test",
     "build-storybook": "storybook build",
     "release": "changeset publish",
     "prepare": "husky"

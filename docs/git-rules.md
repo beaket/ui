@@ -35,7 +35,7 @@ ALLOW_MAJOR=1 git commit -m "feat!: remove deprecated API"
 
 ## Changeset Guidelines
 
-- Package name must be one of the published workspace packages: `@beaket/ui` (the CLI in `packages/cli`) or `@beaket/editor` (the editor in `packages/editor`). Match the changeset to the package you actually changed.
+- Package name must be one of the published workspace packages: `@beaket/ui` (the CLI in `packages/cli`) or `@beaket/paper` (the editor in `packages/paper`). Match the changeset to the package you actually changed.
 - One changeset per logical change
 - Write clear, user-facing descriptions (these appear in the changelog)
 - Include migration instructions for any breaking change

@@ -1,0 +1,115 @@
+---
+import Base from '../layouts/base.astro';
+import { EditorPlayground } from '../components/editor-playground';
+
+const installCode = `npm install @beaket/paper
+
+# the React wrapper also needs react / react-dom (optional peer deps)
+npm install react react-dom`;
+
+const reactCode = `import { BeaketPaper, type BeaketPaperHandle } from "@beaket/paper/react";
+import { useRef } from "react";
+
+function Editor() {
+  const ref = useRef<BeaketPaperHandle>(null);
+  return (
+    <BeaketPaper
+      ref={ref}
+      defaultValue={"# Hello\\n\\nStart writing…"}
+      onChange={(markdown) => console.log(markdown)}
+    />
+  );
+}`;
+
+const coreCode = `import { createEditor } from "@beaket/paper";
+
+const editor = createEditor(document.querySelector("#editor")!, {
+  doc: "# Hello",
+  onChange: (markdown) => console.log(markdown),
+});`;
+
+const cssCode = `.my-editor-wrapper {
+  --beaket-paper-accent: #0c6bae;     /* links, focus, selection tint */
+  --beaket-paper-ink: #232a35;        /* body text + caret */
+  --beaket-paper-paper: #ffffff;      /* rendered surface */
+  --beaket-paper-font: Georgia, serif;
+  --beaket-paper-font-size: 18px;
+  --beaket-paper-measure: 42rem;      /* max line width; default none = full width */
+}`;
+---
+
+<Base>
+  <section class="hero">
+    <h1>Write markdown<br />the way it reads.</h1>
+    <p>
+      <strong>Paper</strong> is a markdown-first, CJK-first <strong>Live Preview</strong> editor built
+      on CodeMirror 6. The text is the single source of truth — only the line under your cursor shows
+      raw syntax, everything else renders. The Obsidian model, as a standalone npm package.
+    </p>
+    <div class="badges">
+      <span class="badge">CodeMirror 6</span>
+      <span class="badge">CJK-first</span>
+      <span class="badge">Framework-agnostic core + React</span>
+      <span class="badge">Uncontrolled by design</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="playground-frame">
+      <EditorPlayground client:only="react" />
+    </div>
+    <p class="hint">Type <code>/</code> for the slash menu · drop an image · paste a table · change the accent &amp; font.</p>
+  </section>
+
+  <h2 id="install">Install</h2>
+  <pre><code>{installCode}</code></pre>
+
+  <blockquote>
+    Unlike the components in <a href="https://beaket.github.io/ui/"><code>@beaket/ui</code></a>, Paper is
+    a <strong>standalone npm package</strong>, not a copy-paste registry component. There is no CLI
+    <code>add</code> step — install it from npm.
+  </blockquote>
+
+  <h2 id="usage">Usage</h2>
+
+  <h3>React</h3>
+  <pre><code>{reactCode}</code></pre>
+  <p>
+    The editor is <strong>uncontrolled</strong>: pass <code>defaultValue</code> for the initial
+    document and call <code>ref.current.setValue(...)</code> to replace it programmatically.
+    <code>onChange</code> fires with the full markdown on user edits only — it is IME-guarded, and
+    <code>setValue</code> does not echo back through it. For anything the curated handle does not
+    expose, <code>ref.current.getView()</code> returns the underlying CodeMirror <code>EditorView</code>.
+  </p>
+
+  <h3>Framework-agnostic core</h3>
+  <p>The core has zero React. Mount it onto any element:</p>
+  <pre><code>{coreCode}</code></pre>
+
+  <h2 id="styling">Styling</h2>
+  <p>
+    The editor ships its own visual tokens via a CodeMirror theme scoped to <code>.cm-editor</code>, so
+    it works standalone — no CSS file to import. Every token resolves through
+    <code>var(--beaket-paper-X, …)</code>; set any of them on <code>:root</code> or any ancestor and
+    the editor follows.
+  </p>
+  <pre><code>{cssCode}</code></pre>
+  <p>
+    Rendered inside <code>@beaket/ui</code>'s porcelain theme, the tokens bridge to porcelain's
+    <code>--color-*</code> variables automatically — including dark mode — with no setup. For deeper
+    control, style the stable <code>.cm-*</code> class hooks directly, or reach the
+    <code>EditorView</code> via <code>ref.current.getView()</code>.
+  </p>
+</Base>
+
+<style>
+  .playground-frame {
+    background: var(--frost);
+    padding: 1rem 1.25rem 1.25rem;
+  }
+  .hint {
+    font-size: 13px;
+    color: var(--steel);
+    margin-top: 0.75rem;
+  }
+</style>

@@ -30,16 +30,16 @@ const DEFAULT_FONT_STACK = [
 // view.dom (= .cm-editor), so these definitions cascade to all of them.
 //
 // Each token resolves through a deliberate fallback chain. The PUBLIC theming contract is the
-// `--beaket-editor-*` name — that is what a consumer sets to customize the editor, and it is stable
+// `--beaket-paper-*` name — that is what a consumer sets to customize the editor, and it is stable
 // and documented (see README). Extensions never read it directly; they use the short internal name
 // (var(--ink)/var(--accent)/…) and the mapping lives here, in one place.
 //
-// ① Porcelain-bridged → 3-tier: `var(--beaket-editor-X, var(--color-Y, default))`.
+// ① Porcelain-bridged → 3-tier: `var(--beaket-paper-X, var(--color-Y, default))`.
 //    1) explicit consumer override (editor-owned public name, no need to know porcelain's names)
 //    2) porcelain bridge — when rendered inside @beaket/ui's porcelain theme it matches for free
 //       (and inherits porcelain's dark-mode block)
 //    3) built-in default — keeps the package self-sufficient standalone.
-// ② Editor-owned → 2-tier: `var(--beaket-editor-X, default)` (no porcelain equivalent). These do
+// ② Editor-owned → 2-tier: `var(--beaket-paper-X, default)` (no porcelain equivalent). These do
 //    NOT inherit porcelain's dark block — each needs a dark value when dark mode (deferred) lands.
 // ③ `--color-ink` is a deliberate local override of porcelain's harsh ink — documented divergence.
 //    accent-sel/weak are derived from `--accent`, so a consumer accent override flows into them.
@@ -50,41 +50,41 @@ export const tokens = {
   //    (ADR-0009). Pin it softer, locally to the editor. Needs a dark-aware value for dark mode.
   "--color-ink": "#232a35",
   // ① Porcelain-bridged colors (3-tier)
-  "--ink": "var(--beaket-editor-ink, var(--color-ink, #232a35))",
-  "--paper": "var(--beaket-editor-paper, var(--color-paper, #ffffff))",
-  "--frost": "var(--beaket-editor-frost, var(--color-frost, #f3f4f6))",
-  "--accent": "var(--beaket-editor-accent, var(--color-signal-blue, #0c6bae))",
-  "--shadow-overlay": "var(--beaket-editor-shadow, var(--shadow-offset, 1px 1px 0 0 #c0c4ca))",
+  "--ink": "var(--beaket-paper-ink, var(--color-ink, #232a35))",
+  "--paper": "var(--beaket-paper-paper, var(--color-paper, #ffffff))",
+  "--frost": "var(--beaket-paper-frost, var(--color-frost, #f3f4f6))",
+  "--accent": "var(--beaket-paper-accent, var(--color-signal-blue, #0c6bae))",
+  "--shadow-overlay": "var(--beaket-paper-shadow, var(--shadow-offset, 1px 1px 0 0 #c0c4ca))",
   // ③ Derived from --accent so a consumer accent override flows into the selection tint.
   "--accent-sel": "color-mix(in srgb, var(--accent) 16%, transparent)",
   "--accent-weak": "color-mix(in srgb, var(--accent) 8%, transparent)",
   // ① Porcelain-bridged neutral scale (values verified identical to porcelain.css)
-  "--platinum": "var(--beaket-editor-platinum, var(--color-platinum, #e8eaec))",
-  "--silver": "var(--beaket-editor-silver, var(--color-silver, #d5d8dc))",
-  "--chrome": "var(--beaket-editor-chrome, var(--color-chrome, #c0c4ca))",
-  "--aluminum": "var(--beaket-editor-aluminum, var(--color-aluminum, #a0a3a7))",
-  "--muted": "var(--beaket-editor-muted, var(--color-muted, #7a7d81))",
-  "--steel": "var(--beaket-editor-steel, var(--color-steel, #686b6f))",
-  "--slate": "var(--beaket-editor-slate, var(--color-slate, #3e4145))",
+  "--platinum": "var(--beaket-paper-platinum, var(--color-platinum, #e8eaec))",
+  "--silver": "var(--beaket-paper-silver, var(--color-silver, #d5d8dc))",
+  "--chrome": "var(--beaket-paper-chrome, var(--color-chrome, #c0c4ca))",
+  "--aluminum": "var(--beaket-paper-aluminum, var(--color-aluminum, #a0a3a7))",
+  "--muted": "var(--beaket-paper-muted, var(--color-muted, #7a7d81))",
+  "--steel": "var(--beaket-paper-steel, var(--color-steel, #686b6f))",
+  "--slate": "var(--beaket-paper-slate, var(--color-slate, #3e4145))",
   // ② Editor-owned colors (2-tier; no porcelain equivalent)
-  "--canvas": "var(--beaket-editor-canvas, #fbfcfd)", // cool near-white for long-form writing (ADR-0009), not --color-paper (#fff)
-  "--surface": "var(--beaket-editor-surface, #eceef2)",
+  "--canvas": "var(--beaket-paper-canvas, #fbfcfd)", // cool near-white for long-form writing (ADR-0009), not --color-paper (#fff)
+  "--surface": "var(--beaket-paper-surface, #eceef2)",
   // ② Editor-owned code syntax (GitHub Light, ADR-0006); porcelain has none
-  "--syn-kw": "var(--beaket-editor-syntax-keyword, #cf222e)",
-  "--syn-str": "var(--beaket-editor-syntax-string, #0a3069)",
-  "--syn-num": "var(--beaket-editor-syntax-number, #0550ae)",
-  "--syn-fn": "var(--beaket-editor-syntax-function, #6f42c1)",
-  "--syn-type": "var(--beaket-editor-syntax-type, #953800)",
-  "--syn-cmt": "var(--beaket-editor-syntax-comment, #57606a)",
-  "--syn-tag": "var(--beaket-editor-syntax-tag, #116329)",
+  "--syn-kw": "var(--beaket-paper-syntax-keyword, #cf222e)",
+  "--syn-str": "var(--beaket-paper-syntax-string, #0a3069)",
+  "--syn-num": "var(--beaket-paper-syntax-number, #0550ae)",
+  "--syn-fn": "var(--beaket-paper-syntax-function, #6f42c1)",
+  "--syn-type": "var(--beaket-paper-syntax-type, #953800)",
+  "--syn-cmt": "var(--beaket-paper-syntax-comment, #57606a)",
+  "--syn-tag": "var(--beaket-paper-syntax-tag, #116329)",
   // ② Editor-owned typography (2-tier). CJK-first defaults; consumers commonly tune these.
-  "--font": `var(--beaket-editor-font, ${DEFAULT_FONT_STACK})`,
-  "--font-size": "var(--beaket-editor-font-size, 17px)",
+  "--font": `var(--beaket-paper-font, ${DEFAULT_FONT_STACK})`,
+  "--font-size": "var(--beaket-paper-font-size, 17px)",
   // Line height 1.75: synthesis of Korean/Japanese/English readability evidence (KRDS 150% floor and
   // up, JLREQ range, balancing CJK comfort + Latin). ADR-0009.
-  "--line-height": "var(--beaket-editor-line-height, 1.75)",
+  "--line-height": "var(--beaket-paper-line-height, 1.75)",
   // Opt-in readable measure (max line width). Default `none` = full width, unchanged behavior.
-  "--measure": "var(--beaket-editor-measure, none)",
+  "--measure": "var(--beaket-paper-measure, none)",
 };
 
 export const baseTheme = EditorView.theme({

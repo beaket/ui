@@ -14,7 +14,7 @@ import { createValueController } from "../editor/valueController";
 // Uncontrolled: defaultValue is only the initial value; full replacement is commanded via ref.setValue().
 
 /** Curated handle exposed via ref + getView() escape hatch (unsafe). ADR-0013 decision 3. */
-export interface BeaketEditorHandle {
+export interface BeaketPaperHandle {
   getValue(): string;
   /** Replace the whole document. While an IME composition is active, deferred and applied on settle (ADR-0004). */
   setValue(md: string): void;
@@ -25,7 +25,7 @@ export interface BeaketEditorHandle {
   getView(): EditorView;
 }
 
-export interface BeaketEditorProps {
+export interface BeaketPaperProps {
   /** Initial document body. Not a live prop (uncontrolled) — changes do not trigger recreation. */
   defaultValue?: string;
   /** Full markdown on every user edit. Once after IME settle; setValue produces no echo. */
@@ -45,7 +45,7 @@ export interface BeaketEditorProps {
   className?: string;
 }
 
-export const BeaketEditor = forwardRef<BeaketEditorHandle, BeaketEditorProps>(function BeaketEditor(
+export const BeaketPaper = forwardRef<BeaketPaperHandle, BeaketPaperProps>(function BeaketPaper(
   {
     defaultValue,
     onChange,
@@ -114,7 +114,7 @@ export const BeaketEditor = forwardRef<BeaketEditorHandle, BeaketEditorProps>(fu
 
   useImperativeHandle(
     ref,
-    (): BeaketEditorHandle => ({
+    (): BeaketPaperHandle => ({
       getValue: () => viewRef.current?.state.doc.toString() ?? "",
       setValue: (md) => controllerRef.current?.setValue(md),
       focus: () => viewRef.current?.focus(),
@@ -127,7 +127,7 @@ export const BeaketEditor = forwardRef<BeaketEditorHandle, BeaketEditorProps>(fu
       },
       getView: () => {
         const view = viewRef.current;
-        if (!view) throw new Error("BeaketEditor: view is not mounted yet");
+        if (!view) throw new Error("BeaketPaper: view is not mounted yet");
         return view;
       },
     }),

@@ -1,4 +1,4 @@
-// `@beaket/editor` core entry (vanilla) — zero React imports (ADR-0013 exports map, decision 1).
+// `@beaket/paper` core entry (vanilla) — zero React imports (ADR-0013 exports map, decision 1).
 // The framework-agnostic core is the main body. The React wrapper is a separate subpath `./react` (src/react/index.ts).
 export { createEditor, defaultSlashItems } from "./editor/createEditor";
 export type { EditorOptions, SlashItemSpec, SlashItemsConfig } from "./editor/createEditor";
