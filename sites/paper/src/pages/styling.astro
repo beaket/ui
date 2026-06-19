@@ -1,5 +1,7 @@
 ---
 import Base from '../layouts/base.astro';
+const base = import.meta.env.BASE_URL;
+const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p);
 
 const cssCode = `.my-editor-wrapper {
   --beaket-paper-accent: #0c6bae;     /* links, focus, selection tint */
@@ -39,10 +41,25 @@ const cssCode = `.my-editor-wrapper {
     explicit override first, then the host palette, then a built-in default.
   </p>
 
+  <h2 id="dark">Dark mode</h2>
+  <p>
+    The editor follows the OS <code>prefers-color-scheme</code> automatically — no setup, no class to
+    toggle. Every token carries a dark-aware default, so body text, surfaces, and the code-syntax ramp
+    all flip together (the dark ramp mirrors GitHub Dark Default).
+  </p>
+  <p>
+    Theming still wins in both modes: a token you set on <code>:root</code> or an ancestor —
+    <code>--beaket-paper-*</code> directly, or the host's <code>--color-*</code> palette through the
+    bridge — applies to light and dark alike. To diverge per scheme, set your overrides inside your own
+    <code>@media (prefers-color-scheme: dark)</code> block.
+  </p>
+
   <h2 id="escape">Escape hatches</h2>
   <p>For anything the variables don't cover:</p>
   <ul>
     <li>Style the stable <code>.cm-*</code> class hooks directly — e.g. <code>.cm-table-widget</code>, <code>.cm-slash-menu</code>, <code>.cm-md-copy</code>.</li>
     <li>Reach the underlying CodeMirror <code>EditorView</code> via <code>ref.current.getView()</code> to add your own extensions or theme.</li>
   </ul>
+
+  <p class="next"><a href={withBase('')}>← Back to overview</a></p>
 </Base>

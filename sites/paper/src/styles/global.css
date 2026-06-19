@@ -169,7 +169,31 @@ pre code {
   flex: 1;
   min-width: 0;
   max-width: 760px;
-  padding: 2.25rem 2.5rem 4rem;
+  padding: 3.25rem 2.5rem 5rem;
+}
+/* Docs lead: the headline + first paragraph get the same spacious, tight-tracked
+   treatment as the landing so the pages read as one family. */
+.content > h1 {
+  font-size: clamp(2rem, 3.6vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin: 0 0 1rem;
+}
+.content > h1 + p {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--slate);
+  margin-top: 0;
+}
+/* "Next page" footer link — a divider + breathing room closes each doc page. */
+.next {
+  margin-top: 3.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--chrome);
+  font-weight: 600;
+}
+.next a {
+  font-size: 1.05rem;
 }
 /* The home page leads with the playground — let it use the full width
    beside the sidebar instead of the narrow reading column. */
