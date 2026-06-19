@@ -91,12 +91,9 @@ pre code {
   padding: 0 1.5rem;
 }
 
-/* Header */
+/* Header — borderless. The bold wordmark + whitespace carry it; no rule needed. */
 .masthead {
   background: var(--paper);
-  /* A quiet chrome hairline — the heavy black rule is gone, but the brutalist
-     system still wants the edge shown (matches the sidebar/footer separators). */
-  border-bottom: 1px solid var(--chrome);
 }
 .masthead-inner {
   display: flex;
