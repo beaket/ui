@@ -42,7 +42,7 @@ migration (2026-06-17); only the decisions that constrain future work are kept h
   _ingestion_ is delegated to the consumer (`onInsertImage`). Slash items are a declarative consumer
   contract with a transformer override; privileged built-ins are kept separate.
 - **Package shape.** Two layers: a framework-agnostic **core** (`createEditor`, zero React) plus a
-  thin **React wrapper** (`<BeaketPaper>`). Uncontrolled (`defaultValue` + `ref.setValue()`);
+  thin **React wrapper** (`<Paper>`). Uncontrolled (`defaultValue` + `ref.setValue()`);
   `onChange` emits full markdown on user edits only (IME-guarded; `setValue` does not echo). A
   curated `ref` handle with a `getView()` escape hatch. Shipped as a **standalone npm package**, not
   a copy-paste registry component — so it is exempt from the monorepo's component checklist (no

@@ -1,4 +1,4 @@
-import { BeaketPaper, type BeaketPaperHandle } from "@beaket/paper/react";
+import { Paper, type PaperHandle } from "@beaket/paper/react";
 import { useRef, useState } from "react";
 
 const INITIAL = `# Paper
@@ -32,7 +32,7 @@ const FONTS = [
 ];
 
 export function EditorPlayground() {
-  const ref = useRef<BeaketPaperHandle>(null);
+  const ref = useRef<PaperHandle>(null);
   const [markdown, setMarkdown] = useState(INITIAL);
   const [accent, setAccent] = useState(ACCENTS[0].value);
   const [font, setFont] = useState(FONTS[0].value);
@@ -84,7 +84,7 @@ export function EditorPlayground() {
 
       {/* The editor ships no container chrome — the host supplies the paper card. */}
       <div className="pg-paper">
-        <BeaketPaper ref={ref} defaultValue={INITIAL} onChange={setMarkdown} />
+        <Paper ref={ref} defaultValue={INITIAL} onChange={setMarkdown} />
       </div>
 
       <div className="pg-footer">
