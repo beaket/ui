@@ -24,13 +24,13 @@ npm install react react-dom
 ### React
 
 ```tsx
-import { BeaketPaper, type BeaketPaperHandle } from "@beaket/paper/react";
+import { Paper, type PaperHandle } from "@beaket/paper/react";
 import { useRef } from "react";
 
 function Editor() {
-  const ref = useRef<BeaketPaperHandle>(null);
+  const ref = useRef<PaperHandle>(null);
   return (
-    <BeaketPaper
+    <Paper
       ref={ref}
       defaultValue="# Hello\n\nStart writing…"
       onChange={(markdown) => console.log(markdown)}
@@ -44,6 +44,8 @@ The editor is uncontrolled: pass `defaultValue` for the initial document and cal
 on user edits only (it is IME-guarded, and `setValue` does not echo back through it). For anything
 the curated handle does not expose, `ref.current.getView()` returns the underlying CodeMirror
 `EditorView`.
+
+If `Paper` collides with another import in your code, alias it: `import { Paper as BeaketPaper } from "@beaket/paper/react"`.
 
 ### Framework-agnostic core
 
