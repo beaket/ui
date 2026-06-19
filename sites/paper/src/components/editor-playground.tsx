@@ -112,11 +112,19 @@ export function EditorPlayground() {
           color: var(--steel, #686b6f);
         }
         .pg-swatch {
+          position: relative;
           width: 22px;
           height: 22px;
           border: 1px solid var(--chrome);
           cursor: pointer;
           padding: 0;
+        }
+        /* Transparent hit area extends the tap target past 44px without
+           changing the visible swatch (the design-system touch-target trick). */
+        .pg-swatch::before {
+          content: "";
+          position: absolute;
+          inset: -12px;
         }
         .pg-btn {
           font: inherit;
