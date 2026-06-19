@@ -23,7 +23,7 @@ import type { SlashItemsConfig } from "./extensions/slashCommand";
 import { slashCommand } from "./extensions/slashCommand";
 import { tableAutoConvert } from "./extensions/tableAutoConvert";
 import { tableWidget } from "./extensions/tableWidget";
-import { baseTheme } from "./theme";
+import { baseTheme, darkThemeStyle } from "./theme";
 export { defaultSlashItems } from "./extensions/slashCommand";
 export type { SlashItemsConfig, SlashItemSpec } from "./extensions/slashCommand";
 
@@ -70,6 +70,7 @@ export function editorExtensions(opts: EditorOptions = {}): Extension[] {
     keymap.of([...defaultKeymap, ...historyKeymap]),
     EditorView.lineWrapping,
     baseTheme,
+    darkThemeStyle(),
     markdownExtension(),
     inlineSyntaxHiding(),
     blockSyntaxHiding(),

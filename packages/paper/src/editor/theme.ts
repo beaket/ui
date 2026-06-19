@@ -1,4 +1,5 @@
-import { EditorView } from "@codemirror/view";
+import type { Extension } from "@codemirror/state";
+import { EditorView, ViewPlugin } from "@codemirror/view";
 
 // CJK tier-1 typography default. Japanese fonts are placed BEFORE Korean fonts (key): Apple SD
 // Gothic Neo includes kana/kanji glyphs, so if a Korean font came first, Japanese would render in
@@ -40,14 +41,14 @@ const DEFAULT_FONT_STACK = [
 //       (and inherits porcelain's dark-mode block)
 //    3) built-in default — keeps the package self-sufficient standalone.
 // ② Editor-owned → 2-tier: `var(--beaket-paper-X, default)` (no porcelain equivalent). These do
-//    NOT inherit porcelain's dark block — each needs a dark value when dark mode (deferred) lands.
+//    NOT inherit porcelain's dark block, so they carry their own dark default in `darkTokens` below.
 // ③ `--color-ink` is a deliberate local override of porcelain's harsh ink — documented divergence.
 //    accent-sel/weak are derived from `--accent`, so a consumer accent override flows into them.
 //    letter-spacing is intentionally NOT exposed (negative spacing breaks mixed CJK; CJK-first guard).
 // Exported for the token-wiring contract test (not part of the package's JS public surface).
 export const tokens = {
   // ③ Local override: porcelain --color-ink is #0a0d14 (≈18:1), too harsh on the near-white canvas
-  //    (ADR-0009). Pin it softer, locally to the editor. Needs a dark-aware value for dark mode.
+  //    (ADR-0009). Pin it softer, locally to the editor. Dark-aware counterpart in `darkTokens`.
   "--color-ink": "#232a35",
   // ① Porcelain-bridged colors (3-tier)
   "--ink": "var(--beaket-paper-ink, var(--color-ink, #232a35))",
@@ -85,6 +86,50 @@ export const tokens = {
   "--line-height": "var(--beaket-paper-line-height, 1.75)",
   // Opt-in readable measure (max line width). Default `none` = full width, unchanged behavior.
   "--measure": "var(--beaket-paper-measure, none)",
+};
+
+// Dark mode (ADR-0009 dark canvas). Same architecture as `tokens`: each entry keeps its var() chain
+// so the public `--beaket-paper-*` override and the porcelain `--color-*` bridge still win — ONLY the
+// built-in fallback default is swapped to a dark-aware value. That makes the package self-sufficient in
+// dark mode standalone, while still inheriting porcelain's dark block (or a host's dark `--color-*`)
+// when present. These values are emitted into the scoped `@media` stylesheet by `darkThemeStyle()`
+// below (it can't live in baseTheme — see that comment for why).
+//
+// `--color-ink`: in LIGHT we pin it softer than porcelain's harsh #0a0d14 (ADR-0009). In DARK porcelain's
+// ink (#e6eaee) is already soft, so the pin just carries a dark-aware value of its own — same role,
+// dark-aware. The PUBLIC `--beaket-paper-ink` still overrides first.
+//
+// Neutral scale + accent defaults mirror porcelain's dark block (so standalone == porcelain dark).
+// Code syntax swaps GitHub Light → GitHub Dark Default. Derived `--accent-sel`/`--accent-weak` are NOT
+// re-declared: they read `var(--accent)` at use time, which is the dark accent here, so they follow.
+export const darkTokens = {
+  // ③ Local override, dark-aware (no longer shadows the host with a light value in dark mode).
+  "--color-ink": "#e6eaee",
+  // ① Porcelain-bridged colors (3-tier), dark defaults mirror porcelain's dark block
+  "--ink": "var(--beaket-paper-ink, var(--color-ink, #e6eaee))",
+  "--paper": "var(--beaket-paper-paper, var(--color-paper, #0d1117))",
+  "--frost": "var(--beaket-paper-frost, var(--color-frost, #0e1016))",
+  "--accent": "var(--beaket-paper-accent, var(--color-signal-blue, #1a8ed8))",
+  "--shadow-overlay": "var(--beaket-paper-shadow, var(--shadow-offset, 1px 1px 0 0 #000000))",
+  // ① Porcelain-bridged neutral scale (dark, inverted ramp — values verified identical to porcelain.css)
+  "--platinum": "var(--beaket-paper-platinum, var(--color-platinum, #161a22))",
+  "--silver": "var(--beaket-paper-silver, var(--color-silver, #1e242e))",
+  "--chrome": "var(--beaket-paper-chrome, var(--color-chrome, #2a303e))",
+  "--aluminum": "var(--beaket-paper-aluminum, var(--color-aluminum, #3e4454))",
+  "--muted": "var(--beaket-paper-muted, var(--color-muted, #586070))",
+  "--steel": "var(--beaket-paper-steel, var(--color-steel, #6c7486))",
+  "--slate": "var(--beaket-paper-slate, var(--color-slate, #9ca4b2))",
+  // ② Editor-owned colors (2-tier; no porcelain equivalent). Cool near-black writing canvas + raised fill.
+  "--canvas": "var(--beaket-paper-canvas, #14171c)",
+  "--surface": "var(--beaket-paper-surface, #1c1f27)",
+  // ② Editor-owned code syntax — GitHub Dark Default (mirrors the GitHub Light ramp above)
+  "--syn-kw": "var(--beaket-paper-syntax-keyword, #ff7b72)",
+  "--syn-str": "var(--beaket-paper-syntax-string, #a5d6ff)",
+  "--syn-num": "var(--beaket-paper-syntax-number, #79c0ff)",
+  "--syn-fn": "var(--beaket-paper-syntax-function, #d2a8ff)",
+  "--syn-type": "var(--beaket-paper-syntax-type, #ffa657)",
+  "--syn-cmt": "var(--beaket-paper-syntax-comment, #8b949e)",
+  "--syn-tag": "var(--beaket-paper-syntax-tag, #7ee787)",
 };
 
 export const baseTheme = EditorView.theme({
@@ -125,3 +170,46 @@ export const baseTheme = EditorView.theme({
     backgroundColor: "var(--accent-sel)",
   },
 });
+
+// Dark mode can't be expressed through baseTheme: CodeMirror's theme builder (style-mod) maps the
+// editor root to `&`, but a nested `&` inside an `@media` block hits style-mod's selector-replacement
+// path and emits bare declarations directly under the at-rule (invalid CSS the browser discards). So
+// the dark token block is shipped as a separate, scoped stylesheet injected by `darkThemeStyle()`.
+//
+// Scoping: `EditorView.editorAttributes` stamps DARK_SCOPE_CLASS on the editor root, and the stylesheet
+// targets `.cm-editor.<scope>`. Two classes = specificity (0,2,0), which outranks baseTheme's single
+// generated class (0,1,0) — so in dark mode these tokens win regardless of source order, while the
+// `--beaket-paper-*` override and `--color-*` porcelain bridge inside each var() chain still apply.
+const DARK_SCOPE_CLASS = "cm-beaket-paper";
+const DARK_STYLE_ID = "beaket-paper-dark-tokens";
+
+/** Serializes `darkTokens` into the scoped dark-mode stylesheet text. Exported for the wiring test. */
+export function darkThemeCss(): string {
+  const decls = Object.entries(darkTokens)
+    .map(([name, value]) => `${name}: ${value};`)
+    .join(" ");
+  return `@media (prefers-color-scheme: dark){.cm-editor.${DARK_SCOPE_CLASS}{${decls}}}`;
+}
+
+/**
+ * Dark mode. Stamps the scope class on the editor and injects the dark token stylesheet once per
+ * document/shadow root (idempotent by id). Self-contained — the consumer flips automatically with the
+ * OS color scheme; `--beaket-paper-*` overrides and the porcelain bridge keep working in both modes.
+ */
+export function darkThemeStyle(): Extension {
+  return [
+    EditorView.editorAttributes.of({ class: DARK_SCOPE_CLASS }),
+    ViewPlugin.define((view) => {
+      const root = view.dom.getRootNode() as Document | ShadowRoot;
+      const host: ParentNode & Node =
+        root instanceof ShadowRoot ? root : ((root as Document).head ?? document.head);
+      if (!host.querySelector(`#${DARK_STYLE_ID}`)) {
+        const style = (root.ownerDocument ?? document).createElement("style");
+        style.id = DARK_STYLE_ID;
+        style.textContent = darkThemeCss();
+        host.appendChild(style);
+      }
+      return {};
+    }),
+  ];
+}
