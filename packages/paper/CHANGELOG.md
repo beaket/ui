@@ -1,5 +1,20 @@
 # @beaket/paper
 
+## 0.3.0
+
+### Minor Changes
+
+- [#455](https://github.com/beaket/ui/pull/455) [`3574af2`](https://github.com/beaket/ui/commit/3574af2b1e0fef6225e6870ffdae43dafe5838b1) Thanks [@jihnma](https://github.com/jihnma)! - Rename the React component from `BeaketPaper` to `Paper` (and its types `BeaketPaperHandle` → `PaperHandle`, `BeaketPaperProps` → `PaperProps`). The package scope (`@beaket/paper`) already namespaces the export, so the prefix was redundant.
+
+  **Breaking:** update imports from `@beaket/paper/react`:
+
+  ```diff
+  -import { BeaketPaper, type BeaketPaperHandle } from "@beaket/paper/react";
+  +import { Paper, type PaperHandle } from "@beaket/paper/react";
+  ```
+
+  If `Paper` collides with another import in your code, alias it: `import { Paper as BeaketPaper } from "@beaket/paper/react"`.
+
 ## 0.2.0
 
 ### Minor Changes
