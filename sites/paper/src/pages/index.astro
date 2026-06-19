@@ -28,37 +28,6 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
     <p class="hint">Type <code>/</code> for the slash menu · drop an image · paste a table · change the accent &amp; font.</p>
   </section>
 
-  <section class="explain">
-    <h2>How it works</h2>
-    <div class="cards">
-      <article class="card">
-        <h3>Text is the source</h3>
-        <p>
-          The markdown text is the single source of truth — the rendered view is derived from it,
-          never the other way around.
-        </p>
-      </article>
-      <article class="card">
-        <h3>One line of syntax</h3>
-        <p>
-          Only the line under the cursor shows raw markdown. Everything else renders inline, so the
-          document reads the way it will publish.
-        </p>
-      </article>
-      <article class="card">
-        <h3>Uncontrolled by design</h3>
-        <p>
-          A framework-agnostic core with zero React, plus a thin uncontrolled wrapper that keeps text
-          the source of truth at the API boundary.
-        </p>
-      </article>
-    </div>
-    <p class="note">
-      Tables are the one exception: their structural syntax stays permanently hidden and editing
-      happens inside a shared CodeMirror subview, so undo and IME composition stay a single system.
-    </p>
-  </section>
-
   <section class="cta">
     <a class="cta-link" href={withBase('installation')}>Get started — Installation →</a>
     <a class="cta-alt" href={withBase('usage')}>Read the usage guide</a>
@@ -81,40 +50,8 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
     margin-top: 1rem;
   }
 
-  .explain {
-    margin-top: 4.5rem;
-  }
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-top: 1.75rem;
-  }
-  .card {
-    background: var(--paper);
-    border: 1px solid var(--chrome);
-    box-shadow: var(--shadow-offset);
-    padding: 1.25rem 1.25rem 1.4rem;
-  }
-  .card h3 {
-    margin: 0 0 0.5rem;
-    font-size: 1.05rem;
-    letter-spacing: -0.01em;
-  }
-  .card p {
-    margin: 0;
-    font-size: 14.5px;
-    color: var(--slate);
-  }
-  .note {
-    margin-top: 1.5rem;
-    font-size: 14.5px;
-    color: var(--steel);
-    max-width: 60em;
-  }
-
   .cta {
-    margin-top: 4.5rem;
+    margin-top: 3.5rem;
     display: flex;
     align-items: center;
     gap: 1.5rem;
@@ -137,12 +74,8 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
   }
 
   @media (max-width: 720px) {
-    .cards {
-      grid-template-columns: 1fr;
-    }
-    .explain,
     .cta {
-      margin-top: 3rem;
+      margin-top: 2.5rem;
     }
   }
 

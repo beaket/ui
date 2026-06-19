@@ -141,7 +141,7 @@ export function EditorPlayground() {
           border: 1px solid var(--chrome);
           box-shadow: var(--shadow-offset, 2px 2px 0 0 var(--chrome));
           padding: 1.25rem 1.5rem;
-          min-height: min(60vh, 520px);
+          min-height: min(76vh, 680px);
         }
         .pg-footer {
           display: flex;
@@ -169,7 +169,7 @@ export function EditorPlayground() {
           }
           .pg-paper {
             padding: 0.9rem 1rem;
-            min-height: min(58vh, 460px);
+            min-height: min(70vh, 560px);
           }
           /* Bigger tap targets for the swatches on touch screens. */
           .pg-swatch {
