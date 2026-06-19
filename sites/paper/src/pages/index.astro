@@ -5,7 +5,7 @@ const base = import.meta.env.BASE_URL;
 const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p);
 ---
 
-<Base title="Paper — markdown-first editor">
+<Base title="Paper — markdown-first editor" bodyClass="home">
   <section class="hero">
     <h1>Write markdown<br />the way it reads.</h1>
     <p>
@@ -53,6 +53,13 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
     font-size: 13px;
     color: var(--steel);
     margin-top: 0.75rem;
+  }
+  @media (max-width: 540px) {
+    .playground-frame {
+      /* Full-bleed on phones so the editor gets every pixel of width. */
+      margin: 0 -1.1rem;
+      padding: 0.75rem 0.85rem 0.85rem;
+    }
   }
   .next {
     margin-top: 2.5rem;

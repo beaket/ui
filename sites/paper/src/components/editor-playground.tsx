@@ -132,8 +132,8 @@ export function EditorPlayground() {
           background: var(--beaket-paper-paper, var(--paper, #fff));
           border: 1px solid var(--chrome);
           box-shadow: var(--shadow-offset, 2px 2px 0 0 var(--chrome));
-          padding: 1.25rem;
-          min-height: 340px;
+          padding: 1.25rem 1.5rem;
+          min-height: min(60vh, 520px);
         }
         .pg-footer {
           display: flex;
@@ -153,6 +153,21 @@ export function EditorPlayground() {
           word-break: break-word;
           max-height: 320px;
           overflow: auto;
+        }
+        @media (max-width: 540px) {
+          .pg-toolbar {
+            gap: 0.85rem 1rem;
+            padding: 0.5rem 0;
+          }
+          .pg-paper {
+            padding: 0.9rem 1rem;
+            min-height: min(58vh, 460px);
+          }
+          /* Bigger tap targets for the swatches on touch screens. */
+          .pg-swatch {
+            width: 26px;
+            height: 26px;
+          }
         }
       `}</style>
     </div>
