@@ -106,8 +106,15 @@ fights:
 
 When rendered within `@beaket/ui`'s porcelain theme, the editor's tokens bridge to porcelain's
 `--color-*` variables automatically (the second tier of `var(--beaket-paper-X, var(--color-Y,
-default))`), so it matches the design system — including dark mode for the bridged tokens — with no
-setup.
+default))`), so it matches the design system — including dark mode — with no setup.
+
+### Dark mode
+
+Dark mode is built in and follows the OS `prefers-color-scheme` automatically — no class to toggle,
+no config. It works standalone (the package ships dark-aware defaults for every token, including the
+editor-owned canvas/surface and the code-syntax ramp) and inside porcelain (the `--color-*` bridge
+flows porcelain's dark block through). Your `--beaket-paper-*` overrides win in both modes; set them
+inside your own `@media (prefers-color-scheme: dark)` block to customize the dark palette.
 
 ### 3. Escape hatches (power users)
 

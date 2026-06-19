@@ -130,6 +130,9 @@ function computeDecorations(view: EditorView): DecorationSet {
 // A native input can't draw ::after, so appearance:none + SVG background stamps the check.
 const CHECK_MARK =
   "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%20fill='none'%20stroke='%23ffffff'%20stroke-width='2.25'%3E%3Cpath%20d='M3.5%208.5l3%203%206-6'/%3E%3C/svg%3E\")";
+// Dark mode stamps onto a light --ink fill, so the white checkmark above would vanish; use a dark stroke instead.
+const CHECK_MARK_DARK =
+  "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%20fill='none'%20stroke='%230d1117'%20stroke-width='2.25'%3E%3Cpath%20d='M3.5%208.5l3%203%206-6'/%3E%3C/svg%3E\")";
 
 export function listRendering(): Extension {
   return [
@@ -157,6 +160,12 @@ export function listRendering(): Extension {
       ".cm-task-checkbox:focus-visible": {
         outline: "2px solid var(--accent)",
         outlineOffset: "2px",
+      },
+      // Dark mode: --ink fills light, so the white checkmark would disappear — stamp a dark one instead.
+      "@media (prefers-color-scheme: dark)": {
+        ".cm-task-checkbox:checked": {
+          background: `var(--ink) ${CHECK_MARK_DARK} center / 11px no-repeat`,
+        },
       },
     }),
   ];

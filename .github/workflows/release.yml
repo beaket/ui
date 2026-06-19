@@ -47,7 +47,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: "true" # generate npm provenance attestations on publish
+          # Provenance is enabled via `provenance=true` in the repo-root .npmrc —
+          # pnpm ignores NPM_CONFIG_PROVENANCE, so do NOT re-add it here.
 
       - name: Create check run for Release PR
         if: steps.changesets.outputs.pullRequestNumber

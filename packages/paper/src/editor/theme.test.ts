@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { tokens } from "./theme";
+import { darkThemeCss, darkTokens, tokens } from "./theme";
 
 // Token reconciliation + public theming contract (ADR-0013 decision 6).
 //
@@ -69,5 +69,79 @@ describe("theme typography is variabilized (CJK-first defaults)", () => {
     expect(tokens["--font-size"]).toBe("var(--beaket-paper-font-size, 17px)");
     expect(tokens["--line-height"]).toBe("var(--beaket-paper-line-height, 1.75)");
     expect(tokens["--measure"]).toBe("var(--beaket-paper-measure, none)");
+  });
+});
+
+// Dark mode wiring (jsdom-safe: locks the var() chains, not rendered color — the rendered dark colors
+// are a browser/manual check, same carve-out as the light tokens above).
+describe("dark theme keeps the override + bridge chains, swapping only the built-in default", () => {
+  // Every color/shadow token a consumer can override stays publicly overridable in dark mode too.
+  const NON_PUBLIC = new Set(["--color-ink"]);
+  it("every dark token still reads a --beaket-paper-* override first", () => {
+    for (const [name, value] of Object.entries(darkTokens)) {
+      if (NON_PUBLIC.has(name)) continue;
+      expect(value, `${name} should read a --beaket-paper-* override first`).toMatch(
+        /^var\(--beaket-paper-[a-z-]+,/,
+      );
+    }
+  });
+
+  it("flips the locally-pinned ink to a dark-aware light value (no longer shadows the host with #232a35)", () => {
+    expect(tokens["--color-ink"]).toBe("#232a35");
+    expect(darkTokens["--color-ink"]).toBe("#e6eaee");
+    expect(darkTokens["--ink"]).toBe("var(--beaket-paper-ink, var(--color-ink, #e6eaee))");
+  });
+
+  it("preserves the porcelain bridge while swapping defaults to porcelain's dark block", () => {
+    expect(darkTokens["--paper"]).toBe("var(--beaket-paper-paper, var(--color-paper, #0d1117))");
+    expect(darkTokens["--frost"]).toBe("var(--beaket-paper-frost, var(--color-frost, #0e1016))");
+    expect(darkTokens["--chrome"]).toBe("var(--beaket-paper-chrome, var(--color-chrome, #2a303e))");
+    expect(darkTokens["--accent"]).toBe(
+      "var(--beaket-paper-accent, var(--color-signal-blue, #1a8ed8))",
+    );
+  });
+
+  it("swaps editor-owned canvas/surface and syntax to dark-aware defaults", () => {
+    expect(darkTokens["--canvas"]).toBe("var(--beaket-paper-canvas, #14171c)");
+    expect(darkTokens["--surface"]).toBe("var(--beaket-paper-surface, #1c1f27)");
+    expect(darkTokens["--syn-kw"]).toBe("var(--beaket-paper-syntax-keyword, #ff7b72)");
+  });
+
+  it("covers exactly the light tokens that don't bridge to porcelain's dark block", () => {
+    // Typography/measure carry no color, so they need no dark variant; everything else must.
+    const LIGHT_ONLY = new Set([
+      "--font",
+      "--font-size",
+      "--line-height",
+      "--measure",
+      // Derived at use time from --accent (which is dark here), so they follow without re-declaration.
+      "--accent-sel",
+      "--accent-weak",
+    ]);
+    const expected = Object.keys(tokens).filter((k) => !LIGHT_ONLY.has(k));
+    expect(Object.keys(darkTokens).sort()).toEqual(expected.sort());
+  });
+});
+
+// The dark block can't go through baseTheme (style-mod can't emit `@media { & { … } }` for the root —
+// nested `&` produces bare declarations under the at-rule), so it ships as a scoped stylesheet. This
+// locks the structure that makes it apply: an @media wrapper + a two-class root selector that outranks
+// baseTheme's single generated class without disturbing the var() override/bridge chains.
+describe("darkThemeCss emits a scoped prefers-color-scheme block", () => {
+  const css = darkThemeCss();
+
+  it("wraps the tokens in a prefers-color-scheme: dark media query", () => {
+    expect(css).toMatch(/^@media \(prefers-color-scheme: dark\)\{/);
+  });
+
+  it("scopes to .cm-editor + the beaket class (specificity 0,2,0 > baseTheme's 0,1,0)", () => {
+    expect(css).toContain(".cm-editor.cm-beaket-paper{");
+  });
+
+  it("contains every dark token declaration (including the readable light ink fix)", () => {
+    for (const [name, value] of Object.entries(darkTokens)) {
+      expect(css).toContain(`${name}: ${value};`);
+    }
+    expect(css).toContain("--ink: var(--beaket-paper-ink, var(--color-ink, #e6eaee));");
   });
 });
