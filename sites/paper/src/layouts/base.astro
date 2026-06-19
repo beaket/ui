@@ -4,10 +4,12 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  bodyClass?: string;
 }
 const {
   title = 'Paper — markdown-first editor',
   description = 'A markdown-first, CJK-first Live Preview editor built on CodeMirror 6. Standalone npm package.',
+  bodyClass,
 } = Astro.props;
 
 const base = import.meta.env.BASE_URL;
@@ -35,7 +37,7 @@ const year = new Date().getFullYear();
     <meta name="description" content={description} />
     <meta name="color-scheme" content="light dark" />
   </head>
-  <body>
+  <body class={bodyClass}>
     <header class="masthead">
       <div class="masthead-inner">
         <a href={withBase('')} class="brand">Paper</a>
