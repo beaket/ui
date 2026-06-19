@@ -100,17 +100,29 @@ pre code {
   display: flex;
   align-items: baseline;
   gap: 1rem;
-  padding: 1.1rem 1.5rem;
-  max-width: 1120px;
+  padding: 1.4rem 1.75rem;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
 /* Layout: sidebar + content */
 .layout {
   display: flex;
-  max-width: 1120px;
+  max-width: 1200px;
   margin: 0 auto;
   align-items: flex-start;
+}
+
+/* Home: no sidebar. The content runs the full centered width so the hero and
+   playground breathe. The reading column on docs pages is unaffected. */
+.layout.is-home {
+  display: block;
+}
+.is-home .content {
+  max-width: none;
+  /* Left padding matches the masthead so the headline lines up under the
+     "Paper" wordmark — a deliberate vertical edge down the page. */
+  padding: 0 1.75rem 6rem;
 }
 .sidebar {
   width: 210px;
@@ -167,8 +179,14 @@ pre code {
 
 @media (max-width: 820px) {
   .masthead-inner {
-    padding: 0.85rem 1.1rem;
+    padding: 0.95rem 1.1rem;
     gap: 0.6rem;
+  }
+  .is-home .content {
+    padding: 0 1.1rem 4rem;
+  }
+  .hero {
+    padding: 3rem 0 1.5rem;
   }
   .layout {
     flex-direction: column;
@@ -223,25 +241,27 @@ pre code {
 
 /* Hero */
 .hero {
-  padding: 2.5rem 0 1.5rem;
+  padding: 5.5rem 0 2.5rem;
+  max-width: 920px;
 }
 .hero h1 {
-  font-size: clamp(2rem, 5vw, 3rem);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  margin: 0 0 0.75rem;
+  font-size: clamp(2.5rem, 6.5vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin: 0 0 1.25rem;
 }
 .hero p {
-  font-size: 17px;
+  font-size: 19px;
+  line-height: 1.6;
   color: var(--slate);
   margin: 0;
-  max-width: 36em;
+  max-width: 40em;
 }
 .badges {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 1.25rem;
+  margin-top: 2rem;
 }
 .badge {
   font-size: 12px;
