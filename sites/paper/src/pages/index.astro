@@ -21,48 +21,71 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
     </div>
   </section>
 
-  <section>
+  <section class="showcase">
     <div class="playground-frame">
       <EditorPlayground client:only="react" />
     </div>
     <p class="hint">Type <code>/</code> for the slash menu · drop an image · paste a table · change the accent &amp; font.</p>
   </section>
 
-  <h2>How it works</h2>
-  <p>
-    The markdown text is the single source of truth — the rendered view is derived. Only the line under
-    the cursor shows raw syntax; everything else renders inline. Tables are the one exception: their
-    structural syntax stays permanently hidden and editing happens inside a shared CodeMirror subview,
-    so undo and IME composition stay a single system.
-  </p>
-  <p>
-    The React wrapper is <strong>uncontrolled</strong> by design, which keeps the text as the source of
-    truth at the API boundary. There is a framework-agnostic core with zero React, plus a thin React
-    wrapper on top.
-  </p>
-
-  <p class="next"><a href={withBase('installation')}>Installation →</a></p>
+  <section class="cta">
+    <a class="cta-link" href={withBase('installation')}>Get started — Installation →</a>
+    <a class="cta-alt" href={withBase('usage')}>Read the usage guide</a>
+  </section>
 </Base>
 
 <style>
+  .showcase {
+    margin-top: 1rem;
+  }
   .playground-frame {
     background: var(--frost);
-    padding: 1rem 1.25rem 1.25rem;
+    padding: 1.25rem 1.5rem 1.5rem;
+    border: 1px solid var(--chrome);
+    box-shadow: var(--shadow-offset);
   }
   .hint {
     font-size: 13px;
     color: var(--steel);
-    margin-top: 0.75rem;
+    margin-top: 1rem;
   }
+
+  .cta {
+    margin-top: 3.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .cta-link {
+    display: inline-block;
+    font-weight: 600;
+    padding: 0.7rem 1.2rem;
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+    box-shadow: var(--shadow-offset);
+  }
+  .cta-link:hover {
+    text-decoration: none;
+  }
+  .cta-alt {
+    font-weight: 600;
+  }
+
+  @media (max-width: 720px) {
+    .cta {
+      margin-top: 2.5rem;
+    }
+  }
+
   @media (max-width: 540px) {
     .playground-frame {
       /* Full-bleed on phones so the editor gets every pixel of width. */
       margin: 0 -1.1rem;
-      padding: 0.75rem 0.85rem 0.85rem;
+      padding: 0.85rem 0.95rem 1rem;
+      border-left: none;
+      border-right: none;
     }
-  }
-  .next {
-    margin-top: 2.5rem;
-    font-weight: 600;
   }
 </style>
