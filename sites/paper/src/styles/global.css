@@ -91,9 +91,10 @@ pre code {
   padding: 0 1.5rem;
 }
 
-/* Header — borderless. The bold wordmark + whitespace carry it; no rule needed. */
+/* Header — borderless and seamless. Matches the page (--canvas) so there's no
+   panel edge; the bold wordmark + whitespace carry it on their own. */
 .masthead {
-  background: var(--paper);
+  background: var(--canvas);
 }
 .masthead-inner {
   display: flex;
