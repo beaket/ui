@@ -11,7 +11,7 @@ Copy-paste component library (like shadcn/ui). Package: `@beaket/ui`.
 
 The editor (`@beaket/paper`) is **exempt from the component checklist** — no registry entry, no `.stories.tsx`, no `cn`/Tailwind. It ships its own CodeMirror theme + types. Its docs are a **standalone Astro site** at `sites/paper/` (own landing/brand + live playground), separate from the `@beaket/ui` docs in `docs/`. Both kinds release through the same changeset flow.
 
-**`@beaket/paper` decisions:** read `packages/paper/docs/CONTEXT.md` (orientation map — modules, glossary, invariants) before editing, `packages/paper/docs/DECISIONS.md` for load-bearing decisions, and follow `packages/paper/docs/adr/README.md` for when/how to write an ADR (decisions only — routine bug/perf fixes get a changeset whose body states the root cause, not an ADR).
+**`@beaket/paper` decisions:** read `packages/paper/docs/CONTEXT.md` (orientation map — modules, glossary, invariants) before editing, `packages/paper/docs/DECISIONS.md` for load-bearing decisions, and follow `packages/paper/docs/adr/README.md` for when/how to write an ADR (decisions only — routine bug/perf fixes get a changeset whose body states the root cause, not an ADR). `packages/paper/docs/MAINTENANCE.md` describes the improvement queue, the `agent:ready` Definition of Ready, and the release cadence.
 
 ## Architecture
 
