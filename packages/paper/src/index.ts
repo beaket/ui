@@ -2,6 +2,9 @@
 // The framework-agnostic core is the main body. The React wrapper is a separate subpath `./react` (src/react/index.ts).
 export { createEditor, defaultSlashItems } from "./editor/create-editor";
 export type { EditorOptions, SlashItemSpec, SlashItemsConfig } from "./editor/create-editor";
+// Color scheme: the `colorScheme` option plus a live-flip helper (no recreation) for vanilla consumers.
+export { setColorScheme } from "./editor/theme";
+export type { ColorScheme } from "./editor/theme";
 // The `onInsertImage` option/prop type, so consumers can annotate their own resolver.
 export type { ImageResolver } from "./editor/extensions/image-drop";
 // Anchor pure functions (ADR-0014 step A). Vanilla core consumers use these for selection→anchor→re-resolution directly.

@@ -1,4 +1,4 @@
-import { Paper, type PaperHandle } from "@beaket/paper/react";
+import { type ColorScheme, Paper, type PaperHandle } from "@beaket/paper/react";
 import { useRef, useState } from "react";
 
 const INITIAL = `# Paper
@@ -31,11 +31,18 @@ const FONTS = [
   { name: "Serif", value: "Georgia, 'Times New Roman', serif" },
 ];
 
+const SCHEMES: { name: string; value: ColorScheme }[] = [
+  { name: "Light", value: "light" },
+  { name: "Dark", value: "dark" },
+  { name: "System", value: "system" },
+];
+
 export function EditorPlayground() {
   const ref = useRef<PaperHandle>(null);
   const [markdown, setMarkdown] = useState(INITIAL);
   const [accent, setAccent] = useState(ACCENTS[0].value);
   const [font, setFont] = useState(FONTS[0].value);
+  const [scheme, setScheme] = useState<ColorScheme>("system");
   const [showSource, setShowSource] = useState(false);
 
   // The editor reads its visual tokens from --beaket-paper-* on any ancestor.
@@ -45,7 +52,9 @@ export function EditorPlayground() {
   } as React.CSSProperties;
 
   return (
-    <div style={tokenStyle}>
+    // data-pg-theme darkens the surrounding card/toolbar to match a *forced* editor scheme.
+    // "system" is left unset so the chrome follows the docs page (which already tracks the OS).
+    <div style={tokenStyle} data-pg-theme={scheme === "system" ? undefined : scheme}>
       <div className="pg-toolbar">
         <div className="pg-group">
           <span className="pg-label">Accent</span>
@@ -80,11 +89,25 @@ export function EditorPlayground() {
             </button>
           ))}
         </div>
+        <div className="pg-group">
+          <span className="pg-label">Theme</span>
+          {SCHEMES.map((s) => (
+            <button
+              key={s.value}
+              type="button"
+              className="pg-btn"
+              aria-pressed={scheme === s.value}
+              onClick={() => setScheme(s.value)}
+            >
+              {s.name}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* The editor ships no container chrome — the host supplies the paper card. */}
       <div className="pg-paper">
-        <Paper ref={ref} defaultValue={INITIAL} onChange={setMarkdown} />
+        <Paper ref={ref} defaultValue={INITIAL} onChange={setMarkdown} colorScheme={scheme} />
       </div>
 
       <div className="pg-footer">
@@ -97,6 +120,16 @@ export function EditorPlayground() {
       {showSource && <pre className="pg-source">{markdown}</pre>}
 
       <style>{`
+        /* A *forced* editor scheme overrides the local docs tokens so the card, toolbar, footer and
+           source view track the editor instead of sitting light under a dark editor. Values mirror the
+           docs-site palette in global.css (light :root + the prefers-color-scheme: dark block). The
+           editor paints its own surface from its dark tokens — these only dress the chrome around it. */
+        [data-pg-theme="light"] {
+          --ink: #232a35; --paper: #ffffff; --frost: #f3f4f6; --chrome: #c0c4ca; --steel: #686b6f;
+        }
+        [data-pg-theme="dark"] {
+          --ink: #e8eaec; --paper: #16181c; --frost: #23272e; --chrome: #3e4145; --steel: #9aa0a6;
+        }
         .pg-toolbar {
           display: flex;
           flex-wrap: wrap;

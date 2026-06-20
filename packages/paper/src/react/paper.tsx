@@ -5,6 +5,8 @@ import type { EditorOptions } from "../editor/create-editor";
 import { createEditor } from "../editor/create-editor";
 import type { HighlightController, HighlightInput } from "../editor/extensions/highlight-layer";
 import { createHighlightController } from "../editor/extensions/highlight-layer";
+import type { ColorScheme } from "../editor/theme";
+import { setColorScheme } from "../editor/theme";
 import type { ValueController } from "../editor/value-controller";
 import { createValueController } from "../editor/value-controller";
 
@@ -42,6 +44,8 @@ export interface PaperProps {
   onSelect?: EditorOptions["onSelect"];
   onInsertImage?: EditorOptions["onInsertImage"];
   slashItems?: EditorOptions["slashItems"];
+  /** Light/dark scheme. "system" (default) follows the OS; "light"/"dark" force it. Live prop — flips without recreation. */
+  colorScheme?: ColorScheme;
   className?: string;
 }
 
@@ -56,6 +60,7 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
     onSelect,
     onInsertImage,
     slashItems,
+    colorScheme,
     className,
   },
   ref,
@@ -85,6 +90,7 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
       onSelect: (sel) => onSelectRef.current?.(sel),
       onInsertImage,
       slashItems,
+      colorScheme,
     });
     viewRef.current = view;
     controllerRef.current = createValueController(view);
@@ -111,6 +117,11 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
   useEffect(() => {
     highlightRef.current?.setActiveHighlight(activeHighlightId ?? null);
   }, [activeHighlightId]);
+
+  // colorScheme is a live prop — flipped via a compartment reconfigure (no recreation, document kept).
+  useEffect(() => {
+    if (viewRef.current) setColorScheme(viewRef.current, colorScheme ?? "system");
+  }, [colorScheme]);
 
   useImperativeHandle(
     ref,

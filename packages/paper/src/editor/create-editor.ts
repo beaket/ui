@@ -23,7 +23,7 @@ import type { SlashItemsConfig } from "./extensions/slash-command";
 import { slashCommand } from "./extensions/slash-command";
 import { tableAutoConvert } from "./extensions/table-auto-convert";
 import { tableWidget } from "./extensions/table-widget";
-import { baseTheme, darkThemeStyle } from "./theme";
+import { baseTheme, type ColorScheme, darkThemeStyle } from "./theme";
 export { defaultSlashItems } from "./extensions/slash-command";
 export type { SlashItemsConfig, SlashItemSpec } from "./extensions/slash-command";
 
@@ -61,6 +61,11 @@ export interface EditorOptions {
    * The consumer draws the floating action button from rect. Held during IME composition, fired after it settles.
    */
   onSelect?: (sel: SelectionInfo | null) => void;
+  /**
+   * Light/dark scheme. "system" (default) follows the OS `prefers-color-scheme`; "light"/"dark" force
+   * the scheme regardless of OS. Live-flippable via `setColorScheme(view, …)` without recreating the editor.
+   */
+  colorScheme?: ColorScheme;
 }
 
 /** The full extension set of the production editor — tests use this as-is too */
@@ -70,7 +75,7 @@ export function editorExtensions(opts: EditorOptions = {}): Extension[] {
     keymap.of([...defaultKeymap, ...historyKeymap]),
     EditorView.lineWrapping,
     baseTheme,
-    darkThemeStyle(),
+    darkThemeStyle(opts.colorScheme),
     markdownExtension(),
     inlineSyntaxHiding(),
     blockSyntaxHiding(),

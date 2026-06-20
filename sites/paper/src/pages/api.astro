@@ -21,6 +21,7 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
       <tr><td><code>onSelect</code></td><td><code>(sel: SelectionInfo | null) =&gt; void</code></td><td>Selection report <code>&#123; text, anchor, rect &#125;</code>, <code>null</code> when empty. Draw a floating toolbar from <code>rect</code>.</td></tr>
       <tr><td><code>onInsertImage</code></td><td><code>ImageResolver</code></td><td>Decides the URL for a dropped/pasted image. Upload/storage is yours. Default: in-session <code>blob:</code> URL.</td></tr>
       <tr><td><code>slashItems</code></td><td><code>SlashItemsConfig</code></td><td>Customize the <code>/</code> menu. Array = full replacement; <code>(defaults) =&gt; items</code> = derive from defaults (recommended).</td></tr>
+      <tr><td><code>colorScheme</code></td><td><code>"light" | "dark" | "system"</code></td><td><strong>Live</strong> prop. <code>"system"</code> (default) follows the OS <code>prefers-color-scheme</code>; <code>"light"</code>/<code>"dark"</code> force the scheme. Flips without recreating the editor, so the document is kept.</td></tr>
       <tr><td><code>className</code></td><td><code>string</code></td><td>Class on the editor container element.</td></tr>
     </tbody>
   </table>
@@ -47,6 +48,7 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
       <tr><td><code>onChange</code></td><td><code>(value: string) =&gt; void</code></td><td>Same contract as in the props table above.</td></tr>
       <tr><td><code>onInsertImage</code></td><td><code>ImageResolver</code></td><td>Image placement resolver.</td></tr>
       <tr><td><code>slashItems</code></td><td><code>SlashItemsConfig</code></td><td>Slash-menu customization.</td></tr>
+      <tr><td><code>colorScheme</code></td><td><code>"light" | "dark" | "system"</code></td><td>Light/dark scheme. Flip live (without recreating) via <code>setColorScheme(view, scheme)</code>.</td></tr>
       <tr><td><code>onSelect</code></td><td><code>(sel: SelectionInfo | null) =&gt; void</code></td><td>Selection report.</td></tr>
       <tr><td><code>onHighlightStatusChange</code> / <code>onHighlightClick</code></td><td>callbacks</td><td>Highlight surface. The highlight <em>list</em> is set imperatively via <code>setHighlightsEffect</code>.</td></tr>
     </tbody>
