@@ -1,0 +1,93 @@
+---
+import { Code } from 'astro:components';
+
+interface Props {
+  code: string;
+  lang?: 'tsx' | 'ts' | 'js' | 'bash' | 'css';
+}
+
+const { code, lang = 'tsx' } = Astro.props;
+---
+
+<div class="code-block">
+  <button class="copy-btn" type="button" aria-label="Copy code">COPY</button>
+  {/* A dark Shiki theme so the block stays black in both light and dark page modes. */}
+  <Code code={code} lang={lang} theme="github-dark" />
+</div>
+
+<style>
+  .code-block {
+    position: relative;
+    margin: 1rem 0;
+  }
+  /* The Shiki <pre> carries its own inline dark background; we add the brutalist
+     frame (border + offset shadow) and typography to match the page chrome. */
+  .code-block :global(.astro-code) {
+    margin: 0;
+    padding: 1rem;
+    overflow-x: auto;
+    border: 1px solid var(--chrome);
+    box-shadow: var(--shadow-offset);
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  /* Neutralize the page's inline-code styling inside the highlighted block. */
+  .code-block :global(.astro-code code) {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+  }
+
+  /* Copy button — light-on-dark to sit on the always-dark block (no white fill). */
+  .copy-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 1;
+    padding: 0.3rem 0.5rem;
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    color: #c9d1d9;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    cursor: pointer;
+  }
+  .copy-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.14);
+  }
+  .copy-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .copy-btn.copied {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.code-block').forEach((block) => {
+    const btn = block.querySelector<HTMLButtonElement>('.copy-btn');
+    const pre = block.querySelector<HTMLElement>('.astro-code');
+    if (!btn || !pre) return;
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(pre.innerText);
+        btn.textContent = 'COPIED';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'COPY';
+          btn.classList.remove('copied');
+        }, 1500);
+      } catch {
+        /* clipboard unavailable (e.g. non-secure context) — no-op */
+      }
+    });
+  });
+</script>

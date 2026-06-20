@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/base.astro';
+import CodeBlock from '../components/code-block.astro';
 const base = import.meta.env.BASE_URL;
 const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p);
 
@@ -36,7 +37,7 @@ const editor = createEditor(document.querySelector("#editor")!, {
   <h1>Usage</h1>
 
   <h2 id="react">React</h2>
-  <pre><code>{reactCode}</code></pre>
+  <CodeBlock code={reactCode} lang="tsx" />
   <p>
     The editor is <strong>uncontrolled</strong>: pass <code>defaultValue</code> for the initial
     document and call <code>ref.current.setValue(...)</code> to replace it programmatically.
@@ -46,7 +47,7 @@ const editor = createEditor(document.querySelector("#editor")!, {
   </p>
 
   <h3>Reading &amp; replacing the document</h3>
-  <pre><code>{setValueCode}</code></pre>
+  <CodeBlock code={setValueCode} lang="ts" />
   <p>
     For anything the curated handle does not expose, <code>ref.current.getView()</code> returns the
     underlying CodeMirror <code>EditorView</code> as an escape hatch. See the
@@ -55,7 +56,7 @@ const editor = createEditor(document.querySelector("#editor")!, {
 
   <h2 id="core">Framework-agnostic core</h2>
   <p>The core has zero React. Mount it onto any element and it returns the CodeMirror <code>EditorView</code>:</p>
-  <pre><code>{coreCode}</code></pre>
+  <CodeBlock code={coreCode} lang="ts" />
   <p>
     The core takes <code>doc</code> where the React wrapper takes <code>defaultValue</code>; the
     callback options (<code>onChange</code>, <code>onSelect</code>, <code>onInsertImage</code>,
