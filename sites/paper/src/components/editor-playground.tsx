@@ -145,6 +145,21 @@ export function EditorPlayground() {
         [data-pg-theme="dark"] {
           --ink: #e8eaec; --paper: #16181c; --frost: #23272e; --chrome: #3e4145; --steel: #9aa0a6;
         }
+        /* Re-bridge the editor's porcelain vars to the *forced* palette. global.css resolves
+           --color-* at :root against the OS scheme and that computed value inherits down — so
+           overriding only --paper/--frost above doesn't reach the editor's tokens, which read
+           --color-paper/--color-frost. Without this, a forced-light editor under a dark OS leaks
+           dark into overlays that paint those tokens directly: the slash menu, the "Copied" toast
+           and the table row/col insert handles. Re-declaring --color-* here re-resolves them
+           against the forced --paper/--ink/etc. on this element. */
+        [data-pg-theme="light"],
+        [data-pg-theme="dark"] {
+          --color-ink: var(--ink);
+          --color-paper: var(--paper);
+          --color-frost: var(--frost);
+          --color-chrome: var(--chrome);
+          --color-steel: var(--steel);
+        }
         .pg-toolbar {
           display: flex;
           flex-wrap: wrap;
@@ -203,6 +218,10 @@ export function EditorPlayground() {
           margin: 0 0 1rem;
           padding: 1rem;
           background: var(--frost, #f3f4f6);
+          /* Pin the text to the (forced) ink — otherwise it inherits the page body
+             colour, which tracks the OS, and goes invisible (light text on the now
+             light --frost) when the editor is forced light under a dark OS. */
+          color: var(--ink);
           border: 1px solid var(--chrome);
           font-size: 12px;
           white-space: pre-wrap;
