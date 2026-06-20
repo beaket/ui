@@ -1,5 +1,10 @@
-import { Paper, type HighlightInput, type SelectionInfo } from "@beaket/paper/react";
-import { useRef, useState } from "react";
+import {
+  Paper,
+  type HighlightInput,
+  type PaperHandle,
+  type SelectionInfo,
+} from "@beaket/paper/react";
+import { useEffect, useRef, useState } from "react";
 
 const SEED = `# Annotating with Paper
 
@@ -9,12 +14,22 @@ click the highlight to make it active. The editor only reports the
 selection; you draw the toolbar and own the list.
 `;
 
+// Start in the end-state: one highlight already stored and active, so the
+// rendered mark + populated data panel are visible before you touch anything.
+// The anchor is just { quote, offset } — quote is plain source text, offset
+// computed so it resolves exactly. (Re-resolution matches by quote anyway.)
+const SEED_QUOTE = "the range is stored as an anchor";
+const INITIAL_HIGHLIGHTS: HighlightInput[] = [
+  { id: "h1", anchor: { quote: SEED_QUOTE, offset: SEED.indexOf(SEED_QUOTE) } },
+];
+
 export function HighlightsDemo() {
+  const paperRef = useRef<PaperHandle>(null);
   const [sel, setSel] = useState<SelectionInfo | null>(null);
   // Exactly what the prop wants: { id, anchor }. We store it verbatim and hand it back.
-  const [highlights, setHighlights] = useState<HighlightInput[]>([]);
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const nextId = useRef(1);
+  const [highlights, setHighlights] = useState<HighlightInput[]>(INITIAL_HIGHLIGHTS);
+  const [activeId, setActiveId] = useState<string | null>("h1");
+  const nextId = useRef(2);
 
   const saveHighlight = () => {
     if (!sel) return;
@@ -23,7 +38,39 @@ export function HighlightsDemo() {
     setSel(null); // selection consumed — hide the toolbar
   };
 
-  // sel.rect is viewport-relative (from view.coordsAtPos), so position: fixed.
+  // rect is captured once at selection time and is viewport-relative, so a
+  // position:fixed toolbar drifts off the text on scroll/resize. Re-read the
+  // live selection coords from the view to keep it pinned (and close it if the
+  // selection collapsed). Depend on `hasSel` (not `sel`) so we don't resubscribe
+  // every reposition frame.
+  const hasSel = sel !== null;
+  useEffect(() => {
+    if (!hasSel) return;
+    const reposition = () => {
+      const view = paperRef.current?.getView();
+      if (!view) return;
+      const main = view.state.selection.main;
+      if (main.empty) {
+        setSel(null);
+        return;
+      }
+      const c = view.coordsAtPos(main.head);
+      if (c) {
+        setSel((prev) =>
+          prev
+            ? { ...prev, rect: { left: c.left, top: c.top, right: c.right, bottom: c.bottom } }
+            : prev,
+        );
+      }
+    };
+    window.addEventListener("scroll", reposition, true);
+    window.addEventListener("resize", reposition);
+    return () => {
+      window.removeEventListener("scroll", reposition, true);
+      window.removeEventListener("resize", reposition);
+    };
+  }, [hasSel]);
+
   const toolbar =
     sel && sel.rect ? (
       <div className="hd-toolbar" style={{ left: sel.rect.left, top: sel.rect.top - 38 }}>
@@ -43,6 +90,7 @@ export function HighlightsDemo() {
       {toolbar}
       <div className="hd-paper">
         <Paper
+          ref={paperRef}
           defaultValue={SEED}
           highlights={highlights}
           activeHighlightId={activeId}
