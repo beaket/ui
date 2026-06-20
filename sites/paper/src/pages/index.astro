@@ -7,7 +7,10 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
 
 <Base title="Paper — markdown-first editor" bodyClass="home">
   <section class="hero">
-    <h1>Write markdown<br />the way it reads.</h1>
+    <h1 class="type" aria-label="Write markdown the way it reads.">
+      <span class="tl" aria-hidden="true"><span class="tt">Write markdown</span></span>
+      <span class="tl" aria-hidden="true"><span class="tt">the way it reads.</span></span>
+    </h1>
     <p>
       <strong>Paper</strong> is a markdown-first, CJK-first <strong>Live Preview</strong> editor built
       on CodeMirror 6.<br />
@@ -67,4 +70,111 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
     margin-top: 2.5rem;
     font-weight: 600;
   }
+
+  /* Typewriter hero — a script (below) types each line out character-by-character
+     with a human cadence: jittered delays, a beat at the period, one self-
+     corrected typo, and a caret that stays solid while typing then blinks when
+     idle. The full headline lives in the static HTML (h1 carries the aria-label;
+     the lines are aria-hidden) so no-JS / SEO / screen readers get clean text. */
+  .hero h1.type .tl {
+    display: block;
+    /* Reserve one line's height so emptying the text for the typewriter doesn't
+       collapse the headline and shove the page up ("쿵"). 1lh = the line box. */
+    min-height: 1lh;
+  }
 </style>
+
+<!-- Caret styles must be global: the caret is created in JS (document.createElement),
+     so it never gets Astro's scoped-style hash attribute — a scoped `.cr` rule would
+     silently not match it, leaving the caret unstyled (zero-size, invisible). -->
+<style is:global>
+  .hero h1.type .cr {
+    display: inline-block;
+    width: 0.06em;
+    height: 0.92em;
+    margin-left: 0.04em;
+    vertical-align: -0.1em;
+    /* Caret = the text colour, like a real OS caret: black in light mode, white
+       in dark. --ink is the headline's own colour and flips with the OS scheme. */
+    background: var(--ink);
+    transition: opacity 0.6s ease;
+  }
+  /* Resting caret blinks after typing finishes; the script then stops the blink
+     and fades it out (opacity transition above) before removing it. */
+  .hero h1.type .cr.blink {
+    animation: tw-caret-blink 1s step-end infinite;
+  }
+  @keyframes tw-caret-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero h1.type .cr {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // Humanized typewriter for the hero. The lines already hold the full text in
+  // the static HTML; we clear them and retype with a human cadence so no-JS and
+  // reduced-motion users keep the clean headline untouched.
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const h1 = document.querySelector('.hero h1.type');
+  if (h1 && !reduce) {
+    const lines = Array.from(h1.querySelectorAll<HTMLElement>('.tt'));
+    const targets = lines.map((l) => l.textContent ?? '');
+    lines.forEach((l) => (l.textContent = ''));
+
+    const caret = document.createElement('span');
+    caret.className = 'cr';
+
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    const rand = (min: number, max: number) => min + Math.random() * (max - min);
+    // A plausible neighbouring key for the occasional fat-finger.
+    const slip = (ch: string) => {
+      const near: Record<string, string> = { d: 's', e: 'r', a: 's', r: 't', t: 'y', s: 'd', i: 'o', y: 't' };
+      const low = ch.toLowerCase();
+      const alt = near[low] ?? 'n';
+      return ch === low ? alt : alt.toUpperCase();
+    };
+
+    async function typeInto(el: HTMLElement, text: string, typoAt?: number) {
+      el.parentElement?.appendChild(caret); // caret rides at the typing frontier
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (i === typoAt) {
+          // fat-finger, notice, backspace, recover
+          el.textContent += slip(ch);
+          await sleep(rand(170, 280));
+          el.textContent = el.textContent.slice(0, -1);
+          await sleep(rand(120, 200));
+        }
+        el.textContent += ch;
+        let d = rand(42, 102); // humans aren't metronomes
+        if (ch === ' ') d *= 0.6;
+        if (/[.,;:—]/.test(ch)) d += rand(170, 320); // beat at punctuation
+        await sleep(d);
+      }
+    }
+
+    (async () => {
+      await sleep(280);
+      await typeInto(lines[0], targets[0]);
+      await sleep(rand(140, 240));
+      await typeInto(lines[1], targets[1], 14); // typo on the "d" of "reads"
+      caret.classList.add('blink'); // rest a beat, blinking...
+      // Stop inside an ON phase of the 1s blink (ON 0-0.5s, OFF 0.5-1s each
+      // cycle): 2.3s lands mid-ON, so the caret is already lit when we take over
+      // and the fade reads as "on → gently gone" with no pop-back-on flicker.
+      await sleep(2300);
+      caret.classList.remove('blink');
+      caret.style.opacity = '1';
+      void caret.offsetHeight;
+      caret.style.opacity = '0';
+      await sleep(700);
+      caret.remove();
+    })();
+  }
+</script>

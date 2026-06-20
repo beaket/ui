@@ -1,16 +1,16 @@
 import { type ColorScheme, Paper, type PaperHandle } from "@beaket/paper/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-const INITIAL = `# Paper
+// The heading keeps a trailing space (via ${" "} so formatters can't strip it) —
+// the load caret sits after it, one space clear of "Paper" rather than jammed against it.
+const INITIAL = `# Paper${" "}
 
-A markdown-first, **CJK-first** editor. Only the line under your cursor shows raw
-syntax — everything else renders (the Obsidian model).
+A markdown-first, CJK-first **Live Preview** editor built on CodeMirror 6.
 
 Try it:
 
 - Type \`/\` to open the slash menu
 - Drop an image, paste a table, write some \`code\`
-- Mix scripts freely — 한국어, 日本語, English
 
 | Feature | Status |
 | --- | --- |
@@ -44,6 +44,21 @@ export function EditorPlayground() {
   const [font, setFont] = useState(FONTS[0].value);
   const [scheme, setScheme] = useState<ColorScheme>("system");
   const [showSource, setShowSource] = useState(false);
+
+  // On load, drop the caret at the end of the "# Paper " heading line (after the
+  // trailing space, a space clear of "Paper") so the page reads as an editor you can
+  // start writing in. (The table renders as an atomic widget, so a caret can't sit
+  // inside a cell — a selection there gets pushed past the table.) Skip on touch —
+  // autofocusing there pops the keyboard and buries the hero. preventScroll + a
+  // selection-only dispatch (no scrollIntoView) keep the page from yanking down past
+  // the hero on focus.
+  useEffect(() => {
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+    const view = ref.current?.getView();
+    if (!view) return;
+    view.dispatch({ selection: { anchor: INITIAL.indexOf("\n") } });
+    view.contentDOM.focus({ preventScroll: true });
+  }, []);
 
   // The editor reads its visual tokens from --beaket-paper-* on any ancestor.
   const tokenStyle = {
