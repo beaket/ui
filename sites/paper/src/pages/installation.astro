@@ -4,35 +4,22 @@ import CodeBlock from '../components/code-block.astro';
 const base = import.meta.env.BASE_URL;
 const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p);
 
-const installCode = `npm install @beaket/paper
-
-# the React wrapper also needs react / react-dom (optional peer deps)
-npm install react react-dom`;
+const installCode = `npm install @beaket/paper`;
 ---
 
 <Base title="Installation — Paper">
   <h1>Installation</h1>
 
-  <p>Paper ships as a standalone npm package — there is no copy-paste or CLI step. Install it from npm:</p>
+  <p>Paper is published as a standalone npm package — install it from npm and import it like any other dependency:</p>
 
   <CodeBlock code={installCode} lang="bash" />
 
   <p>
     The package exposes two entry points: the framework-agnostic core at <code>@beaket/paper</code> and a
-    thin React wrapper at <code>@beaket/paper/react</code>. React and <code>react-dom</code> are
-    <strong>optional</strong> peer dependencies — install them only if you use the React wrapper.
+    thin React wrapper at <code>@beaket/paper/react</code>. The core has no peer dependencies — it bundles
+    its CodeMirror 6 engine. <code>react</code> and <code>react-dom</code> (<code>&gt;=18</code>) are
+    <strong>optional</strong> peer dependencies for the wrapper — install them only if you use it.
   </p>
-
-  <h2>Requirements</h2>
-  <table>
-    <thead><tr><th>Peer</th><th>Range</th><th>When</th></tr></thead>
-    <tbody>
-      <tr><td><code>react</code></td><td><code>&gt;=18</code></td><td>Only for <code>@beaket/paper/react</code>.</td></tr>
-      <tr><td><code>react-dom</code></td><td><code>&gt;=18</code></td><td>Only for <code>@beaket/paper/react</code>.</td></tr>
-    </tbody>
-  </table>
-
-  <p>The core itself has no peer dependencies — it bundles its CodeMirror 6 engine.</p>
 
   <blockquote>
     Paper is <strong>ESM-only</strong> (no CommonJS build). Use it from an ESM project or a bundler
