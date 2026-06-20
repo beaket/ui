@@ -112,10 +112,10 @@ function Annotator() {
   <p>The core has zero React. Mount it onto any element and it returns the CodeMirror <code>EditorView</code>:</p>
   <CodeBlock code={coreCode} lang="ts" />
   <p>
-    The core takes <code>doc</code> where the React wrapper takes <code>defaultValue</code>; the
-    callback options (<code>onChange</code>, <code>onSelect</code>, <code>onInsertImage</code>,
-    <code>slashItems</code>) are shared. The React-only props (<code>highlights</code>,
-    <code>activeHighlightId</code>, <code>className</code>) are wiring on top of the core surface.
+    It takes the initial document as <code>doc</code>, plus the options the editor accepts anywhere —
+    <code>onChange</code>, <code>onSelect</code>, <code>onInsertImage</code>, <code>slashItems</code>.
+    Highlights are driven imperatively here, via <code>setHighlightsEffect</code> and
+    <code>setActiveHighlightEffect</code>. The React wrapper is thin wiring over exactly this surface.
   </p>
 
   <p class="next"><a href={withBase('api')}>API Reference →</a></p>
