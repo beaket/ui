@@ -204,7 +204,19 @@ export function EditorPlayground() {
           border: 1px solid var(--chrome);
           box-shadow: var(--shadow-offset, 2px 2px 0 0 var(--chrome));
           padding: 1.25rem 1.5rem;
+        }
+        /* Give the editor (not the card) the tall min-height so it fills the card.
+           Otherwise the card is taller than the editor and the gap below the content
+           is a dead zone — clicking there (e.g. under the table) misses the editor and
+           nothing types. */
+        .pg-paper .cm-content {
           min-height: min(76vh, 680px);
+        }
+        /* ...but never the nested cell editor: editing a table cell mounts its own
+           CodeMirror inside the table widget, whose .cm-content would otherwise inherit
+           the rule above and balloon the cell to full height. (0,3,0) beats it. */
+        .pg-paper .cm-table-widget .cm-content {
+          min-height: 0;
         }
         .pg-footer {
           display: flex;
@@ -236,6 +248,8 @@ export function EditorPlayground() {
           }
           .pg-paper {
             padding: 0.9rem 1rem;
+          }
+          .pg-paper .cm-content {
             min-height: min(70vh, 560px);
           }
           /* Bigger tap targets for the swatches on touch screens. */
