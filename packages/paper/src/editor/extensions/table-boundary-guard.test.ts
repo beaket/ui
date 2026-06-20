@@ -75,4 +75,24 @@ describe("tableBoundaryGuard", () => {
     v.dispatch({ changes: { from: 0, to: v.state.doc.length, insert: "x" } }); // Cmd+A → 'x'
     expect(v.state.doc.toString()).toBe("x");
   });
+
+  // Pure insertion (fromA === toA for every change) can never delete a boundary newline,
+  // so the guard must return early without walking the syntax tree.
+  it("does not block a pure-insertion transaction in a doc with a table+blank-line boundary", async () => {
+    const v = await viewWithParsedTable();
+    const para = v.state.doc.line(5);
+    // Insert a character at the end of the paragraph — no deletion, can't touch the boundary.
+    v.dispatch({ changes: { from: para.to, to: para.to, insert: "x" } });
+    expect(v.state.doc.toString()).toBe(DOC + "x");
+  });
+
+  it("does not block a pure-insertion transaction at the start of the paragraph line", async () => {
+    const v = await viewWithParsedTable();
+    const para = v.state.doc.line(5);
+    // Insert at the start of the paragraph — still a pure insertion, still must pass through.
+    v.dispatch({ changes: { from: para.from, to: para.from, insert: ">" } });
+    expect(v.state.doc.toString()).toBe(
+      ["| a | b |", "| --- | --- |", "| 1 | 2 |", "", ">문단입니다"].join("\n"),
+    );
+  });
 });
