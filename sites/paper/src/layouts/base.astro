@@ -79,32 +79,7 @@ const year = new Date().getFullYear();
         const open = nav?.classList.toggle('open');
         toggle.setAttribute('aria-expanded', String(!!open));
       });
-
-      // Copy buttons on code blocks
-      document.querySelectorAll('pre').forEach((pre) => {
-        const button = document.createElement('button');
-        button.textContent = 'Copy';
-        button.setAttribute('aria-label', 'Copy code');
-        Object.assign(button.style, {
-          position: 'absolute',
-          top: '0.5rem',
-          right: '0.5rem',
-          font: 'inherit',
-          fontSize: '12px',
-          padding: '0.15rem 0.5rem',
-          background: 'var(--paper)',
-          color: 'var(--ink)',
-          border: '1px solid var(--chrome)',
-          cursor: 'pointer',
-        });
-        pre.style.position = 'relative';
-        button.addEventListener('click', async () => {
-          await navigator.clipboard.writeText(pre.querySelector('code')?.textContent || pre.textContent || '');
-          button.textContent = 'Copied';
-          setTimeout(() => (button.textContent = 'Copy'), 1500);
-        });
-        pre.appendChild(button);
-      });
+      // Code-block copy buttons live in the CodeBlock component (code-block.astro).
     </script>
   </body>
 </html>
