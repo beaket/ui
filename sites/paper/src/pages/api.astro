@@ -39,12 +39,12 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
   </table>
 
   <h2 id="core">Core <code>createEditor(parent, options)</code></h2>
-  <p>The vanilla core takes the mount element and an <code>EditorOptions</code> object, returning the CodeMirror <code>EditorView</code>. The React props above map onto these (minus the React-specific <code>highlights</code> / <code>activeHighlightId</code> / <code>className</code> wiring):</p>
+  <p>The vanilla core takes the mount element and an <code>EditorOptions</code> object, returning the CodeMirror <code>EditorView</code>. These options are the editor's own surface; <code>highlights</code>, <code>activeHighlightId</code>, and <code>className</code> are React-wrapper additions, not core options:</p>
   <table>
     <thead><tr><th>Option</th><th>Type</th><th>Notes</th></tr></thead>
     <tbody>
-      <tr><td><code>doc</code></td><td><code>string</code></td><td>Initial markdown (the core's name for <code>defaultValue</code>). Empty if omitted.</td></tr>
-      <tr><td><code>onChange</code></td><td><code>(value: string) =&gt; void</code></td><td>Same contract as the React prop.</td></tr>
+      <tr><td><code>doc</code></td><td><code>string</code></td><td>Initial markdown document. Empty if omitted. (The React wrapper exposes this as <code>defaultValue</code>.)</td></tr>
+      <tr><td><code>onChange</code></td><td><code>(value: string) =&gt; void</code></td><td>Same contract as in the props table above.</td></tr>
       <tr><td><code>onInsertImage</code></td><td><code>ImageResolver</code></td><td>Image placement resolver.</td></tr>
       <tr><td><code>slashItems</code></td><td><code>SlashItemsConfig</code></td><td>Slash-menu customization.</td></tr>
       <tr><td><code>onSelect</code></td><td><code>(sel: SelectionInfo | null) =&gt; void</code></td><td>Selection report.</td></tr>

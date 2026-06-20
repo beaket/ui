@@ -283,6 +283,40 @@ blockquote {
   background: var(--frost);
   color: var(--slate);
 }
+
+/* Admonition callouts (GitHub-style), shared across pages for consistency.
+   Type → color: tip = green, note = blue (the site accent, already dark-aware). */
+.callout {
+  display: flex;
+  gap: 0.55rem;
+  margin: 1.25rem 0;
+  padding: 0.7rem 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--callout) 35%, var(--chrome));
+  border-left: 3px solid var(--callout);
+  background: color-mix(in srgb, var(--callout) 7%, var(--paper));
+  color: var(--slate);
+  font-size: 14px;
+}
+.callout-icon {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--callout);
+}
+.callout strong {
+  color: var(--callout);
+}
+.callout-tip {
+  --callout: #1a7f37;
+}
+.callout-note {
+  --callout: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  .callout-tip {
+    --callout: #3fb950;
+  }
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
