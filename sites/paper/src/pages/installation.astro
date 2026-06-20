@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/base.astro';
+import CodeBlock from '../components/code-block.astro';
 const base = import.meta.env.BASE_URL;
 const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p);
 
@@ -14,7 +15,7 @@ npm install react react-dom`;
 
   <p>Paper ships as a standalone npm package — there is no copy-paste or CLI step. Install it from npm:</p>
 
-  <pre><code>{installCode}</code></pre>
+  <CodeBlock code={installCode} lang="bash" />
 
   <p>
     The package exposes two entry points: the framework-agnostic core at <code>@beaket/paper</code> and a

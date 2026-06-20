@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/base.astro';
+import CodeBlock from '../components/code-block.astro';
 const base = import.meta.env.BASE_URL;
 const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p);
 
@@ -27,7 +28,7 @@ const cssCode = `.my-editor-wrapper {
     <code>:root</code> or any ancestor of the editor and it follows — no <code>!important</code>, no
     specificity fights:
   </p>
-  <pre><code>{cssCode}</code></pre>
+  <CodeBlock code={cssCode} lang="css" />
   <blockquote>
     <code>letter-spacing</code> is intentionally <strong>not</strong> exposed — negative spacing breaks
     mixed-script CJK, so it is fixed at <code>0</code> (a CJK-first guard).
