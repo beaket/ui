@@ -2,11 +2,9 @@
 
 A markdown-first, CJK-first **Live Preview** editor for the web, built on CodeMirror 6.
 
-The markdown text is the single source of truth — the rendered view is derived, and the React
-wrapper is **uncontrolled** to enforce that at the API boundary. Only the text under the cursor shows
-raw syntax; everything else renders (the Obsidian model). Tables are the one exception: their
-structural syntax stays hidden and editing happens inside a shared CodeMirror subview, so undo and
-IME composition stay a single system.
+Only the line you're editing shows raw markdown — everything else renders inline as you type. And
+it's CJK-first: Korean, Japanese, and Chinese input never drops or duplicates characters
+mid-composition, the bug most live-preview editors still trip on.
 
 **[Full docs, API reference & live playground →](https://beaket.github.io/ui/paper/)**
 
@@ -63,25 +61,7 @@ const editor = createEditor(document.querySelector("#editor")!, {
 
 ## Styling
 
-The editor ships its own theme scoped to `.cm-editor`, so it works standalone — no CSS file to
-import. Override any token by setting `--beaket-paper-*` **anywhere above the editor** (`:root`, a
-wrapper element, etc.) — no `!important`, no specificity fights:
-
-```css
-.my-editor-wrapper {
-  --beaket-paper-accent: #0c6bae; /* links, focus, selection */
-  --beaket-paper-ink: #232a35; /* body text + caret */
-  --beaket-paper-font: Georgia, serif;
-  --beaket-paper-font-size: 18px;
-  --beaket-paper-measure: 42rem; /* max line width; default `none` = full width */
-}
-```
-
-Dark mode is built in (follows the OS `prefers-color-scheme`, no config), and if your app already
-exposes a `--color-*` design-token palette the editor bridges to it automatically. The full token
-list, the design-token bridge, and the `.cm-*` escape hatches are in the
+The editor ships its own theme — nothing to import — and is fully themeable through
+`--beaket-paper-*` CSS variables, with dark mode built in (it follows the OS `prefers-color-scheme`).
+The tokens, the `--color-*` design-token bridge, and the `.cm-*` escape hatches are in the
 **[styling guide →](https://beaket.github.io/ui/paper/styling)**.
-
----
-
-Architecture & design decisions: [`docs/DECISIONS.md`](https://github.com/beaket/ui/blob/main/packages/paper/docs/DECISIONS.md).
