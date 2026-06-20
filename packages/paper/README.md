@@ -14,10 +14,6 @@ mid-composition, the bug most live-preview editors still trip on.
 npm install @beaket/paper
 ```
 
-The React wrapper (`@beaket/paper/react`) also needs `react` and `react-dom` (`>=18`). They're
-**optional** peer dependencies — install them only if you use the wrapper. The framework-agnostic
-core has none.
-
 ## Quick start (React)
 
 ```tsx
