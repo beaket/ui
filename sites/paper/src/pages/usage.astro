@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/base.astro';
 import CodeBlock from '../components/code-block.astro';
+import { HighlightsDemo } from '../components/highlights-demo';
 const base = import.meta.env.BASE_URL;
 const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p);
 
@@ -31,6 +32,34 @@ const editor = createEditor(document.querySelector("#editor")!, {
   doc: "# Hello",
   onChange: (markdown) => console.log(markdown),
 });`;
+
+const highlightsCode = `import { Paper, type SelectionInfo, type HighlightInput } from "@beaket/paper/react";
+import { useState } from "react";
+
+function Annotator() {
+  const [sel, setSel] = useState<SelectionInfo | null>(null);
+  const [highlights, setHighlights] = useState<HighlightInput[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  return (
+    <>
+      {/* Paper reports the selection; you draw the toolbar from sel.rect. */}
+      {sel?.rect && (
+        <Toolbar rect={sel.rect} onPick={() => {
+          setHighlights((hs) => [...hs, { id: crypto.randomUUID(), anchor: sel.anchor }]);
+          setSel(null); // selection consumed
+        }} />
+      )}
+
+      <Paper
+        highlights={highlights}          // live prop — re-resolved on change (IME-safe)
+        activeHighlightId={activeId}     // live prop — declarative visual sync
+        onSelect={setSel}                // { text, anchor, rect } | null
+        onHighlightClick={setActiveId}   // a highlight was clicked
+      />
+    </>
+  );
+}`;
 ---
 
 <Base title="Usage — Paper">
@@ -54,6 +83,25 @@ const editor = createEditor(document.querySelector("#editor")!, {
     <a href={withBase('api')}>API Reference</a> for the full prop and handle surface.
   </p>
 
+  <h2 id="highlights">Selections &amp; highlights</h2>
+  <p>
+    Paper reports the live selection through <code>onSelect</code> — <code>&#123; text, anchor, rect &#125;</code>,
+    or <code>null</code> when empty — and renders a <code>highlights</code> list you own. It draws no toolbar
+    of its own: you place UI from <code>rect</code> and persist the opaque <code>anchor</code>. Drag a
+    sentence below to watch the whole loop.
+  </p>
+  <div class="demo">
+    <HighlightsDemo client:only="react" />
+  </div>
+  <CodeBlock code={highlightsCode} lang="tsx" />
+  <p>
+    The <code>anchor</code> from <code>onSelect</code> is built for exactly this — store it in
+    <code>highlights</code> and Paper re-resolves it against the document (deferred during IME) on every
+    change, while <code>activeHighlightId</code> syncs the visual emphasis declaratively. The full demo
+    component (toolbar positioning, state) is on
+    <a href="https://github.com/beaket/ui/blob/main/sites/paper/src/components/highlights-demo.tsx">GitHub ↗</a>.
+  </p>
+
   <h2 id="core">Framework-agnostic core</h2>
   <p>The core has zero React. Mount it onto any element and it returns the CodeMirror <code>EditorView</code>:</p>
   <CodeBlock code={coreCode} lang="ts" />
@@ -66,3 +114,9 @@ const editor = createEditor(document.querySelector("#editor")!, {
 
   <p class="next"><a href={withBase('api')}>API Reference →</a></p>
 </Base>
+
+<style>
+  .demo {
+    margin: 1.25rem 0;
+  }
+</style>
