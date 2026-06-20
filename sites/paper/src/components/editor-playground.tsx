@@ -204,6 +204,12 @@ export function EditorPlayground() {
           border: 1px solid var(--chrome);
           box-shadow: var(--shadow-offset, 2px 2px 0 0 var(--chrome));
           padding: 1.25rem 1.5rem;
+        }
+        /* Give the editor (not the card) the tall min-height so it fills the card.
+           Otherwise the card is taller than the editor and the gap below the content
+           is a dead zone — clicking there (e.g. under the table) misses the editor and
+           nothing types. */
+        .pg-paper .cm-content {
           min-height: min(76vh, 680px);
         }
         .pg-footer {
@@ -236,6 +242,8 @@ export function EditorPlayground() {
           }
           .pg-paper {
             padding: 0.9rem 1rem;
+          }
+          .pg-paper .cm-content {
             min-height: min(70vh, 560px);
           }
           /* Bigger tap targets for the swatches on touch screens. */
