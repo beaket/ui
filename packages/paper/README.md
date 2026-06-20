@@ -58,4 +58,4 @@ const editor = createEditor(document.querySelector("#editor")!, {
 The editor ships its own theme — nothing to import — and is fully themeable through
 `--beaket-paper-*` CSS variables, with dark mode built in (it follows the OS `prefers-color-scheme`).
 The tokens, the `--color-*` design-token bridge, and the `.cm-*` escape hatches are in the
-**[styling guide →](https://beaket.github.io/ui/paper/styling)**.
+[styling guide](https://beaket.github.io/ui/paper/styling).
