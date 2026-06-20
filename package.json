@@ -16,6 +16,7 @@
     "test": "vitest",
     "test:cli": "./scripts/test-cli.sh",
     "test:editor": "pnpm --filter @beaket/paper test",
+    "check:adr": "node scripts/check-adr-refs.mjs",
     "build-storybook": "storybook build",
     "release": "changeset publish",
     "prepare": "husky"
