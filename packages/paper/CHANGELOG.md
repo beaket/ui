@@ -1,5 +1,15 @@
 # @beaket/paper
 
+## 0.4.0
+
+### Minor Changes
+
+- [#469](https://github.com/beaket/ui/pull/469) [`3a9ff1c`](https://github.com/beaket/ui/commit/3a9ff1cc2e0e808eb9c122cf91203dabb92b3813) Thanks [@jihnma](https://github.com/jihnma)! - Add a `colorScheme` prop (`"light" | "dark" | "system"`). Previously the editor only followed the OS `prefers-color-scheme`; now a consumer with its own theme toggle can force light or dark. It's a live prop — flipped via a CodeMirror compartment, so switching never recreates the editor or drops the document. The vanilla core exposes the same `colorScheme` option plus a `setColorScheme(view, scheme)` helper. `"system"` remains the default, so existing usage is unchanged.
+
+### Patch Changes
+
+- [#467](https://github.com/beaket/ui/pull/467) [`3a5a652`](https://github.com/beaket/ui/commit/3a5a652fb9c291e2f88f27649e7149bdca120068) Thanks [@jihnma](https://github.com/jihnma)! - Refresh the npm README: a frontend-focused quick start (install → import → go), standalone-first framing, and links out to the docs site for the full styling and API reference instead of duplicating them inline.
+
 ## 0.3.0
 
 ### Minor Changes
