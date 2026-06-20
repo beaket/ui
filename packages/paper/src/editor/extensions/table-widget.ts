@@ -1146,6 +1146,13 @@ function tableBackspace(view: EditorView): boolean {
  */
 export const tableBoundaryGuard: Extension = EditorState.transactionFilter.of((tr) => {
   if (!tr.docChanged) return tr;
+  // A pure insertion (fromA === toA for every change) can never delete a boundary newline, so the
+  // guard can only ever block deletions/replacements. Skip the whole syntaxTree walk on this path.
+  let hasDeletion = false;
+  tr.changes.iterChanges((fromA, toA) => {
+    if (toA > fromA) hasDeletion = true;
+  });
+  if (!hasDeletion) return tr;
   const doc = tr.startState.doc;
   // Carry each protected newline together with its owning table range. The absorption risk only occurs when
   // "the table stays but only the boundary newline disappears," so changes that delete the whole table (e.g. select-all delete) are not blocked.
