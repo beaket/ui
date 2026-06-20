@@ -1,5 +1,4 @@
-import type { Anchor } from "@beaket/paper";
-import { Paper, type SelectionInfo } from "@beaket/paper/react";
+import { Paper, type HighlightInput, type SelectionInfo } from "@beaket/paper/react";
 import { useRef, useState } from "react";
 
 const SEED = `# Annotating with Paper
@@ -10,24 +9,17 @@ click the highlight to make it active. The editor only reports the
 selection; you draw the toolbar and own the list.
 `;
 
-/** What we keep per highlight. \`anchor\` is opaque — Paper hands it to us and we
- *  hand it back; \`quote\` is ours, just for the data panel below. */
-interface Stored {
-  id: string;
-  anchor: Anchor;
-  quote: string;
-}
-
 export function HighlightsDemo() {
   const [sel, setSel] = useState<SelectionInfo | null>(null);
-  const [stored, setStored] = useState<Stored[]>([]);
+  // Exactly what the prop wants: { id, anchor }. We store it verbatim and hand it back.
+  const [highlights, setHighlights] = useState<HighlightInput[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const nextId = useRef(1);
 
   const saveHighlight = () => {
     if (!sel) return;
     const id = `h${nextId.current++}`;
-    setStored((list) => [...list, { id, anchor: sel.anchor, quote: sel.text }]);
+    setHighlights((list) => [...list, { id, anchor: sel.anchor }]);
     setSel(null); // selection consumed — hide the toolbar
   };
 
@@ -52,29 +44,28 @@ export function HighlightsDemo() {
       <div className="hd-paper">
         <Paper
           defaultValue={SEED}
-          highlights={stored.map((h) => ({ id: h.id, anchor: h.anchor }))}
+          highlights={highlights}
           activeHighlightId={activeId}
           onSelect={setSel}
           onHighlightClick={setActiveId}
         />
       </div>
 
+      {/* The actual data each surface deals in — the contract, not a friendly label. */}
       <div className="hd-panel">
         <div className="hd-row">
-          <span className="hd-key">selection</span>
-          <span className="hd-val">{sel?.text ? `"${sel.text}"` : "—"}</span>
+          <span className="hd-key">onSelect</span>
+          <span className="hd-val">{sel ? formatSelection(sel) : "null"}</span>
         </div>
         <div className="hd-row">
           <span className="hd-key">highlights</span>
           <span className="hd-val">
-            {stored.length
-              ? `[ ${stored.map((h) => `${h.id}: "${truncate(h.quote)}"`).join(", ")} ]`
-              : "[]"}
+            {highlights.length ? JSON.stringify(highlights, null, 2) : "[]"}
           </span>
         </div>
         <div className="hd-row">
-          <span className="hd-key">active</span>
-          <span className="hd-val">{activeId ?? "null"}</span>
+          <span className="hd-key">activeHighlightId</span>
+          <span className="hd-val">{activeId ? `"${activeId}"` : "null"}</span>
         </div>
       </div>
 
@@ -113,18 +104,28 @@ export function HighlightsDemo() {
           font-size: 12px;
           line-height: 1.7;
         }
-        .hd-row { display: flex; gap: 0.75rem; }
+        .hd-row { display: flex; gap: 0.75rem; align-items: flex-start; }
+        .hd-row + .hd-row { margin-top: 0.35rem; }
         .hd-key {
           flex-shrink: 0;
-          width: 5.5rem;
+          width: 8.5rem;
           color: var(--steel, #686b6f);
         }
-        .hd-val { color: var(--ink); word-break: break-word; min-width: 0; }
+        .hd-val {
+          color: var(--ink);
+          white-space: pre-wrap;
+          word-break: break-word;
+          min-width: 0;
+        }
       `}</style>
     </div>
   );
 }
 
-function truncate(s: string, n = 24) {
-  return s.length > n ? `${s.slice(0, n)}…` : s;
+/** A compact one-liner of the onSelect payload — the readable text plus the
+ *  viewport rect you'd position UI from (anchor is shown once it's stored). */
+function formatSelection(sel: SelectionInfo) {
+  const r = sel.rect;
+  const rect = r ? `, rect: { left: ${Math.round(r.left)}, top: ${Math.round(r.top)} }` : "";
+  return `{ text: ${JSON.stringify(sel.text)}${rect} }`;
 }
