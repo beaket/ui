@@ -9,6 +9,9 @@ on:
     paths:
       - "src/**"
       - "packages/**"
+      # Docs-only changes (ADRs, DECISIONS.md, CONTEXT.md…) ship in no package
+      # tarball, so they don't need a changeset / version bump.
+      - "!packages/*/docs/**"
 
 jobs:
   check:

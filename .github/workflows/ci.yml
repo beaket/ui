@@ -37,3 +37,5 @@ jobs:
         run: pnpm test:cli
       - name: Test Editor
         run: pnpm test:editor
+      - name: Check ADR references resolve
+        run: pnpm check:adr

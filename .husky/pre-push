@@ -4,8 +4,9 @@ branch=$(git rev-parse --abbrev-ref HEAD)
 [[ "$branch" == changeset-release/* ]] && exit 0
 [[ "$branch" == renovate/* ]] && exit 0
 
-# Check if src/** or packages/** changed
-if git diff --name-only origin/main...HEAD | grep -qE '^(src|packages)/'; then
+# Check if src/** or packages/** changed (docs-only changes ship in no
+# tarball, so they don't need a changeset — mirrors changeset-check.yml).
+if git diff --name-only origin/main...HEAD | grep -vE '^packages/[^/]+/docs/' | grep -qE '^(src|packages)/'; then
   # Check for changeset
   if ! git diff --name-only origin/main...HEAD -- '.changeset/*.md' | grep -qv README.md; then
     echo ""

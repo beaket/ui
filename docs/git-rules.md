@@ -39,3 +39,7 @@ ALLOW_MAJOR=1 git commit -m "feat!: remove deprecated API"
 - One changeset per logical change
 - Write clear, user-facing descriptions (these appear in the changelog)
 - Include migration instructions for any breaking change
+
+## Architecture Decision Records
+
+`@beaket/paper` keeps an append-only ADR log at `packages/paper/docs/adr/` (indexed by `DECISIONS.md`). The full rule — when a change needs an ADR vs. a changeset, the amend/supersede lifecycle, and the citation convention — lives in `packages/paper/docs/adr/README.md`. In short: **ADRs are for decisions** (alternatives, load-bearing approach, revising a prior ADR); routine bug/perf fixes get a changeset whose body states the **root cause**. Every `ADR-NNNN` cited in code must resolve to a file (enforced by `pnpm check:adr` in CI).

@@ -1,8 +1,10 @@
 # `@beaket/paper` — architecture decisions
 
 A markdown-first, CJK-first Live Preview editor. This is the distilled, load-bearing design
-context for the package. It was seeded from the `sandbox-beaket-editor` prototype's 14 ADRs during
-migration (2026-06-17); only the decisions that constrain future work are kept here.
+context for the package — a **curated index** of the decisions that constrain future work. The full
+records live in [`adr/`](./adr/) (`ADR-0001`–`ADR-0014`, imported & translated from the
+`sandbox-beaket-editor` prototype on 2026-06-21); see [`adr/README.md`](./adr/README.md) for when a
+change needs an ADR vs. a changeset. Each bullet below links to its ADR.
 
 ## Core domain
 
@@ -16,8 +18,9 @@ migration (2026-06-17); only the decisions that constrain future work are kept h
 - **Lightness** is the test for adding a feature: input responsiveness, feature restraint ("there
   must be a reason to add it"), visual minimalism.
 - **Live Preview**: only the text under the cursor shows raw syntax; the rest renders (the Obsidian
-  model). The **table widget** is the one exception — entering it never unfolds to source;
-  structural syntax (`|`, the delimiter row) is permanently hidden from the user.
+  model), on a CodeMirror 6 engine. The **table widget** is the one exception — entering it never
+  unfolds to source; structural syntax (`|`, the delimiter row) is permanently hidden from the user.
+  ([ADR-0001](./adr/0001-live-preview-on-codemirror6.md))
 - **Consumer config ≠ plugin API.** The editor exposes injection points (`onInsertImage`,
   `slashItems`, the annotation props) as _build-time consumer config_, not a runtime/third-party
   plugin system. A runtime plugin system is out of scope.
@@ -27,30 +30,40 @@ migration (2026-06-17); only the decisions that constrain future work are kept h
 - **Table model.** Table structural syntax is permanently hidden; the focused cell is a CodeMirror
   **subview** that shares the document, which keeps undo and IME a single system. Cell line breaks
   are hidden `<br>` elements.
+  ([ADR-0002](./adr/0002-table-structure-syntax-permanently-hidden.md),
+  [ADR-0003](./adr/0003-cell-editor-as-codemirror-subview.md),
+  [ADR-0008](./adr/0008-table-cell-line-break-hidden-br.md))
 - **Composing guard contract (the most expensive invariant).** During `view.composing`: no
   decoration recompute, no widget DOM rebuild, no menu action; map existing decorations to the new
   coordinates; re-evaluate on `compositionend`. **Every new extension or feature must honor this.**
-  Locked by `imeComposition.test` / `composingGuard.test`. Decoration-producing extensions go
+  Locked by `ime-composition.test` / `composing-guard.test`. Decoration-producing extensions go
   through the `guardedDecorations` helper rather than using `ViewPlugin` directly.
+  ([ADR-0004](./adr/0004-composing-guard-defer-plus-map.md))
 - **Quality strategy.** jsdom **contract tests** + **regression tests**; every bug is fixed
   red → green. Coordinate and visual concerns are deliberately carved out for browser verification
   (jsdom returns zero-size rects via the polyfills in `src/test/setup.ts`).
+  ([ADR-0005](./adr/0005-quality-via-jsdom-contract-and-regression-tests.md))
 - **Visual language.** "Porcelain, softened"; CSS-variable tokens; evidence-based CJK typography.
   **Trap — CJK font interception:** Japanese fonts must come _before_ Korean in the font stack, or
   shared Han glyphs render in the Korean font (measured). See `theme.ts`.
+  ([ADR-0009](./adr/0009-visual-language-porcelain-tokens-cjk-typography.md))
 - **Extensibility = mechanism-in-editor / policy-in-consumer.** Images render in the source model;
   _ingestion_ is delegated to the consumer (`onInsertImage`). Slash items are a declarative consumer
   contract with a transformer override; privileged built-ins are kept separate.
+  ([ADR-0011](./adr/0011-images-render-vs-ingest-consumer-delegation.md),
+  [ADR-0012](./adr/0012-slash-items-consumer-config.md))
 - **Package shape.** Two layers: a framework-agnostic **core** (`createEditor`, zero React) plus a
   thin **React wrapper** (`<Paper>`). Uncontrolled (`defaultValue` + `ref.setValue()`);
   `onChange` emits full markdown on user edits only (IME-guarded; `setValue` does not echo). A
   curated `ref` handle with a `getView()` escape hatch. Shipped as a **standalone npm package**, not
   a copy-paste registry component — so it is exempt from the monorepo's component checklist (no
   Storybook story, no `registry.json`, no `cn` util, no Tailwind).
+  ([ADR-0013](./adr/0013-react-shell-and-distribution.md))
 - **Selection annotation = mechanism only, policy to consumer.** The anchor is a `quote` (a source
   substring) plus an `offset`; resolution is 3-state (`exact` / `approximate` / `orphaned`),
   anchored to the **markdown source**, not rendered HTML. Surface: `highlights`,
   `activeHighlightId`, `onHighlightStatusChange`, `onHighlightClick`, `onSelect`.
+  ([ADR-0014](./adr/0014-selection-annotation-mechanism.md))
 
 ## Versioning
 
@@ -72,7 +85,8 @@ short internal name (`var(--ink)` etc.) and the mapping lives in one place.
   2. porcelain bridge (matches `@beaket/ui` for free, inherits its dark-mode block),
   3. built-in default (self-sufficient standalone).
 - **Editor-owned tokens** → 2-tier: `var(--beaket-paper-X, default)` (typography, `--canvas`,
-  `--surface`, `--syn-*`). No porcelain equivalent; each needs a dark value when dark mode lands.
+  `--surface`, `--syn-*`). No porcelain equivalent; each carries a dark-aware default (dark mode
+  shipped in v0.2.0 — see [ADR-0009](./adr/0009-visual-language-porcelain-tokens-cjk-typography.md)'s amendment).
 
 Three customization tiers for consumers: (1) override `--beaket-paper-*` variables, (2) render
 inside porcelain for a zero-config match, (3) escape hatches — the stable `.cm-*` class hooks and
@@ -80,7 +94,7 @@ inside porcelain for a zero-config match, (3) escape hatches — the stable `.cm
 variabilized because writers tune it; `letter-spacing` is deliberately **not** exposed (negative
 spacing breaks mixed-script CJK).
 
-Deliberate, documented local divergences (each needs a dark-aware value when dark mode lands):
+Deliberate, documented local divergences (each now carries a dark-aware value; dark mode shipped in v0.2.0):
 
 - `--color-ink` is overridden locally to `#232a35` (porcelain's `#0a0d14` is too harsh on the
   near-white canvas); it is the default tier of `--ink`'s chain.
@@ -88,7 +102,7 @@ Deliberate, documented local divergences (each needs a dark-aware value when dar
   (`#ffffff`).
 
 Not yet exposed (deliberate scope cut, revisit on demand): a `theme?: Extension` option to append a
-consumer CodeMirror theme, and a managed dark-mode token set for the editor-owned tokens.
+consumer CodeMirror theme.
 
 ## Deferred (not bugs)
 
@@ -98,6 +112,3 @@ consumer CodeMirror theme, and a managed dark-mode token set for the editor-owne
   both fields) — defer until real orphan rates are observed.
 - `.cm-selectionBackground` is dormant (no `drawSelection()`); selection uses the browser-native
   highlight. Add `drawSelection()` if a porcelain selection tint is wanted.
-- Dark mode (the `@media (prefers-color-scheme: dark)` block). Porcelain-mapped tokens inherit
-  porcelain's dark block for free; editor-owned tokens (`--syn-*`, `--canvas`, the `--color-ink`
-  override) each need a dark value.
