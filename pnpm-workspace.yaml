@@ -20,3 +20,6 @@ overrides:
 allowBuilds:
   esbuild: true
   sharp: true
+
+patchedDependencies:
+  "@changesets/cli@2.31.0": patches/@changesets__cli@2.31.0.patch
