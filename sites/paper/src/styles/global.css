@@ -252,6 +252,19 @@ pre code {
 }
 
 /* Content */
+/* Page title — a consistent rule under every content-page <h1>, so the
+   divider no longer depends on a section <h2> happening to sit near the top.
+   The hero <h1> is nested in .hero, so .content > h1 excludes it. */
+.content > h1 {
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--chrome);
+}
+/* When a section heading butts right against the title, the title rule is the
+   only divider — drop the h2's own top rule so they don't stack into two lines. */
+.content > h1 + h2 {
+  border-top: none;
+  padding-top: 0;
+}
 h2 {
   font-size: 1.5rem;
   letter-spacing: -0.02em;
