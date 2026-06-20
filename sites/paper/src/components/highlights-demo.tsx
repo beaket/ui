@@ -107,9 +107,7 @@ export function HighlightsDemo() {
         </div>
         <div className="hd-row">
           <span className="hd-key">highlights</span>
-          <span className="hd-val">
-            {highlights.length ? JSON.stringify(highlights, null, 2) : "[]"}
-          </span>
+          <span className="hd-val">{highlights.length ? JSON.stringify(highlights) : "[]"}</span>
         </div>
         <div className="hd-row">
           <span className="hd-key">activeHighlightId</span>
@@ -135,7 +133,7 @@ export function HighlightsDemo() {
            unreadable on the dark canvas). The .cm-editor scope wins over Paper's
            theme rule on specificity. Active is the stronger tone. */
         .hd-paper .cm-editor .cm-annotation-highlight {
-          background-color: #fff3b0;
+          background-color: #ffe066;
           color: #232a35;
         }
         .hd-paper .cm-editor .cm-annotation-active {
