@@ -70,6 +70,12 @@ export const tokens = {
   // ② Editor-owned colors (2-tier; no porcelain equivalent)
   "--canvas": "var(--beaket-paper-canvas, #fbfcfd)", // cool near-white for long-form writing (ADR-0009), not --color-paper (#fff)
   "--surface": "var(--beaket-paper-surface, #eceef2)",
+  // ② Task-checkbox checkmark image. Light = white stroke (stamped on the dark --ink fill). The dark
+  //    variant lives in `darkTokens`, so the checkmark follows a forced `colorScheme` via the scope
+  //    class — not a bare `prefers-color-scheme` query (which ignored forced schemes). Consumed by
+  //    `list-rendering.ts` as `var(--cm-check-mark)`; inherits to the checkbox from the editor root.
+  "--cm-check-mark":
+    "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%20fill='none'%20stroke='%23ffffff'%20stroke-width='2.25'%3E%3Cpath%20d='M3.5%208.5l3%203%206-6'/%3E%3C/svg%3E\")",
   // ② Editor-owned code syntax (GitHub Light, ADR-0006); porcelain has none
   "--syn-kw": "var(--beaket-paper-syntax-keyword, #cf222e)",
   "--syn-str": "var(--beaket-paper-syntax-string, #0a3069)",
@@ -122,6 +128,11 @@ export const darkTokens = {
   // ② Editor-owned colors (2-tier; no porcelain equivalent). Cool near-black writing canvas + raised fill.
   "--canvas": "var(--beaket-paper-canvas, #14171c)",
   "--surface": "var(--beaket-paper-surface, #1c1f27)",
+  // ② Dark task-checkbox checkmark: dark stroke, because --ink fills light in dark mode (the white
+  //    light variant would vanish). Rides both dark blocks via darkThemeCss, so it flips with the
+  //    active scope class for forced "dark" and OS-dark "system" alike.
+  "--cm-check-mark":
+    "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%20fill='none'%20stroke='%230d1117'%20stroke-width='2.25'%3E%3Cpath%20d='M3.5%208.5l3%203%206-6'/%3E%3C/svg%3E\")",
   // ② Editor-owned code syntax — GitHub Dark Default (mirrors the GitHub Light ramp above)
   "--syn-kw": "var(--beaket-paper-syntax-keyword, #ff7b72)",
   "--syn-str": "var(--beaket-paper-syntax-string, #a5d6ff)",

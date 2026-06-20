@@ -12,7 +12,9 @@ import { colorSchemeClass, darkThemeCss, darkTokens, tokens } from "./theme";
 // The token names extensions read internally that are NOT a direct public override:
 // - --color-ink is a deliberate local override of porcelain's ink (the default in the chain below).
 // - --accent-sel/--accent-weak are derived from --accent, so they inherit a consumer accent override.
-const NON_PUBLIC = new Set(["--color-ink", "--accent-sel", "--accent-weak"]);
+// - --cm-check-mark is an internal SVG image (the task-checkbox checkmark), not a public theming knob;
+//   it carries a light value here and a dark value in darkTokens so it flips with the scope class (#487).
+const NON_PUBLIC = new Set(["--color-ink", "--accent-sel", "--accent-weak", "--cm-check-mark"]);
 
 describe("theme public override contract", () => {
   it("every theming token is overridable via a --beaket-paper-* public name", () => {
@@ -76,7 +78,8 @@ describe("theme typography is variabilized (CJK-first defaults)", () => {
 // are a browser/manual check, same carve-out as the light tokens above).
 describe("dark theme keeps the override + bridge chains, swapping only the built-in default", () => {
   // Every color/shadow token a consumer can override stays publicly overridable in dark mode too.
-  const NON_PUBLIC = new Set(["--color-ink"]);
+  // --cm-check-mark is the internal checkbox checkmark image (not a public knob), same as in light.
+  const NON_PUBLIC = new Set(["--color-ink", "--cm-check-mark"]);
   it("every dark token still reads a --beaket-paper-* override first", () => {
     for (const [name, value] of Object.entries(darkTokens)) {
       if (NON_PUBLIC.has(name)) continue;
@@ -155,6 +158,20 @@ describe("darkThemeCss emits a scoped prefers-color-scheme block", () => {
     for (const [name, value] of Object.entries(darkTokens)) {
       expect(forced).toContain(`${name}: ${value};`);
     }
+  });
+
+  // #487: the task-checkbox checkmark must follow the active scheme via the scope class, not a bare
+  // `prefers-color-scheme` query (which ignored forced colorScheme — invisible checkmark when forced
+  // opposite the OS). It ships as the editor token `--cm-check-mark`, so it rides BOTH dark blocks
+  // (media-gated + forced) exactly like every other dark token and inherits down to the checkbox.
+  it("ships the dark task-checkbox checkmark as a scope-scoped token in both dark blocks (#487)", () => {
+    expect(darkTokens).toHaveProperty("--cm-check-mark");
+    // the dark variant uses a dark stroke (#0d1117, URL-encoded %230d1117), not the light/white one
+    expect(darkTokens["--cm-check-mark"]).toContain("%230d1117");
+    const media = css.slice(0, css.indexOf("}}") + 2); // the @media (...) { .cm-editor.cm-beaket-paper { ... } } block
+    const forced = css.slice(css.indexOf("}}") + 2); // the unconditional .cm-editor.cm-beaket-paper-dark block
+    expect(media).toContain("--cm-check-mark:");
+    expect(forced).toContain("--cm-check-mark:");
   });
 });
 
