@@ -1,4 +1,4 @@
-import type { Extension } from "@codemirror/state";
+import { Compartment, type Extension } from "@codemirror/state";
 import { EditorView, ViewPlugin } from "@codemirror/view";
 
 // CJK tier-1 typography default. Japanese fonts are placed BEFORE Korean fonts (key): Apple SD
@@ -180,25 +180,65 @@ export const baseTheme = EditorView.theme({
 // targets `.cm-editor.<scope>`. Two classes = specificity (0,2,0), which outranks baseTheme's single
 // generated class (0,1,0) — so in dark mode these tokens win regardless of source order, while the
 // `--beaket-paper-*` override and `--color-*` porcelain bridge inside each var() chain still apply.
-const DARK_SCOPE_CLASS = "cm-beaket-paper";
+// Color scheme as a public prop (`colorScheme` on EditorOptions/PaperProps):
+// - "system" (default) → follow the OS via `prefers-color-scheme` (the original behavior).
+// - "dark"            → force dark regardless of OS.
+// - "light"           → force light regardless of OS (suppress the OS dark block).
+// The injected stylesheet carries BOTH a media-gated block (keyed on DARK_SCOPE_CLASS) and an
+// unconditional forced-dark block (keyed on DARK_FORCE_CLASS). The scheme only decides which scope
+// class the editor root wears — so flipping it is a single live class swap (`setColorScheme`), no
+// recreation. "light" wears neither class, so even the OS media block can't match it.
+export type ColorScheme = "light" | "dark" | "system";
+
+const DARK_SCOPE_CLASS = "cm-beaket-paper"; // OS-follow: only goes dark inside the media query
+const DARK_FORCE_CLASS = "cm-beaket-paper-dark"; // forced dark: unconditional
 const DARK_STYLE_ID = "beaket-paper-dark-tokens";
 
-/** Serializes `darkTokens` into the scoped dark-mode stylesheet text. Exported for the wiring test. */
+/** Maps a color scheme to the editor-root class that selects its token block (empty = forced light). */
+export function colorSchemeClass(scheme: ColorScheme): string {
+  if (scheme === "dark") return DARK_FORCE_CLASS;
+  if (scheme === "light") return "";
+  return DARK_SCOPE_CLASS;
+}
+
+/**
+ * Serializes `darkTokens` into the dark-mode stylesheet text. Exported for the wiring test.
+ * Emits the OS-follow block (media-gated) and the forced-dark block (unconditional) from one source.
+ */
 export function darkThemeCss(): string {
   const decls = Object.entries(darkTokens)
     .map(([name, value]) => `${name}: ${value};`)
     .join(" ");
-  return `@media (prefers-color-scheme: dark){.cm-editor.${DARK_SCOPE_CLASS}{${decls}}}`;
+  return (
+    `@media (prefers-color-scheme: dark){.cm-editor.${DARK_SCOPE_CLASS}{${decls}}}` +
+    `.cm-editor.${DARK_FORCE_CLASS}{${decls}}`
+  );
+}
+
+// The scope class lives in a compartment so `colorScheme` can flip live (no editor recreation, which
+// would wipe the user's document). Module-level: a Compartment is just an identity key, and a
+// reconfigure dispatched to a specific view only touches that view's slot — safe across many editors.
+const colorSchemeCompartment = new Compartment();
+
+function colorSchemeAttr(scheme: ColorScheme): Extension {
+  const cls = colorSchemeClass(scheme);
+  // Drive native `color-scheme` too, so scrollbars/inputs inside the editor match the active scheme
+  // (a forced-light editor on a dark OS would otherwise get dark native scrollbars, and vice versa).
+  // "system" → "light dark" follows the OS, matching the media-gated token block.
+  const attrs: Record<string, string> = {
+    style: `color-scheme: ${scheme === "system" ? "light dark" : scheme};`,
+  };
+  if (cls) attrs.class = cls;
+  return EditorView.editorAttributes.of(attrs);
 }
 
 /**
- * Dark mode. Stamps the scope class on the editor and injects the dark token stylesheet once per
- * document/shadow root (idempotent by id). Self-contained — the consumer flips automatically with the
- * OS color scheme; `--beaket-paper-*` overrides and the porcelain bridge keep working in both modes.
+ * Dark mode. Injects the dark token stylesheet once per document/shadow root (idempotent by id) and
+ * stamps the scope class for `scheme`. Self-contained — `--beaket-paper-*` overrides and the porcelain
+ * bridge keep working in every mode. Default "system" reproduces the original OS-follow behavior.
  */
-export function darkThemeStyle(): Extension {
+export function darkThemeStyle(scheme: ColorScheme = "system"): Extension {
   return [
-    EditorView.editorAttributes.of({ class: DARK_SCOPE_CLASS }),
     ViewPlugin.define((view) => {
       const root = view.dom.getRootNode() as Document | ShadowRoot;
       const host: ParentNode & Node =
@@ -211,5 +251,11 @@ export function darkThemeStyle(): Extension {
       }
       return {};
     }),
+    colorSchemeCompartment.of(colorSchemeAttr(scheme)),
   ];
+}
+
+/** Live-flips the editor's color scheme without recreating it (so the document is preserved). */
+export function setColorScheme(view: EditorView, scheme: ColorScheme): void {
+  view.dispatch({ effects: colorSchemeCompartment.reconfigure(colorSchemeAttr(scheme)) });
 }

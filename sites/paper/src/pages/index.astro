@@ -42,6 +42,15 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
     background: var(--frost);
     padding: 1rem 1.25rem 1.25rem;
   }
+  /* When the editor scheme is *forced* (data-pg-theme set by the playground), pull the frame's
+     --frost to match so the toolbar rail doesn't stay on the OS theme under a flipped editor.
+     Values mirror global.css's light :root / dark block. "system" leaves the attribute unset. */
+  .playground-frame:has([data-pg-theme="light"]) {
+    --frost: #f3f4f6;
+  }
+  .playground-frame:has([data-pg-theme="dark"]) {
+    --frost: #23272e;
+  }
   .hint {
     font-size: 13px;
     color: var(--steel);

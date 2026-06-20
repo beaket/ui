@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { darkThemeCss, darkTokens, tokens } from "./theme";
+import { colorSchemeClass, darkThemeCss, darkTokens, tokens } from "./theme";
 
 // Token reconciliation + public theming contract (ADR-0013 decision 6).
 //
@@ -143,5 +143,28 @@ describe("darkThemeCss emits a scoped prefers-color-scheme block", () => {
       expect(css).toContain(`${name}: ${value};`);
     }
     expect(css).toContain("--ink: var(--beaket-paper-ink, var(--color-ink, #e6eaee));");
+  });
+
+  // colorScheme "dark" forces dark regardless of OS, so the same tokens also ship in an
+  // unconditional block keyed on a second class — the only thing the scheme flips is which class
+  // the editor root wears (a live compartment swap), not the stylesheet.
+  it("also emits an unconditional forced-dark block (outside the media query)", () => {
+    const forced = css.slice(css.indexOf("}}") + 2); // everything after the media block closes
+    expect(forced).toContain(".cm-editor.cm-beaket-paper-dark{");
+    expect(forced).not.toContain("@media");
+    for (const [name, value] of Object.entries(darkTokens)) {
+      expect(forced).toContain(`${name}: ${value};`);
+    }
+  });
+});
+
+// colorScheme → root class is the branch that decides which token block each mode wears (the
+// stylesheet above is static). "system" follows the OS (media-gated class), "dark" forces the
+// unconditional block, "light" wears no class so even the OS media block can't darken it.
+describe("colorSchemeClass selects the editor-root class per scheme", () => {
+  it("maps system → OS-follow class, dark → forced class, light → none", () => {
+    expect(colorSchemeClass("system")).toBe("cm-beaket-paper");
+    expect(colorSchemeClass("dark")).toBe("cm-beaket-paper-dark");
+    expect(colorSchemeClass("light")).toBe("");
   });
 });
