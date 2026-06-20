@@ -212,6 +212,12 @@ export function EditorPlayground() {
         .pg-paper .cm-content {
           min-height: min(76vh, 680px);
         }
+        /* ...but never the nested cell editor: editing a table cell mounts its own
+           CodeMirror inside the table widget, whose .cm-content would otherwise inherit
+           the rule above and balloon the cell to full height. (0,3,0) beats it. */
+        .pg-paper .cm-table-widget .cm-content {
+          min-height: 0;
+        }
         .pg-footer {
           display: flex;
           align-items: center;
