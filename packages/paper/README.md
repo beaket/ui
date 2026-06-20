@@ -2,9 +2,9 @@
 
 A markdown-first, CJK-first **Live Preview** editor for the web, built on CodeMirror 6.
 
-Only the line you're editing shows raw markdown — everything else renders inline as you type. And
-it's CJK-first: Japanese and Korean input never drops or duplicates characters mid-composition —
-the bug most live-preview editors still trip on.
+Only the line you're editing shows raw markdown — everything else renders inline as you type. That
+live rewriting is exactly what breaks Japanese and Korean IME composition in most editors — dropping
+or duplicating characters mid-composition. Paper is built so it never does.
 
 **[Full docs, API reference & live playground →](https://beaket.github.io/ui/paper/)**
 
