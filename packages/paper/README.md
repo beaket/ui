@@ -3,8 +3,8 @@
 A markdown-first, CJK-first **Live Preview** editor for the web, built on CodeMirror 6.
 
 Only the line you're editing shows raw markdown — everything else renders inline as you type. And
-it's CJK-first: Korean, Japanese, and Chinese input never drops or duplicates characters
-mid-composition, the bug most live-preview editors still trip on.
+it's CJK-first: Japanese and Korean input never drops or duplicates characters mid-composition —
+the bug most live-preview editors still trip on.
 
 **[Full docs, API reference & live playground →](https://beaket.github.io/ui/paper/)**
 
@@ -36,8 +36,6 @@ The editor is **uncontrolled**: `defaultValue` seeds the initial document, and y
 programmatically with `ref.current.setValue(...)`. `onChange` fires with the full markdown on user
 edits only — it's IME-guarded, and `setValue` doesn't echo back through it. For anything the handle
 doesn't expose, `ref.current.getView()` returns the underlying CodeMirror `EditorView`.
-
-If `Paper` collides with another import, alias it: `import { Paper as BeaketPaper } from "@beaket/paper/react"`.
 
 See the [API reference](https://beaket.github.io/ui/paper/api) for the full prop and handle surface.
 
