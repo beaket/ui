@@ -83,6 +83,18 @@ describe("list hanging indent (second-line alignment on wrap)", () => {
   });
 });
 
+describe("task-checkbox checkmark is driven by the --cm-check-mark token (#487)", () => {
+  // The checked checkbox must read its checkmark image from var(--cm-check-mark), so the dark value
+  // shipped in darkTokens can flip it via the scope class (forced colorScheme works regardless of OS).
+  // A bare `@media (prefers-color-scheme: dark)` in this layer would ignore forced schemes — the bug.
+  it("the generated checkbox style references var(--cm-check-mark), not a hard-coded dark @media", () => {
+    makeView("- [x] 완료", 0);
+    const css = [...document.querySelectorAll("style")].map((s) => s.textContent ?? "").join("\n");
+    expect(css).toContain("var(--cm-check-mark");
+    expect(css).not.toMatch(/@media[^{}]*prefers-color-scheme[\s\S]*?cm-task-checkbox/);
+  });
+});
+
 describe("Live Preview: when the cursor is on a structure line the source is exposed (expected behavior)", () => {
   it("when the cursor is on a task line the - [ ] source is visible", () => {
     const v = makeView("- [ ] 미완료", 4);
