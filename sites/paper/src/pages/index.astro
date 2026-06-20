@@ -10,82 +10,52 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
     <h1>Write markdown<br />the way it reads.</h1>
     <p>
       <strong>Paper</strong> is a markdown-first, CJK-first <strong>Live Preview</strong> editor built
-      on CodeMirror 6. The text is the single source of truth — only the line under your cursor shows
-      raw syntax, everything else renders. The Obsidian model, as a standalone npm package.
+      on CodeMirror 6.<br />
+      Drop it into your app as a dependency.
     </p>
-    <div class="badges">
-      <span class="badge">CodeMirror 6</span>
-      <span class="badge">CJK-first</span>
-      <span class="badge">Framework-agnostic core + React</span>
-      <span class="badge">Uncontrolled by design</span>
-    </div>
   </section>
 
-  <section class="showcase">
+  <section>
     <div class="playground-frame">
       <EditorPlayground client:only="react" />
     </div>
     <p class="hint">Type <code>/</code> for the slash menu · drop an image · paste a table · change the accent &amp; font.</p>
   </section>
 
-  <section class="cta">
-    <a class="cta-link" href={withBase('installation')}>Get started — Installation →</a>
-    <a class="cta-alt" href={withBase('usage')}>Read the usage guide</a>
-  </section>
+  <h2>Why Paper</h2>
+  <p>
+    Live preview rewrites the DOM as you type — hiding and revealing syntax around your cursor. Do that
+    mid-IME-composition and Japanese or Korean input drops or duplicates characters. It's a stubborn,
+    still-open problem even in mature, widely-used editors.
+  </p>
+  <p>
+    Paper makes one promise its central invariant: <strong>never break composition</strong> — no
+    decoration recompute, no widget rebuild while you're mid-character. That's the editor I wanted,
+    small enough to drop into any app.
+  </p>
+
+  <p class="next"><a href={withBase('installation')}>Installation →</a></p>
 </Base>
 
 <style>
-  .showcase {
-    margin-top: 1rem;
-  }
   .playground-frame {
     background: var(--frost);
-    padding: 1.25rem 1.5rem 1.5rem;
-    border: 1px solid var(--chrome);
-    box-shadow: var(--shadow-offset);
+    padding: 1rem 1.25rem 1.25rem;
   }
   .hint {
     font-size: 13px;
     color: var(--steel);
-    margin-top: 1rem;
+    margin-top: 0.75rem;
   }
-
-  .cta {
-    margin-top: 3.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-  }
-  .cta-link {
-    display: inline-block;
-    font-weight: 600;
-    padding: 0.7rem 1.2rem;
-    background: var(--ink);
-    color: var(--paper);
-    border: 1px solid var(--ink);
-    box-shadow: var(--shadow-offset);
-  }
-  .cta-link:hover {
-    text-decoration: none;
-  }
-  .cta-alt {
-    font-weight: 600;
-  }
-
-  @media (max-width: 720px) {
-    .cta {
-      margin-top: 2.5rem;
-    }
-  }
-
   @media (max-width: 540px) {
     .playground-frame {
       /* Full-bleed on phones so the editor gets every pixel of width. */
       margin: 0 -1.1rem;
-      padding: 0.85rem 0.95rem 1rem;
-      border-left: none;
-      border-right: none;
+      padding: 0.75rem 0.85rem 0.85rem;
     }
+  }
+  .next {
+    margin-top: 2.5rem;
+    font-weight: 600;
   }
 </style>

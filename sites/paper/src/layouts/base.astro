@@ -26,9 +26,6 @@ const nav = [
 ];
 const isActive = (seg: string) => (seg === '' ? path === homePath : path.endsWith('/' + seg));
 const year = new Date().getFullYear();
-// The landing page leads with the hero + playground, so it drops the docs
-// sidebar and runs full-width. Docs pages keep the sidebar.
-const isHome = bodyClass === 'home';
 ---
 
 <!doctype html>
@@ -46,24 +43,21 @@ const isHome = bodyClass === 'home';
         <a href={withBase('')} class="brand">Paper</a>
         <span class="brand-sub">@beaket/paper</span>
         <nav class="masthead-links">
-          <a href={withBase('installation')}>Docs</a>
           <a href="https://www.npmjs.com/package/@beaket/paper">npm</a>
           <a href="https://github.com/beaket/ui/tree/main/packages/paper">GitHub</a>
         </nav>
       </div>
     </header>
 
-    <div class:list={['layout', { 'is-home': isHome }]}>
-      {!isHome && (
-        <aside class="sidebar">
-          <button class="sidebar-toggle" aria-label="Toggle navigation" aria-expanded="false">Menu ▾</button>
-          <nav class="sidebar-nav">
-            {nav.map((item) => (
-              <a href={item.href} class:list={['sidebar-link', { active: isActive(item.seg) }]}>{item.label}</a>
-            ))}
-          </nav>
-        </aside>
-      )}
+    <div class="layout">
+      <aside class="sidebar">
+        <button class="sidebar-toggle" aria-label="Toggle navigation" aria-expanded="false">Menu ▾</button>
+        <nav class="sidebar-nav">
+          {nav.map((item) => (
+            <a href={item.href} class:list={['sidebar-link', { active: isActive(item.seg) }]}>{item.label}</a>
+          ))}
+        </nav>
+      </aside>
 
       <main class="content">
         <slot />
