@@ -126,6 +126,22 @@ export function HighlightsDemo() {
           padding: 1rem 1.25rem;
           min-height: 190px;
         }
+        /* Recolor the highlight marks to a highlighter yellow so they read as
+           highlights at a glance. We target the mark classes directly rather
+           than Paper's --accent-weak / --accent-sel tokens, because those are
+           shared with the slash menu + table selection (overriding them would
+           tint those yellow too). Opaque fill + dark ink keeps the text legible
+           in BOTH light and dark mode (a translucent tint leaves white text
+           unreadable on the dark canvas). The .cm-editor scope wins over Paper's
+           theme rule on specificity. Active is the stronger tone. */
+        .hd-paper .cm-editor .cm-annotation-highlight {
+          background-color: #fff3b0;
+          color: #232a35;
+        }
+        .hd-paper .cm-editor .cm-annotation-active {
+          background-color: #ffd60a;
+          color: #232a35;
+        }
         .hd-toolbar {
           position: fixed;
           z-index: 10;
