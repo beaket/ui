@@ -1,7 +1,7 @@
 # 0015 — No raw CodeMirror `Extension[]` injection slot; keep raw access on the explicitly-unsafe `getView()` escape hatch and route concrete needs to declarative APIs
 
 - **Status:** Accepted
-- **Date:** 2026-06-21
+- **Date:** 2026-06-21 (#506)
 - **Supersedes:** —
 - **Superseded-by:** —
 - **Amends:** —
