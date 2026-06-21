@@ -1,7 +1,13 @@
 // `@beaket/paper` core entry (vanilla) — zero React imports (ADR-0013 exports map, decision 1).
 // The framework-agnostic core is the main body. The React wrapper is a separate subpath `./react` (src/react/index.ts).
 export { createEditor, defaultSlashItems } from "./editor/create-editor";
-export type { EditorOptions, SlashItemSpec, SlashItemsConfig } from "./editor/create-editor";
+export type {
+  EditorOptions,
+  SlashItemSpec,
+  SlashItemsConfig,
+  TriggerItem,
+  TriggerSpec,
+} from "./editor/create-editor";
 // Color scheme: the `colorScheme` option plus a live-flip helper (no recreation) for vanilla consumers.
 export { setColorScheme } from "./editor/theme";
 export type { ColorScheme } from "./editor/theme";

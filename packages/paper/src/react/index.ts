@@ -11,3 +11,5 @@ export type { SelectionInfo } from "../editor/extensions/selection-notifier";
 export type { ImageResolver } from "../editor/extensions/image-drop";
 // The slash-menu config type (the `slashItems` prop) and item shape.
 export type { SlashItemSpec, SlashItemsConfig } from "../editor/create-editor";
+// The declarative trigger API (the `triggers` prop): @ mentions / [[ wikilinks (ADR-0016).
+export type { TriggerItem, TriggerSpec } from "../editor/create-editor";

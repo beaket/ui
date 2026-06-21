@@ -44,6 +44,8 @@ export interface PaperProps {
   onSelect?: EditorOptions["onSelect"];
   onInsertImage?: EditorOptions["onInsertImage"];
   slashItems?: EditorOptions["slashItems"];
+  /** Declarative autocomplete triggers — `@` mentions, `[[` wikilinks (ADR-0016). Fixed at creation (not live). */
+  triggers?: EditorOptions["triggers"];
   /** Light/dark scheme. "system" (default) follows the OS; "light"/"dark" force it. Live prop — flips without recreation. */
   colorScheme?: ColorScheme;
   className?: string;
@@ -60,6 +62,7 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
     onSelect,
     onInsertImage,
     slashItems,
+    triggers,
     colorScheme,
     className,
   },
@@ -90,6 +93,7 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
       onSelect: (sel) => onSelectRef.current?.(sel),
       onInsertImage,
       slashItems,
+      triggers,
       colorScheme,
     });
     viewRef.current = view;
