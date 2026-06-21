@@ -23,7 +23,12 @@ change needs an ADR vs. a changeset. Each bullet below links to its ADR.
   ([ADR-0001](./adr/0001-live-preview-on-codemirror6.md))
 - **Consumer config ≠ plugin API.** The editor exposes injection points (`onInsertImage`,
   `slashItems`, the annotation props) as _build-time consumer config_, not a runtime/third-party
-  plugin system. A runtime plugin system is out of scope.
+  plugin system. A runtime plugin system is out of scope. This extends to **build-time raw
+  injection**: there is no blessed `extensions?: Extension[]` (or `keymap`) slot on `EditorOptions` —
+  it would leak CM6 into the 1.0-frozen surface and let a consumer break the core invariants. Raw
+  access stays on the explicitly-_unsafe_ `getView()` escape hatch; concrete needs route to the
+  declarative APIs.
+  ([ADR-0015](./adr/0015-no-raw-codemirror-extension-injection-slot.md))
 
 ## Load-bearing decisions
 

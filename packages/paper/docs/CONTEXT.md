@@ -30,12 +30,14 @@ there is no second document model. Everything else follows from this:
    shared Han glyphs render in the Korean font (measured). Lives in `theme.ts`.
    → [ADR-0009](./adr/0009-visual-language-porcelain-tokens-cjk-typography.md)
 3. **Mechanism in editor, policy in consumer.** The editor exposes build-time injection points
-   (`onInsertImage`, `slashItems`, the highlight/selection props) — not a runtime plugin system.
-   Images _render_ in-editor but _ingestion_ is delegated; selection annotations are anchored to the
-   **markdown source**, not rendered HTML.
+   (`onInsertImage`, `slashItems`, the highlight/selection props) — not a runtime plugin system, and
+   **not a raw `extensions[]`/`keymap` slot** (that stays on the unsafe `getView()` hatch, ADR-0015).
+   Curated APIs deliberately do not expose `EditorView`. Images _render_ in-editor but _ingestion_ is
+   delegated; selection annotations are anchored to the **markdown source**, not rendered HTML.
    → [ADR-0011](./adr/0011-images-render-vs-ingest-consumer-delegation.md),
    [ADR-0012](./adr/0012-slash-items-consumer-config.md),
-   [ADR-0014](./adr/0014-selection-annotation-mechanism.md)
+   [ADR-0014](./adr/0014-selection-annotation-mechanism.md),
+   [ADR-0015](./adr/0015-no-raw-codemirror-extension-injection-slot.md)
 4. **Test boundary.** Logic is covered by jsdom **contract + regression tests** (every bug fixed
    red→green). Coordinate/visual concerns are deliberately _carved out_ — jsdom returns zero-size
    rects (polyfills in `test/setup.ts`), so anything geometry-dependent needs real-browser

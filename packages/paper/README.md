@@ -35,7 +35,9 @@ function Editor() {
 The editor is **uncontrolled**: `defaultValue` seeds the initial document, and you replace it
 programmatically with `ref.current.setValue(...)`. `onChange` fires with the full markdown on user
 edits only — it's IME-guarded, and `setValue` doesn't echo back through it. For anything the handle
-doesn't expose, `ref.current.getView()` returns the underlying CodeMirror `EditorView`.
+doesn't expose, `ref.current.getView()` returns the underlying CodeMirror `EditorView` — the
+deliberate raw escape hatch, with no cross-version guarantee (there is no blessed `extensions` slot;
+that would lock CM6 into the public surface).
 
 See the [API reference](https://beaket.github.io/ui/paper/api) for the full prop and handle surface.
 
