@@ -131,7 +131,7 @@ export function imageDrop(resolve: ImageResolver = blobResolver): Extension {
   return [
     EditorView.domEventHandlers({
       paste(event, view) {
-        if (view.composing) return false;
+        if (view.composing || view.state.readOnly) return false; // read-only: no ingestion (ADR-0018)
         // Capture the File references synchronously before await — after await, event.clipboardData may be empty.
         const files = imageFilesOf(event.clipboardData?.files);
         if (files.length === 0) return false;
@@ -143,6 +143,7 @@ export function imageDrop(resolve: ImageResolver = blobResolver): Extension {
       // For an external file drop to fire, dragover's default behavior (open/navigate to the file) must be prevented.
       // At the same time, update the insertion line to the drop position.
       dragover(event, view) {
+        if (view.state.readOnly) return false; // read-only: no insertion indicator (ADR-0018)
         if (!draggingFiles(event)) return false;
         event.preventDefault();
         if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
@@ -159,7 +160,7 @@ export function imageDrop(resolve: ImageResolver = blobResolver): Extension {
       },
       drop(event, view) {
         hideIndicator();
-        if (view.composing) return false;
+        if (view.composing || view.state.readOnly) return false; // read-only: no ingestion (ADR-0018)
         const files = imageFilesOf(event.dataTransfer?.files);
         if (files.length === 0) return false;
         event.preventDefault();

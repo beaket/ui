@@ -1,7 +1,7 @@
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import type { Extension } from "@codemirror/state";
 import { EditorState } from "@codemirror/state";
-import { EditorView, keymap } from "@codemirror/view";
+import { EditorView, keymap, placeholder as placeholderExt } from "@codemirror/view";
 import type { AnchorStatus } from "./anchor";
 import { blockSyntaxHiding } from "./extensions/block-syntax-hiding";
 import { blockquoteKeymap } from "./extensions/blockquote-keys";
@@ -17,6 +17,7 @@ import { listRendering } from "./extensions/list-rendering";
 import { markdownExtension } from "./extensions/markdown";
 import { markdownCopy } from "./extensions/markdown-copy";
 import { pasteTableConvert } from "./extensions/paste-table-convert";
+import { readOnlyState } from "./extensions/read-only";
 import type { SelectionInfo } from "./extensions/selection-notifier";
 import { selectionNotifier } from "./extensions/selection-notifier";
 import type { SlashItemsConfig } from "./extensions/slash-command";
@@ -27,7 +28,7 @@ import type { TokenSpec } from "./extensions/token-render";
 import { tokenRender } from "./extensions/token-render";
 import type { TriggerSpec } from "./extensions/trigger-menu";
 import { triggerMenu } from "./extensions/trigger-menu";
-import { baseTheme, type ColorScheme, darkThemeStyle } from "./theme";
+import { baseTheme, type ColorScheme, darkThemeStyle, sizeTheme } from "./theme";
 export { defaultSlashItems } from "./extensions/slash-command";
 export type { SlashItemsConfig, SlashItemSpec } from "./extensions/slash-command";
 export type { TokenSpec, TokenView } from "./extensions/token-render";
@@ -89,6 +90,29 @@ export interface EditorOptions {
    * the scheme regardless of OS. Live-flippable via `setColorScheme(view, …)` without recreating the editor.
    */
   colorScheme?: ColorScheme;
+  /**
+   * Hint shown on an empty document (ADR-0018). Plain text; rendered by CodeMirror's `placeholder`
+   * extension and hidden as soon as the document is non-empty.
+   */
+  placeholder?: string;
+  /**
+   * Read-only mode (ADR-0018). Sets `EditorState.readOnly` + turns off `EditorView.editable`, so
+   * typing/IME/drag-edit and the doc-mutating entry points (image drop/paste, table cell editing,
+   * paste-to-table) are all inert; native selection and the copy buttons keep working. Live-flippable
+   * via `setReadOnly(view, …)` (React: the `readOnly` prop) without recreating the editor.
+   */
+  readOnly?: boolean;
+  /**
+   * Fixed editor height (any CSS length, e.g. `"25rem"`) — the editor scrolls internally when content
+   * exceeds it (ADR-0018). Unset = grow-with-content. Fixed at creation (not a live prop).
+   */
+  height?: string;
+  /**
+   * Minimum editable height (any CSS length) — the editor grows with content but never shorter than
+   * this, and the *editable surface itself* fills the reserved height, so clicking anywhere in it
+   * places a cursor (the dead-zone fix, #501). Fixed at creation (not a live prop).
+   */
+  minHeight?: string;
 }
 
 /** The full extension set of the production editor — tests use this as-is too */
@@ -99,6 +123,10 @@ export function editorExtensions(opts: EditorOptions = {}): Extension[] {
     EditorView.lineWrapping,
     baseTheme,
     darkThemeStyle(opts.colorScheme),
+    sizeTheme(opts.height, opts.minHeight),
+    // Read-only intent + contenteditable off, in a compartment so setReadOnly flips it live (ADR-0018).
+    readOnlyState(opts.readOnly),
+    opts.placeholder ? placeholderExt(opts.placeholder) : [],
     markdownExtension(),
     // Atomic token rendering (ADR-0017). Placed before inlineSyntaxHiding so a token's full-range
     // replace widget takes precedence over the link's inner syntax-hide on matched ranges.

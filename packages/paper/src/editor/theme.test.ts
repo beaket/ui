@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { colorSchemeClass, darkThemeCss, darkTokens, tokens } from "./theme";
+import { colorSchemeClass, darkThemeCss, darkTokens, sizeRules, tokens } from "./theme";
 
 // Token reconciliation + public theming contract (ADR-0013 decision 6).
 //
@@ -172,6 +172,35 @@ describe("darkThemeCss emits a scoped prefers-color-scheme block", () => {
     const forced = css.slice(css.indexOf("}}") + 2); // the unconditional .cm-editor.cm-beaket-paper-dark block
     expect(media).toContain("--cm-check-mark:");
     expect(forced).toContain("--cm-check-mark:");
+  });
+});
+
+// Sizing (ADR-0018). `sizeRules` is the pure wiring seam — it maps the two options to CM6's documented
+// recipes: `height` → a fixed height on `.cm-editor` (`&`); `minHeight` → a minimum on `.cm-content`
+// (the editable surface itself, so clicking the reserved height places a cursor). The rendered grow vs
+// fixed-scroll geometry and the click-to-focus are browser-verified (invariant #4), not asserted here.
+describe("sizeRules maps height/minHeight to the CM6 recipes", () => {
+  it("height sizes the editor root (& = .cm-editor)", () => {
+    expect(sizeRules("25rem")).toEqual({ "&": { height: "25rem" } });
+  });
+
+  it("minHeight sizes the top-level editable only (child combinator, never the cell subview)", () => {
+    // A bare `.cm-content` descendant selector would also match the nested table-cell subview's
+    // content and balloon it; the direct `& > .cm-scroller > .cm-content` pins it to the top level.
+    expect(sizeRules(undefined, "10rem")).toEqual({
+      "& > .cm-scroller > .cm-content": { minHeight: "10rem" },
+    });
+  });
+
+  it("supports both at once (a floor that scrolls past a fixed height)", () => {
+    expect(sizeRules("40rem", "20rem")).toEqual({
+      "&": { height: "40rem" },
+      "& > .cm-scroller > .cm-content": { minHeight: "20rem" },
+    });
+  });
+
+  it("contributes nothing when neither is set (pure grow-with-content default)", () => {
+    expect(sizeRules()).toEqual({});
   });
 });
 

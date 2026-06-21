@@ -67,7 +67,11 @@ there is no second document model. Everything else follows from this:
 - `editor/value-controller.ts` — `setValue` full-document replacement, IME-safe (deferred during
   composition; does not echo through `onChange`).
 - `editor/theme.ts` — single source of token truth; the porcelain bridge + editor-owned tokens; the
-  CJK font stack; `colorScheme` / `setColorScheme` (light/dark/system, live via a compartment).
+  CJK font stack; `colorScheme` / `setColorScheme` (light/dark/system, live via a compartment); the
+  `height` / `minHeight` sizing recipes (`sizeTheme` / the pure `sizeRules` seam, ADR-0018).
+- `editor/extensions/read-only.ts` — the `readOnly` option: `EditorState.readOnly` +
+  `EditorView.editable` in one compartment; `setReadOnly` flips it live (ADR-0018). The doc-mutating
+  entry points guard on `view.state.readOnly` themselves (the matrix lives in the ADR).
 - `editor/extensions/markdown.ts` — the dialect: CommonMark + GFM core (Table, TaskList,
   Strikethrough, Autolink) and the heading/code style ramp.
 
@@ -144,7 +148,7 @@ view` rendered as a permanently-atomic replace-widget (caret steps over, one Bac
 ## Public API surface
 
 **Core (`@beaket/paper`)** — `createEditor`, `editorExtensions`, `defaultSlashItems`,
-`setColorScheme`, `createAnchor`, `resolveAnchor`, `setHighlightsEffect`,
+`setColorScheme`, `setReadOnly`, `createAnchor`, `resolveAnchor`, `setHighlightsEffect`,
 `setActiveHighlightEffect`; types `EditorOptions`, `SlashItemSpec`, `SlashItemsConfig`,
 `TriggerSpec`, `TriggerItem`, `TokenSpec`, `TokenView`, `ColorScheme`, `ImageResolver`, `Anchor`,
 `AnchorStatus`, `ResolvedAnchor`, `HighlightInput`, `SelectionInfo`.
@@ -153,7 +157,8 @@ view` rendered as a permanently-atomic replace-widget (caret steps over, one Bac
 types above.
 
 `EditorOptions`: `doc`, `onChange`, `onInsertImage`, `slashItems`, `triggers`, `tokens`,
-`onHighlightStatusChange`, `onHighlightClick`, `onSelect`, `colorScheme`. This surface is slated to
+`onHighlightStatusChange`, `onHighlightClick`, `onSelect`, `colorScheme`, `placeholder`, `readOnly`,
+`height`, `minHeight` (ADR-0018). This surface is slated to
 **freeze at 1.0**
 (milestone `1.0.0`) — breaking changes are cheap on `0.x` minors now, expensive deliberate majors
 after.

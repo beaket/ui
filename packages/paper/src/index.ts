@@ -11,6 +11,8 @@ export type {
 // Color scheme: the `colorScheme` option plus a live-flip helper (no recreation) for vanilla consumers.
 export { setColorScheme } from "./editor/theme";
 export type { ColorScheme } from "./editor/theme";
+// Read-only: the `readOnly` option plus a live-flip helper (no recreation) for vanilla consumers (ADR-0018).
+export { setReadOnly } from "./editor/extensions/read-only";
 // The `onInsertImage` option/prop type, so consumers can annotate their own resolver.
 export type { ImageResolver } from "./editor/extensions/image-drop";
 // Anchor pure functions (ADR-0014 step A). Vanilla core consumers use these for selection→anchor→re-resolution directly.

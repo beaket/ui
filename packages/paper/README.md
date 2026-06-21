@@ -39,6 +39,11 @@ doesn't expose, `ref.current.getView()` returns the underlying CodeMirror `Edito
 deliberate raw escape hatch, with no cross-version guarantee (there is no blessed `extensions` slot;
 that would lock CM6 into the public surface).
 
+Common embedding options: `placeholder` (hint on an empty document), `readOnly` (a live-flippable
+view mode — typing/ingest off, selection and copy still work), and explicit sizing — `height` for a
+fixed height that scrolls, or `minHeight` to grow with content while keeping the whole editable
+surface clickable (no dead zone below short content).
+
 See the [API reference](https://beaket.github.io/ui/paper/api) for the full prop and handle surface.
 
 ## Framework-agnostic core

@@ -155,6 +155,14 @@ export const baseTheme = EditorView.theme({
     // Letter spacing 0: JLREQ solid setting (beta-gumi) / KLREQ "Hangul letter spacing 0 by default".
     // Mixed-script content, so negative letter spacing is forbidden — intentionally not a public token.
     letterSpacing: "normal",
+    // Sizing chain (ADR-0018). Unconditional, so the editable surface fills the editor's height
+    // however the editor got tall — our `height`/`minHeight` options OR a host sizing `.cm-editor`
+    // directly (the `.cm-content` min-height: 100% CM6 default then fills the scroller, removing the
+    // click-target dead zone). `flexGrow` claims the editor's spare vertical space (the editor is a
+    // flex column); `overflowY: auto` only shows a scrollbar when content exceeds a fixed height, so
+    // it is inert in the default grow-with-content mode. Geometry is browser-verified (invariant #4).
+    flexGrow: 1,
+    overflowY: "auto",
   },
   ".cm-content": {
     // CJK per-character line breaking: Hangul too breaks at characters instead of keeping words intact (keep-all).
@@ -269,4 +277,36 @@ export function darkThemeStyle(scheme: ColorScheme = "system"): Extension {
 /** Live-flips the editor's color scheme without recreating it (so the document is preserved). */
 export function setColorScheme(view: EditorView, scheme: ColorScheme): void {
   view.dispatch({ effects: colorSchemeCompartment.reconfigure(colorSchemeAttr(scheme)) });
+}
+
+// Sizing (ADR-0018). Two independent, optional CSS lengths, each the CM6-documented recipe:
+// - `height`    → a FIXED height with internal scroll. Sized on `.cm-editor` (`&`): the editor owns
+//                 its sizing; the React wrapper div is just a mount point. The scroll comes from the
+//                 unconditional `.cm-scroller { overflowY: auto }` in baseTheme.
+// - `minHeight` → a MINIMUM editable height that GROWS with content. Sized on `.cm-content` — the
+//                 *editable surface* itself, not just the outer wrapper — so clicking anywhere in the
+//                 reserved height places a cursor (the dead-zone fix, #501). Targeting `.cm-content`
+//                 rather than `.cm-editor` sidesteps the percentage-min-height flex gotcha.
+//                 IMPORTANT: the selector is the *direct* `& > .cm-scroller > .cm-content`, not a bare
+//                 `.cm-content`. A CM theme rule is a descendant selector off the editor root, so a
+//                 bare `.cm-content` would also match the nested table-cell subview (a separate
+//                 EditorView mounted inside `.cm-content`) and balloon every focused cell to the full
+//                 min-height. The child combinator pins the rule to the top-level editable only.
+// Both unset (default) = pure grow-with-content, layout unchanged. Fixed at creation (not live) —
+// per the lightness principle, only `readOnly`/`colorScheme` earn a live compartment.
+// `sizeRules` is the pure, jsdom-asserted wiring seam (the rendered geometry is browser-verified).
+export function sizeRules(
+  height?: string,
+  minHeight?: string,
+): Record<string, Record<string, string>> {
+  const rules: Record<string, Record<string, string>> = {};
+  if (height) rules["&"] = { height };
+  if (minHeight) rules["& > .cm-scroller > .cm-content"] = { minHeight };
+  return rules;
+}
+
+/** Theme contributing the `height`/`minHeight` sizing rules; empty when neither is set. */
+export function sizeTheme(height?: string, minHeight?: string): Extension {
+  const rules = sizeRules(height, minHeight);
+  return Object.keys(rules).length ? EditorView.theme(rules) : [];
 }
