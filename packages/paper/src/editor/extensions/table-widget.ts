@@ -1116,6 +1116,18 @@ function findTableRange(
   return found;
 }
 
+/**
+ * Whether the document ends with a table that has no trailing line — its block widget range ends
+ * exactly at doc end. CM6 renders a caret at that end-boundary *before* the widget (there is no
+ * following text line for it to attach to), so clicking in the empty space below such a table would
+ * visually land the caret above it even though the state position (doc end) is correct. (Pure — a
+ * unit-test target.) Edit paths can't reach this state (tableBoundaryGuard guarantees a trailing
+ * blank line after every table), but an initial doc passed straight in can — hence the click heal below.
+ */
+export function docEndsWithBareTable(state: EditorState): boolean {
+  return findTableRange(state, (_from, to) => to === state.doc.length) !== null;
+}
+
 // Obsidian 1.5.8 policy: backspace right after a table = (1) select the whole table, (2) once more = delete.
 // We must intercept atomicRanges' default behavior (one backspace deletes the whole table).
 function tableBackspace(view: EditorView): boolean {
@@ -1398,8 +1410,27 @@ export function tableWidget(): Extension {
     tableSelectionRing,
     // Clicking outside the widget (in the body) clears the active cell — events inside the widget are ignored by CM, so this doesn't reach them
     EditorView.domEventHandlers({
-      mousedown(_event, view) {
+      mousedown(event, view) {
         clearActiveCell(view);
+        // Bare table at EOF (no trailing line): a click in the empty space below it lands the caret at
+        // doc end, which CM renders *before* the widget. Heal the doc with a trailing line and place the
+        // caret there — mirroring escapeTable("below"). Geometry-gated (only fires below the last block,
+        // browser-verified, invariant #4); read-only never mutates (ADR-0018 matrix).
+        if (!view.state.readOnly && docEndsWithBareTable(view.state)) {
+          const docLen = view.state.doc.length;
+          const lastBottom = view.documentTop + view.lineBlockAt(docLen).bottom;
+          if (event.clientY > lastBottom) {
+            view.focus();
+            view.dispatch({
+              changes: { from: docLen, insert: "\n" },
+              selection: { anchor: docLen + 1 },
+              scrollIntoView: true,
+              userEvent: "input",
+            });
+            event.preventDefault();
+            return true;
+          }
+        }
         return false;
       },
     }),
