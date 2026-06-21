@@ -67,10 +67,19 @@ change needs an ADR vs. a changeset. Each bullet below links to its ADR.
 { label, className? }` rendered as a permanently-atomic replace widget (caret steps over, one
   Backspace deletes whole). Identity rides the markdown (recovered from capture groups, no `data`); it
   round-trips to plain markdown (no second model). Built on the `guardedDecorations` `{atomic}` path.
+  The same family carries the **embedding options** — `placeholder` (CM6's hint), `readOnly`, and
+  explicit sizing (`height` fixed-scroll / `minHeight` grow-floor). `readOnly` sets **both**
+  `EditorState.readOnly` **and** `EditorView.editable` (live via `setReadOnly`), with an explicit
+  behavior matrix: because `EditorState.readOnly` does not block a raw `view.dispatch`, the
+  doc-mutating entry points (image ingest, paste-to-table, and the **table cell subview**, which is a
+  separate `EditorView` the parent's `editable` does not reach) each guard on `view.state.readOnly`,
+  while the copy buttons keep working. Sizing puts the reserved height on the **editable surface**
+  (`.cm-content`), so clicking anywhere in it places a cursor (no dead zone).
   ([ADR-0011](./adr/0011-images-render-vs-ingest-consumer-delegation.md),
   [ADR-0012](./adr/0012-slash-items-consumer-config.md),
   [ADR-0016](./adr/0016-declarative-trigger-api.md),
-  [ADR-0017](./adr/0017-atomic-token-rendering.md))
+  [ADR-0017](./adr/0017-atomic-token-rendering.md),
+  [ADR-0018](./adr/0018-embedding-options-placeholder-readonly-sizing.md))
 - **Package shape.** Two layers: a framework-agnostic **core** (`createEditor`, zero React) plus a
   thin **React wrapper** (`<Paper>`). Uncontrolled (`defaultValue` + `ref.setValue()`);
   `onChange` emits full markdown on user edits only (IME-guarded; `setValue` does not echo). A

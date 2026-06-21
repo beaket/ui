@@ -5,6 +5,7 @@ import type { EditorOptions } from "../editor/create-editor";
 import { createEditor } from "../editor/create-editor";
 import type { HighlightController, HighlightInput } from "../editor/extensions/highlight-layer";
 import { createHighlightController } from "../editor/extensions/highlight-layer";
+import { setReadOnly } from "../editor/extensions/read-only";
 import type { ColorScheme } from "../editor/theme";
 import { setColorScheme } from "../editor/theme";
 import type { ValueController } from "../editor/value-controller";
@@ -50,6 +51,14 @@ export interface PaperProps {
   tokens?: EditorOptions["tokens"];
   /** Light/dark scheme. "system" (default) follows the OS; "light"/"dark" force it. Live prop — flips without recreation. */
   colorScheme?: ColorScheme;
+  /** Hint shown on an empty document (ADR-0018). Fixed at creation (not live). */
+  placeholder?: EditorOptions["placeholder"];
+  /** Read-only mode (ADR-0018). Live prop — flips via a compartment reconfigure (no recreation). */
+  readOnly?: boolean;
+  /** Fixed editor height (CSS length) with internal scroll (ADR-0018). Fixed at creation (not live). */
+  height?: EditorOptions["height"];
+  /** Minimum editable height (CSS length) — grows with content, no click-target dead zone (ADR-0018). Fixed at creation (not live). */
+  minHeight?: EditorOptions["minHeight"];
   className?: string;
 }
 
@@ -67,6 +76,10 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
     triggers,
     tokens,
     colorScheme,
+    placeholder,
+    readOnly,
+    height,
+    minHeight,
     className,
   },
   ref,
@@ -99,6 +112,10 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
       triggers,
       tokens,
       colorScheme,
+      placeholder,
+      readOnly,
+      height,
+      minHeight,
     });
     viewRef.current = view;
     controllerRef.current = createValueController(view);
@@ -130,6 +147,11 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
   useEffect(() => {
     if (viewRef.current) setColorScheme(viewRef.current, colorScheme ?? "system");
   }, [colorScheme]);
+
+  // readOnly is a live prop — flipped via a compartment reconfigure (no recreation, document kept).
+  useEffect(() => {
+    if (viewRef.current) setReadOnly(viewRef.current, readOnly ?? false);
+  }, [readOnly]);
 
   useImperativeHandle(
     ref,

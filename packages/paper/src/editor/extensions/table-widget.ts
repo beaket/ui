@@ -313,6 +313,9 @@ class TableController {
     table.addEventListener("mousedown", (event) => {
       const target = (event.target as HTMLElement).closest("th, td") as HTMLElement | null;
       if (!target || !this.mainView) return;
+      // Read-only: never enter a cell for editing (the cell subview is a separate EditorView, so the
+      // parent's editable=false does not propagate to it — guard the entry, ADR-0018 matrix).
+      if (this.mainView.state.readOnly) return;
       if (this.active && target === this.activeCellEl()) return; // handled by the subview
       event.preventDefault();
       const row = Number(target.dataset.row);
@@ -538,6 +541,8 @@ class TableController {
   mount(view: EditorView, row: number, col: number): void {
     if (this.active?.row === row && this.active?.col === col) return;
     this.unmount();
+    // Read-only: do not spin up a cell subview (it would be independently editable). ADR-0018 matrix.
+    if (view.state.readOnly) return;
     const cell = this.data.rows[row]?.[col];
     if (!cell?.editable) return;
     this.mainView = view;

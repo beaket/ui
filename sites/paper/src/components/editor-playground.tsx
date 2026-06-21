@@ -200,6 +200,13 @@ export function EditorPlayground() {
           slashItems={slashItems}
           triggers={[mentionTrigger]}
           tokens={[mentionToken]}
+          placeholder="Start writing…"
+          // The `minHeight` option (ADR-0018) reserves the editable height on the editor itself, so
+          // the editor fills the card and clicking anywhere — even the empty space under the table —
+          // places a cursor. This replaces the fragile hand-rolled `.cm-content` CSS this demo used to
+          // ship (which also had to special-case the nested cell editor); the option is scoped so the
+          // table cell subview is never ballooned.
+          minHeight="min(76vh, 680px)"
         />
       </div>
 
@@ -283,19 +290,8 @@ export function EditorPlayground() {
           box-shadow: var(--shadow-offset, 2px 2px 0 0 var(--chrome));
           padding: 1.25rem 1.5rem;
         }
-        /* Give the editor (not the card) the tall min-height so it fills the card.
-           Otherwise the card is taller than the editor and the gap below the content
-           is a dead zone — clicking there (e.g. under the table) misses the editor and
-           nothing types. */
-        .pg-paper .cm-content {
-          min-height: min(76vh, 680px);
-        }
-        /* ...but never the nested cell editor: editing a table cell mounts its own
-           CodeMirror inside the table widget, whose .cm-content would otherwise inherit
-           the rule above and balloon the cell to full height. (0,3,0) beats it. */
-        .pg-paper .cm-table-widget .cm-content {
-          min-height: 0;
-        }
+        /* The editor's own minHeight option (ADR-0018) now reserves the editable height — no
+           hand-rolled cm-content CSS (and no cell-subview special case) needed here anymore. */
         .pg-footer {
           display: flex;
           align-items: center;
@@ -326,9 +322,6 @@ export function EditorPlayground() {
           }
           .pg-paper {
             padding: 0.9rem 1rem;
-          }
-          .pg-paper .cm-content {
-            min-height: min(70vh, 560px);
           }
           /* Bigger tap targets for the swatches on touch screens. */
           .pg-swatch {

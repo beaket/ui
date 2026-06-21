@@ -60,6 +60,7 @@ function insertTable(view: EditorView, markdown: string): void {
 export function pasteTableConvert(): Extension {
   return EditorView.domEventHandlers({
     paste(event, view) {
+      if (view.state.readOnly) return false; // read-only: no paste-to-table conversion (ADR-0018)
       const html = event.clipboardData?.getData("text/html") ?? "";
       const text = event.clipboardData?.getData("text/plain") ?? "";
 

@@ -18,7 +18,7 @@ function countColumns(text: string): number {
 
 function convertPipeRowOnEnter(view: EditorView): boolean {
   // During composition, Enter is used only to commit the composition (CJK first-class)
-  if (view.composing) return false;
+  if (view.composing || view.state.readOnly) return false; // read-only: no auto-conversion (ADR-0018)
   const { state } = view;
   const sel = state.selection.main;
   if (!sel.empty) return false;
