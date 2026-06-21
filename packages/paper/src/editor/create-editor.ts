@@ -53,6 +53,9 @@ export interface EditorOptions {
   /**
    * Extends/replaces the slash menu items (consumer config, ADR-0012). Default items if unspecified.
    * - flat array → full replacement  - function `(defaults) => items` → derive from defaults (recommended)
+   * The transformer may return a `Promise` to load the catalog **asynchronously** (resolved once on
+   * first open, then filtered locally; a "Loading…" row shows meanwhile), and each item may carry an
+   * optional `group` to render section headers (ADR-0012 amendment).
    */
   slashItems?: SlashItemsConfig;
   /**

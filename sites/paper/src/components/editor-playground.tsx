@@ -2,10 +2,39 @@ import {
   type ColorScheme,
   Paper,
   type PaperHandle,
+  type SlashItemsConfig,
   type TokenSpec,
   type TriggerSpec,
 } from "@beaket/paper/react";
 import { useEffect, useRef, useState } from "react";
+
+// Async + grouped slash items (ADR-0012 amendment). The transformer returns a Promise — modelling a
+// catalog fetched on first open, with a short delay so the non-interactive "Loading…" row is visible —
+// and tags items with `group`, so the menu renders "Blocks" / "Templates" section headers. Built-ins
+// keep their order; the consumer clusters by ordering. Resolution is lazy + cached: only the first `/`
+// open waits; subsequent opens are instant.
+const slashItems: SlashItemsConfig = (defaults) =>
+  new Promise((resolve) =>
+    setTimeout(
+      () =>
+        resolve([
+          ...defaults.map((item) => ({ ...item, group: "Blocks" })),
+          {
+            label: "Meeting notes",
+            keywords: "template meeting",
+            insert: "## Meeting notes\n\n- ",
+            group: "Templates",
+          },
+          {
+            label: "Daily log",
+            keywords: "template daily",
+            insert: "## Daily log\n\n- [ ] ",
+            group: "Templates",
+          },
+        ]),
+      500,
+    ),
+  );
 
 // A declarative `@`-mention trigger (ADR-0016). `onQuery` filters a directory — async here, to model a
 // real fetch — and returns declarative items: each inserts a markdown link (single source of truth), and
@@ -49,7 +78,7 @@ A markdown-first, CJK-first **Live Preview** editor built on CodeMirror 6.
 
 Try it:
 
-- Type \`/\` to open the slash menu
+- Type \`/\` to open the slash menu — items load async and are grouped (Blocks · Templates)
 - Type \`@\` to mention someone — it renders as an atomic chip (Backspace removes it whole)
 - Drop an image, paste a table, write some \`code\`
 
@@ -168,6 +197,7 @@ export function EditorPlayground() {
           defaultValue={INITIAL}
           onChange={setMarkdown}
           colorScheme={scheme}
+          slashItems={slashItems}
           triggers={[mentionTrigger]}
           tokens={[mentionToken]}
         />

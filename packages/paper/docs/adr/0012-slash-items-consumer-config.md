@@ -1,11 +1,12 @@
 # 0012 — Slash items are opened through consumer config — a declarative contract, transformer override, and a separation of privileged built-ins
 
-- **Status:** Accepted
+- **Status:** Amended
 - **Date:** 2026-06-16
 - **Provenance:** Imported & translated from the `sandbox-beaket-editor` prototype on 2026-06-21.
 - **Supersedes:** —
 - **Superseded-by:** —
 - **Amends:** —
+- **Amended-by:** Amendment 2026-06-21 (#500) — async catalog + group section headers (see foot of file).
 
 ---
 
@@ -91,3 +92,59 @@ Even as items grow, the visual language stays as it is today (label-centric, por
 - Item injection does not change the decoration or DOM-recompute path — the composing guard contract (ADR-0004) is maintained by the existing `SlashMenu` unchanged (open/close/filter deferred while composing).
 - **Deterministic contract test (ADR-0005):** spec → internal-item resolution, transformer application, `id` → behavior reattachment, order preservation, and filter matching are unit-tested under jsdom (coordinate-independent) through the pure function `resolveSlashItems`. red → green.
 - Coordinate-dependent concerns (menu position, scroll overflow) cannot run under jsdom → verified in the 5173 browser.
+
+---
+
+## Amendment (2026-06-21, #500) — async catalog resolution and group section headers
+
+The decision above stands; this extends the **declarative spec** in two backward-compatible ways for
+richer menus (#500, child ④ of the embedding epic #505). Both ride the existing channel — they add to
+`SlashItemSpec` / `SlashItemsConfig`, not a new API — so decisions 1–5 above hold unchanged.
+
+### Async catalog — once-cached, not per-query
+
+The transformer may now return a `Promise`:
+
+```ts
+type SlashItemsConfig =
+  | SlashItemSpec[]
+  | ((defaults: SlashItemSpec[]) => SlashItemSpec[] | Promise<SlashItemSpec[]>);
+```
+
+The catalog is resolved **once** on the menu's first open and **cached**, then filtered synchronously
+on every keystroke. This preserves the slash menu's identity — _filter a static list internally_ — the
+asymmetry ADR-0016 drew against the trigger menu (whose `onQuery` filters per query). **Per-query async
+is deliberately not added here:** that is exactly what the `triggers` API (ADR-0016) already provides; a
+per-keystroke refetch on the slash menu would duplicate it and lose the local-filter snappiness.
+
+States are concrete: while the promise is pending the menu shows a single non-interactive **"Loading…"**
+row; a catalog that resolves **empty** closes the menu; a query that filters to **zero** items closes the
+menu — the _existing_ behavior, kept byte-stable (no new "no results" row).
+
+### Group section headers — boundary-emitted, consumer-clustered
+
+`SlashItemSpec` gains an optional `group?: string`. A non-interactive header is emitted whenever a
+**surviving** item's `group` differs from the previous survivor's. This **revises decision 5** ("we add
+no section dividers"): dividers are now possible, but **only when the consumer opts in** by setting
+`group` — the default menu, and any consumer that omits `group`, stays divider-free, so the lightness
+that decision 5 protected holds for the common case. Consequences, chosen to stay consistent with
+decision 4 (_array order = display order_; no `priority`):
+
+- The **consumer clusters** by ordering items; the editor does not reorder. Non-contiguous same-group
+  items therefore repeat the header — accepted, since order is the consumer's to state.
+- Headers are woven in **after** filtering, over the survivors — so a group whose items all filter out
+  shows **no empty header**, and the preserved selection index always lands on a selectable row.
+- Ungrouped items render with no header.
+
+### Mechanism (reversible, internal)
+
+- `resolveSlashItems` stays **synchronous** (its contract tests are unchanged); a thin
+  `resolveSlashConfig` branches on promise-ness and only the async branch defers. The `SlashMenu` plugin
+  holds the resolved catalog as instance state, fires the promise once, and on resolve re-evaluates
+  **through the IME-guarded path** (never rebuilding DOM mid-composition — invariant #1).
+- The shared menu engine (`menu-engine.ts`, ADR-0016) gained one **non-interactive row** type that
+  serves both group headers and the "Loading…" row; keyboard navigation skips it, selection indexes
+  selectable rows only. The trigger menu, which emits no headers, is byte-identical.
+- New pure contract-test seam (ADR-0005): `buildMenuRows(items, query)` — filter + header insertion —
+  alongside the unchanged `resolveSlashItems`. Async resolution and the loading-row geometry are
+  browser-verified (invariant #4).

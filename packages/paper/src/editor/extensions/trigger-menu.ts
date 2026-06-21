@@ -119,7 +119,7 @@ class TriggerMenu implements MenuController {
   constructor(private readonly view: EditorView) {
     this.popup = new PopupMenu(
       view,
-      { menu: "cm-trigger-menu", selected: "cm-trigger-selected" },
+      { menu: "cm-trigger-menu", selected: "cm-trigger-selected", header: "cm-trigger-header" },
       (item) => this.apply(item),
     );
   }
