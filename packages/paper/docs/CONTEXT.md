@@ -104,10 +104,13 @@ there is no second document model. Everything else follows from this:
 **Menus (trigger-activated)**
 
 - `extensions/menu-engine.ts` — the shared popup-menu engine (`PopupMenu`, `menuKeyBindings` /
-  `menuKeymap`, `menuTheme`): menu DOM, selected-index, keyboard nav, porcelain overlay. Both menus
-  below are thin controllers over it (ADR-0016). Coordinate-dependent → browser-verified, not jsdom.
+  `menuKeymap`, `menuTheme`): menu DOM, selected-index, keyboard nav, porcelain overlay, and
+  non-interactive header/loading rows (selection skips them). Both menus below are thin controllers
+  over it (ADR-0016). Coordinate-dependent → browser-verified, not jsdom.
 - `extensions/slash-command.ts` — the `/` insert menu; declarative `slashItems` config + privileged
-  built-ins (table `after`). `resolveSlashItems` is the pure test seam. → ADR-0012.
+  built-ins (table `after`). Catalog resolves sync or **async** (once-cached, Loading row) and items
+  carry an optional `group` rendered as section headers (ADR-0012 + its amendment). `resolveSlashItems`
+  (sync resolve) and `buildMenuRows` (filter + headers) are the pure test seams. → ADR-0012.
 - `extensions/trigger-menu.ts` — declarative consumer triggers (`@` mentions, `[[` wikilinks); the
   `triggers` option, async `onQuery` with stale-response discarding, `onSelect` + `data` passthrough.
   `matchTrigger` / `isResponseCurrent` are the pure test seams. → ADR-0016.

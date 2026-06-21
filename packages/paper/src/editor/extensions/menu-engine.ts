@@ -12,6 +12,11 @@ import { EditorView, keymap } from "@codemirror/view";
 /** Minimal shape the engine needs to render one menu row. Controllers extend it with their own fields. */
 export interface MenuRow {
   label: string;
+  /**
+   * A non-interactive row — a group section header or a "Loading…" placeholder (ADR-0012 amendment).
+   * Rendered as plain text, never a button: not clickable, and keyboard navigation skips it.
+   */
+  header?: boolean;
 }
 
 /** Per-menu class names — kept distinct so the stable `.cm-slash-menu` consumer hook is preserved. */
@@ -20,6 +25,8 @@ export interface MenuClasses {
   menu: string;
   /** Class on the selected row button (e.g. `cm-slash-selected`). */
   selected: string;
+  /** Class on a non-interactive header/loading row (e.g. `cm-slash-header`). */
+  header: string;
 }
 
 /**
@@ -29,7 +36,8 @@ export interface MenuClasses {
  */
 export class PopupMenu<T extends MenuRow> {
   private el: HTMLElement | null = null;
-  private rows: T[] = [];
+  /** The selectable (non-header) rows, in display order — `selected` indexes into this, never headers. */
+  private items: T[] = [];
   private selected = 0;
 
   constructor(
@@ -42,17 +50,33 @@ export class PopupMenu<T extends MenuRow> {
     return this.el !== null;
   }
 
-  /** (Re)open at the given source position. The selected index is preserved across re-filtering. */
+  /**
+   * (Re)open at the given source position. `rows` may interleave non-interactive header rows
+   * (`row.header`) with selectable items; headers render as plain text and are skipped by selection.
+   * The selected index is preserved across re-filtering (clamped to the selectable rows).
+   */
   open(anchorPos: number, rows: T[]): void {
-    this.rows = rows;
     const coords = this.view.coordsAtPos(anchorPos);
     this.closeDOM();
     if (!coords) return;
 
+    const items = rows.filter((row) => !row.header);
+    this.items = items;
+    this.selected =
+      items.length === 0 ? -1 : Math.max(0, Math.min(this.selected, items.length - 1));
+
     const menu = document.createElement("div");
     menu.className = this.classes.menu;
-    this.selected = Math.max(0, Math.min(this.selected, rows.length - 1));
-    rows.forEach((row, i) => {
+    let itemIndex = 0;
+    for (const row of rows) {
+      if (row.header) {
+        const head = document.createElement("div");
+        head.className = this.classes.header;
+        head.textContent = row.label;
+        menu.appendChild(head);
+        continue;
+      }
+      const i = itemIndex++;
       const btn = document.createElement("button");
       btn.type = "button";
       btn.textContent = row.label;
@@ -60,7 +84,7 @@ export class PopupMenu<T extends MenuRow> {
       btn.addEventListener("mousedown", (e) => e.preventDefault());
       btn.addEventListener("click", () => this.onApply(row));
       menu.appendChild(btn);
-    });
+    }
     menu.style.left = `${coords.left}px`;
     menu.style.top = `${coords.bottom + 4}px`;
     // Attach to view.dom so the EditorView.theme scope (under .cm-editor) applies.
@@ -69,8 +93,9 @@ export class PopupMenu<T extends MenuRow> {
   }
 
   moveSelection(delta: -1 | 1): void {
-    if (!this.el || this.rows.length === 0) return;
-    this.selected = (this.selected + delta + this.rows.length) % this.rows.length;
+    if (!this.el || this.items.length === 0) return;
+    this.selected = (this.selected + delta + this.items.length) % this.items.length;
+    // Only selectable rows are <button>s, so the button list aligns 1:1 with `this.items`.
     this.el.querySelectorAll("button").forEach((btn, i) => {
       const on = i === this.selected;
       btn.classList.toggle(this.classes.selected, on);
@@ -79,14 +104,14 @@ export class PopupMenu<T extends MenuRow> {
   }
 
   applySelected(): void {
-    const row = this.rows[this.selected];
+    const row = this.items[this.selected];
     if (row) this.onApply(row);
   }
 
   close(): void {
     this.closeDOM();
     this.selected = 0;
-    this.rows = [];
+    this.items = [];
   }
 
   private closeDOM(): void {
@@ -169,5 +194,16 @@ export const menuTheme = EditorView.theme({
   ".cm-slash-menu button.cm-slash-selected, .cm-trigger-menu button.cm-trigger-selected": {
     backgroundColor: "var(--accent-sel)",
     color: "var(--accent)",
+  },
+  // Non-interactive header / "Loading…" row (ADR-0012 amendment): a muted, uppercased label, set
+  // apart from the items. No hover/selection — it is never a button.
+  ".cm-slash-header, .cm-trigger-header": {
+    padding: "6px 10px 2px",
+    fontSize: "11px",
+    fontWeight: "600",
+    textTransform: "uppercase",
+    letterSpacing: "0.04em",
+    color: "var(--steel)",
+    userSelect: "none",
   },
 });

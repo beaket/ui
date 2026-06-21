@@ -54,8 +54,12 @@ change needs an ADR vs. a changeset. Each bullet below links to its ADR.
   ([ADR-0009](./adr/0009-visual-language-porcelain-tokens-cjk-typography.md))
 - **Extensibility = mechanism-in-editor / policy-in-consumer.** Images render in the source model;
   _ingestion_ is delegated to the consumer (`onInsertImage`). Slash items are a declarative consumer
-  contract with a transformer override; privileged built-ins are kept separate. **Custom autocomplete
-  triggers** (`@` mentions, `[[` wikilinks) ride the same family: `triggers?: TriggerSpec[]`, an
+  contract with a transformer override; privileged built-ins are kept separate. The `slashItems`
+  transformer may resolve **asynchronously** (once-cached on first open, then filtered locally — a
+  Loading row meanwhile) and items carry an optional `group` rendered as section headers; per-query
+  async is left to `triggers`, not the slash menu ([ADR-0012 amendment](./adr/0012-slash-items-consumer-config.md)).
+  **Custom autocomplete triggers** (`@` mentions, `[[` wikilinks) ride the same family:
+  `triggers?: TriggerSpec[]`, an
   async `onQuery` source whose items insert a **markdown string** (no `EditorView` exposed), with an
   `onSelect`/`data` passthrough to recover the picked entity. One shared menu engine
   (`menu-engine.ts`) backs both the slash menu and the trigger menu; only one is ever open. **Inserted
