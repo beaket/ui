@@ -89,7 +89,8 @@ there is no second document model. Everything else follows from this:
 
 **IME & consumer notifications**
 
-- `extensions/composing-guard.ts` — invariant #1; `guardedDecorations`.
+- `extensions/composing-guard.ts` — invariant #1; `guardedDecorations` (opt-in `{atomic}` also exposes
+  the guarded set as `EditorView.atomicRanges`, ADR-0017).
 - `extensions/change-notifier.ts` — `onChange` (full markdown on user `docChanged`, IME-guarded).
 - `extensions/selection-notifier.ts` — `onSelect` (selected text + screen rect; IME-guarded).
 
@@ -110,6 +111,10 @@ there is no second document model. Everything else follows from this:
 - `extensions/trigger-menu.ts` — declarative consumer triggers (`@` mentions, `[[` wikilinks); the
   `triggers` option, async `onQuery` with stale-response discarding, `onSelect` + `data` passthrough.
   `matchTrigger` / `isResponseCurrent` are the pure test seams. → ADR-0016.
+- `extensions/token-render.ts` — atomic token rendering (the `tokens` option): a consumer `pattern →
+view` rendered as a permanently-atomic replace-widget (caret steps over, one Backspace deletes whole;
+  identity from capture groups; code-skipped; round-trips to markdown). Rides the `guardedDecorations`
+  `{atomic}` path. `findTokenMatches` / `tokenEndingAt` are the pure test seams. → ADR-0017.
 
 **Editing keys**
 
@@ -138,13 +143,13 @@ there is no second document model. Everything else follows from this:
 **Core (`@beaket/paper`)** — `createEditor`, `editorExtensions`, `defaultSlashItems`,
 `setColorScheme`, `createAnchor`, `resolveAnchor`, `setHighlightsEffect`,
 `setActiveHighlightEffect`; types `EditorOptions`, `SlashItemSpec`, `SlashItemsConfig`,
-`TriggerSpec`, `TriggerItem`, `ColorScheme`, `ImageResolver`, `Anchor`, `AnchorStatus`,
-`ResolvedAnchor`, `HighlightInput`, `SelectionInfo`.
+`TriggerSpec`, `TriggerItem`, `TokenSpec`, `TokenView`, `ColorScheme`, `ImageResolver`, `Anchor`,
+`AnchorStatus`, `ResolvedAnchor`, `HighlightInput`, `SelectionInfo`.
 
 **React (`@beaket/paper/react`)** — `Paper`; types `PaperHandle`, `PaperProps`, plus the shared
 types above.
 
-`EditorOptions`: `doc`, `onChange`, `onInsertImage`, `slashItems`, `triggers`,
+`EditorOptions`: `doc`, `onChange`, `onInsertImage`, `slashItems`, `triggers`, `tokens`,
 `onHighlightStatusChange`, `onHighlightClick`, `onSelect`, `colorScheme`. This surface is slated to
 **freeze at 1.0**
 (milestone `1.0.0`) — breaking changes are cheap on `0.x` minors now, expensive deliberate majors

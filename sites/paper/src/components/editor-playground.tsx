@@ -1,4 +1,10 @@
-import { type ColorScheme, Paper, type PaperHandle, type TriggerSpec } from "@beaket/paper/react";
+import {
+  type ColorScheme,
+  Paper,
+  type PaperHandle,
+  type TokenSpec,
+  type TriggerSpec,
+} from "@beaket/paper/react";
 import { useEffect, useRef, useState } from "react";
 
 // A declarative `@`-mention trigger (ADR-0016). `onQuery` filters a directory — async here, to model a
@@ -27,6 +33,14 @@ const mentionTrigger: TriggerSpec = {
   onSelect: (item) => console.log("[paper] mention selected:", item.data),
 };
 
+// The atomic-token counterpart (ADR-0017): the same `[@Name](user:id)` markdown the trigger inserts is
+// rendered as a chip — the caret steps over it, one Backspace deletes it whole. The id round-trips in
+// the markdown, recovered from the capture group; no second document model.
+const mentionToken: TokenSpec = {
+  pattern: /\[@([^\]]+)\]\(user:([^)]+)\)/,
+  render: (m) => ({ label: `@${m[1]}`, className: "mention-token" }),
+};
+
 // The heading keeps a trailing space (via ${" "} so formatters can't strip it) —
 // the load caret sits after it, one space clear of "Paper" rather than jammed against it.
 const INITIAL = `# Paper${" "}
@@ -36,7 +50,7 @@ A markdown-first, CJK-first **Live Preview** editor built on CodeMirror 6.
 Try it:
 
 - Type \`/\` to open the slash menu
-- Type \`@\` to mention someone (Ada, Alan, Grace…)
+- Type \`@\` to mention someone — it renders as an atomic chip (Backspace removes it whole)
 - Drop an image, paste a table, write some \`code\`
 
 | Feature | Status |
@@ -155,6 +169,7 @@ export function EditorPlayground() {
           onChange={setMarkdown}
           colorScheme={scheme}
           triggers={[mentionTrigger]}
+          tokens={[mentionToken]}
         />
       </div>
 

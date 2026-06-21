@@ -13,3 +13,5 @@ export type { ImageResolver } from "../editor/extensions/image-drop";
 export type { SlashItemSpec, SlashItemsConfig } from "../editor/create-editor";
 // The declarative trigger API (the `triggers` prop): @ mentions / [[ wikilinks (ADR-0016).
 export type { TriggerItem, TriggerSpec } from "../editor/create-editor";
+// The atomic token API (the `tokens` prop): render inserted mentions/references as chips (ADR-0017).
+export type { TokenSpec, TokenView } from "../editor/create-editor";
