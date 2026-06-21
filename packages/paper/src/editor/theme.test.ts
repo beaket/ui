@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { colorSchemeClass, darkThemeCss, darkTokens, sizeRules, tokens } from "./theme";
+import {
+  colorSchemeClass,
+  colorSchemeCss,
+  darkTokens,
+  sizeRules,
+  surfacePins,
+  tokens,
+} from "./theme";
 
 // Token reconciliation + public theming contract (ADR-0013 decision 6).
 //
@@ -130,8 +137,8 @@ describe("dark theme keeps the override + bridge chains, swapping only the built
 // nested `&` produces bare declarations under the at-rule), so it ships as a scoped stylesheet. This
 // locks the structure that makes it apply: an @media wrapper + a two-class root selector that outranks
 // baseTheme's single generated class without disturbing the var() override/bridge chains.
-describe("darkThemeCss emits a scoped prefers-color-scheme block", () => {
-  const css = darkThemeCss();
+describe("colorSchemeCss emits a scoped prefers-color-scheme block", () => {
+  const css = colorSchemeCss();
 
   it("wraps the tokens in a prefers-color-scheme: dark media query", () => {
     expect(css).toMatch(/^@media \(prefers-color-scheme: dark\)\{/);
@@ -208,9 +215,65 @@ describe("sizeRules maps height/minHeight to the CM6 recipes", () => {
 // stylesheet above is static). "system" follows the OS (media-gated class), "dark" forces the
 // unconditional block, "light" wears no class so even the OS media block can't darken it.
 describe("colorSchemeClass selects the editor-root class per scheme", () => {
-  it("maps system → OS-follow class, dark → forced class, light → none", () => {
+  it("maps system → OS-follow class, dark → forced-dark class, light → forced-light class", () => {
     expect(colorSchemeClass("system")).toBe("cm-beaket-paper");
     expect(colorSchemeClass("dark")).toBe("cm-beaket-paper-dark");
-    expect(colorSchemeClass("light")).toBe("");
+    // #472: forced light now wears its own class (was none) so it can pin the bridged surfaces light.
+    expect(colorSchemeClass("light")).toBe("cm-beaket-paper-light");
+  });
+});
+
+// #472: forcing a scheme must be authoritative over a consumer's porcelain `--color-*` bridge (ADR-0020).
+// The forced blocks pin the bridged tier-2 surface names to their scheme value so the editor wins over a
+// bridge that tracks the OS; `system` stays unpinned so it keeps deferring to the bridge. The pins are
+// derived off the var() chains (single source of truth), so these lock the derivation + placement.
+describe("surfacePins derives the bridged tier-2 surfaces from the token chains", () => {
+  it("pins the 3-tier porcelain surfaces to their tier-3 default, per scheme", () => {
+    const light = surfacePins(tokens);
+    expect(light["--color-paper"]).toBe("#ffffff");
+    expect(light["--color-frost"]).toBe("#f3f4f6");
+    expect(light["--color-signal-blue"]).toBe("#0c6bae"); // the accent bridges --color-signal-blue
+    expect(light["--color-ink"]).toBe("#232a35");
+    expect(light["--shadow-offset"]).toBe("1px 1px 0 0 #c0c4ca"); // the shadow bridges --shadow-offset
+
+    const dark = surfacePins(darkTokens);
+    expect(dark["--color-paper"]).toBe("#0d1117");
+    expect(dark["--color-frost"]).toBe("#0e1016");
+    expect(dark["--color-signal-blue"]).toBe("#1a8ed8");
+  });
+
+  it("excludes 2-tier editor-owned tokens (no porcelain bridge to override)", () => {
+    const light = surfacePins(tokens);
+    expect(light).not.toHaveProperty("--canvas"); // editor-owned: var(--beaket-paper-canvas, #fbfcfd)
+    expect(light).not.toHaveProperty("--surface");
+    expect(light).not.toHaveProperty("--font");
+  });
+});
+
+describe("colorSchemeCss makes forcing authoritative over the consumer bridge (#472)", () => {
+  const css = colorSchemeCss();
+  const forced = css.slice(css.indexOf("}}") + 2); // everything after the media block closes
+  const media = css.slice(0, css.indexOf("}}") + 2); // the @media (...) { .cm-editor.cm-beaket-paper { … } }
+
+  it("emits an unconditional forced-light block keyed on the forced-light class", () => {
+    expect(forced).toContain(".cm-editor.cm-beaket-paper-light{");
+  });
+
+  it("pins the bridged surfaces light in the forced-light block (was leaking the OS scheme)", () => {
+    const light = forced.slice(forced.indexOf(".cm-editor.cm-beaket-paper-light{"));
+    expect(light).toContain("--color-paper: #ffffff;");
+    expect(light).toContain("--color-frost: #f3f4f6;");
+  });
+
+  it("pins the bridged surfaces dark in the forced-dark block", () => {
+    expect(forced).toContain("--color-paper: #0d1117;");
+    expect(forced).toContain("--color-frost: #0e1016;");
+  });
+
+  // The OS-follow block must NOT pin the surfaces — it defers to the consumer bridge. The `:` (vs the
+  // `,` in the `--paper`/`--frost` var() chains) makes this a precise pin assertion, no false positive.
+  it("leaves the system/media block deferring to the bridge (no surface pins)", () => {
+    expect(media).not.toContain("--color-paper:");
+    expect(media).not.toContain("--color-frost:");
   });
 });

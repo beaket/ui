@@ -129,7 +129,7 @@ export const darkTokens = {
   "--canvas": "var(--beaket-paper-canvas, #14171c)",
   "--surface": "var(--beaket-paper-surface, #1c1f27)",
   // ② Dark task-checkbox checkmark: dark stroke, because --ink fills light in dark mode (the white
-  //    light variant would vanish). Rides both dark blocks via darkThemeCss, so it flips with the
+  //    light variant would vanish). Rides both dark blocks via colorSchemeCss, so it flips with the
   //    active scope class for forced "dark" and OS-dark "system" alike.
   "--cm-check-mark":
     "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%20fill='none'%20stroke='%230d1117'%20stroke-width='2.25'%3E%3Cpath%20d='M3.5%208.5l3%203%206-6'/%3E%3C/svg%3E\")",
@@ -203,34 +203,76 @@ export const baseTheme = EditorView.theme({
 // - "system" (default) → follow the OS via `prefers-color-scheme` (the original behavior).
 // - "dark"            → force dark regardless of OS.
 // - "light"           → force light regardless of OS (suppress the OS dark block).
-// The injected stylesheet carries BOTH a media-gated block (keyed on DARK_SCOPE_CLASS) and an
-// unconditional forced-dark block (keyed on DARK_FORCE_CLASS). The scheme only decides which scope
-// class the editor root wears — so flipping it is a single live class swap (`setColorScheme`), no
-// recreation. "light" wears neither class, so even the OS media block can't match it.
+// The injected stylesheet carries a media-gated block (keyed on DARK_SCOPE_CLASS) plus an
+// unconditional forced-dark and forced-light block (keyed on DARK_FORCE_CLASS / LIGHT_FORCE_CLASS).
+// The scheme only decides which scope class the editor root wears — so flipping it is a single live
+// class swap (`setColorScheme`), no recreation.
+//
+// Forcing is AUTHORITATIVE over the porcelain bridge (#472, ADR-0020). A consumer who bridges
+// `--color-paper`/`--color-frost`/… to a palette that tracks the OS would otherwise leak the OS scheme
+// into the editor's surfaces when a scheme is forced: the forced block only swaps the tier-3 *defaults*
+// inside each var() chain, never beating a consumer-provided tier-2 `--color-*`. So each forced block
+// also PINS the bridged surface `--color-*` to its scheme's value (the same mechanism `--color-ink`
+// already uses — a concrete `--color-*` declared on `.cm-editor` overrides the value inherited from the
+// consumer's `:root`, sidestepping the once-resolved-against-the-OS stickiness). "system" is left
+// unpinned, so it keeps deferring to the bridge (the porcelain-match-for-free contract). The tier-1
+// public `--beaket-paper-*` override still wins within a forced scheme — it is the escape hatch.
 export type ColorScheme = "light" | "dark" | "system";
 
 const DARK_SCOPE_CLASS = "cm-beaket-paper"; // OS-follow: only goes dark inside the media query
 const DARK_FORCE_CLASS = "cm-beaket-paper-dark"; // forced dark: unconditional
+const LIGHT_FORCE_CLASS = "cm-beaket-paper-light"; // forced light: unconditional (pins surfaces light)
 const DARK_STYLE_ID = "beaket-paper-dark-tokens";
 
-/** Maps a color scheme to the editor-root class that selects its token block (empty = forced light). */
+/** Maps a color scheme to the editor-root class that selects its token block. */
 export function colorSchemeClass(scheme: ColorScheme): string {
   if (scheme === "dark") return DARK_FORCE_CLASS;
-  if (scheme === "light") return "";
+  if (scheme === "light") return LIGHT_FORCE_CLASS;
   return DARK_SCOPE_CLASS;
 }
 
+// A 3-tier porcelain bridge: `var(--beaket-paper-X, var(--color-Y, DEFAULT))`. Captures the tier-2
+// porcelain name (`--color-Y`, or `--shadow-offset` for the shadow) and its tier-3 DEFAULT. 2-tier
+// editor-owned tokens (canvas/surface/syntax/typography) have no inner `var(` and never match, so they
+// are correctly excluded from the surface pins.
+const BRIDGE_CHAIN = /^var\(--beaket-paper-[\w-]+, var\((--[\w-]+), (.+)\)\)$/;
+
 /**
- * Serializes `darkTokens` into the dark-mode stylesheet text. Exported for the wiring test.
- * Emits the OS-follow block (media-gated) and the forced-dark block (unconditional) from one source.
+ * Derives the bridged surface pins for a token set — the tier-2 `--color-*`/`--shadow-offset` names
+ * mapped to their scheme-specific tier-3 default. Single source of truth: read straight off the var()
+ * chains in `tokens`/`darkTokens`, so a new 3-tier token auto-pins under forcing for free. Exported for
+ * the wiring test. NOT merged into `tokens`/`darkTokens` themselves — those stay pure var() chains so
+ * the public-override contract holds and `system` keeps deferring to the bridge; the pins exist ONLY in
+ * the forced blocks emitted by `colorSchemeCss()`.
  */
-export function darkThemeCss(): string {
-  const decls = Object.entries(darkTokens)
+export function surfacePins(tokenSet: Record<string, string>): Record<string, string> {
+  const pins: Record<string, string> = {};
+  for (const value of Object.values(tokenSet)) {
+    const match = BRIDGE_CHAIN.exec(value);
+    if (match) pins[match[1]] = match[2];
+  }
+  return pins;
+}
+
+/**
+ * Serializes the scheme stylesheet text. Exported for the wiring test. Emits three blocks from one
+ * source: the OS-follow dark block (media-gated), the forced-dark block, and the forced-light block.
+ * The forced blocks additionally carry the per-scheme surface pins (#472) so forcing beats the bridge.
+ */
+export function colorSchemeCss(): string {
+  const darkDecls = Object.entries(darkTokens)
     .map(([name, value]) => `${name}: ${value};`)
     .join(" ");
+  const pinDecls = (pins: Record<string, string>) =>
+    Object.entries(pins)
+      .map(([name, value]) => `${name}: ${value};`)
+      .join(" ");
+  const lightPins = pinDecls(surfacePins(tokens));
+  const darkPins = pinDecls(surfacePins(darkTokens));
   return (
-    `@media (prefers-color-scheme: dark){.cm-editor.${DARK_SCOPE_CLASS}{${decls}}}` +
-    `.cm-editor.${DARK_FORCE_CLASS}{${decls}}`
+    `@media (prefers-color-scheme: dark){.cm-editor.${DARK_SCOPE_CLASS}{${darkDecls}}}` +
+    `.cm-editor.${DARK_FORCE_CLASS}{${darkDecls} ${darkPins}}` +
+    `.cm-editor.${LIGHT_FORCE_CLASS}{${lightPins}}`
   );
 }
 
@@ -265,7 +307,7 @@ export function darkThemeStyle(scheme: ColorScheme = "system"): Extension {
       if (!host.querySelector(`#${DARK_STYLE_ID}`)) {
         const style = (root.ownerDocument ?? document).createElement("style");
         style.id = DARK_STYLE_ID;
-        style.textContent = darkThemeCss();
+        style.textContent = colorSchemeCss();
         host.appendChild(style);
       }
       return {};
