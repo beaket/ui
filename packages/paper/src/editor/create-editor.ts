@@ -23,9 +23,12 @@ import type { SlashItemsConfig } from "./extensions/slash-command";
 import { slashCommand } from "./extensions/slash-command";
 import { tableAutoConvert } from "./extensions/table-auto-convert";
 import { tableWidget } from "./extensions/table-widget";
+import type { TriggerSpec } from "./extensions/trigger-menu";
+import { triggerMenu } from "./extensions/trigger-menu";
 import { baseTheme, type ColorScheme, darkThemeStyle } from "./theme";
 export { defaultSlashItems } from "./extensions/slash-command";
 export type { SlashItemsConfig, SlashItemSpec } from "./extensions/slash-command";
+export type { TriggerItem, TriggerSpec } from "./extensions/trigger-menu";
 
 /** Options passed by the component consumer — the injection point for editor behavior policy */
 export interface EditorOptions {
@@ -49,6 +52,13 @@ export interface EditorOptions {
    * - flat array → full replacement  - function `(defaults) => items` → derive from defaults (recommended)
    */
   slashItems?: SlashItemsConfig;
+  /**
+   * Declarative autocomplete triggers beyond the slash menu — `@` mentions, `[[` wikilinks (ADR-0016).
+   * Each spec is `{ trigger, minQueryLength?, onQuery, onSelect? }`; `onQuery` may be async (stale
+   * responses discarded, never acted on mid-IME). Consumer config (ADR-0012 family) — insertion stays
+   * a declarative markdown string; no `EditorView` is exposed. Reserve `/` for the slash menu.
+   */
+  triggers?: readonly TriggerSpec[];
   /**
    * Callback for the highlight re-resolution status map (ADR-0014 surface step). Mainly changes on load/delete.
    * The highlight *list* is replaced imperatively (core: setHighlightsEffect / React: highlights prop).
@@ -88,6 +98,9 @@ export function editorExtensions(opts: EditorOptions = {}): Extension[] {
     // blockquoteKeymap (Enter/Tab/Shift-Tab) is Prec.highest, so it beats markdownKeymap (Prec.high).
     // Placed after the slash menu (slashCommand, which also uses Enter/Tab at the same highest prec) so it yields to it.
     slashCommand(opts.slashItems),
+    // Declarative consumer triggers (@ / [[), ADR-0016. Coexists with the slash menu; its keymap is
+    // also Prec.highest but only one menu is ever open (distinct triggers), so they don't fight.
+    triggerMenu(opts.triggers),
     blockquoteKeymap,
     tableAutoConvert(),
     pasteTableConvert(),

@@ -1,8 +1,9 @@
 import type { Extension } from "@codemirror/state";
-import { Facet, Prec } from "@codemirror/state";
+import { Facet } from "@codemirror/state";
 import type { ViewUpdate } from "@codemirror/view";
-import { EditorView, ViewPlugin, keymap } from "@codemirror/view";
+import { EditorView, ViewPlugin } from "@codemirror/view";
 import { composingRefresh, composingWake } from "./composing-guard";
+import { type MenuController, menuKeymap, menuTheme, PopupMenu } from "./menu-engine";
 import { activateCell } from "./table-widget";
 
 // Slash Command (CONTEXT.md): the insert menu opened from an empty position with `/`
@@ -112,19 +113,26 @@ const slashItemsFacet = Facet.define<SlashItem[], SlashItem[]>({
 
 const TRIGGER_RE = /(?:^|\s)([/、；／])(\S*)$/;
 
-class SlashMenu {
-  private readonly view: EditorView;
-  private menu: HTMLElement | null = null;
+/**
+ * The slash menu controller. Trigger matching + internal filtering + the privileged apply (line
+ * split, `after`) are slash-specific and stay here; the menu DOM / nav / keymap / overlay are the
+ * shared engine (`PopupMenu`, ADR-0016). Note the slash menu filters a static list internally —
+ * unlike the consumer trigger menu, whose source (`onQuery`) does its own filtering.
+ */
+class SlashMenu implements MenuController {
+  private readonly popup: PopupMenu<SlashItem>;
   private triggerPos = -1;
-  private filtered: SlashItem[] = [];
-  private selected = 0;
 
-  constructor(view: EditorView) {
-    this.view = view;
+  constructor(private readonly view: EditorView) {
+    this.popup = new PopupMenu(
+      view,
+      { menu: "cm-slash-menu", selected: "cm-slash-selected" },
+      (item) => this.apply(item),
+    );
   }
 
   get isOpen(): boolean {
-    return this.menu !== null;
+    return this.popup.isOpen;
   }
 
   update(update: ViewUpdate): void {
@@ -153,50 +161,19 @@ class SlashMenu {
     this.triggerPos = sel.head - query.length - 1;
     const q = query.toLowerCase();
     const items = state.facet(slashItemsFacet);
-    this.filtered = items.filter(
+    const filtered = items.filter(
       (item) => item.label.toLowerCase().includes(q) || item.keywords.toLowerCase().includes(q),
     );
-    if (this.filtered.length === 0) return this.close();
-    this.render();
-  }
-
-  private render(): void {
-    this.closeDOM();
-    const coords = this.view.coordsAtPos(this.triggerPos);
-    if (!coords) return;
-
-    const menu = document.createElement("div");
-    menu.className = "cm-slash-menu";
-    this.selected = Math.min(this.selected, this.filtered.length - 1);
-    this.filtered.forEach((item, i) => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = item.label;
-      if (i === this.selected) btn.classList.add("cm-slash-selected");
-      btn.addEventListener("mousedown", (e) => e.preventDefault());
-      btn.addEventListener("click", () => this.apply(item));
-      menu.appendChild(btn);
-    });
-    menu.style.left = `${coords.left}px`;
-    menu.style.top = `${coords.bottom + 4}px`;
-    // Attach to view.dom so the EditorView.theme scope (under .cm-editor) applies
-    this.view.dom.appendChild(menu);
-    this.menu = menu;
+    if (filtered.length === 0) return this.close();
+    this.popup.open(this.triggerPos, filtered);
   }
 
   moveSelection(delta: -1 | 1): void {
-    if (!this.menu) return;
-    this.selected = (this.selected + delta + this.filtered.length) % this.filtered.length;
-    this.menu.querySelectorAll("button").forEach((btn, i) => {
-      const on = i === this.selected;
-      btn.classList.toggle("cm-slash-selected", on);
-      if (on) btn.scrollIntoView({ block: "nearest" });
-    });
+    this.popup.moveSelection(delta);
   }
 
   applySelected(): void {
-    const item = this.filtered[this.selected];
-    if (item) this.apply(item);
+    this.popup.applySelected();
   }
 
   private apply(item: SlashItem): void {
@@ -221,15 +198,8 @@ class SlashMenu {
   }
 
   close(): void {
-    this.closeDOM();
+    this.popup.close();
     this.triggerPos = -1;
-    this.selected = 0;
-    this.filtered = [];
-  }
-
-  private closeDOM(): void {
-    this.menu?.remove();
-    this.menu = null;
   }
 
   destroy(): void {
@@ -239,59 +209,7 @@ class SlashMenu {
 
 const slashPlugin = ViewPlugin.fromClass(SlashMenu);
 
-function withOpenMenu(run: (menu: SlashMenu) => void): (view: EditorView) => boolean {
-  return (view) => {
-    const menu = view.plugin(slashPlugin);
-    if (!menu?.isOpen) return false;
-    run(menu);
-    return true;
-  };
-}
-
-const slashKeymap = Prec.highest(
-  keymap.of([
-    { key: "ArrowDown", run: withOpenMenu((m) => m.moveSelection(1)) },
-    { key: "ArrowUp", run: withOpenMenu((m) => m.moveSelection(-1)) },
-    { key: "Enter", run: withOpenMenu((m) => m.applySelected()) },
-    { key: "Tab", run: withOpenMenu((m) => m.applySelected()) },
-    { key: "Escape", run: withOpenMenu((m) => m.close()) },
-  ]),
-);
-
-const slashTheme = EditorView.theme({
-  // Overlay = porcelain hard offset, radius 0 (ADR-0009)
-  ".cm-slash-menu": {
-    position: "fixed",
-    zIndex: "20",
-    backgroundColor: "var(--paper)",
-    border: "1px solid var(--silver)",
-    boxShadow: "var(--shadow-overlay)",
-    padding: "4px",
-    display: "flex",
-    flexDirection: "column",
-    minWidth: "160px",
-    // Keep many items from overflowing the viewport (stay lightweight — normally not visible, ADR-0012 decision 5)
-    maxHeight: "40vh",
-    overflowY: "auto",
-  },
-  ".cm-slash-menu button": {
-    border: "none",
-    background: "none",
-    textAlign: "left",
-    padding: "5px 10px",
-    cursor: "pointer",
-    fontSize: "14px",
-    fontFamily: "inherit",
-    color: "var(--ink)",
-  },
-  ".cm-slash-menu button:hover": {
-    backgroundColor: "var(--frost)",
-  },
-  ".cm-slash-menu button.cm-slash-selected": {
-    backgroundColor: "var(--accent-sel)",
-    color: "var(--accent)",
-  },
-});
+const slashKeymap = menuKeymap((view) => view.plugin(slashPlugin));
 
 export function slashCommand(config?: SlashItemsConfig): Extension {
   return [
@@ -299,6 +217,6 @@ export function slashCommand(config?: SlashItemsConfig): Extension {
     slashItemsFacet.of(resolveSlashItems(config)),
     slashPlugin,
     slashKeymap,
-    slashTheme,
+    menuTheme,
   ];
 }

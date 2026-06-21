@@ -1,5 +1,31 @@
-import { type ColorScheme, Paper, type PaperHandle } from "@beaket/paper/react";
+import { type ColorScheme, Paper, type PaperHandle, type TriggerSpec } from "@beaket/paper/react";
 import { useEffect, useRef, useState } from "react";
+
+// A declarative `@`-mention trigger (ADR-0016). `onQuery` filters a directory — async here, to model a
+// real fetch — and returns declarative items: each inserts a markdown link (single source of truth), and
+// `data` carries the user id so `onSelect` can recover *which* person was picked, not just the text.
+const PEOPLE = [
+  { name: "Ada Lovelace", handle: "ada", id: "u_001" },
+  { name: "Alan Turing", handle: "alan", id: "u_002" },
+  { name: "Grace Hopper", handle: "grace", id: "u_003" },
+  { name: "Katherine Johnson", handle: "katherine", id: "u_004" },
+  { name: "Linus Torvalds", handle: "linus", id: "u_005" },
+];
+
+const mentionTrigger: TriggerSpec = {
+  trigger: "@",
+  onQuery: async (query) => {
+    const q = query.toLowerCase();
+    return PEOPLE.filter((p) => p.name.toLowerCase().includes(q) || p.handle.includes(q)).map(
+      (p) => ({
+        label: `${p.name} · @${p.handle}`,
+        insert: `[@${p.name}](user:${p.id}) `,
+        data: p.id,
+      }),
+    );
+  },
+  onSelect: (item) => console.log("[paper] mention selected:", item.data),
+};
 
 // The heading keeps a trailing space (via ${" "} so formatters can't strip it) —
 // the load caret sits after it, one space clear of "Paper" rather than jammed against it.
@@ -10,6 +36,7 @@ A markdown-first, CJK-first **Live Preview** editor built on CodeMirror 6.
 Try it:
 
 - Type \`/\` to open the slash menu
+- Type \`@\` to mention someone (Ada, Alan, Grace…)
 - Drop an image, paste a table, write some \`code\`
 
 | Feature | Status |
@@ -122,7 +149,13 @@ export function EditorPlayground() {
 
       {/* The editor ships no container chrome — the host supplies the paper card. */}
       <div className="pg-paper">
-        <Paper ref={ref} defaultValue={INITIAL} onChange={setMarkdown} colorScheme={scheme} />
+        <Paper
+          ref={ref}
+          defaultValue={INITIAL}
+          onChange={setMarkdown}
+          colorScheme={scheme}
+          triggers={[mentionTrigger]}
+        />
       </div>
 
       <div className="pg-footer">

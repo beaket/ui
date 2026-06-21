@@ -54,9 +54,14 @@ change needs an ADR vs. a changeset. Each bullet below links to its ADR.
   ([ADR-0009](./adr/0009-visual-language-porcelain-tokens-cjk-typography.md))
 - **Extensibility = mechanism-in-editor / policy-in-consumer.** Images render in the source model;
   _ingestion_ is delegated to the consumer (`onInsertImage`). Slash items are a declarative consumer
-  contract with a transformer override; privileged built-ins are kept separate.
+  contract with a transformer override; privileged built-ins are kept separate. **Custom autocomplete
+  triggers** (`@` mentions, `[[` wikilinks) ride the same family: `triggers?: TriggerSpec[]`, an
+  async `onQuery` source whose items insert a **markdown string** (no `EditorView` exposed), with an
+  `onSelect`/`data` passthrough to recover the picked entity. One shared menu engine
+  (`menu-engine.ts`) backs both the slash menu and the trigger menu; only one is ever open.
   ([ADR-0011](./adr/0011-images-render-vs-ingest-consumer-delegation.md),
-  [ADR-0012](./adr/0012-slash-items-consumer-config.md))
+  [ADR-0012](./adr/0012-slash-items-consumer-config.md),
+  [ADR-0016](./adr/0016-declarative-trigger-api.md))
 - **Package shape.** Two layers: a framework-agnostic **core** (`createEditor`, zero React) plus a
   thin **React wrapper** (`<Paper>`). Uncontrolled (`defaultValue` + `ref.setValue()`);
   `onChange` emits full markdown on user edits only (IME-guarded; `setValue` does not echo). A

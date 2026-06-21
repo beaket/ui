@@ -100,6 +100,17 @@ there is no second document model. Everything else follows from this:
 - `extensions/highlight-layer.ts` — renders the consumer's anchor list as mark decorations;
   `setHighlightsEffect` / `setActiveHighlightEffect`; `HighlightInput`.
 
+**Menus (trigger-activated)**
+
+- `extensions/menu-engine.ts` — the shared popup-menu engine (`PopupMenu`, `menuKeyBindings` /
+  `menuKeymap`, `menuTheme`): menu DOM, selected-index, keyboard nav, porcelain overlay. Both menus
+  below are thin controllers over it (ADR-0016). Coordinate-dependent → browser-verified, not jsdom.
+- `extensions/slash-command.ts` — the `/` insert menu; declarative `slashItems` config + privileged
+  built-ins (table `after`). `resolveSlashItems` is the pure test seam. → ADR-0012.
+- `extensions/trigger-menu.ts` — declarative consumer triggers (`@` mentions, `[[` wikilinks); the
+  `triggers` option, async `onQuery` with stale-response discarding, `onSelect` + `data` passthrough.
+  `matchTrigger` / `isResponseCurrent` are the pure test seams. → ADR-0016.
+
 **Editing keys**
 
 - `extensions/blockquote-keys.ts` — Enter escapes / Tab changes level.
@@ -127,14 +138,15 @@ there is no second document model. Everything else follows from this:
 **Core (`@beaket/paper`)** — `createEditor`, `editorExtensions`, `defaultSlashItems`,
 `setColorScheme`, `createAnchor`, `resolveAnchor`, `setHighlightsEffect`,
 `setActiveHighlightEffect`; types `EditorOptions`, `SlashItemSpec`, `SlashItemsConfig`,
-`ColorScheme`, `ImageResolver`, `Anchor`, `AnchorStatus`, `ResolvedAnchor`, `HighlightInput`,
-`SelectionInfo`.
+`TriggerSpec`, `TriggerItem`, `ColorScheme`, `ImageResolver`, `Anchor`, `AnchorStatus`,
+`ResolvedAnchor`, `HighlightInput`, `SelectionInfo`.
 
 **React (`@beaket/paper/react`)** — `Paper`; types `PaperHandle`, `PaperProps`, plus the shared
 types above.
 
-`EditorOptions`: `doc`, `onChange`, `onInsertImage`, `slashItems`, `onHighlightStatusChange`,
-`onHighlightClick`, `onSelect`, `colorScheme`. This surface is slated to **freeze at 1.0**
+`EditorOptions`: `doc`, `onChange`, `onInsertImage`, `slashItems`, `triggers`,
+`onHighlightStatusChange`, `onHighlightClick`, `onSelect`, `colorScheme`. This surface is slated to
+**freeze at 1.0**
 (milestone `1.0.0`) — breaking changes are cheap on `0.x` minors now, expensive deliberate majors
 after.
 
