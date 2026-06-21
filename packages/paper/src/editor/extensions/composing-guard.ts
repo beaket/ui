@@ -1,7 +1,7 @@
 import type { Extension } from "@codemirror/state";
 import { Annotation } from "@codemirror/state";
 import type { DecorationSet, ViewUpdate } from "@codemirror/view";
-import { EditorView, ViewPlugin } from "@codemirror/view";
+import { Decoration, EditorView, ViewPlugin } from "@codemirror/view";
 
 // CJK first-class gate: defer decoration recomputation during IME composition (view.composing),
 // then wake and re-evaluate via an annotation transaction after compositionend.
@@ -27,9 +27,20 @@ const debugLog = DEBUG
       console.debug(`[composing-guard] ${label}: ${action}`)
   : () => {};
 
+/**
+ * Build an IME-guarded decoration provider.
+ *
+ * `atomic` (opt-in, additive — existing callers are unaffected): also expose the *same* guarded
+ * decoration set as `EditorView.atomicRanges`, so the ranges are treated as single units (the caret
+ * steps over them, selection includes them whole). Reading the live plugin's set — rather than a
+ * second recompute — keeps atomicity consistent with what is rendered, including the mapped set held
+ * during composition (ADR-0017). Note `atomicRanges`' default on Backspace is *skip*, not delete; an
+ * extension that wants delete-whole adds its own Backspace command (see `token-render.ts`).
+ */
 export function guardedDecorations(
   label: string,
   compute: (view: EditorView) => DecorationSet,
+  options?: { atomic?: boolean },
 ): Extension {
   const plugin = ViewPlugin.fromClass(
     class {
@@ -71,5 +82,12 @@ export function guardedDecorations(
     },
     { decorations: (v) => v.decorations },
   );
+  if (options?.atomic) {
+    return [
+      composingWake,
+      plugin,
+      EditorView.atomicRanges.of((view) => view.plugin(plugin)?.decorations ?? Decoration.none),
+    ];
+  }
   return [composingWake, plugin];
 }

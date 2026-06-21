@@ -46,6 +46,8 @@ export interface PaperProps {
   slashItems?: EditorOptions["slashItems"];
   /** Declarative autocomplete triggers — `@` mentions, `[[` wikilinks (ADR-0016). Fixed at creation (not live). */
   triggers?: EditorOptions["triggers"];
+  /** Atomic token rendering — render `pattern`-matched markdown as chips (ADR-0017). Fixed at creation (not live). */
+  tokens?: EditorOptions["tokens"];
   /** Light/dark scheme. "system" (default) follows the OS; "light"/"dark" force it. Live prop — flips without recreation. */
   colorScheme?: ColorScheme;
   className?: string;
@@ -63,6 +65,7 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
     onInsertImage,
     slashItems,
     triggers,
+    tokens,
     colorScheme,
     className,
   },
@@ -94,6 +97,7 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
       onInsertImage,
       slashItems,
       triggers,
+      tokens,
       colorScheme,
     });
     viewRef.current = view;

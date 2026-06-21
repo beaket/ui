@@ -23,11 +23,14 @@ import type { SlashItemsConfig } from "./extensions/slash-command";
 import { slashCommand } from "./extensions/slash-command";
 import { tableAutoConvert } from "./extensions/table-auto-convert";
 import { tableWidget } from "./extensions/table-widget";
+import type { TokenSpec } from "./extensions/token-render";
+import { tokenRender } from "./extensions/token-render";
 import type { TriggerSpec } from "./extensions/trigger-menu";
 import { triggerMenu } from "./extensions/trigger-menu";
 import { baseTheme, type ColorScheme, darkThemeStyle } from "./theme";
 export { defaultSlashItems } from "./extensions/slash-command";
 export type { SlashItemsConfig, SlashItemSpec } from "./extensions/slash-command";
+export type { TokenSpec, TokenView } from "./extensions/token-render";
 export type { TriggerItem, TriggerSpec } from "./extensions/trigger-menu";
 
 /** Options passed by the component consumer — the injection point for editor behavior policy */
@@ -60,6 +63,13 @@ export interface EditorOptions {
    */
   triggers?: readonly TriggerSpec[];
   /**
+   * Render markdown substrings matching a `pattern` as **atomic tokens** — e.g. an inserted mention
+   * `[@Grace Hopper](user:u_003)` shown as a chip the caret steps over and one Backspace deletes whole
+   * (ADR-0017). Declarative (`render(match) => { label, className? }`); the markdown stays the source of
+   * truth (round-trips on copy). Pairs with `triggers` (#498/#499): triggers insert, tokens render.
+   */
+  tokens?: readonly TokenSpec[];
+  /**
    * Callback for the highlight re-resolution status map (ADR-0014 surface step). Mainly changes on load/delete.
    * The highlight *list* is replaced imperatively (core: setHighlightsEffect / React: highlights prop).
    */
@@ -87,6 +97,9 @@ export function editorExtensions(opts: EditorOptions = {}): Extension[] {
     baseTheme,
     darkThemeStyle(opts.colorScheme),
     markdownExtension(),
+    // Atomic token rendering (ADR-0017). Placed before inlineSyntaxHiding so a token's full-range
+    // replace widget takes precedence over the link's inner syntax-hide on matched ranges.
+    tokenRender(opts.tokens),
     inlineSyntaxHiding(),
     blockSyntaxHiding(),
     imageWidget(),
