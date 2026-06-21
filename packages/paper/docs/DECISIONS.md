@@ -133,6 +133,13 @@ Deliberate, documented local divergences (each now carries a dark-aware value; d
 - `--canvas` is `#fbfcfd`, a cool near-white writing surface — not porcelain's `--color-paper`
   (`#ffffff`).
 
+**A forced `colorScheme` is authoritative over the bridge** ([ADR-0020](./adr/0020-forced-colorscheme-authoritative-over-bridge.md)).
+`"light"`/`"dark"` pin the bridged surface `--color-*` per scheme on `.cm-editor` (the same mechanism
+`--color-ink` uses), so a forced scheme beats a consumer `--color-*` bridge that tracks the OS — otherwise
+overlays leaked the OS scheme (#472). `"system"` stays unpinned, keeping the porcelain match-for-free;
+tier-1 `--beaket-paper-*` is the escape hatch within a forced scheme. The pins are derived off the var()
+chains (single source of truth), forced-block-only — never merged into the token maps.
+
 Not yet exposed (deliberate scope cut, revisit on demand): a `theme?: Extension` option to append a
 consumer CodeMirror theme.
 

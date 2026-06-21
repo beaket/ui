@@ -230,21 +230,11 @@ export function EditorPlayground() {
         [data-pg-theme="dark"] {
           --ink: #e8eaec; --paper: #16181c; --frost: #23272e; --chrome: #3e4145; --steel: #9aa0a6;
         }
-        /* Re-bridge the editor's porcelain vars to the *forced* palette. global.css resolves
-           --color-* at :root against the OS scheme and that computed value inherits down — so
-           overriding only --paper/--frost above doesn't reach the editor's tokens, which read
-           --color-paper/--color-frost. Without this, a forced-light editor under a dark OS leaks
-           dark into overlays that paint those tokens directly: the slash menu, the "Copied" toast
-           and the table row/col insert handles. Re-declaring --color-* here re-resolves them
-           against the forced --paper/--ink/etc. on this element. */
-        [data-pg-theme="light"],
-        [data-pg-theme="dark"] {
-          --color-ink: var(--ink);
-          --color-paper: var(--paper);
-          --color-frost: var(--frost);
-          --color-chrome: var(--chrome);
-          --color-steel: var(--steel);
-        }
+        /* No --color-* re-bridge needed here: as of @beaket/paper ≥ the #472 fix (ADR-0020), a forced
+           colorScheme is authoritative — the editor pins its own bridged --color-* per scheme on
+           .cm-editor, so overlays (slash menu, "Copied" toast, table handles) follow the forced scheme
+           regardless of the docs site's OS-tracking bridge in global.css. The chrome overrides above
+           only dress the card/toolbar/footer around the editor. */
         .pg-toolbar {
           display: flex;
           flex-wrap: wrap;
