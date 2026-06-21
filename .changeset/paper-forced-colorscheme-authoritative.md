@@ -1,9 +1,0 @@
----
-"@beaket/paper": patch
----
-
-Fix (#472): a forced `colorScheme` ("light"/"dark") now overrides a consumer's porcelain `--color-*` bridge, so overlays (slash menu, "Copied" toast, table row/col insert handles) follow the forced scheme instead of leaking the OS scheme.
-
-**Root cause.** Surface tokens resolve through the 3-tier bridge `var(--beaket-paper-X, var(--color-Y, default))`. Forcing only swapped the tier-3 built-in _default_ — it never beat a consumer-provided tier-2 `--color-*`. So when a consumer bridges `--color-paper`/`--color-frost`/… to a palette that tracks the OS, a forced-light editor under a dark OS still painted those surfaces dark (and CSS custom-property resolution makes it sticky: `--color-paper: var(--paper)` declared at `:root` is computed once against the OS scheme, and that value inherits down). Only `--color-ink`, which was already pinned per scheme, didn't leak.
-
-**Fix.** When a scheme is forced, pin the full set of bridged surface `--color-*` (and `--shadow-offset`) per scheme on `.cm-editor` — the same mechanism `--color-ink` already used, so the editor's own declaration beats the inherited bridge and reaches every overlay (they are `.cm-editor` descendants). `colorScheme="light"` now wears its own scope class (`cm-beaket-paper-light`) carrying the light pins; `"dark"` adds dark pins to its existing block; `"system"` stays unpinned so it keeps deferring to the bridge. The tier-1 `--beaket-paper-*` override still wins inside a forced scheme. Pins are derived off the var() chains in `theme.ts` (single source of truth), forced-block-only — never merged into the token maps. See ADR-0020. The docs playground's consumer-side `--color-*` re-bridge workaround was removed (the package fix makes forcing authoritative on its own). jsdom tests lock the derived pins + placement; the rendered colors are browser-verified (ADR-0005 carve-out).
