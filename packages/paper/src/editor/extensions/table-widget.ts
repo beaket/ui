@@ -805,11 +805,13 @@ class TableController {
       menu.appendChild(btn);
     }
 
-    const wrapRect = this.wrap.getBoundingClientRect();
+    // Position from the grip's viewport rect and attach to view.dom (.cm-editor, overflow:visible)
+    // with position:fixed, mirroring the slash menu — this escapes the .cm-scroller overflow box so
+    // the menu is never clipped near the scroller's right/bottom edge (#471).
     const anchorRect = anchor.getBoundingClientRect();
-    menu.style.left = `${anchorRect.left - wrapRect.left}px`;
-    menu.style.top = `${anchorRect.bottom - wrapRect.top + 4}px`;
-    this.wrap.appendChild(menu);
+    menu.style.left = `${anchorRect.left}px`;
+    menu.style.top = `${anchorRect.bottom + 4}px`;
+    (this.mainView?.dom ?? this.wrap).appendChild(menu);
     this.menu = menu;
 
     this.menuCloseListener = (event) => {
@@ -1323,7 +1325,7 @@ const tableTheme = EditorView.theme({
   },
   // Overlay = porcelain hard offset, radius 0
   ".cm-table-menu": {
-    position: "absolute",
+    position: "fixed",
     zIndex: "10",
     backgroundColor: "var(--paper)",
     border: "1px solid var(--silver)",
