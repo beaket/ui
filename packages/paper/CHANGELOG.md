@@ -1,5 +1,15 @@
 # @beaket/paper
 
+## 0.4.1
+
+### Patch Changes
+
+- [#491](https://github.com/beaket/ui/pull/491) [`7e724ff`](https://github.com/beaket/ui/commit/7e724ffe6f285ab8c8e22bfd529052e89e8d6136) Thanks [@jihnma](https://github.com/jihnma)! - Fix the task-list checkbox checkmark becoming invisible under a forced `colorScheme`. The checked checkmark image was selected with a bare `@media (prefers-color-scheme: dark)` rule, but forced light/dark schemes are driven by editor scope classes (`.cm-beaket-paper-dark` / `.cm-beaket-paper`), and the OS media query doesn't match a forced scheme. So a checkbox forced opposite the OS (e.g. `colorScheme="dark"` on a light OS) painted a same-color checkmark on its `--ink` fill — invisible. Root cause: it was the only styling rule keyed on `prefers-color-scheme` instead of the scope class. The checkmark image is now the internal `--cm-check-mark` editor token (light default in `tokens`, dark value in `darkTokens`), so it rides the same scoped dark stylesheet as every other dark token and follows the active scheme in both `system` and forced modes.
+
+- [#495](https://github.com/beaket/ui/pull/495) [`b6ba398`](https://github.com/beaket/ui/commit/b6ba398c922cd84c3669e1187881148e9fa5858a) Thanks [@jihnma](https://github.com/jihnma)! - `tableBoundaryGuard` walked the full syntax tree on every `docChanged` transaction, including pure insertions (normal typing, `fromA === toA`), which can never delete a boundary newline and can never be blocked. Root cause: the guard's `syntaxTree().iterate()` ran unconditionally before the check that actually uses it. Fix: scan `tr.changes` once up-front; if no change has `toA > fromA` (no deletion or replacement), return the transaction immediately without walking the tree — eliminating the tree walk on the common keystroke path.
+
+- [#506](https://github.com/beaket/ui/pull/506) [`3299dda`](https://github.com/beaket/ui/commit/3299ddac3e86680487f7307945d612e63169f96f) Thanks [@jihnma](https://github.com/jihnma)! - Clarify in the README that `getView()` is the deliberate raw escape hatch with no cross-version guarantee, and that there is intentionally no blessed `extensions` injection slot. This records the consumer-facing outcome of the extensibility decision ([#497](https://github.com/beaket/ui/issues/497), ADR-0015): a raw `Extension[]`/`keymap` slot on `EditorOptions` is declined because it would leak CodeMirror into the 1.0-frozen public surface and let a consumer break the core invariants (the composing guard, the permanently-hidden table structure). Concrete extensibility needs route to the declarative APIs instead; raw access stays on the unsafe `getView()` handle.
+
 ## 0.4.0
 
 ### Minor Changes
