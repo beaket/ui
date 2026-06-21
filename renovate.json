@@ -8,8 +8,7 @@
     }
   ],
   "vulnerabilityAlerts": {
-    "labels": ["security"],
-    "automerge": true
+    "labels": ["security"]
   },
   "osvVulnerabilityAlerts": true,
   "lockFileMaintenance": {
