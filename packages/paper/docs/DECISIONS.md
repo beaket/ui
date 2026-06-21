@@ -85,8 +85,12 @@ change needs an ADR vs. a changeset. Each bullet below links to its ADR.
   `onChange` emits full markdown on user edits only (IME-guarded; `setValue` does not echo). A
   curated `ref` handle with a `getView()` escape hatch. Shipped as a **standalone npm package**, not
   a copy-paste registry component — so it is exempt from the monorepo's component checklist (no
-  Storybook story, no `registry.json`, no `cn` util, no Tailwind).
-  ([ADR-0013](./adr/0013-react-shell-and-distribution.md))
+  Storybook story, no `registry.json`, no `cn` util, no Tailwind). **Controlled-value** consumers are
+  served by a documented **controlled-bridge recipe** (a thin `setValue` + `onChange` + `value !==
+getValue()` echo-guard wrapper), _not_ a `value` prop — the core stays uncontrolled; a first-class
+  `value` prop is deferred as an additive future minor.
+  ([ADR-0013](./adr/0013-react-shell-and-distribution.md),
+  [ADR-0019](./adr/0019-controlled-value-bridge-recipe.md))
 - **Selection annotation = mechanism only, policy to consumer.** The anchor is a `quote` (a source
   substring) plus an `offset`; resolution is 3-state (`exact` / `approximate` / `orphaned`),
   anchored to the **markdown source**, not rendered HTML. Surface: `highlights`,
