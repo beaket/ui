@@ -46,7 +46,10 @@ DOM-free, the same restraint as `tokens` returning `{label}` not a node, ADR-001
 `setReadOnly(view, …)` (React: the `readOnly` prop) reconfigures the compartment to flip the mode
 **live** without recreating the editor — the same live-flip pattern as `setColorScheme` (ADR-0009
 amendment). It is the one new option here that earns a compartment; `placeholder`/`height`/`minHeight`
-are fixed at creation (lightness — see Decision 4).
+are fixed at creation (lightness — see Decision 4). The live flip is IME-safe by construction: it is a
+facet reconfigure, not a decoration recompute / widget rebuild / menu action, so the composing-guard
+contract (invariant #1) does not apply — the same reasoning that lets `setColorScheme` reconfigure
+freely mid-composition.
 
 **Why a behavior matrix is load-bearing.** `EditorState.readOnly` does **not** block a raw
 `view.dispatch` — by CM6 design it only makes built-in _commands_ opt out. So every entry point that
