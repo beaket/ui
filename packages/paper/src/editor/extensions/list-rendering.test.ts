@@ -36,6 +36,29 @@ describe("nested list / task / blockquote rendering (outside the cursor)", () =>
     expect(renderedLines(v)).toEqual(["머리글", "", "• 1단계", "  • 2단계", "    • 3단계"]);
   });
 
+  // Regression: a list inside a blockquote shares the line's padding-left with the quote bar gutter.
+  // The list's inline padding-left must ADD the gutter back (calc with the em gutter) — otherwise it
+  // overrides the quote indent and the bullet collides with the bar.
+  it("a list inside a blockquote keeps the quote bar gutter (bullet clears the bar)", () => {
+    const v = makeView("> para\n>\n> - item", 0);
+    const listLine = [...v.contentDOM.querySelectorAll<HTMLElement>(".cm-line")].find((el) =>
+      el.textContent?.includes("item"),
+    );
+    const pl = listLine?.style.paddingLeft ?? "";
+    expect(pl).toContain("calc(");
+    expect(pl).toContain("em"); // the quote gutter (depth × BQ_UNIT em) added back in
+  });
+
+  it("a top-level list uses a plain ch padding (no quote gutter)", () => {
+    const v = makeView("- item", 0);
+    const line = [...v.contentDOM.querySelectorAll<HTMLElement>(".cm-line")].find((el) =>
+      el.textContent?.includes("item"),
+    );
+    const pl = line?.style.paddingLeft ?? "";
+    expect(pl).toContain("ch");
+    expect(pl).not.toContain("calc(");
+  });
+
   it("both checked and unchecked tasks render as checkboxes (no raw - [ ] exposed)", () => {
     const v = makeView("머리글\n\n- [x] 완료\n- [ ] 미완료", 0);
     expect(renderedLines(v)).toEqual(["머리글", "", "완료", "미완료"]);

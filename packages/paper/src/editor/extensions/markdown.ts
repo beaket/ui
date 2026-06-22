@@ -10,11 +10,13 @@ import { GFM } from "@lezer/markdown";
 // Code block languages (codeLanguages) are lazy-loaded via dynamic import through language-data —
 // the parser is fetched only when a fence of that language is first encountered, so there's no impact on the initial bundle or input responsiveness (lightweight).
 
-// A restrained ramp (ADR-0009): doesn't shout with size, whispers with weight and whitespace. Colors are :root tokens.
+// A restrained ramp (ADR-0009, finalised against the paper-md typescale grill 2026-06-22): doesn't shout
+// with size, whispers with weight and whitespace. Sizes/weights map the grill's 16.5px-body scale —
+// h1 26px (1.58em), h2 21px (1.27em), h3 18px (1.09em) — at weight 600 (was 700/650). Colors are :root tokens.
 const sourceHighlight = HighlightStyle.define([
-  { tag: tags.heading1, fontSize: "1.5em", fontWeight: "700", lineHeight: "1.3" },
-  { tag: tags.heading2, fontSize: "1.3em", fontWeight: "700", lineHeight: "1.3" },
-  { tag: tags.heading3, fontSize: "1.15em", fontWeight: "650", lineHeight: "1.3" },
+  { tag: tags.heading1, fontSize: "1.58em", fontWeight: "600", lineHeight: "1.3" },
+  { tag: tags.heading2, fontSize: "1.27em", fontWeight: "600", lineHeight: "1.4" },
+  { tag: tags.heading3, fontSize: "1.09em", fontWeight: "600", lineHeight: "1.4" },
   // h4–h6 are 1em/700 — barely distinguishable from bold body text, but a conscious acceptance (deep headings are rare, ADR-0009).
   { tag: tags.heading4, fontWeight: "700" },
   { tag: tags.heading5, fontWeight: "700" },
@@ -29,7 +31,15 @@ const sourceHighlight = HighlightStyle.define([
     tag: tags.monospace,
     fontFamily: 'ui-monospace, "SF Mono", Menlo, Consolas, "D2Coding", monospace',
   },
-  { tag: tags.link, color: "var(--accent)" },
+  // Link = accent text + accent underline (offset 2px) — text color matches the underline, unifying
+  // `[text](url)` links with bare URLs (tags.url, already accent) and the @-mention token.
+  {
+    tag: tags.link,
+    color: "var(--accent)",
+    textDecoration: "underline",
+    textDecorationColor: "var(--accent)",
+    textUnderlineOffset: "2px",
+  },
   { tag: tags.url, color: "var(--accent)", textDecoration: "underline" },
   { tag: tags.quote, color: "var(--steel)" },
   // Structure marks (#, **, ~~, ```, etc.) are faint — later, in 1.3, they're hidden when outside the cursor.

@@ -64,3 +64,16 @@ If the drop location is invisible, the user misses. We make **"the visible inser
 - **Deterministic contract tests (ADR-0005):** the core of ingest (resolver → insert → render) is unit-tested in jsdom via the pure functions `handleImageFiles` / `insertImageBlock` / `altFromFilename`, without synthesizing events or a DataTransfer. `parseImage` is also pure.
 - **Coordinate-dependent logic is impossible in jsdom (coordinates are 0) → substituted with browser verification:** render's reveal (click and arrow keys both ways), ingest event firing (synthesized drop/paste), and the drag indicator's snap / block-box coordinates / cleanup. All measured in the running dev server.
 - **Remaining real-world verification:** an actual OS file drag and an actual clipboard Cmd+V cannot be 100% reproduced by synthesis — confirmed via a real user drop / real paste (the same limitation as real IME typing). The drag-indicator coordinate bug was caught exactly in such a real drop.
+
+## Amendment (2026-06-22) — image caption from the markdown `title`
+
+Render now supports a caption (paper-md grill alignment, ADR-0009 amendment). A titled image
+`![alt](url "caption")` renders as `<figure><img><figcaption>` (caption 12.5px ≈ 0.76em, `--muted`,
+left-aligned); a bare `![alt](url)` stays a plain `<img>`. **Decision: the caption is the `title`, not
+the `alt`** — alt remains the accessibility text, so an author can have a11y text without forcing a
+visible caption, and the presence of a title is the unambiguous "this is a figure" signal (chosen over
+"alt → caption" with the maintainer; standard markdown title syntax, round-trips on copy, no new
+syntax). This supersedes the previous use of `title` as the `<img title>` tooltip. Still render-only —
+ingest/sizing are unchanged, and width stays full-container (the editor's `--measure` is full-width by
+default, so beaket's 640/720 figure-vs-bare width split does not apply). `eq()` already keys on `title`,
+so caption edits re-render correctly through the composing guard. Pinned by `image-widget.test`.

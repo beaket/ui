@@ -15,6 +15,11 @@ const quoteLineDeco = [1, 2, 3, 4].map((d) =>
   Decoration.line({ class: `cm-blockquote-line cm-bq-d${d}` }),
 );
 const codeLine = Decoration.line({ class: "cm-codeblock-line" });
+// An empty blockquote line (only `>` marks) is a separator between blocks inside a quote (paragraph ↔
+// list ↔ nested quote). Rendered as a full line-height row it leaves a ~29px gap; collapsed HTML quotes
+// show ~8px. When the cursor is elsewhere, shrink it to a tight strip (same trick as the code-fence
+// line) so the in-quote rhythm matches — the bar stays continuous (drawn by the depth class).
+const emptyQuoteLine = Decoration.line({ class: "cm-blockquote-empty" });
 // Code-block fence (``` line): when the cursor is outside, hide the text and shrink the line to a ~0.5em surface padding strip.
 // (Previously it remained a full-height empty row like a body code line, creating an accidental ~1.6em gap.)
 const fenceLine = Decoration.line({ class: "cm-codeblock-fence" });
@@ -24,8 +29,9 @@ const hrLine = Decoration.line({ class: "cm-hr-line" });
 // Per-nesting-depth blockquote theme. One level = bar (2px) + gutter. At depth d, indent the text by d*UNIT and
 // draw vertical bars at positions k=0..d-1 (k*UNIT) to form a continuous line with the parent lines.
 // Bars are a background-image layer (not involved in layout) — only paddingLeft enters line height, keeping coordinates safe.
-const BQ_UNIT = 1.1; // em / nesting level
-const BQ_BAR = "linear-gradient(var(--chrome), var(--chrome))";
+export const BQ_UNIT = 1.1; // em / nesting level (also consumed by list-rendering for in-quote list indent)
+// Accent (blue) left rule — the quote reads as a marked aside, matching the paper-md typescale grill.
+const BQ_BAR = "linear-gradient(var(--accent), var(--accent))";
 const quoteDepthTheme = Object.fromEntries(
   [1, 2, 3, 4].map((d) => [
     // The two-class selector beats baseTheme `.cm-line { padding:0 }` (same specificity).
@@ -37,7 +43,7 @@ const quoteDepthTheme = Object.fromEntries(
         { length: d },
         (_, k) => `${(k * BQ_UNIT).toFixed(2)}em 0`,
       ).join(", "),
-      backgroundSize: "2px 100%",
+      backgroundSize: "3px 100%",
       backgroundRepeat: "no-repeat",
     },
   ]),
@@ -69,6 +75,8 @@ function computeDecorations(view: EditorView): DecorationSet {
   const headingLines: { pos: number; level: number }[] = [];
   // Line start position → nesting depth (number of wrapping Blockquote nodes). Accumulates as nodes overlap on the same line.
   const quoteDepth = new Map<number, number>();
+  // Empty quote lines (only `>` marks) with the cursor elsewhere → tight separator strip.
+  const emptyQuoteLines = new Set<number>();
   const codeLines: number[] = [];
   const fenceLines: number[] = [];
   const hrLines: number[] = [];
@@ -97,8 +105,13 @@ function computeDecorations(view: EditorView): DecorationSet {
           const firstLine = state.doc.lineAt(node.from).number;
           const lastLine = state.doc.lineAt(node.to).number;
           for (let n = firstLine; n <= lastLine; n++) {
-            const pos = state.doc.line(n).from;
-            quoteDepth.set(pos, (quoteDepth.get(pos) ?? 0) + 1);
+            const ln = state.doc.line(n);
+            quoteDepth.set(ln.from, (quoteDepth.get(ln.from) ?? 0) + 1);
+            // Only `>`/whitespace = an empty quote separator line. Shrink it only when the cursor is
+            // elsewhere (when on it, the user is about to type — keep it full height).
+            if (ln.text.replace(/[>\s]/g, "") === "" && !selectionTouchesLine(state, ln.from)) {
+              emptyQuoteLines.add(ln.from);
+            }
           }
         }
         if (node.name === "QuoteMark") {
@@ -144,6 +157,7 @@ function computeDecorations(view: EditorView): DecorationSet {
       ...[...quoteDepth].map(([pos, depth]) =>
         quoteLineDeco[Math.min(depth, QUOTE_MAX_DEPTH) - 1].range(pos),
       ),
+      ...[...emptyQuoteLines].map((pos) => emptyQuoteLine.range(pos)),
       ...codeLines.map((pos) => codeLine.range(pos)),
       ...fenceLines.map((pos) => fenceLine.range(pos)),
       ...hrLines.map((pos) => hrLine.range(pos)),
@@ -160,11 +174,22 @@ export function blockSyntaxHiding(): Extension {
       ".cm-line.cm-blockquote-line": {
         color: "var(--steel)",
       },
+      // Empty quote separator line → tight strip (~0.5em ≈ 8px) instead of a full row, so the in-quote
+      // spacing (paragraph ↔ list ↔ nested quote) matches the rendered-HTML rhythm. font-size + line-height
+      // both shrunk because a widgetBuffer keeps the empty line from flattening on line-height alone (same
+      // as the code fence). The two-class selector beats baseTheme's `.cm-line { padding: 0 }`. The bar
+      // (drawn by the depth class background) stays continuous through the shorter segment.
+      ".cm-line.cm-blockquote-empty": {
+        fontSize: "0.5em",
+        lineHeight: "1",
+      },
       ...quoteDepthTheme,
       ".cm-line.cm-codeblock-line": {
         backgroundColor: "var(--surface)",
         fontFamily: 'ui-monospace, "SF Mono", Menlo, Consolas, "D2Coding", monospace',
-        fontSize: "0.9em",
+        // 0.79em ≈ 13px on the 16.5px body — the paper-md grill sets code BLOCKS smaller than inline
+        // code (15px, the 0.9em chip), a deliberate density distinction. (ADR-0009 amendment 2026-06-22)
+        fontSize: "0.79em",
         // Unified block horizontal gutter — based on 0.9em text, so 0.78em ≈ the blockquote/table 0.7em (body-text based)
         padding: "0 0.78em",
       },
@@ -183,8 +208,12 @@ export function blockSyntaxHiding(): Extension {
       // The selector uses two classes — to beat baseTheme's `.cm-line { padding: 0 }` (same specificity).
       ".cm-line.cm-heading-line": { paddingBottom: "0.1em" },
       ".cm-heading-line.cm-h1": { paddingTop: "1.6em" },
-      ".cm-heading-line.cm-h2": { paddingTop: "0.4em" },
-      ".cm-heading-line.cm-h3": { paddingTop: "1.1em" },
+      // h2/h3 carry a real bottom padding (overrides the 0.1em base) so the section title keeps a
+      // beaket-like gap to the following block even when written with NO blank line (the common
+      // single-Enter editing case) — ≈12px (h2) / ≈6px (h3) on the 16.5px body. With a blank line
+      // the row adds a touch more. (paper-md grill, ADR-0009 amendment 2026-06-22)
+      ".cm-heading-line.cm-h2": { paddingTop: "0.4em", paddingBottom: "0.45em" },
+      ".cm-heading-line.cm-h3": { paddingTop: "1.1em", paddingBottom: "0.28em" },
       ".cm-heading-line.cm-h4, .cm-heading-line.cm-h5, .cm-heading-line.cm-h6": {
         paddingTop: "0.9em",
       },
