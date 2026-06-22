@@ -7,9 +7,9 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
 const cssCode = `.my-editor-wrapper {
   --beaket-paper-accent: #0c6bae;     /* links, focus, selection tint */
   --beaket-paper-ink: #232a35;        /* body text + caret */
-  --beaket-paper-paper: #ffffff;      /* rendered surface */
+  --beaket-paper-canvas: #fffefc;     /* writing surface (default #fff) */
   --beaket-paper-font: Georgia, serif;
-  --beaket-paper-font-size: 18px;
+  --beaket-paper-font-size: 16.5px;
   --beaket-paper-measure: 42rem;      /* max line width; default none = full width */
 }`;
 ---

@@ -32,6 +32,22 @@ afterEach(() => {
   view = null;
 });
 
+describe("empty blockquote separator line shrink", () => {
+  // An empty quote line (only `>`) between blocks renders as a tight strip (cm-blockquote-empty) when
+  // the cursor is elsewhere, so in-quote spacing matches collapsed-HTML quotes; full-height while editing.
+  const DOC = "> para\n>\n> - item";
+
+  it("marks an empty quote separator line for shrinking when the cursor is elsewhere", () => {
+    const v = makeView(DOC, 0);
+    expect(v.contentDOM.querySelector(".cm-blockquote-empty")).toBeTruthy();
+  });
+
+  it("keeps the empty quote line full-height when the cursor is on it (editing)", () => {
+    const v = makeView(DOC, DOC.indexOf("\n>") + 1); // cursor on the lone `>` line
+    expect(v.contentDOM.querySelector(".cm-blockquote-empty")).toBeNull();
+  });
+});
+
 describe("heading mark hiding", () => {
   it("a heading line without a cursor hides the opening `#`", () => {
     const v = makeView("## 제목\n\n본문", /* anchor */ 100);

@@ -83,6 +83,25 @@ describe("imageWidget render (Live Preview)", () => {
     expect(v.contentDOM.textContent).toContain("![풍경](https://x.test/a.png)");
   });
 
+  // Caption convention (paper-md grill): a titled image renders a <figure> + <figcaption> carrying
+  // the title; a bare image stays a plain image with no caption. alt is preserved either way.
+  it("renders a titled image as <figure> with the title as <figcaption>", () => {
+    const v = makeView('머리글\n\n![풍경](https://x.test/a.png "Fig 1. A caption")', 0);
+    const fig = v.contentDOM.querySelector(".cm-image-figure");
+    expect(fig?.tagName.toLowerCase()).toBe("figure");
+    const cap = fig?.querySelector("figcaption");
+    expect(cap?.textContent).toBe("Fig 1. A caption");
+    // alt stays the a11y text, distinct from the visible caption.
+    expect(fig?.querySelector("img")?.alt).toBe("풍경");
+  });
+
+  it("renders a bare image (no title) with no figcaption", () => {
+    const v = makeView("머리글\n\n![풍경](https://x.test/a.png)", 0);
+    expect(v.contentDOM.querySelector("figcaption")).toBeNull();
+    expect(v.contentDOM.querySelector(".cm-image-figure")).toBeNull();
+    expect(imgs(v).length).toBe(1);
+  });
+
   // Regression: a bug where a 1px border (2px left+right) added outside maxWidth:100% caused
   // horizontal scroll on images whose natural width >= container. border-box includes the border
   // within 100%. (The actual 2px overflow is layout, so jsdom cannot reproduce the numbers — it was

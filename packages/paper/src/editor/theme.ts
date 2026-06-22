@@ -68,7 +68,7 @@ export const tokens = {
   "--steel": "var(--beaket-paper-steel, var(--color-steel, #686b6f))",
   "--slate": "var(--beaket-paper-slate, var(--color-slate, #3e4145))",
   // ② Editor-owned colors (2-tier; no porcelain equivalent)
-  "--canvas": "var(--beaket-paper-canvas, #fbfcfd)", // cool near-white for long-form writing (ADR-0009), not --color-paper (#fff)
+  "--canvas": "var(--beaket-paper-canvas, #ffffff)", // white writing surface by default (paper-md grill 2026-06-22), overridable via --beaket-paper-canvas (e.g. beaket's #fffefc)
   "--surface": "var(--beaket-paper-surface, #eceef2)",
   // ② Task-checkbox checkmark image. Light = white stroke (stamped on the dark --ink fill). The dark
   //    variant lives in `darkTokens`, so the checkmark follows a forced `colorScheme` via the scope
@@ -86,7 +86,7 @@ export const tokens = {
   "--syn-tag": "var(--beaket-paper-syntax-tag, #116329)",
   // ② Editor-owned typography (2-tier). CJK-first defaults; consumers commonly tune these.
   "--font": `var(--beaket-paper-font, ${DEFAULT_FONT_STACK})`,
-  "--font-size": "var(--beaket-paper-font-size, 17px)",
+  "--font-size": "var(--beaket-paper-font-size, 16.5px)",
   // Line height 1.75: synthesis of Korean/Japanese/English readability evidence (KRDS 150% floor and
   // up, JLREQ range, balancing CJK comfort + Latin). ADR-0009.
   "--line-height": "var(--beaket-paper-line-height, 1.75)",
@@ -148,6 +148,10 @@ export const baseTheme = EditorView.theme({
     ...tokens,
     fontSize: "var(--font-size)",
     color: "var(--ink)",
+    // Writing surface. The package paints its own background (white by default via --canvas, ADR-0009
+    // revision / paper-md grill) so it is self-sufficient standalone — overridable with --beaket-paper-canvas.
+    // Dark mode swaps the --canvas default in darkTokens; "system"/forced schemes ride the same scope class.
+    backgroundColor: "var(--canvas)",
   },
   ".cm-scroller": {
     fontFamily: "var(--font)",

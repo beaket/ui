@@ -61,7 +61,7 @@ describe("theme token reconciliation", () => {
   });
 
   it("keeps editor-owned colors as 2-tier (no porcelain equivalent)", () => {
-    expect(tokens["--canvas"]).toBe("var(--beaket-paper-canvas, #fbfcfd)");
+    expect(tokens["--canvas"]).toBe("var(--beaket-paper-canvas, #ffffff)");
     expect(tokens["--surface"]).toBe("var(--beaket-paper-surface, #eceef2)");
     expect(tokens["--syn-kw"]).toBe("var(--beaket-paper-syntax-keyword, #cf222e)");
   });
@@ -75,7 +75,7 @@ describe("theme typography is variabilized (CJK-first defaults)", () => {
     expect(fontDefault.indexOf("Hiragino")).toBeLessThan(
       fontDefault.indexOf("Apple SD Gothic Neo"),
     );
-    expect(tokens["--font-size"]).toBe("var(--beaket-paper-font-size, 17px)");
+    expect(tokens["--font-size"]).toBe("var(--beaket-paper-font-size, 16.5px)");
     expect(tokens["--line-height"]).toBe("var(--beaket-paper-line-height, 1.75)");
     expect(tokens["--measure"]).toBe("var(--beaket-paper-measure, none)");
   });
@@ -244,7 +244,7 @@ describe("surfacePins derives the bridged tier-2 surfaces from the token chains"
 
   it("excludes 2-tier editor-owned tokens (no porcelain bridge to override)", () => {
     const light = surfacePins(tokens);
-    expect(light).not.toHaveProperty("--canvas"); // editor-owned: var(--beaket-paper-canvas, #fbfcfd)
+    expect(light).not.toHaveProperty("--canvas"); // editor-owned: var(--beaket-paper-canvas, #ffffff)
     expect(light).not.toHaveProperty("--surface");
     expect(light).not.toHaveProperty("--font");
   });

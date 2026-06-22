@@ -8,6 +8,9 @@ import { guardedDecorations } from "./composing-guard";
 // image when the cursor is outside that line, and exposes the `![alt](url)` source for editing
 // when the cursor touches it. Same "line with cursor = source" rule as the horizontal rule
 // `---` (blockSyntaxHiding) — it swaps the HR's `::after` horizontal rule for an `<img>` widget.
+//
+// Caption: the markdown `title` is the visible caption (consumer convention) — `![alt](url "caption")`
+// renders <figure><img><figcaption>, a bare `![alt](url)` renders a plain <img>. See toDOM.
 // guardedDecorations (ViewPlugin) provides the composing guard, so StateField/atomicRanges/coordsAt
 // are not needed.
 //
@@ -47,12 +50,15 @@ class ImageWidget extends WidgetType {
   }
 
   toDOM(view: EditorView): HTMLElement {
-    const wrap = document.createElement("span");
-    wrap.className = "cm-image-widget";
+    // Caption convention (consumer-facing): the markdown `title` is the visible caption — a
+    // titled image `![alt](url "caption")` renders as a <figure> with a <figcaption>; a bare
+    // `![alt](url)` stays a plain <img>. alt remains the a11y text in both. (paper-md grill 2026-06-22)
+    const caption = this.title && this.title.length > 0 ? this.title : null;
+    const wrap = document.createElement(caption ? "figure" : "span");
+    wrap.className = caption ? "cm-image-widget cm-image-figure" : "cm-image-widget";
     const img = document.createElement("img");
     img.src = this.url;
     img.alt = this.alt;
-    if (this.title) img.title = this.title;
     // Re-measure the CM height model when async load changes height — prevents scroll jumps (ADR-0003).
     img.addEventListener("load", () => view.requestMeasure());
     img.addEventListener("error", () => {
@@ -60,6 +66,11 @@ class ImageWidget extends WidgetType {
       wrap.textContent = this.alt || this.url;
     });
     wrap.appendChild(img);
+    if (caption) {
+      const cap = document.createElement("figcaption");
+      cap.textContent = caption;
+      wrap.appendChild(cap);
+    }
     return wrap;
   }
 
@@ -111,6 +122,19 @@ export function imageWidget(): Extension {
       ".cm-image-widget": {
         display: "inline-block",
         maxWidth: "100%",
+      },
+      // Titled image → figure with a caption below the image (paper-md grill). Keep it inline-block
+      // (inherited from .cm-image-widget) — NOT block — so a captioned image gets the exact same
+      // vertical spacing in its line as a bare one; a block widget pulls in CM6's line-height-tall
+      // widgetBuffer anchors above/below and would sit ~25px further from the surrounding text.
+      ".cm-image-figure": {
+        margin: "0",
+      },
+      ".cm-image-figure figcaption": {
+        marginTop: "0.5em",
+        fontSize: "0.76em", // ≈12.5px on the 16.5px body
+        lineHeight: "1.5",
+        color: "var(--muted)",
       },
       // porcelain: radius 0. silver 1px to separate from the near-white canvas (ADR-0009).
       ".cm-image-widget img": {

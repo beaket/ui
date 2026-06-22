@@ -2,7 +2,12 @@ import { syntaxTree } from "@codemirror/language";
 import type { EditorState, Extension } from "@codemirror/state";
 import type { DecorationSet } from "@codemirror/view";
 import { Decoration, EditorView, WidgetType } from "@codemirror/view";
+import { BQ_UNIT } from "./block-syntax-hiding";
 import { guardedDecorations } from "./composing-guard";
+
+// Quote nesting clamp — mirrors block-syntax-hiding's QUOTE_MAX_DEPTH so an in-quote list's left gutter
+// tracks the (clamped) blockquote bar gutter exactly.
+const QUOTE_MAX_DEPTH = 4;
 
 // List rendering: on lines outside the cursor, bullet marks (- * +) become •, and task markers (- [ ])
 // become click-toggle checkbox widgets. When the cursor enters a line, the source is revealed.
@@ -85,11 +90,23 @@ function computeDecorations(view: EditorView): DecorationSet {
         // regardless of cursor presence to prevent a horizontal jump when the cursor enters.
         const line = state.doc.lineAt(listMark.from);
         const contentCol = listMark.to - line.from + 1;
+        // A list inside a blockquote shares the line's `padding-left` with the quote's bar gutter, and
+        // this inline style would otherwise OVERRIDE that gutter — pulling the bullet onto the bar. Add
+        // the quote gutter (depth × BQ_UNIT em, clamped like the bar) back in via calc so the bullet sits
+        // right of the bar. text-indent (the hanging indent) stays the list part only.
+        let quoteDepth = 0;
+        for (let p = node.node.parent; p; p = p.parent) {
+          if (p.name === "Blockquote") quoteDepth++;
+        }
+        const gutter = Math.min(quoteDepth, QUOTE_MAX_DEPTH) * BQ_UNIT;
+        const paddingLeft = gutter
+          ? `calc(${gutter.toFixed(2)}em + ${contentCol}ch)`
+          : `${contentCol}ch`;
         decorations.push({
           from: line.from,
           to: line.from,
           deco: Decoration.line({
-            attributes: { style: `padding-left:${contentCol}ch;text-indent:-${contentCol}ch` },
+            attributes: { style: `padding-left:${paddingLeft};text-indent:-${contentCol}ch` },
           }),
         });
 
