@@ -1283,6 +1283,12 @@ const tableTheme = EditorView.theme({
   ".cm-table-widget table": {
     borderCollapse: "collapse",
     width: "100%",
+    // Reset margin so a host/global `table { margin }` rule (common in markdown CSS) can't escape the
+    // widget wrap: the wrap is `position: relative` with `padding: 0`, so a table margin collapses out
+    // below/above the block widget. CM6 measures only the wrap's box for its height map, so that escaped
+    // margin desyncs the map from the DOM for everything below the table — vertical arrow nav then lands
+    // a line off, on blank separator lines (#520). Block rhythm comes from the blank lines, not margin.
+    margin: "0",
   },
   // Precise grid: silver 1px full border (ADR-0009)
   ".cm-table-widget th, .cm-table-widget td": {
