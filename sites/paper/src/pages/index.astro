@@ -13,8 +13,7 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
     </h1>
     <p>
       <strong>Paper</strong> is a markdown-first, CJK-first <strong>Live Preview</strong> editor built
-      on CodeMirror 6.<br />
-      Drop it into your app as a dependency.
+      on CodeMirror 6.
     </p>
   </section>
 
@@ -24,18 +23,6 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
     </div>
     <p class="hint">Type <code>/</code> for the slash menu · drop an image · paste a table · change the accent &amp; font.</p>
   </section>
-
-  <h2>Why Paper</h2>
-  <p>
-    Live preview rewrites the DOM as you type — hiding and revealing syntax around your cursor. Do that
-    mid-IME-composition and Japanese or Korean input drops or duplicates characters. It's a stubborn,
-    still-open problem even in mature, widely-used editors.
-  </p>
-  <p>
-    Paper makes one promise its central invariant: <strong>never break composition</strong> — no
-    decoration recompute, no widget rebuild while you're mid-character. That's the editor I wanted,
-    small enough to drop into any app.
-  </p>
 
   <p class="next"><a href={withBase('installation')}>Installation →</a></p>
 </Base>
