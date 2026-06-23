@@ -34,32 +34,6 @@ const editor = createEditor(document.querySelector("#editor")!, {
   onChange: (markdown) => console.log(markdown),
 });`;
 
-const controlledCode = `import { Paper, type PaperHandle } from "@beaket/paper/react";
-import { useEffect, useRef } from "react";
-
-// A thin bridge: controlled value/onChange over the uncontrolled <Paper>.
-function ControlledPaper({ value, onChange }: {
-  value: string;
-  onChange: (v: string) => void;
-}) {
-  const ref = useRef<PaperHandle>(null);
-
-  useEffect(() => {
-    // Sync EXTERNAL value changes into the editor. Skip the echo of the user's
-    // own edit: after onChange, value already equals what the editor holds, so
-    // this is a no-op then — no cursor jump. A real external change (load, reset,
-    // cross-tab sync) differs, so setValue applies (IME-deferred internally).
-    if (ref.current && value !== ref.current.getValue()) {
-      ref.current.setValue(value);
-    }
-  }, [value]);
-
-  return <Paper ref={ref} defaultValue={value} onChange={onChange} />;
-}
-
-// Now use it like any controlled input:
-// <ControlledPaper value={md} onChange={setMd} />`;
-
 const highlightsCode = `import { Paper, type SelectionInfo, type HighlightInput } from "@beaket/paper/react";
 import { useState } from "react";
 
@@ -113,27 +87,12 @@ function Annotator() {
 
   <h2 id="controlled">Controlled value (a bridge)</h2>
   <p>
-    Paper is uncontrolled by design — a live <code>value</code> prop would fight IME composition and
-    make React state a second source of truth (see <a href="https://github.com/beaket/ui/blob/main/packages/paper/docs/adr/0019-controlled-value-bridge-recipe.md">ADR-0019</a>).
-    When you want the React-idiomatic <code>value</code>/<code>onChange</code> shape anyway, wrap it in
-    a thin bridge — the uncontrolled surface already gives you both halves:
-  </p>
-  <CodeBlock code={controlledCode} lang="tsx" />
-  <p>
-    The one line that matters is the <code>value !== ref.current.getValue()</code> guard. When the user
-    types, <code>onChange</code> updates your state, the effect re-runs, but the value already matches
-    what the editor holds — so <code>setValue</code> is skipped and the cursor never jumps. Only a
-    genuinely <em>external</em> change differs, and that routes through the IME-deferred
-    <code>setValue</code>.
-  </p>
-  <p class="callout callout-tip">
-    <svg class="callout-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-      <path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863.5 8 .5s5.5 1.81 5.5 4.75c0 1.516-.701 2.5-1.318 3.282-.095.115-.184.22-.268.32-.207.245-.383.453-.541.68-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z" />
-    </svg>
-    <span><strong>Caveat</strong> — store <em>exactly</em> what <code>onChange</code> emits. The bridge
-    is for wholesale/external value changes (server load, reset-to-template, cross-tab sync), not
-    per-keystroke transforms (uppercasing, normalization) — those make the value differ mid-type and
-    re-trigger <code>setValue</code>, jumping the cursor.</span>
+    Paper is uncontrolled by design — a live <code>value</code> prop would fight IME composition and make
+    React state a second source of truth. If you want the React-idiomatic <code>value</code>/<code>onChange</code>
+    shape anyway, wrap the uncontrolled surface in a thin bridge guarded by
+    <code>value !== getValue()</code>. The
+    <a href="https://github.com/beaket/ui/blob/main/packages/paper/docs/adr/0019-controlled-value-bridge-recipe.md">controlled-value recipe</a>
+    has the full code, the rationale, and the one caveat that keeps the cursor from jumping.
   </p>
   <p class="callout callout-tip">
     <svg class="callout-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">

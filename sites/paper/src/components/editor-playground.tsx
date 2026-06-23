@@ -71,10 +71,12 @@ const mentionToken: TokenSpec = {
 };
 
 // The heading keeps a trailing space (via ${" "} so formatters can't strip it) —
-// the load caret sits after it, one space clear of "Paper" rather than jammed against it.
-const INITIAL = `# Paper${" "}
+// the load caret sits after it, one space clear of "Why Paper" rather than jammed against it.
+const INITIAL = `# Why Paper${" "}
 
-A markdown-first, CJK-first **Live Preview** editor built on CodeMirror 6.
+Live preview rewrites the DOM as you type — hiding and revealing syntax around your cursor. Do that mid-IME-composition and Japanese or Korean input drops or duplicates characters. It's a stubborn, still-open problem even in mature, widely-used editors.
+
+Paper makes one promise its central invariant: **never break composition** — no decoration recompute, no widget rebuild while you're mid-character. That's the editor I wanted, small enough to drop into any app.
 
 Try it:
 
@@ -82,10 +84,42 @@ Try it:
 - Type \`@\` to mention someone — it renders as an atomic chip (Backspace removes it whole)
 - Drop an image, paste a table, write some \`code\`
 
-| Feature | Status |
+| Good fit | Not the tool |
 | --- | --- |
-| Live preview | ✓ |
-| Tables | ✓ |
+| Markdown notes, docs, comments | Rich-text docs that aren't markdown |
+| CJK / mixed-language writing | Real-time collaboration |
+| Dropping an editor into your app | Page layout & print |
+| Read and write in one view | A big plugin ecosystem |
+
+## Markdown, the way it reads
+
+Everything renders **in place** as you type — no split pane, no preview tab. Mix _emphasis_, \`inline code\`, [links](https://github.com/beaket/ui), and footnotes[^gh] right in the flow of a sentence.
+
+[^gh]: GitHub-style — defined right by the reference, and also gathered at the bottom.
+
+> The cursor reveals raw syntax; everything around it stays rendered. That's live preview.
+
+CJK is first-class, not bolted on:
+
+- **English** behaves the way you'd expect
+  - _emphasis_, \`code\`, ~~strikethrough~~ — all in place
+  - tables, task lists, nested lists, footnotes
+- 日本語 — 装飾の境界でも変換が壊れない
+  - **強調** や \`コード\` を文中に混ぜても安全
+  - 脚注[^ime]を文の途中に挿しても composition は保たれる
+- 한국어로 이 문장 끝에 직접 이어서 입력해보세요 →
+
+[^ime]: 変換確定の前に装飾を組み直さない、それだけを守る。
+
+\`\`\`tsx
+// fenced code blocks keep their highlighting
+import { Paper } from "@beaket/paper/react";
+
+<Paper defaultValue="# Hello, 世界" onChange={setMarkdown} />;
+\`\`\`
+
+- [x] Live preview without breaking IME
+- [ ] Your next document
 `;
 
 const ACCENTS = [
@@ -115,7 +149,7 @@ export function EditorPlayground() {
   const [scheme, setScheme] = useState<ColorScheme>("system");
   const [showSource, setShowSource] = useState(false);
 
-  // On load, drop the caret at the end of the "# Paper " heading line (after the
+  // On load, drop the caret at the end of the "# Why Paper " heading line (after the
   // trailing space, a space clear of "Paper") so the page reads as an editor you can
   // start writing in. (The table renders as an atomic widget, so a caret can't sit
   // inside a cell — a selection there gets pushed past the table.) Skip on touch —

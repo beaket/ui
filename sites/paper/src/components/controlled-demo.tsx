@@ -122,7 +122,7 @@ export function ControlledDemo() {
           grid-template-columns: 1fr 1fr;
           gap: 1rem;
         }
-        .cd-pane { min-width: 0; }
+        .cd-pane { min-width: 0; display: flex; flex-direction: column; }
         .cd-pane-label {
           font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
           font-size: 11px;
@@ -130,14 +130,16 @@ export function ControlledDemo() {
           margin-bottom: 0.4rem;
         }
         .cd-paper {
+          flex: 1;
           background: var(--beaket-paper-paper, var(--paper, #fff));
           border: 1px solid var(--chrome);
           box-shadow: var(--shadow-offset, 2px 2px 0 0 var(--chrome));
           padding: 0.9rem 1.1rem;
         }
         .cd-textarea {
+          flex: 1;
           width: 100%;
-          min-height: 212px;
+          min-height: 180px;
           box-sizing: border-box;
           padding: 0.9rem 1.1rem;
           background: var(--frost, #f3f4f6);
