@@ -853,6 +853,26 @@ class TableController {
     });
   }
 
+  /**
+   * Remove the whole table. Backs the "Delete table" menu item and the last-row / last-column
+   * case of Delete row/column (which would otherwise no-op, leaving a small table impossible to
+   * remove from the menu). Deletes only the table's own lines — the surrounding blank lines stay,
+   * matching the block-select Backspace path.
+   */
+  private deleteTable(): void {
+    if (!this.mainView) return;
+    clearActiveCell(this.mainView);
+    const tableLines = this.tableLines();
+    const from = tableLines[0]?.from ?? this.data.tableFrom;
+    const to = tableLines[tableLines.length - 1]?.to ?? from;
+    this.mainView.focus();
+    this.mainView.dispatch({
+      changes: { from, to },
+      selection: { anchor: from },
+      userEvent: "delete",
+    });
+  }
+
   private columnMenuItems(col: number): ({ label: string; action: () => void } | "-")[] {
     const insert = (offset: 0 | 1) => () => {
       const rows = this.cellTexts();
@@ -881,7 +901,11 @@ class TableController {
     };
     const remove = () => {
       const rows = this.cellTexts();
-      if ((rows[0]?.length ?? 0) <= 1) return;
+      // Deleting the only column means there's no table left — remove it whole rather than no-op.
+      if ((rows[0]?.length ?? 0) <= 1) {
+        this.deleteTable();
+        return;
+      }
       rows.forEach((row) => row.splice(col, 1));
       const aligns = [...this.data.aligns];
       aligns.splice(col, 1);
@@ -893,6 +917,7 @@ class TableController {
       { label: "Move left", action: move(-1) },
       { label: "Move right", action: move(1) },
       { label: "Delete column", action: remove },
+      { label: "Delete table", action: () => this.deleteTable() },
       "-",
       { label: "Align left", action: setAlign("left") },
       { label: "Align center", action: setAlign("center") },
@@ -918,7 +943,11 @@ class TableController {
     };
     const remove = () => {
       const rows = this.cellTexts();
-      if (rows.length <= 1) return;
+      // Deleting the only row means there's no table left — remove it whole rather than no-op.
+      if (rows.length <= 1) {
+        this.deleteTable();
+        return;
+      }
       rows.splice(row, 1);
       this.replaceTable(rows, this.data.aligns);
     };
@@ -928,6 +957,7 @@ class TableController {
       { label: "Move up", action: move(-1) },
       { label: "Move down", action: move(1) },
       { label: "Delete row", action: remove },
+      { label: "Delete table", action: () => this.deleteTable() },
     ];
   }
 }
