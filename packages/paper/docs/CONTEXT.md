@@ -73,7 +73,7 @@ there is no second document model. Everything else follows from this:
   `EditorView.editable` in one compartment; `setReadOnly` flips it live (ADR-0018). The doc-mutating
   entry points guard on `view.state.readOnly` themselves (the matrix lives in the ADR).
 - `editor/extensions/markdown.ts` — the dialect: CommonMark + GFM core (Table, TaskList,
-  Strikethrough, Autolink) and the heading/code style ramp.
+  Strikethrough, Autolink), the **footnotes** parser config (below), and the heading/code style ramp.
 
 **Live Preview rendering** (hide syntax off-cursor, render on)
 
@@ -83,6 +83,20 @@ there is no second document model. Everything else follows from this:
 - `extensions/list-rendering.ts` — bullets `- * +` → •, task markers → checkboxes, off-cursor.
 - `extensions/image-widget.ts` — a line that is a lone `![alt](url)` renders as the image (render
   side of images).
+
+**Footnotes** (GitHub-style; ADR-0021. Always-on, no consumer config)
+
+- `extensions/footnotes-syntax.ts` — the `@beaket/paper` `MarkdownConfig` adding real
+  `FootnoteReference` (inline) + `FootnoteDefinition` (block) nodes, since GFM ships none. Wired into
+  `markdown.ts`. `endLeaf` lets a definition interrupt a paragraph (no blank line needed).
+- `extensions/footnote-render.ts` — `computeFootnotes(state)` (the one pure model: numbering by
+  first-reference order; the pure test seam) + the ViewPlugin rendering: a `[^1]` reference → superscript
+  reveal-on-cursor, and a referenced definition rendered **in place** off-cursor (number + body),
+  locatable and clickable, raw on-cursor.
+- `extensions/footnote-section.ts` — the collected "footnotes at the end" list. The package's **first
+  StateField-provided block decoration** (CM6 forbids block decorations from a ViewPlugin); IME-safe via
+  the widget's `eq()` + `docChanged`-only recompute. `mousedown` on an item jumps the cursor to its
+  source definition (the collected list is a read-only preview — editing is always at the source).
 
 **Tables** (structure permanently hidden; cell edited in a subview)
 

@@ -8,6 +8,8 @@ import { blockquoteKeymap } from "./extensions/blockquote-keys";
 import { changeNotifier } from "./extensions/change-notifier";
 import { codeBlockCopy } from "./extensions/code-block-copy";
 import { codeBlockEnter } from "./extensions/code-block-enter";
+import { footnoteRender } from "./extensions/footnote-render";
+import { footnoteSection } from "./extensions/footnote-section";
 import { highlightLayer } from "./extensions/highlight-layer";
 import type { ImageResolver } from "./extensions/image-drop";
 import { imageDrop } from "./extensions/image-drop";
@@ -133,6 +135,11 @@ export function editorExtensions(opts: EditorOptions = {}): Extension[] {
     tokenRender(opts.tokens),
     inlineSyntaxHiding(),
     blockSyntaxHiding(),
+    // Footnotes: `[^1]` references render as superscript ordinals (numbered by first-reference order),
+    // raw-on-cursor. Placed after the syntax-hiders so its replace widget owns the reference range.
+    footnoteRender(),
+    // The collected "Footnotes" section at the document's end (a StateField-provided block widget).
+    footnoteSection(),
     imageWidget(),
     imageDrop(opts.onInsertImage),
     codeBlockCopy(),
