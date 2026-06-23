@@ -120,7 +120,7 @@ const footnoteSectionTheme = EditorView.theme({
     margin: "0",
     paddingLeft: "1.4em",
     color: "var(--steel)",
-    fontSize: "0.9em",
+    fontSize: "0.8em",
     lineHeight: "1.6",
   },
   ".cm-footnotes-item": {

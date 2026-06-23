@@ -213,7 +213,7 @@ const footnoteTheme = EditorView.theme({
   ".cm-footnote-def": {
     cursor: "pointer",
     color: "var(--steel)",
-    fontSize: "0.9em",
+    fontSize: "0.8em",
   },
   ".cm-footnote-def-num": {
     color: "var(--accent)",
