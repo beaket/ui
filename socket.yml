@@ -1,0 +1,14 @@
+# Socket.dev configuration — https://docs.socket.dev/docs/socket-yml
+version: 2
+
+issueRules:
+  # Known false positive. Socket's "URL strings" alert flags the literal
+  # `http://www.w3.org/2000/svg` found in @beaket/paper. This is the SVG XML
+  # namespace, hard-required by spec inside the two `data:image/svg+xml`
+  # task-checkbox checkmark images in
+  # packages/paper/src/editor/theme.ts (`--cm-check-mark`, light + dark).
+  #
+  # A `data:` URI SVG used as a CSS `background-image` will not render without
+  # the `xmlns` declaration, so the string cannot be removed. It is a static
+  # W3C standards URI — there is no runtime network access. Suppressed as benign.
+  urlStrings: false
