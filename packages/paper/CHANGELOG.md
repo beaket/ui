@@ -1,5 +1,28 @@
 # @beaket/paper
 
+## 0.6.1
+
+### Patch Changes
+
+- [#531](https://github.com/beaket/ui/pull/531) [`8b06648`](https://github.com/beaket/ui/commit/8b06648d8f2b35fa15ad7c6304972bd2261dbe45) Thanks [@jihnma](https://github.com/jihnma)! - Make a table deletable from its grip menu.
+
+  The row/column grip menus offered only "Delete row" / "Delete column", and both silently no-op'd
+  on the last remaining row or column (`rows.length <= 1` / `cols <= 1`) — so a small table could not
+  be removed from the menu at all (reported as "can't delete the table"). Keyboard deletion already
+  worked (block-select via Escape or a second Backspace, then Backspace), but the menu — the
+  discoverable path — had no way out.
+
+  Add a "Delete table" item to both grip menus, and make "Delete row" / "Delete column" on the last
+  row/column delete the whole table rather than no-op. Deletion removes the table's own lines and
+  leaves the surrounding blank lines, matching the block-select Backspace path. Covered by
+  `table-delete.test.ts`.
+
+- [#530](https://github.com/beaket/ui/pull/530) [`4fe8843`](https://github.com/beaket/ui/commit/4fe8843b12981523415cc8b868da33a9d2c2011c) Thanks [@jihnma](https://github.com/jihnma)! - Fix vertical cursor navigation landing on blank separator lines below a table ([#520](https://github.com/beaket/ui/issues/520)).
+
+  The table widget's `<table>` had no margin reset, so a host/global `table { margin }` rule (common in markdown CSS — the docs site ships `table { margin: 1rem 0 }`) applied to it. The widget wrap is `position: relative` with `padding: 0`, so that margin collapses out above/below the block widget. CodeMirror measures only the wrap's box for its height map, so the escaped margin desynced the height map from the actual DOM for everything below the table. `posAtCoords` (which arrow-key vertical motion uses) then mapped a screen y to the line one below the visually-correct one, so ↑/↓ around the table skipped onto blank lines.
+
+  Resetting `.cm-table-widget table { margin: 0 }` keeps the widget's DOM footprint equal to what the height map measures (block rhythm already comes from the blank lines, per the existing `padding: 0` design). The selector outspecifies a bare `table` rule, so it holds without `!important`. Verified in-browser (geometry is jsdom-carved-out per ADR-0005): ↑/↓ across the table, the exact issue repro (cell → ↓↓ → paragraph), non-zero goal columns, and content above the table all land on the expected lines.
+
 ## 0.6.0
 
 ### Minor Changes
