@@ -4,6 +4,7 @@ import { languages } from "@codemirror/language-data";
 import type { Extension } from "@codemirror/state";
 import { tags } from "@lezer/highlight";
 import { GFM } from "@lezer/markdown";
+import { footnotesMarkdown } from "./footnotes-syntax";
 
 // Dialect (CONTEXT.md): CommonMark + GFM core extensions only — Table, TaskList, Strikethrough, Autolink.
 // markdownLanguage (the default) includes out-of-scope syntax like subscript/emoji, so we restrict to commonmark + GFM.
@@ -63,7 +64,7 @@ const sourceHighlight = HighlightStyle.define([
 
 const support = markdown({
   base: commonmarkLanguage,
-  extensions: [GFM],
+  extensions: [GFM, footnotesMarkdown],
   codeLanguages: languages,
 });
 
