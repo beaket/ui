@@ -1,5 +1,37 @@
 # @beaket/paper
 
+## 0.6.0
+
+### Minor Changes
+
+- [#526](https://github.com/beaket/ui/pull/526) [`7ee8c2e`](https://github.com/beaket/ui/commit/7ee8c2eda936c3b72fc2bee5da3836e3d45f48fa) Thanks [@jihnma](https://github.com/jihnma)! - Add GitHub-style footnotes (ADR-0021). Type a `[^label]` reference in a sentence and a `[^label]: text` definition anywhere — off the cursor they "become footnotes," all derived from the markdown source (no second model; round-trips for free).
+
+  - **Parser.** GFM in `@lezer/markdown` ships no footnote node, so a custom `MarkdownConfig` adds real `FootnoteReference` (inline) and `FootnoteDefinition` (block) nodes — driving marker hiding, definition detection, and round-trip without fragile regex. A definition may interrupt a paragraph with no blank line above it (`endLeaf`), and a `[^x]` inside inline code stays literal.
+  - **Reference → superscript, reveal-on-cursor.** `[^1]` renders as a superscript ordinal off-cursor and reveals its raw form on-cursor (the Live-Preview contract, not an atomic token). Numbering follows GitHub: by **first-reference order**, computed over the whole document; an undefined `[^x]` stays literal and an unreferenced definition is excluded from the numbering.
+  - **Definition rendered in place + collected at the end.** Off-cursor, a referenced definition renders as a real footnote (number + body) where it is authored — locatable and clickable, not hidden — and on-cursor reveals raw for editing. Every referenced definition is also gathered into a section after the last line (the package's first StateField-provided block decoration; IME-safe via the widget's `eq()` and `docChanged`-only recompute). Both renderings share markup so they stay consistent.
+  - **Re-edit model.** Editing always happens at the source: cursor-on-line reveals raw like any other block, and clicking a collected item moves the cursor to its source definition. The cursor moves; content never teleports.
+
+  Always-on (like tables) — no `EditorOptions` change. Known v1 cuts: footnote bodies are plain text (inline markdown inside a footnote not yet rendered), single-line definitions only, and numbering rescans the whole document per edit. A publish-oriented `footnoteLayout: "inline" | "collected"` toggle (collected = clean body, definitions only at the bottom) is a planned follow-up.
+
+- [#522](https://github.com/beaket/ui/pull/522) [`5163cbe`](https://github.com/beaket/ui/commit/5163cbe675388108f4b4edeef74f964900c78a1a) Thanks [@jihnma](https://github.com/jihnma)! - Align the Live-Preview markdown typescale to beaket's finalised "paper-md" body grill (ADR-0009 amendment, 2026-06-22), and default the writing surface to white.
+
+  - **White canvas default + self-painted surface.** `--canvas` now defaults to `#ffffff` (was the near-white `#fbfcfd`), and the editor paints its own writing-surface background instead of being transparent over the host. The surface tint is now a consumer choice: override with `--beaket-paper-canvas` (e.g. `#fffefc` for a barely-warm paper). Dark canvas unchanged.
+  - **Body size + heading ramp re-pointed to the grill.** Body `--font-size` 17px → 16.5px; headings h1/h2/h3 → 1.58 / 1.27 / 1.09em at weight 600 (was 700/650). The load-bearing CJK decisions are preserved — `--line-height: 1.75` and the Japanese-before-Korean font stack are untouched (the grill's 1.7 leading and Latin-first stack were not ported).
+  - **Link treatment.** A link renders as accent text + accent underline (`text-underline-offset: 2px`), matching the text color to the underline so `[text](url)` links, bare URLs, and `@`-mention tokens all share one consistent link style.
+  - **Blockquote rule → accent (blue), 3px.** The blockquote left rule moves from grey (`--chrome`) to the accent (`--accent`) and from 2px to 3px; quote text stays muted, non-italic (CJK-safe). Empty `>` separator lines inside a quote now render as a tight ~0.5em strip (instead of a full line-height row) when the cursor is elsewhere, so the in-quote rhythm (paragraph ↔ list ↔ nested quote) matches collapsed-HTML quotes; the line returns to full height while the cursor is on it for editing. A list inside a blockquote now keeps the quote's bar gutter in its hanging-indent padding (`calc(gutter + Nch)`), so its bullets no longer collide with the bar.
+  - **h2/h3 bottom spacing.** Headings now carry a real `padding-bottom` (h2 0.45em, h3 0.28em) so the gap to the following block stays beaket-like even with no blank line after the heading (the common single-Enter editing case), instead of collapsing to ~8px.
+  - **Image captions.** A titled image `![alt](url "caption")` now renders as a `<figure>` with a `<figcaption>` (12.5px, muted, left-aligned); a bare `![alt](url)` stays a plain image. `alt` remains the accessibility text in both cases. (Previously `title` only set the `<img title>` tooltip.) Both wrappers are `inline-block` so a captioned and a bare image get identical vertical spacing in their line (a block figure would pull in CM6's line-height-tall widgetBuffer anchors and sit ~25px further from the surrounding text).
+
+  Not changed: the prose measure stays full-width by default (`--measure: none`) — opt into a reading column with `--beaket-paper-measure` (the editor has no breakout, so a hard cap would clip tables/code) — and the task-checkbox keeps the brutalist ink fill.
+
+### Patch Changes
+
+- [#527](https://github.com/beaket/ui/pull/527) [`8f5aacf`](https://github.com/beaket/ui/commit/8f5aacfa317115678d525b473e9c7d1b54d16767) Thanks [@jihnma](https://github.com/jihnma)! - Add a `source` export condition so monorepo consumers can resolve the package to its TypeScript source during local dev.
+
+  `exports[".".|"./react"].source` now points at `src/index.ts` / `src/react/index.ts`, ordered before `types`/`import`. Default resolvers (npm, Node, a normal Vite/webpack install) never request `source`, so installs are unchanged — they keep resolving `import → dist`, and the published tarball still ships `dist` only. A dev server that opts into the condition (`resolve.conditions: ["source"]`) instead compiles the package from source via the workspace symlink, enabling Fast Refresh on `@beaket/paper` edits with no rebuild.
+
+  No runtime or API change for consumers.
+
 ## 0.5.0
 
 ### Minor Changes
