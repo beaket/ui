@@ -54,7 +54,9 @@ describe("table deletion from the grip menu", () => {
     const menu = openMenu(v, ".cm-col-grip");
     await until(() => v.dom.querySelector(".cm-table-menu") !== null);
 
-    expect([...menu.querySelectorAll("button")].map((b) => b.textContent)).toContain("Delete table");
+    expect([...menu.querySelectorAll("button")].map((b) => b.textContent)).toContain(
+      "Delete table",
+    );
     clickItem(menu, "Delete table");
 
     expect(v.state.doc.toString()).toBe("Before.\n\n\n\nAfter.\n");
@@ -67,7 +69,9 @@ describe("table deletion from the grip menu", () => {
     const menu = openMenu(v, ".cm-row-grip");
     await until(() => v.dom.querySelector(".cm-table-menu") !== null);
 
-    expect([...menu.querySelectorAll("button")].map((b) => b.textContent)).toContain("Delete table");
+    expect([...menu.querySelectorAll("button")].map((b) => b.textContent)).toContain(
+      "Delete table",
+    );
     clickItem(menu, "Delete table");
 
     expect(v.state.doc.toString()).toBe("Before.\n\n\n\nAfter.\n");
