@@ -16,6 +16,12 @@ describe("tsvToRows", () => {
   it("escapes pipes inside a cell", () => {
     expect(tsvToRows("a|b\tc")).toEqual([["a\\|b", "c"]]);
   });
+
+  it("escapes backslashes before pipes so cell escaping cannot be defeated", () => {
+    // `\|` must become `\\\|` (escaped backslash + escaped pipe), never `\\|`
+    // (literal backslash + live delimiter), which would inject an extra column.
+    expect(tsvToRows("a\\|b\tc")).toEqual([["a\\\\\\|b", "c"]]);
+  });
 });
 
 describe("htmlTableToRows", () => {

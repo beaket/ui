@@ -6,11 +6,9 @@ import { EditorView } from "@codemirror/view";
 // even on a plain paste the StateField creates the widget.
 
 function escapeCell(text: string): string {
-  return text
-    .replace(/\\/g, "\\\\")
-    .replace(/\|/g, "\\|")
-    .replace(/\r?\n/g, "<br>")
-    .trim();
+  // Escape backslashes before pipes: a cell containing `\|` must not collapse to
+  // `\\|` (literal backslash + live column delimiter), which would inject columns.
+  return text.replace(/\\/g, "\\\\").replace(/\|/g, "\\|").replace(/\r?\n/g, "<br>").trim();
 }
 
 export function toMarkdownTable(rows: string[][]): string | null {
