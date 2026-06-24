@@ -1,5 +1,23 @@
 # @beaket/paper
 
+## 0.6.2
+
+### Patch Changes
+
+- [#544](https://github.com/beaket/ui/pull/544) [`f131c7c`](https://github.com/beaket/ui/commit/f131c7c83069d7dbafec0818df274143216772a1) Thanks [@jihnma](https://github.com/jihnma)! - fix: keep floating menus glued to their anchor on scroll, and close when the anchor scrolls out of view ([#541](https://github.com/beaket/ui/issues/541))
+
+  The slash (`/`) menu, the `@`/`[[` trigger menus, and the table grip menu were positioned once when opened (from `coordsAtPos` / `getBoundingClientRect`) with `position: fixed` and no scroll listener — a side effect of [#471](https://github.com/beaket/ui/issues/471). Scrolling the editor left them pinned to the viewport, floating over unrelated content while their anchor moved away.
+
+  They now re-place from the live anchor coordinates on scroll/resize (capture-phase listener so the inner `.cm-scroller` is caught), and close once the anchor scrolls out of the editor's scroll viewport. Repositioning is skipped during IME composition so the close path never fires mid-compose.
+
+- [#542](https://github.com/beaket/ui/pull/542) [`bdc5c08`](https://github.com/beaket/ui/commit/bdc5c08febbc19deb84d629db7780b3f0e568799) Thanks [@jihnma](https://github.com/jihnma)! - Fade the in-place footnote definition so it recedes from the body flow ([#525](https://github.com/beaket/ui/issues/525)).
+
+  An off-cursor footnote definition (`[^1]: …`) renders in place as an accent number + body, and is _also_ collected at the document end (ADR-0021). The in-place copy is what lets you locate and re-edit the definition without teleporting, but at full `--steel` it read like a small paragraph wedged between the surrounding prose — and because a definition's source position is arbitrary (authored anywhere), that made it look like it belonged to whichever paragraph it happened to sit under.
+
+  The body span now mixes `--steel` 68% toward `--paper` (`color-mix`, theme-aware: lighter in light, dimmer in dark — no new token), so the definition visibly recedes while the accent number stays crisp as the locator/number-anchor. Font size is held at `0.8em` deliberately, **not** shrunk further: CJK glyphs lose legibility when smaller. Verified in-browser (light + dark, EN/KO/JA) — the definition reads as a faded, number-anchored footnote rather than body prose, and CJK stays legible.
+
+  This resolves the `footnoteLayout: "inline" | "collected"` follow-up deferred in ADR-0021: the publish/"collected" _toggle_ is rejected (Paper has no render-to-output reading mode; any in-body hide reduces to the vanish bug or an orphaned marker), and the in-place render — faded — is the answer. See the ADR-0021 amendment.
+
 ## 0.6.1
 
 ### Patch Changes
