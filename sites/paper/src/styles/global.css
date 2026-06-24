@@ -172,6 +172,13 @@ pre code {
   }
   .layout {
     flex-direction: column;
+    /* The desktop rule sets align-items: flex-start, which in a *column* flex
+       sizes each item to its own content width (max-content) on the cross axis.
+       That let .content grow to its widest child — a code block or table — and
+       drag the whole page past the viewport, so overflow-x:auto never engaged
+       and the page rendered at desktop width on phones. Stretch pins .content
+       to the viewport so its min-width:0 holds and wide children scroll. */
+    align-items: stretch;
   }
   .sidebar {
     position: static;
