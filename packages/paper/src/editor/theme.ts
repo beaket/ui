@@ -76,7 +76,8 @@ export const tokens = {
   //    `list-rendering.ts` as `var(--cm-check-mark)`; inherits to the checkbox from the editor root.
   //    NOTE: the `xmlns='http://www.w3.org/2000/svg'` below is required by spec for a `data:` URI SVG
   //    used as a CSS background — it cannot be removed. Socket flags it as a "URL strings" alert; it is
-  //    a benign false positive (no runtime network access), suppressed in /socket.yml.
+  //    a benign false positive (no runtime network access). /socket.yml exempts only THIS file via
+  //    `projectIgnorePaths` (keeping urlStrings active for the rest of the repo + all dependencies).
   "--cm-check-mark":
     "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%20fill='none'%20stroke='%23ffffff'%20stroke-width='2.25'%3E%3Cpath%20d='M3.5%208.5l3%203%206-6'/%3E%3C/svg%3E\")",
   // ② Editor-owned code syntax (GitHub Light, ADR-0006); porcelain has none

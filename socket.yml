@@ -1,14 +1,22 @@
 # Socket.dev configuration — https://docs.socket.dev/docs/socket-yml
 version: 2
 
-issueRules:
-  # Known false positive. Socket's "URL strings" alert flags the literal
-  # `http://www.w3.org/2000/svg` found in @beaket/paper. This is the SVG XML
-  # namespace, hard-required by spec inside the two `data:image/svg+xml`
-  # task-checkbox checkmark images in
-  # packages/paper/src/editor/theme.ts (`--cm-check-mark`, light + dark).
-  #
-  # A `data:` URI SVG used as a CSS `background-image` will not render without
-  # the `xmlns` declaration, so the string cannot be removed. It is a static
-  # W3C standards URI — there is no runtime network access. Suppressed as benign.
-  urlStrings: false
+# Scope the suppression to the ONE file that triggers the false positive, instead
+# of disabling the alert type repo-wide.
+#
+# Socket's "URL strings" alert flags the literal `http://www.w3.org/2000/svg` in
+# @beaket/paper. That is the SVG XML namespace, hard-required by spec inside the
+# two `data:image/svg+xml` task-checkbox checkmark images in theme.ts
+# (`--cm-check-mark`, light + dark). A `data:` URI SVG used as a CSS
+# `background-image` will not render without the `xmlns` declaration, so the
+# string cannot be removed. It is a static W3C standards URI — no runtime network
+# access. Benign.
+#
+# `issueRules` only toggles an alert type globally (no per-file/per-string scope in
+# socket.yml v2), which would also blind us to genuinely suspicious URLs in our
+# dependency tree — exactly where supply-chain attacks live. `projectIgnorePaths`
+# (.gitignore-style) instead exempts only this single static CSS-token file, whose
+# entire content is style constants under our control. urlStrings — and every other
+# alert — stays active for the rest of the repo and all dependencies.
+projectIgnorePaths:
+  - packages/paper/src/editor/theme.ts
