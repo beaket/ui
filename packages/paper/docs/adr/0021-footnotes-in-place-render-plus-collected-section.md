@@ -5,6 +5,7 @@
 - **Supersedes:** —
 - **Superseded-by:** —
 - **Amends:** —
+- **Amended:** 2026-06-24 — the deferred `footnoteLayout` toggle is **rejected**; see "Follow-up resolved" below.
 
 ---
 
@@ -96,3 +97,27 @@ Concretely:
 - Coordinate/DOM behavior (superscript placement, the in-place and collected renders, reveal-on-cursor,
   click-to-source) is carved out for browser verification (invariant #4) — done in the playground; the
   parser and `computeFootnotes` model are covered by jsdom contract tests.
+
+## Follow-up resolved (2026-06-24): the `footnoteLayout` toggle is rejected
+
+The decision above deferred a publish-oriented `footnoteLayout: "inline" | "collected"` toggle (collected =
+clean body, definitions only at the bottom). Picking it up, the toggle was prototyped (a `Compartment` +
+`setFootnoteLayout`, mirroring `colorScheme`/`readOnly`) and then **rejected**. The reasoning:
+
+- **Paper has no reading mode.** It is always one Live-Preview editor over the markdown source; "rendered"
+  is decorations over that source, and `readOnly` only disables editing (the same reveal-on-cursor
+  decorations still apply). So "collected = a publish/reading view" has nothing to attach to — a layout
+  toggle can only change how a definition looks **off-cursor**.
+- **Every "hide it off-cursor" variant is worse than showing it.** A zero-height hide is the vanish bug this
+  ADR already rejected. A bare locatable marker reads as an _orphan_ ("why is there a stray `1` mid-document?").
+  Showing the full body in place is the only non-vanishing, non-orphan option — and a footnote links to its
+  reference by **number, not position**, so a number-anchored in-place definition is not misread as belonging
+  to the adjacent paragraph (the misread came from position-implying treatments like a `└` glyph, which we
+  don't use).
+- Therefore the in-place definition **stays in both the drafting and the "I want a cleaner body" cases**; there
+  is no second layout to toggle to. The only real lever is visual weight, handled by styling, not an API.
+
+**What landed instead:** the in-place definition body is **faded** (`color-mix(--steel 68%, --paper)`,
+theme-aware) so it recedes from the body flow while the accent number stays crisp as the locator; size held at
+`0.8em` (not smaller — CJK legibility floor). No new `EditorOptions` surface; the 1.0-frozen options are
+untouched. Verified in-browser (light/dark, EN/KO/JA). Issue #525 is closed as resolved-by-rejection.

@@ -208,11 +208,14 @@ const footnoteTheme = EditorView.theme({
     // Sit the number tight against the preceding word, like a printed footnote mark.
     padding: "0 0.1em",
   },
-  // The off-cursor definition rendered in place: an accent number + muted body; the hover tint signals
-  // it is clickable (cursor → reveals raw for editing).
+  // The off-cursor definition rendered in place: an accent number + a *faded* body so the parked
+  // definition recedes from the body flow (it reads cleanly at the bottom; here it's just a locatable,
+  // number-anchored marker). Faded by mixing --steel toward --paper — theme-aware (lighter in light,
+  // dimmer in dark) and no new token. Size held at 0.8em, NOT smaller: CJK glyphs lose legibility when
+  // shrunk further. The hover tint signals it's clickable (cursor → reveals raw for editing).
   ".cm-footnote-def": {
     cursor: "pointer",
-    color: "var(--steel)",
+    color: "color-mix(in srgb, var(--steel) 68%, var(--paper))",
     fontSize: "0.8em",
   },
   ".cm-footnote-def-num": {
