@@ -778,6 +778,10 @@ class TableController {
 
   private menu: HTMLElement | null = null;
   private menuCloseListener: ((event: MouseEvent) => void) | null = null;
+  /** The grip the open menu is anchored to, so it can be re-placed from live coords on scroll (#541). */
+  private menuAnchor: HTMLElement | null = null;
+  /** Bound scroll/resize handler that keeps the menu glued to its anchor grip. */
+  private menuReposition: (() => void) | null = null;
 
   private openMenu(kind: "col" | "row", index: number, anchor: HTMLElement): void {
     // No menu actions during IME composition (CJK first-class)
@@ -805,19 +809,49 @@ class TableController {
       menu.appendChild(btn);
     }
 
-    // Position from the grip's viewport rect and attach to view.dom (.cm-editor, overflow:visible)
-    // with position:fixed, mirroring the slash menu — this escapes the .cm-scroller overflow box so
-    // the menu is never clipped near the scroller's right/bottom edge (#471).
-    const anchorRect = anchor.getBoundingClientRect();
-    menu.style.left = `${anchorRect.left}px`;
-    menu.style.top = `${anchorRect.bottom + 4}px`;
+    // Attach to view.dom (.cm-editor, overflow:visible) with position:fixed, mirroring the slash menu —
+    // this escapes the .cm-scroller overflow box so the menu is never clipped near the scroller's
+    // right/bottom edge (#471). Position is set by positionMenu() from the grip's live viewport rect.
     (this.mainView?.dom ?? this.wrap).appendChild(menu);
     this.menu = menu;
+    this.menuAnchor = anchor;
+    this.positionMenu();
 
     this.menuCloseListener = (event) => {
       if (!menu.contains(event.target as Node)) this.closeMenu();
     };
     document.addEventListener("mousedown", this.menuCloseListener, true);
+    // Keep the menu glued to the grip on scroll/resize, closing it once the grip scrolls out of the
+    // editor viewport (#541). capture:true catches the inner .cm-scroller's non-bubbling scroll.
+    this.menuReposition = () => this.positionMenu();
+    window.addEventListener("scroll", this.menuReposition, { capture: true, passive: true });
+    window.addEventListener("resize", this.menuReposition);
+  }
+
+  /**
+   * Re-place the menu from the anchor grip's live rect, or close it if the grip has been detached or
+   * scrolled out of the editor's scroll viewport (#541). Skipped during IME composition so the close
+   * branch never fires mid-compose (CJK first-class, #483); it self-corrects on the next event.
+   */
+  private positionMenu(): void {
+    if (!this.menu || !this.menuAnchor || this.subview?.composing) return;
+    const anchorRect = this.menuAnchor.getBoundingClientRect();
+    const scroller = this.mainView?.scrollDOM.getBoundingClientRect();
+    // Close once the grip scrolls out of the scroller viewport — vertically or horizontally
+    // (.cm-scroller scrolls sideways for wide tables), else the fixed menu floats over empty chrome.
+    if (
+      !this.menuAnchor.isConnected ||
+      (scroller &&
+        (anchorRect.bottom < scroller.top ||
+          anchorRect.top > scroller.bottom ||
+          anchorRect.right < scroller.left ||
+          anchorRect.left > scroller.right))
+    ) {
+      this.closeMenu();
+      return;
+    }
+    this.menu.style.left = `${anchorRect.left}px`;
+    this.menu.style.top = `${anchorRect.bottom + 4}px`;
   }
 
   private closeMenu(): void {
@@ -825,8 +859,14 @@ class TableController {
       document.removeEventListener("mousedown", this.menuCloseListener, true);
       this.menuCloseListener = null;
     }
+    if (this.menuReposition) {
+      window.removeEventListener("scroll", this.menuReposition, { capture: true });
+      window.removeEventListener("resize", this.menuReposition);
+      this.menuReposition = null;
+    }
     this.menu?.remove();
     this.menu = null;
+    this.menuAnchor = null;
   }
 
   // -------------------------------------------------------------------------

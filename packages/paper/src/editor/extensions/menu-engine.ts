@@ -39,6 +39,10 @@ export class PopupMenu<T extends MenuRow> {
   /** The selectable (non-header) rows, in display order — `selected` indexes into this, never headers. */
   private items: T[] = [];
   private selected = 0;
+  /** Source position the menu is anchored to, so it can be re-placed from live coords on scroll/resize. */
+  private anchorPos = 0;
+  /** Bound scroll/resize handler that keeps the menu glued to its anchor (#541). */
+  private readonly reposition = (): void => this.place();
 
   constructor(
     private readonly view: EditorView,
@@ -59,6 +63,7 @@ export class PopupMenu<T extends MenuRow> {
     const coords = this.view.coordsAtPos(anchorPos);
     this.closeDOM();
     if (!coords) return;
+    this.anchorPos = anchorPos;
 
     const items = rows.filter((row) => !row.header);
     this.items = items;
@@ -90,6 +95,36 @@ export class PopupMenu<T extends MenuRow> {
     // Attach to view.dom so the EditorView.theme scope (under .cm-editor) applies.
     this.view.dom.appendChild(menu);
     this.el = menu;
+    // Keep the fixed-position menu glued to its anchor on scroll/resize, and close it when the anchor
+    // scrolls out of the editor viewport (#541). capture:true catches the inner .cm-scroller's scroll,
+    // which does not bubble; passive since we never preventDefault.
+    window.addEventListener("scroll", this.reposition, { capture: true, passive: true });
+    window.addEventListener("resize", this.reposition);
+  }
+
+  /**
+   * Re-place the menu from the anchor's live coords, or close it if the anchor has scrolled out of the
+   * editor's scroll viewport. Skipped during IME composition: a re-place is harmless but the close
+   * branch must never fire mid-compose (CJK first-class, #483) — the menu self-corrects on the next event.
+   */
+  private place(): void {
+    if (!this.el || this.view.composing) return;
+    const coords = this.view.coordsAtPos(this.anchorPos);
+    const scroller = this.view.scrollDOM.getBoundingClientRect();
+    // Close once the anchor scrolls out of the scroller viewport — vertically or horizontally
+    // (.cm-scroller scrolls sideways for wide tables), else the fixed menu floats over empty chrome.
+    if (
+      !coords ||
+      coords.bottom < scroller.top ||
+      coords.top > scroller.bottom ||
+      coords.right < scroller.left ||
+      coords.left > scroller.right
+    ) {
+      this.close();
+      return;
+    }
+    this.el.style.left = `${coords.left}px`;
+    this.el.style.top = `${coords.bottom + 4}px`;
   }
 
   moveSelection(delta: -1 | 1): void {
@@ -115,6 +150,10 @@ export class PopupMenu<T extends MenuRow> {
   }
 
   private closeDOM(): void {
+    if (this.el) {
+      window.removeEventListener("scroll", this.reposition, { capture: true });
+      window.removeEventListener("resize", this.reposition);
+    }
     this.el?.remove();
     this.el = null;
   }
