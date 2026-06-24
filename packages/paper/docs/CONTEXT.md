@@ -140,6 +140,9 @@ view` rendered as a permanently-atomic replace-widget (caret steps over, one Bac
 **Editing keys**
 
 - `extensions/blockquote-keys.ts` — Enter escapes / Tab changes level.
+- `extensions/code-block-autoclose.ts` — Enter on an _opening_ fence line auto-inserts the matching
+  close + a blank middle line (cursor parked there); skips already-closed blocks via the `FencedCode`
+  `CodeMark` count. Disjoint from `code-block-enter` (delimiter line vs. content line).
 - `extensions/code-block-enter.ts` — Enter in a fence keeps indent, dodges the lazy language parser's
   `indentService`.
 - `extensions/wrap-selection.ts` — wrap-on-type (Notion/Obsidian): typing a pair opener (`(` `[` `{`

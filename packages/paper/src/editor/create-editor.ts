@@ -6,6 +6,7 @@ import type { AnchorStatus } from "./anchor";
 import { blockSyntaxHiding } from "./extensions/block-syntax-hiding";
 import { blockquoteKeymap } from "./extensions/blockquote-keys";
 import { changeNotifier } from "./extensions/change-notifier";
+import { codeBlockAutoClose } from "./extensions/code-block-autoclose";
 import { codeBlockCopy } from "./extensions/code-block-copy";
 import { codeBlockEnter } from "./extensions/code-block-enter";
 import { footnoteRender } from "./extensions/footnote-render";
@@ -148,6 +149,9 @@ export function editorExtensions(opts: EditorOptions = {}): Extension[] {
     imageDrop(opts.onInsertImage),
     codeBlockCopy(),
     listRendering(),
+    // Enter on an opening fence line auto-inserts the matching close (cursor on a blank middle line).
+    // Placed with codeBlockEnter — disjoint cases (delimiter line vs. content line), both Prec.high.
+    codeBlockAutoClose,
     codeBlockEnter,
     tableWidget(),
     // blockquoteKeymap (Enter/Tab/Shift-Tab) is Prec.highest, so it beats markdownKeymap (Prec.high).
