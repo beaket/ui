@@ -317,6 +317,21 @@ blockquote {
   }
 }
 
+/* The API tables carry long, unbreakable type signatures (e.g.
+   `(m: Map<string, AnchorStatus>) => void`). On a phone those can't wrap, so a
+   bare table would push past the viewport and scroll the whole page sideways.
+   Wrapping each table in .table-scroll keeps the overflow contained to the
+   table — it scrolls horizontally on its own while the page stays put. */
+.table-scroll {
+  overflow-x: auto;
+  /* The table's own margin would collapse oddly through the wrapper; carry it
+     here so spacing matches an unwrapped table. */
+  margin: 1rem 0;
+}
+.table-scroll table {
+  margin: 0;
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
