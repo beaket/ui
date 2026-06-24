@@ -142,6 +142,10 @@ view` rendered as a permanently-atomic replace-widget (caret steps over, one Bac
 - `extensions/blockquote-keys.ts` — Enter escapes / Tab changes level.
 - `extensions/code-block-enter.ts` — Enter in a fence keeps indent, dodges the lazy language parser's
   `indentService`.
+- `extensions/wrap-selection.ts` — wrap-on-type (Notion/Obsidian): typing a pair opener (`(` `[` `{`
+  `` ` `` `"` `'` `*`) over a selection surrounds it, keeping the selection on the inner text (so a
+  second press nests → `**bold**`). The package's first `EditorView.inputHandler`; pure seam
+  `wrapEdit(state, text)`. Empty selection / pasted text fall through to default insertion.
 
 **Copy**
 

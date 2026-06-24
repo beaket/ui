@@ -30,6 +30,7 @@ import type { TokenSpec } from "./extensions/token-render";
 import { tokenRender } from "./extensions/token-render";
 import type { TriggerSpec } from "./extensions/trigger-menu";
 import { triggerMenu } from "./extensions/trigger-menu";
+import { wrapSelection } from "./extensions/wrap-selection";
 import { baseTheme, type ColorScheme, darkThemeStyle, sizeTheme } from "./theme";
 export { defaultSlashItems } from "./extensions/slash-command";
 export type { SlashItemsConfig, SlashItemSpec } from "./extensions/slash-command";
@@ -123,6 +124,9 @@ export function editorExtensions(opts: EditorOptions = {}): Extension[] {
     history(),
     keymap.of([...defaultKeymap, ...historyKeymap]),
     EditorView.lineWrapping,
+    // Wrap-on-type: typing `(` `[` `` ` `` etc. over a selection surrounds it (Notion/Obsidian style).
+    // An inputHandler with no competitors, so plain precedence is fine.
+    wrapSelection(),
     baseTheme,
     darkThemeStyle(opts.colorScheme),
     sizeTheme(opts.height, opts.minHeight),
