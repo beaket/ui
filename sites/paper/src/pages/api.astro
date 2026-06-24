@@ -9,6 +9,7 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
 
   <h2 id="props"><code>&lt;Paper&gt;</code> props</h2>
   <p>Import from <code>@beaket/paper/react</code>. All props are optional.</p>
+  <div class="table-scroll">
   <table>
     <thead><tr><th>Prop</th><th>Type</th><th>Notes</th></tr></thead>
     <tbody>
@@ -31,9 +32,11 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
       <tr><td><code>className</code></td><td><code>string</code></td><td>Class on the editor container element.</td></tr>
     </tbody>
   </table>
+  </div>
 
   <h2 id="handle">Imperative handle (<code>ref</code>)</h2>
   <p>The <code>ref</code> exposes a <code>PaperHandle</code>:</p>
+  <div class="table-scroll">
   <table>
     <thead><tr><th>Method</th><th>Returns</th><th>Notes</th></tr></thead>
     <tbody>
@@ -44,9 +47,11 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
       <tr><td><code>getView()</code></td><td><code>EditorView</code></td><td>Escape hatch — the raw CodeMirror 6 <code>EditorView</code>. No cross-version guarantees.</td></tr>
     </tbody>
   </table>
+  </div>
 
   <h2 id="core">Core <code>createEditor(parent, options)</code></h2>
   <p>The vanilla core takes the mount element and an <code>EditorOptions</code> object, returning the CodeMirror <code>EditorView</code>. These options are the editor's own surface; <code>highlights</code>, <code>activeHighlightId</code>, and <code>className</code> are React-wrapper additions, not core options:</p>
+  <div class="table-scroll">
   <table>
     <thead><tr><th>Option</th><th>Type</th><th>Notes</th></tr></thead>
     <tbody>
@@ -64,6 +69,7 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
       <tr><td><code>onHighlightStatusChange</code> / <code>onHighlightClick</code></td><td>callbacks</td><td>Highlight surface. The highlight <em>list</em> is set imperatively via <code>setHighlightsEffect</code>.</td></tr>
     </tbody>
   </table>
+  </div>
 
   <p class="next"><a href={withBase('styling')}>Styling →</a></p>
 </Base>
