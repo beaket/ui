@@ -1,5 +1,32 @@
 # @beaket/paper
 
+## 0.7.0
+
+### Minor Changes
+
+- [#548](https://github.com/beaket/ui/pull/548) [`20c1667`](https://github.com/beaket/ui/commit/20c1667c467c26eda465fd1fbb8e4b37f8e18ad6) Thanks [@jihnma](https://github.com/jihnma)! - Auto-close fenced code blocks: pressing Enter at the end of an opening fence line (` ``` `, ` ```js `, `~~~`, …) inserts the matching closing fence and parks the cursor on a blank middle line, so you get a ready-to-fill block instead of an unterminated fence.
+
+  Implemented as `codeBlockAutoClose`, a `Prec.high` Enter keymap alongside `codeBlockEnter` (disjoint cases: this owns the opening delimiter line, `codeBlockEnter` the content lines). It only fires when the cursor is at the end of an unterminated opening fence — a closed block (two `CodeMark` children in the `FencedCode` node) is left untouched, so no double-close. Honors the IME composing guard and read-only state. Leading indentation is preserved on the inserted lines.
+
+- [#551](https://github.com/beaket/ui/pull/551) [`8471fa1`](https://github.com/beaket/ui/commit/8471fa18f68dd9510e2147de8ac2876d2ce2e7bc) Thanks [@jihnma](https://github.com/jihnma)! - Tab indentation for lists and fenced code blocks (ADR-0022).
+
+  - **Lists**: Tab nests the item one level deeper (under its preceding sibling), Shift+Tab lifts it one level shallower — or strips the marker at top level. The whole item subtree (continuation lines + child items) shifts together, so nesting stays valid. Indent depth is driven by the parsed syntax tree (the parent's content column — 2 under `- `, 3 under `1. `), not a fixed space count, and is blockquote-aware (indents after the `> ` prefix). The first item of a list has no parent to nest under, so Tab there is a consumed no-op rather than a focus escape.
+  - **Code blocks**: VSCode-style Tab/Shift+Tab — Tab inserts one indent unit of spaces (or indents every line of a multi-line selection), Shift+Tab outdents — scoped to fenced code content lines (the fence delimiter lines are left alone so Tab can't break the fence). Indentation is spaces (the default 2-space unit), not a hard tab.
+
+  Tab is never bound globally (no `indentWithTab`): each handler yields outside its context so plain prose keeps the default focus-move (and never gets silently turned into an indented code block by stray leading spaces). Precedence: an open slash/trigger menu's Tab still wins; a list line inside a blockquote indents the list, not the quote; Tab inside a code block nested in a list/quote still reaches the code-block handler.
+
+  v1 limits: ordered-list numbers aren't renumbered on indent/outdent, and a range selection in a list falls through. Table-cell Tab navigation and code-block auto-closing brackets are deferred to follow-ups.
+
+- [#547](https://github.com/beaket/ui/pull/547) [`75927fb`](https://github.com/beaket/ui/commit/75927fb201c8027ceeb7bb20b6b40513757bc1d6) Thanks [@jihnma](https://github.com/jihnma)! - Wrap the selection on type (Notion/Obsidian style): with text selected, typing `(` `[` `{` `` ` `` `"` `'` or `*` now surrounds the selection with the pair and keeps the selection on the inner text, instead of replacing it. Always-on, no config.
+
+  Because the selection stays on the inner text after a wrap, pressing the same marker twice nests it — pressing `*` twice yields bold and `` ` `` twice yields a double-backtick code span. Single `_` and `~` are deliberately excluded: a lone `_word_` won't render intra-word in CommonMark and a lone `~word~` isn't GFM strikethrough (use `*` / double-`*`, or two backticks).
+
+### Patch Changes
+
+- [#545](https://github.com/beaket/ui/pull/545) [`7aa885d`](https://github.com/beaket/ui/commit/7aa885d28d28d5c26c43419119078b445c3daf3d) Thanks [@jihnma](https://github.com/jihnma)! - Escape backslashes before pipes when converting pasted tables (CodeQL `js/incomplete-sanitization`).
+
+  `escapeCell` (paste-to-markdown-table conversion) escaped `|` as `\|` but left existing backslashes untouched. A pasted cell containing `\|` collapsed to `\\|`, which a GFM parser reads as a literal backslash followed by a **live column delimiter** — defeating the pipe escaping and letting cell content inject extra table columns. Backslashes are now escaped first (`\` → `\\`), so `\|` becomes `\\\|` (escaped backslash + escaped pipe) and the cell boundary holds.
+
 ## 0.6.2
 
 ### Patch Changes
