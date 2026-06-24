@@ -16,6 +16,7 @@ import type { ImageResolver } from "./extensions/image-drop";
 import { imageDrop } from "./extensions/image-drop";
 import { imageWidget } from "./extensions/image-widget";
 import { inlineSyntaxHiding } from "./extensions/inline-syntax-hiding";
+import { listKeymap } from "./extensions/list-keys";
 import { listRendering } from "./extensions/list-rendering";
 import { markdownExtension } from "./extensions/markdown";
 import { markdownCopy } from "./extensions/markdown-copy";
@@ -160,6 +161,9 @@ export function editorExtensions(opts: EditorOptions = {}): Extension[] {
     // Declarative consumer triggers (@ / [[), ADR-0016. Coexists with the slash menu; its keymap is
     // also Prec.highest but only one menu is ever open (distinct triggers), so they don't fight.
     triggerMenu(opts.triggers),
+    // List Tab/Shift-Tab (ADR-0022). Prec.highest; registered after the menus (so an open menu's Tab
+    // wins) and before blockquoteKeymap (so a list line inside a quote indents the list, not the quote).
+    listKeymap,
     blockquoteKeymap,
     tableAutoConvert(),
     pasteTableConvert(),

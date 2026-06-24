@@ -140,11 +140,17 @@ view` rendered as a permanently-atomic replace-widget (caret steps over, one Bac
 **Editing keys**
 
 - `extensions/blockquote-keys.ts` — Enter escapes / Tab changes level.
+- `extensions/list-keys.ts` — `listKeymap`: Tab nests a list item under its preceding sibling /
+  Shift+Tab lifts it (or strips the marker at top level), by the **syntax tree** (parent content
+  column, not a space count); the whole item subtree shifts together; blockquote-aware. Yields inside
+  a fenced code block. → [ADR-0022](./adr/0022-tab-indentation-lists-and-code-blocks.md)
 - `extensions/code-block-autoclose.ts` — Enter on an _opening_ fence line auto-inserts the matching
   close + a blank middle line (cursor parked there); skips already-closed blocks via the `FencedCode`
   `CodeMark` count. Disjoint from `code-block-enter` (delimiter line vs. content line).
 - `extensions/code-block-enter.ts` — Enter in a fence keeps indent, dodges the lazy language parser's
-  `indentService`.
+  `indentService`; Tab/Shift+Tab give VSCode-style indent inside a fence (`insertTab`/`indentLess`,
+  ADR-0022). Tab is **never bound globally** (no `indentWithTab`) — handlers yield outside their
+  context so prose keeps the default focus-move.
 - `extensions/wrap-selection.ts` — wrap-on-type (Notion/Obsidian): typing a pair opener (`(` `[` `{`
   `` ` `` `"` `'` `*`) over a selection surrounds it, keeping the selection on the inner text (so a
   second press nests → `**bold**`). The package's first `EditorView.inputHandler`; pure seam
