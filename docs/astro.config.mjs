@@ -1,5 +1,6 @@
 // @ts-check
 import react from "@astrojs/react";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import path from "path";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
@@ -35,6 +36,7 @@ export default defineConfig({
     ],
   },
   vite: {
+    plugins: [tailwindcss()],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "../src"),
