@@ -344,7 +344,8 @@ class TableController {
       this.wrap.appendChild(btn);
     };
     make("cm-table-add-col", "Add column", () => this.addColumn());
-    make("cm-table-add-row", "Add row", () => this.addRow());
+    // Focus the new row's first cell (W-5) so the caret doesn't fall back to the doc head after insert.
+    make("cm-table-add-row", "Add row", () => this.addRowAndFocus());
   }
 
   private tableLines(): { from: number; to: number; text: string; isDelimiter: boolean }[] {
@@ -751,15 +752,25 @@ class TableController {
   /** Render cell content + preserve the grip (since renderCellInline clears all children) */
   private renderCell(el: HTMLElement, text: string): void {
     renderCellInline(el, text);
+    // An empty cell has no inline content, so its line box collapses and the row shrinks to padding-only
+    // height (~14px) — a freshly added blank row then looks razor-thin next to filled rows. A zero-width
+    // space restores exactly one line box, matching a text cell's height across any font/theme. (The grip
+    // is absolutely positioned and contributes no height, so it can't substitute.) Only the rendered
+    // (non-editing) path runs here; an active cell is driven by its subview and is untouched.
+    if (!text) el.appendChild(document.createTextNode("​"));
     el.dataset.src = text;
     const grip = (el as GripHost).__grip;
     if (grip) el.appendChild(grip);
   }
 
   private attachGrip(el: HTMLElement, kind: "col" | "row", index: number): void {
-    const grip = document.createElement("div");
+    // A real <button> (not a bare <div>) so the menu opener is keyboard-focusable and exposed to AT.
+    const grip = document.createElement("button");
+    grip.type = "button";
     grip.className = kind === "col" ? "cm-col-grip" : "cm-row-grip";
-    grip.title = kind === "col" ? "Column menu" : "Row menu";
+    const label = kind === "col" ? "Column menu" : "Row menu";
+    grip.title = label;
+    grip.setAttribute("aria-label", label);
     grip.addEventListener("mousedown", (event) => {
       // Separate from cell-editing entry (the table mousedown)
       event.preventDefault();
@@ -983,8 +994,9 @@ class TableController {
     };
     const remove = () => {
       const rows = this.cellTexts();
-      // Deleting the only row means there's no table left — remove it whole rather than no-op.
-      if (rows.length <= 1) {
+      // Deleting the last body row would strand a header-only table (rows[0] is the header), which has no
+      // row grip left to remove it — only the column menu's "Delete table". Remove the whole table instead.
+      if (rows.length <= 2) {
         this.deleteTable();
         return;
       }
@@ -1147,21 +1159,36 @@ const activeCellWatcher = ViewPlugin.fromClass(
 const tableSelectionRing = ViewPlugin.fromClass(
   class {
     view: EditorView;
+    /** tableFrom of the widget currently wearing the ring, or null. Lets the common case — a plain caret
+     *  move, whose empty selection can never match a table block range — skip the DOM walk entirely. */
+    private applied: number | null = null;
     constructor(view: EditorView) {
       this.view = view;
     }
+    /** The table whose block range the selection exactly covers (the only case a ring shows), else null. */
+    private selectedFrom(): number | null {
+      const sel = this.view.state.selection.main;
+      if (sel.empty) return null;
+      let found: number | null = null;
+      this.view.state.field(tableField).between(sel.from, sel.to, (from, to) => {
+        if (from === sel.from && to === sel.to) found = from;
+      });
+      return found;
+    }
     update(u: ViewUpdate) {
-      if (u.selectionSet || u.docChanged || u.viewportChanged) setTimeout(() => this.sync());
+      if (!(u.selectionSet || u.docChanged || u.viewportChanged)) return;
+      // Nothing is block-selected now and nothing was painted before → no class to add or remove.
+      // Skips the setTimeout + querySelectorAll + class toggle on every caret move (an empty selection
+      // can't match a table range), paying the DOM cost only when a ring turns on, off, or must repaint
+      // after a doc/viewport change re-rendered the ringed widget. (`applied` is the painted invariant:
+      // when it's null, no widget carries the class, so there is nothing to clean up.)
+      if (this.selectedFrom() === null && this.applied === null) return;
+      setTimeout(() => this.sync());
     }
     sync() {
       const view = this.view;
-      const sel = view.state.selection.main;
-      let selectedFrom: number | null = null;
-      if (!sel.empty) {
-        view.state.field(tableField).between(sel.from, sel.to, (from, to) => {
-          if (from === sel.from && to === sel.to) selectedFrom = from;
-        });
-      }
+      const selectedFrom = this.selectedFrom();
+      this.applied = selectedFrom;
       for (const el of view.dom.querySelectorAll(".cm-table-widget")) {
         const ctrl = (el as ControllerHost).__tableController;
         const on = !!ctrl && selectedFrom !== null && ctrl.data.tableFrom === selectedFrom;
@@ -1340,10 +1367,12 @@ const tableTheme = EditorView.theme({
     width: "14px",
     height: "100%",
   },
-  // Overlay onto the blank line below
+  // Overlay over the table's bottom edge (inside), mirroring add-col on the right edge — the two share
+  // the same 14px band and overlap in a clean 14×14 bottom-right corner, reading as one consistent
+  // "grow the grid" affordance instead of a button floating on the blank line below.
   ".cm-table-add-row": {
     left: "0",
-    bottom: "-16px",
+    bottom: "0",
     height: "14px",
     width: "100%",
   },
@@ -1368,6 +1397,16 @@ const tableTheme = EditorView.theme({
     textAlign: "left",
     verticalAlign: "top",
     position: "relative",
+    // A long unbreakable token (URL, 200-char string) would otherwise set the cell's min-content width,
+    // widening the whole `width:100%` table past the viewport and forcing editor-wide horizontal scroll.
+    // `anywhere` (unlike the body's inherited `break-word`) DOES shrink min-content, so the table holds
+    // 100% and the content wraps inside the cell.
+    overflowWrap: "anywhere",
+    // `anywhere` shrinks min-content for EVERY cell, which would collapse empty/new columns to ~1ch and
+    // cram a genuinely wide grid into the viewport instead of letting it scroll. A floor restores both:
+    // a many-column grid trips the scroller's default `overflow-x:auto` again, and a freshly inserted
+    // column lands at a sensible, roughly-uniform size rather than a razor-thin sliver. (em-based, ADR-0009.)
+    minWidth: "5em",
   },
   ".cm-col-grip": {
     position: "absolute",
@@ -1380,6 +1419,10 @@ const tableTheme = EditorView.theme({
     cursor: "pointer",
     opacity: "0",
     transition: "opacity 0.15s",
+    // <button> resets — the grip is a 7px bar, not a default chrome button.
+    border: "none",
+    padding: "0",
+    appearance: "none",
   },
   ".cm-row-grip": {
     position: "absolute",
@@ -1392,12 +1435,30 @@ const tableTheme = EditorView.theme({
     cursor: "pointer",
     opacity: "0",
     transition: "opacity 0.15s",
+    border: "none",
+    padding: "0",
+    appearance: "none",
   },
   ".cm-table-widget th:hover .cm-col-grip, .cm-table-widget td:hover .cm-row-grip": {
     opacity: "1",
   },
   ".cm-col-grip:hover, .cm-row-grip:hover": {
     backgroundColor: "var(--accent)",
+  },
+  // Keyboard focus: grips are now buttons, so show the menu opener when tabbed to.
+  ".cm-col-grip:focus-visible, .cm-row-grip:focus-visible": {
+    opacity: "1",
+    outline: "2px solid var(--accent)",
+    outlineOffset: "1px",
+  },
+  // Touch / no-hover devices have no hover to reveal the structure affordances, leaving every insert/
+  // move/delete/align op unreachable. Rest them at a faint-but-visible opacity so they're discoverable
+  // without permanently crowding the grid (the brutalist "no resting chrome" is relaxed only where hover
+  // can't substitute). Desktop hover-reveal is untouched.
+  "@media (hover: none)": {
+    ".cm-table-edge, .cm-col-grip, .cm-row-grip": {
+      opacity: "0.5",
+    },
   },
   // Overlay = porcelain hard offset, radius 0
   ".cm-table-menu": {
