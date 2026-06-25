@@ -78,6 +78,8 @@ describe("theme typography is variabilized (CJK-first defaults)", () => {
     expect(tokens["--font-size"]).toBe("var(--beaket-paper-font-size, 16.5px)");
     expect(tokens["--line-height"]).toBe("var(--beaket-paper-line-height, 1.75)");
     expect(tokens["--measure"]).toBe("var(--beaket-paper-measure, none)");
+    // #554: word-break is opt-in (default `normal`), so a host can set keep-all from the outside.
+    expect(tokens["--word-break"]).toBe("var(--beaket-paper-word-break, normal)");
   });
 });
 
@@ -124,6 +126,7 @@ describe("dark theme keeps the override + bridge chains, swapping only the built
       "--font-size",
       "--line-height",
       "--measure",
+      "--word-break",
       // Derived at use time from --accent (which is dark here), so they follow without re-declaration.
       "--accent-sel",
       "--accent-weak",
