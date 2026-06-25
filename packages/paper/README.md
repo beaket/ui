@@ -69,7 +69,8 @@ let id = 0;
 
 `codeBlockRenderers` maps a fence language to a `(code, el, ctx) => void | Promise<void>` that fills `el`
 — not mermaid-specific (KaTeX, ABC notation, anything). If it **throws or rejects**, Paper shows the
-message in place (a syntax error, or your own "npm install …" hint); unregistered languages stay normal
+message in place (a syntax error, or your own message like "Install mermaid to render diagrams");
+unregistered languages stay normal
 code blocks. For production, lazy-`import()` mermaid so its ~3MB loads only when a diagram first appears,
 and pass `ctx.colorScheme` so diagrams follow light/dark (Paper re-renders on a flip, and caches per
 `(language, scheme, code)`). The full recipe is in the

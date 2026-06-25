@@ -40,8 +40,8 @@ renderer) and injects it. The package carries no diagram code and no diagram opi
 
 A future `@beaket/paper/mermaid` subpath helper (a few lines of `import("mermaid")` glue) is **deferred,
 not rejected** — additive later if consumers keep rewriting the same glue or want a runtime
-"npm install mermaid" hint. The lazy-`import` owner is the only layer that can catch module-not-found at
-runtime, so that helper, if it ships, lives there.
+missing-dependency hint (e.g. "Install mermaid to render diagrams"). The lazy-`import` owner is the only
+layer that can catch module-not-found at runtime, so that helper, if it ships, lives there.
 
 ## Decision 2 — an imperative renderer signature; throw/reject ⇒ error text
 
@@ -58,9 +58,9 @@ interface EditorOptions {
 ```
 
 The renderer **replaces** `el`'s content (sync or async). A **throw or reject** makes paper render error
-text in the widget — this one path covers both a syntax error and an "npm install mermaid" install hint:
-the **text is policy** (the consumer decides what to say), the **display is mechanism** (paper owns where
-it shows). An imperative `(code, el, ctx)` signature — rather than "return a string/VNode" — lets a
+text in the widget — this one path covers both a syntax error and a missing-dependency hint (the consumer
+writes the message, so it never presumes a package manager): the **text is policy** (the consumer decides
+what to say), the **display is mechanism** (paper owns where it shows). An imperative `(code, el, ctx)` signature — rather than "return a string/VNode" — lets a
 consumer drive any renderer's native output (mermaid hands back an SVG string; another lib might mutate a
 canvas) without paper modelling a return shape it would have to freeze at 1.0.
 

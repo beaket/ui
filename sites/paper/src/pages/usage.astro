@@ -179,8 +179,9 @@ const renderMermaid = async (code, el, ctx) => {
   <CodeBlock code={mermaidProdCode} lang="tsx" />
   <p>
     If your renderer <strong>throws or rejects</strong>, Paper shows the message in place — a mermaid syntax
-    error surfaces for free, and you can <code>catch</code>-and-rethrow a friendlier
-    <code>"Run: npm install mermaid"</code> hint. Languages you do not register stay ordinary code blocks.
+    error surfaces for free, and you can <code>catch</code>-and-rethrow a friendlier message of your own
+    (e.g. <code>"Install mermaid to render diagrams"</code>). Languages you do not register stay ordinary
+    code blocks.
   </p>
   <p class="callout callout-tip">
     <svg class="callout-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
