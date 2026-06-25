@@ -61,6 +61,32 @@ function Annotator() {
     </>
   );
 }`;
+
+const codeBlockCode = `import { Paper, type CodeBlockRenderers } from "@beaket/paper/react";
+
+// paper ships no diagram renderer — you install mermaid and import() it lazily,
+// so the ~3MB lib stays out of paper's bundle and loads only on first render.
+let load: Promise<typeof import("mermaid").default> | null = null;
+let n = 0;
+
+const codeBlockRenderers: CodeBlockRenderers = {
+  // key = the fence info string, e.g. \`\`\`mermaid
+  mermaid: async (code, el, ctx) => {
+    const mermaid = await (load ??= import("mermaid").then((m) => m.default));
+    // Re-initialize per render so a light/dark flip re-themes (mermaid bakes colors in).
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: ctx.colorScheme === "dark" ? "dark" : "default",
+    });
+    const { svg } = await mermaid.render(\`mermaid-\${++n}\`, code); // throws on a syntax error
+    el.innerHTML = svg;
+  },
+};
+
+<Paper
+  defaultValue={"\`\`\`mermaid\\nflowchart LR\\n  A --> B\\n\`\`\`"}
+  codeBlockRenderers={codeBlockRenderers}
+/>;`;
 ---
 
 <Base title="Usage — Paper">
@@ -127,6 +153,32 @@ function Annotator() {
     change, while <code>activeHighlightId</code> syncs the visual emphasis declaratively. The full demo
     component (toolbar positioning, state) is on
     <a href="https://github.com/beaket/ui/blob/main/sites/paper/src/components/highlights-demo.tsx">GitHub ↗</a>.
+  </p>
+
+  <h2 id="code-blocks">Rendering code blocks (mermaid &amp; co.)</h2>
+  <p>
+    A fenced code block whose language you register renders as a block widget when the cursor is outside
+    it, and reveals its raw source when the cursor lands inside (the same Live-Preview rule as everything
+    else). Paper ships <strong>no diagram renderer and no dependency</strong> of its own — you install the
+    renderer (here <code>mermaid</code>, ~3MB) and inject it keyed by fence language, so it stays out of
+    Paper's bundle and <code>import()</code>s lazily. Nothing is mermaid-specific: the same seam renders
+    KaTeX, ABC notation, or any <code>(code, el, ctx) =&gt; void | Promise&lt;void&gt;</code> you supply.
+  </p>
+  <CodeBlock code={codeBlockCode} lang="tsx" />
+  <p>
+    The renderer <strong>replaces <code>el</code>'s content</strong> (sync or async) and receives
+    <code>ctx.colorScheme</code> (<code>"light"</code>/<code>"dark"</code>) so it can bake matching colors —
+    Paper re-runs it when the scheme flips, and caches per <code>(language, scheme, code)</code> so a
+    theme flip-back or scroll-back is instant. If the renderer <strong>throws or rejects</strong>, Paper
+    shows the error text in place — use that for both syntax errors and a <code>catch</code>-and-rethrow
+    install hint (<code>throw new Error("Run: npm install mermaid")</code>). Languages you do not register
+    stay ordinary code blocks.
+  </p>
+  <p class="callout callout-tip">
+    <svg class="callout-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+      <path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863.5 8 .5s5.5 1.81 5.5 4.75c0 1.516-.701 2.5-1.318 3.282-.095.115-.184.22-.268.32-.207.245-.383.453-.541.68-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z" />
+    </svg>
+    <span><strong>Try it</strong> — the <a href={withBase('')}>editor on the intro page</a> wires exactly this; the <code>mermaid</code> fence near the top renders live (click into it to edit the source).</span>
   </p>
 
   <h2 id="core">Framework-agnostic core</h2>
