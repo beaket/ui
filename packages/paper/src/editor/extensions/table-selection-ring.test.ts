@@ -49,4 +49,27 @@ describe("tableSelectionRing", () => {
     await until(() => !widget.classList.contains("cm-table-selected"));
     expect(widget.classList.contains("cm-table-selected")).toBe(false);
   });
+
+  // The plugin skips DOM work when nothing is (or was) ring-selected, tracked by an internal `applied`
+  // flag. Guard that the flag re-arms: the ring must turn back on after a full on→off cycle, and an
+  // intervening plain caret move (which the early-out skips) must not strand it.
+  it("re-arms the ring after on → off → caret move → on", async () => {
+    const v = makeView(DOC);
+    await until(() => v.dom.querySelector(".cm-table-widget") !== null);
+    const widget = v.dom.querySelector(".cm-table-widget") as HTMLElement;
+
+    v.dispatch({ selection: { anchor: 0, head: v.state.doc.length } });
+    await until(() => widget.classList.contains("cm-table-selected"));
+
+    v.dispatch({ selection: { anchor: 0 } }); // ring off (applied → null)
+    await until(() => !widget.classList.contains("cm-table-selected"));
+
+    v.dispatch({ selection: { anchor: 1 } }); // plain caret move — early-out skips, must not strand state
+    await new Promise((r) => setTimeout(r, 30));
+    expect(widget.classList.contains("cm-table-selected")).toBe(false);
+
+    v.dispatch({ selection: { anchor: 0, head: v.state.doc.length } }); // ring on again
+    await until(() => widget.classList.contains("cm-table-selected"));
+    expect(widget.classList.contains("cm-table-selected")).toBe(true);
+  });
 });
