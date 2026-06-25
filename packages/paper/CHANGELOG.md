@@ -1,5 +1,43 @@
 # @beaket/paper
 
+## 0.8.0
+
+### Minor Changes
+
+- [#560](https://github.com/beaket/ui/pull/560) [`e6023ee`](https://github.com/beaket/ui/commit/e6023eecd18c633a92b3aeb2cf73c96956b17c91) Thanks [@jihnma](https://github.com/jihnma)! - Add `codeBlockRenderers` — consumer-delegated code-block rendering (ADR-0023). A registered fenced language (e.g. ` ```mermaid `) renders as a block widget off-cursor and reveals its raw source on-cursor (Live Preview); the editor ships **zero renderer bytes and zero renderer opinion** — the consumer installs the renderer (mermaid, etc.) and injects it.
+
+  ```ts
+  import mermaid from "mermaid"; // or lazy-import it (see README recipe)
+
+  <Paper codeBlockRenderers={{
+    mermaid: async (code, el, ctx) => {
+      mermaid.initialize({ startOnLoad: false, theme: ctx.colorScheme === "dark" ? "dark" : "default" });
+      const { svg } = await mermaid.render(`d-${Date.now()}`, code);
+      el.innerHTML = svg;
+    },
+  }} />
+  ```
+
+  - **Mechanism in editor, policy in consumer**, extended to the render layer. This is the inverse of the image split (ADR-0011): there _render_ was trivial and only _ingest_ was delegated; here the render itself needs a heavy library (~3MB), so the render _seam_ is the mechanism and the _renderer_ is the policy. The key is the fence info-string language; an unregistered language stays a normal code block, and an empty/absent `codeBlockRenderers` is a complete no-op (existing consumers unaffected).
+  - **Signature:** `(code, el, ctx: { colorScheme: "light" | "dark" }) => void | Promise<void>`. The renderer replaces `el`'s content (sync or async). **Throw or reject ⇒ paper shows error text** in the widget — one path for both syntax errors and a missing-dependency hint (the text is the consumer's, so it never presumes a package manager; the display is paper's).
+  - Implemented as a **StateField** block decoration (CM6 forbids block decos from a ViewPlugin), split into a `docChanged`-only model and a decoration field that also recomputes on `tr.selection` (a code-render widget is cursor-_dependent_, unlike the footnote section). IME-safe via the widget's `(lang, code, scheme)` `eq()`.
+  - **Theme-synced:** a diagram bakes colors at render time, so the scheme is part of the widget identity and a `setColorScheme` flip (or an OS flip while following `"system"`) re-renders, via a new `colorSchemeChangeEffect`. A per-editor `(lang, scheme, code)` cache makes flip-back / scroll-back instant.
+
+  Exports: `CodeBlockRenderer`, `CodeBlockRenderers`, `CodeBlockRenderContext` (core + `/react`).
+
+- [#559](https://github.com/beaket/ui/pull/559) [`3aceb68`](https://github.com/beaket/ui/commit/3aceb6896bbc14326abdef3964a52a48f880ed52) Thanks [@jihnma](https://github.com/jihnma)! - Editor base theme: render only real bold/italic faces (`font-synthesis: none`) and expose `word-break` as a public `--beaket-paper-word-break` knob ([#554](https://github.com/beaket/ui/issues/554)).
+
+  - **`font-synthesis: none`** on `.cm-content` — when a configured family lacks a real bold or italic face, the browser no longer synthesizes a faux-bold / faux-oblique. For CJK glyphs synthesis smears strokes and muddies weight; rich text here is body weight plus real Markdown bold, so the regression risk is low.
+  - **`--beaket-paper-word-break`** (default `normal`, unchanged CJK per-character breaking) — a host can now opt into `keep-all` (break Korean at spaces, not mid-word, a common readability recommendation) from the outside without fighting the cascade against the internal `.cm-*` rules. It pairs with the existing `overflow-wrap: break-word`, so long unbreakable tokens still wrap.
+
+### Patch Changes
+
+- [#557](https://github.com/beaket/ui/pull/557) [`c140692`](https://github.com/beaket/ui/commit/c140692b67ac943b8a85452c01fbe4b534ffec41) Thanks [@jihnma](https://github.com/jihnma)! - Inline tokens (`@mention`, `[[reference]]`) now render as accent-colored underlined text instead of a bordered, filled chip — matching the treatment of links and bare URLs so every inline "go elsewhere" marker shares one visual language ([#556](https://github.com/beaket/ui/issues/556)).
+
+  Root cause: ADR-0009's 2026-06-22 amendment unified links, bare URLs, and the `@`-mention token under one "accent text + accent underline" treatment, but only the markdown highlight style (`tags.link`/`tags.url`) was updated — the `.cm-token` theme in `token-render.ts` still painted a `--accent-sel` background + `1px solid --accent` border. The chip was a stale divergence from the documented decision; a boxed pill sitting next to an underlined link on the same line read as a second, competing affordance.
+
+  The token rendering mechanism (atomic decoration, ADR-0017) is unchanged — only the default CSS. Consumers who want a chip can still fully restyle via the token's `className`.
+
 ## 0.7.0
 
 ### Minor Changes
