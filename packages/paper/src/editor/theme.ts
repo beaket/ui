@@ -92,6 +92,10 @@ export const tokens = {
   "--line-height": "var(--beaket-paper-line-height, 1.75)",
   // Opt-in readable measure (max line width). Default `none` = full width, unchanged behavior.
   "--measure": "var(--beaket-paper-measure, none)",
+  // Opt-in word-break knob (#554). Default `normal` = CJK per-character breaking, unchanged behavior.
+  // A host opts into `keep-all` (break Korean at spaces, not mid-word) from the outside without fighting
+  // the cascade against the internal .cm-* rules; pairs with overflow-wrap so long tokens still wrap.
+  "--word-break": "var(--beaket-paper-word-break, normal)",
 };
 
 // Dark mode (ADR-0009 dark canvas). Same architecture as `tokens`: each entry keeps its var() chain
@@ -169,11 +173,15 @@ export const baseTheme = EditorView.theme({
     overflowY: "auto",
   },
   ".cm-content": {
-    // CJK per-character line breaking: Hangul too breaks at characters instead of keeping words intact (keep-all).
-    wordBreak: "normal",
+    // CJK per-character line breaking by default (Hangul too breaks at characters, not keeping words
+    // intact). Exposed as a knob (#554) so a host can opt into `keep-all` for Korean readability.
+    wordBreak: "var(--word-break)",
     // Strict line-break prohibition (kinsoku) — small kana, the long-vowel mark (chonpu), closing brackets, and punctuation never start a line (JLREQ §3).
     lineBreak: "strict",
     overflowWrap: "break-word",
+    // Render only real bold/italic faces, never browser-synthesized ones (#554). Faux-bold / faux-oblique
+    // smear CJK strokes badly; rich text here is body weight + real Markdown bold, so the regression risk is low.
+    fontSynthesis: "none",
     // Half-width spacing for punctuation (yakumono nibun aki) + spacing between Japanese/Western and Japanese/Korean (JLREQ §3). Chrome applies this by default;
     // made explicit to guarantee JLREQ behavior in Safari/Firefox etc. No effect on CM6 coordinate measurement (verified).
     textSpacingTrim: "normal",
