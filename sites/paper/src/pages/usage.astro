@@ -62,31 +62,33 @@ function Annotator() {
   );
 }`;
 
-const codeBlockCode = `import { Paper, type CodeBlockRenderers } from "@beaket/paper/react";
+const mermaidCode = `import { Paper } from "@beaket/paper/react";
+import mermaid from "mermaid";
 
-// paper ships no diagram renderer — you install mermaid and import() it lazily,
-// so the ~3MB lib stays out of paper's bundle and loads only on first render.
-let load: Promise<typeof import("mermaid").default> | null = null;
-let n = 0;
-
-const codeBlockRenderers: CodeBlockRenderers = {
-  // key = the fence info string, e.g. \`\`\`mermaid
-  mermaid: async (code, el, ctx) => {
-    const mermaid = await (load ??= import("mermaid").then((m) => m.default));
-    // Re-initialize per render so a light/dark flip re-themes (mermaid bakes colors in).
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: ctx.colorScheme === "dark" ? "dark" : "default",
-    });
-    const { svg } = await mermaid.render(\`mermaid-\${++n}\`, code); // throws on a syntax error
-    el.innerHTML = svg;
-  },
-};
+mermaid.initialize({ startOnLoad: false });
+let id = 0;
 
 <Paper
-  defaultValue={"\`\`\`mermaid\\nflowchart LR\\n  A --> B\\n\`\`\`"}
-  codeBlockRenderers={codeBlockRenderers}
+  codeBlockRenderers={{
+    // the key is the fence language; turn its body into DOM — that's the whole API
+    mermaid: async (code, el) => {
+      el.innerHTML = (await mermaid.render(\`m\${id++}\`, code)).svg;
+    },
+  }}
 />;`;
+
+const mermaidProdCode = `// Lazy-load mermaid so its ~3MB only loads when a diagram first appears, and read
+// ctx.colorScheme so diagrams follow light/dark — Paper re-renders the block on a flip.
+let load: Promise<typeof import("mermaid").default> | undefined;
+let id = 0;
+
+const renderMermaid = async (code, el, ctx) => {
+  const mermaid = await (load ??= import("mermaid").then((m) => m.default));
+  mermaid.initialize({ startOnLoad: false, theme: ctx.colorScheme === "dark" ? "dark" : "default" });
+  el.innerHTML = (await mermaid.render(\`m\${id++}\`, code)).svg; // throws on a syntax error
+};
+
+<Paper codeBlockRenderers={{ mermaid: renderMermaid }} />;`;
 ---
 
 <Base title="Usage — Paper">
@@ -155,24 +157,30 @@ const codeBlockRenderers: CodeBlockRenderers = {
     <a href="https://github.com/beaket/ui/blob/main/sites/paper/src/components/highlights-demo.tsx">GitHub ↗</a>.
   </p>
 
-  <h2 id="code-blocks">Rendering code blocks (mermaid &amp; co.)</h2>
+  <h2 id="code-blocks">Mermaid diagrams</h2>
   <p>
-    A fenced code block whose language you register renders as a block widget when the cursor is outside
-    it, and reveals its raw source when the cursor lands inside (the same Live-Preview rule as everything
-    else). Paper ships <strong>no diagram renderer and no dependency</strong> of its own — you install the
-    renderer (here <code>mermaid</code>, ~3MB) and inject it keyed by fence language, so it stays out of
-    Paper's bundle and <code>import()</code>s lazily. Nothing is mermaid-specific: the same seam renders
-    KaTeX, ABC notation, or any <code>(code, el, ctx) =&gt; void | Promise&lt;void&gt;</code> you supply.
+    Give Paper a renderer for the <code>mermaid</code> fence language and a <code>&#96;&#96;&#96;mermaid</code>
+    block shows as a diagram when the cursor is outside it, and reveals its raw source when you click in
+    (the usual Live-Preview rule). Paper bundles <strong>no renderer</strong> — you bring <code>mermaid</code>
+    and hand it the fence body. The whole integration:
   </p>
-  <CodeBlock code={codeBlockCode} lang="tsx" />
+  <CodeBlock code={mermaidCode} lang="tsx" />
   <p>
-    The renderer <strong>replaces <code>el</code>'s content</strong> (sync or async) and receives
-    <code>ctx.colorScheme</code> (<code>"light"</code>/<code>"dark"</code>) so it can bake matching colors —
-    Paper re-runs it when the scheme flips, and caches per <code>(language, scheme, code)</code> so a
-    theme flip-back or scroll-back is instant. If the renderer <strong>throws or rejects</strong>, Paper
-    shows the error text in place — use that for both syntax errors and a <code>catch</code>-and-rethrow
-    install hint (<code>throw new Error("Run: npm install mermaid")</code>). Languages you do not register
-    stay ordinary code blocks.
+    That is the entire API: <code>codeBlockRenderers</code> maps a fence language to a
+    <code>(code, el) =&gt; void | Promise&lt;void&gt;</code> that fills <code>el</code>. (It is not
+    mermaid-specific — the same hook renders KaTeX, ABC notation, or anything you can draw into an element.)
+  </p>
+  <p>
+    For production you will want two refinements — <strong>lazy-load</strong> mermaid so its ~3MB only ships
+    when a diagram first appears, and pass <code>ctx.colorScheme</code> into it so diagrams follow light/dark
+    (Paper re-renders the block on a theme flip, and caches per <code>(language, scheme, code)</code> so a
+    flip-back is instant):
+  </p>
+  <CodeBlock code={mermaidProdCode} lang="tsx" />
+  <p>
+    If your renderer <strong>throws or rejects</strong>, Paper shows the message in place — a mermaid syntax
+    error surfaces for free, and you can <code>catch</code>-and-rethrow a friendlier
+    <code>"Run: npm install mermaid"</code> hint. Languages you do not register stay ordinary code blocks.
   </p>
   <p class="callout callout-tip">
     <svg class="callout-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">

@@ -46,42 +46,34 @@ surface clickable (no dead zone below short content).
 
 See the [API reference](https://beaket.github.io/ui/paper/api) for the full prop and handle surface.
 
-## Rendering code blocks (e.g. mermaid)
+## Mermaid diagrams
 
-Paper renders a fenced code block as a diagram off-cursor (raw source on-cursor) when you give it a
-renderer for that language — but it ships **no renderer and no dependency** of its own. You install the
-renderer (here `mermaid`, ~3MB) and inject it, so it stays out of Paper's bundle and `import()`s lazily:
+A registered fenced language renders as a diagram off-cursor and reveals its raw source on-cursor. Paper
+ships **no renderer** — you bring `mermaid` and hand it the fence body. That is the whole integration:
 
-````tsx
-import { Paper, type CodeBlockRenderers } from "@beaket/paper/react";
+```tsx
+import { Paper } from "@beaket/paper/react";
+import mermaid from "mermaid";
 
-let load: Promise<typeof import("mermaid").default> | null = null;
-let n = 0;
-const codeBlockRenderers: CodeBlockRenderers = {
-  // key = the fence info string, e.g. ```mermaid
-  mermaid: async (code, el, ctx) => {
-    const mermaid = await (load ??= import("mermaid").then((m) => m.default));
-    // Re-initialize per render so a light/dark flip re-themes (mermaid bakes colors at render time).
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: ctx.colorScheme === "dark" ? "dark" : "default",
-    });
-    const { svg } = await mermaid.render(`mermaid-${++n}`, code); // throws on a syntax error → Paper shows it
-    el.innerHTML = svg;
-  },
-};
+mermaid.initialize({ startOnLoad: false });
+let id = 0;
 
 <Paper
-  defaultValue={"```mermaid\nflowchart LR\n  A --> B\n```"}
-  codeBlockRenderers={codeBlockRenderers}
+  codeBlockRenderers={{
+    mermaid: async (code, el) => {
+      el.innerHTML = (await mermaid.render(`m${id++}`, code)).svg;
+    },
+  }}
 />;
-````
+```
 
-The renderer is `(code, el, ctx: { colorScheme }) => void | Promise<void>` and **replaces `el`'s
-content**. If it **throws or rejects**, Paper renders the error text in place — use that for both syntax
-errors and a `try { await import("mermaid") } catch { throw new Error("Run: npm install mermaid") }`
-install hint. Unregistered languages stay normal code blocks. Paper caches per `(language, scheme, code)`,
-so a theme flip-back or scroll-back is instant.
+`codeBlockRenderers` maps a fence language to a `(code, el, ctx) => void | Promise<void>` that fills `el`
+— not mermaid-specific (KaTeX, ABC notation, anything). If it **throws or rejects**, Paper shows the
+message in place (a syntax error, or your own "npm install …" hint); unregistered languages stay normal
+code blocks. For production, lazy-`import()` mermaid so its ~3MB loads only when a diagram first appears,
+and pass `ctx.colorScheme` so diagrams follow light/dark (Paper re-renders on a flip, and caches per
+`(language, scheme, code)`). The full recipe is in the
+[usage guide](https://beaket.github.io/ui/paper/usage#code-blocks).
 
 ## Framework-agnostic core
 
