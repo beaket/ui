@@ -49,6 +49,8 @@ export interface PaperProps {
   triggers?: EditorOptions["triggers"];
   /** Atomic token rendering — render `pattern`-matched markdown as chips (ADR-0017). Fixed at creation (not live). */
   tokens?: EditorOptions["tokens"];
+  /** Consumer-delegated code-block renderers — e.g. a `mermaid` fence as a diagram (ADR-0023). Fixed at creation (not live). */
+  codeBlockRenderers?: EditorOptions["codeBlockRenderers"];
   /** Light/dark scheme. "system" (default) follows the OS; "light"/"dark" force it. Live prop — flips without recreation. */
   colorScheme?: ColorScheme;
   /** Hint shown on an empty document (ADR-0018). Fixed at creation (not live). */
@@ -75,6 +77,7 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
     slashItems,
     triggers,
     tokens,
+    codeBlockRenderers,
     colorScheme,
     placeholder,
     readOnly,
@@ -111,6 +114,7 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
       slashItems,
       triggers,
       tokens,
+      codeBlockRenderers,
       colorScheme,
       placeholder,
       readOnly,

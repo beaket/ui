@@ -15,3 +15,9 @@ export type { SlashItemSpec, SlashItemsConfig } from "../editor/create-editor";
 export type { TriggerItem, TriggerSpec } from "../editor/create-editor";
 // The atomic token API (the `tokens` prop): render inserted mentions/references as chips (ADR-0017).
 export type { TokenSpec, TokenView } from "../editor/create-editor";
+// Consumer-delegated code-block rendering (the `codeBlockRenderers` prop): a mermaid fence etc. (ADR-0023).
+export type {
+  CodeBlockRenderContext,
+  CodeBlockRenderer,
+  CodeBlockRenderers,
+} from "../editor/create-editor";

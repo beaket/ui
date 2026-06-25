@@ -1,4 +1,4 @@
-import { Compartment, type Extension } from "@codemirror/state";
+import { Compartment, type Extension, StateEffect } from "@codemirror/state";
 import { EditorView, ViewPlugin } from "@codemirror/view";
 
 // CJK tier-1 typography default. Japanese fonts are placed BEFORE Korean fonts (key): Apple SD
@@ -231,6 +231,24 @@ export const baseTheme = EditorView.theme({
 // public `--beaket-paper-*` override still wins within a forced scheme — it is the escape hatch.
 export type ColorScheme = "light" | "dark" | "system";
 
+/**
+ * Broadcasts a color-scheme change to fields that bake colors at render time (code-block-render's
+ * diagram widgets — CSS tokens follow the scope class on their own and don't need this). Dispatched by
+ * `setColorScheme` alongside the compartment reconfigure, and re-dispatched on an OS flip while in
+ * "system" (carrying "system" again — the resolved value is recomputed downstream). A StateField has no
+ * clean way to detect a compartment reconfigure, so this explicit effect is the observation seam.
+ */
+export const colorSchemeChangeEffect = StateEffect.define<ColorScheme>();
+
+/** Resolve a (possibly "system") scheme to the concrete light/dark currently in effect. */
+export function resolveColorScheme(scheme: ColorScheme): "light" | "dark" {
+  if (scheme === "light" || scheme === "dark") return scheme;
+  if (typeof window !== "undefined" && typeof window.matchMedia === "function") {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  return "light";
+}
+
 const DARK_SCOPE_CLASS = "cm-beaket-paper"; // OS-follow: only goes dark inside the media query
 const DARK_FORCE_CLASS = "cm-beaket-paper-dark"; // forced dark: unconditional
 const LIGHT_FORCE_CLASS = "cm-beaket-paper-light"; // forced light: unconditional (pins surfaces light)
@@ -330,7 +348,13 @@ export function darkThemeStyle(scheme: ColorScheme = "system"): Extension {
 
 /** Live-flips the editor's color scheme without recreating it (so the document is preserved). */
 export function setColorScheme(view: EditorView, scheme: ColorScheme): void {
-  view.dispatch({ effects: colorSchemeCompartment.reconfigure(colorSchemeAttr(scheme)) });
+  view.dispatch({
+    effects: [
+      colorSchemeCompartment.reconfigure(colorSchemeAttr(scheme)),
+      // Notify render-time color consumers (code-block diagrams) so they re-render in the new scheme.
+      colorSchemeChangeEffect.of(scheme),
+    ],
+  });
 }
 
 // Sizing (ADR-0018). Two independent, optional CSS lengths, each the CM6-documented recipe:
