@@ -9,6 +9,8 @@ import { changeNotifier } from "./extensions/change-notifier";
 import { codeBlockAutoClose } from "./extensions/code-block-autoclose";
 import { codeBlockCopy } from "./extensions/code-block-copy";
 import { codeBlockEnter } from "./extensions/code-block-enter";
+import type { CodeBlockRenderers } from "./extensions/code-block-render";
+import { codeBlockRender } from "./extensions/code-block-render";
 import { footnoteRender } from "./extensions/footnote-render";
 import { footnoteSection } from "./extensions/footnote-section";
 import { highlightLayer } from "./extensions/highlight-layer";
@@ -34,6 +36,11 @@ import type { TriggerSpec } from "./extensions/trigger-menu";
 import { triggerMenu } from "./extensions/trigger-menu";
 import { wrapSelection } from "./extensions/wrap-selection";
 import { baseTheme, type ColorScheme, darkThemeStyle, sizeTheme } from "./theme";
+export type {
+  CodeBlockRenderContext,
+  CodeBlockRenderer,
+  CodeBlockRenderers,
+} from "./extensions/code-block-render";
 export { defaultSlashItems } from "./extensions/slash-command";
 export type { SlashItemsConfig, SlashItemSpec } from "./extensions/slash-command";
 export type { TokenSpec, TokenView } from "./extensions/token-render";
@@ -78,6 +85,15 @@ export interface EditorOptions {
    * truth (round-trips on copy). Pairs with `triggers` (#498/#499): triggers insert, tokens render.
    */
   tokens?: readonly TokenSpec[];
+  /**
+   * Render registered fenced code blocks via consumer-injected renderers (ADR-0023) — e.g. a `mermaid`
+   * fence as a diagram. Keyed by fence info-string language; off-cursor the block shows the rendered
+   * output, on-cursor the raw source (Live Preview). paper ships zero renderer bytes — the consumer
+   * installs the heavy lib (mermaid etc.) and injects a `(code, el, ctx) => void | Promise<void>` that
+   * renders into `el`; throwing/rejecting shows error text. Unregistered languages stay normal code
+   * blocks. Fixed at creation (not a live prop). See the README recipe.
+   */
+  codeBlockRenderers?: CodeBlockRenderers;
   /**
    * Callback for the highlight re-resolution status map (ADR-0014 surface step). Mainly changes on load/delete.
    * The highlight *list* is replaced imperatively (core: setHighlightsEffect / React: highlights prop).
@@ -146,6 +162,9 @@ export function editorExtensions(opts: EditorOptions = {}): Extension[] {
     footnoteRender(),
     // The collected "Footnotes" section at the document's end (a StateField-provided block widget).
     footnoteSection(),
+    // Consumer-delegated code-block rendering (ADR-0023): a registered fence (e.g. ```mermaid) renders
+    // as a block widget off-cursor, raw source on-cursor. No-op unless codeBlockRenderers is non-empty.
+    codeBlockRender(opts.codeBlockRenderers, opts.colorScheme),
     imageWidget(),
     imageDrop(opts.onInsertImage),
     codeBlockCopy(),

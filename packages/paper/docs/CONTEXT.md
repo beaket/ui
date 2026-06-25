@@ -83,6 +83,14 @@ there is no second document model. Everything else follows from this:
 - `extensions/list-rendering.ts` — bullets `- * +` → •, task markers → checkboxes, off-cursor.
 - `extensions/image-widget.ts` — a line that is a lone `![alt](url)` renders as the image (render
   side of images).
+- `extensions/code-block-render.ts` — consumer-delegated code-block rendering (the `codeBlockRenderers`
+  option, ADR-0023): a registered fence (e.g. ` ```mermaid `) renders as a block widget off-cursor, raw
+  source on-cursor. paper ships zero renderer bytes — the renderer is consumer-injected `(code, el, ctx)
+=> void | Promise<void>`. A **StateField** (block decos can't come from a ViewPlugin), split into a
+  docChanged-only `model` (`computeCodeBlocks` — the pure test seam) + a deco field that filters by the
+  selection and the scheme. Scheme is part of widget identity (a diagram bakes colors at render time), so
+  a flip re-renders via the `colorSchemeChangeEffect` (theme.ts); a per-editor `(lang,scheme,code)` cache
+  makes flip-back/scroll-back instant. Throw/reject → error text. No-op unless `codeBlockRenderers` is set.
 
 **Footnotes** (GitHub-style; ADR-0021. Always-on, no consumer config)
 
@@ -184,8 +192,8 @@ view` rendered as a permanently-atomic replace-widget (caret steps over, one Bac
 types above.
 
 `EditorOptions`: `doc`, `onChange`, `onInsertImage`, `slashItems`, `triggers`, `tokens`,
-`onHighlightStatusChange`, `onHighlightClick`, `onSelect`, `colorScheme`, `placeholder`, `readOnly`,
-`height`, `minHeight` (ADR-0018). This surface is slated to
+`codeBlockRenderers` (ADR-0023), `onHighlightStatusChange`, `onHighlightClick`, `onSelect`, `colorScheme`,
+`placeholder`, `readOnly`, `height`, `minHeight` (ADR-0018). This surface is slated to
 **freeze at 1.0**
 (milestone `1.0.0`) — breaking changes are cheap on `0.x` minors now, expensive deliberate majors
 after.

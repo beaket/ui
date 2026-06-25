@@ -1,4 +1,6 @@
 import {
+  type CodeBlockRenderer,
+  type CodeBlockRenderers,
   type ColorScheme,
   Paper,
   type PaperHandle,
@@ -7,6 +9,27 @@ import {
   type TriggerSpec,
 } from "@beaket/paper/react";
 import { useEffect, useRef, useState } from "react";
+
+// Consumer-delegated code-block rendering (ADR-0023). paper ships zero mermaid bytes — the consumer owns
+// the renderer and the dependency. mermaid is `import()`ed lazily, so it stays out of the initial bundle
+// and only loads when a `mermaid` fence is first rendered. The renderer bakes colors for the editor's
+// scheme (paper re-runs it on a theme flip); a parse error throws and paper shows it as error text in the
+// widget. This is the reference wiring — copy it into your app.
+let mermaidLoader: Promise<typeof import("mermaid").default> | null = null;
+let mermaidSeq = 0;
+const mermaidRenderer: CodeBlockRenderer = async (code, el, ctx) => {
+  if (!mermaidLoader) mermaidLoader = import("mermaid").then((m) => m.default);
+  const mermaid = await mermaidLoader;
+  // Re-initialize per render so a scheme flip re-themes (mermaid bakes colors at render time).
+  mermaid.initialize({
+    startOnLoad: false,
+    securityLevel: "strict",
+    theme: ctx.colorScheme === "dark" ? "dark" : "default",
+  });
+  const { svg } = await mermaid.render(`paper-mermaid-${++mermaidSeq}`, code);
+  el.innerHTML = svg;
+};
+const codeBlockRenderers: CodeBlockRenderers = { mermaid: mermaidRenderer };
 
 // Async + grouped slash items (ADR-0012 amendment). The transformer returns a Promise — modelling a
 // catalog fetched on first open, with a short delay so the non-interactive "Loading…" row is visible —
@@ -84,6 +107,16 @@ Try it:
 - Type \`/\` to open the slash menu — items load async and are grouped (Blocks · Templates)
 - Type \`@\` to mention someone — it renders inline like a link, but atomic (Backspace removes it whole)
 - Drop an image, paste a table, write some \`code\`
+- A \`mermaid\` fence renders as a diagram below — click into it to edit the source
+
+Paper ships **no diagram renderer** — the host injects one, so the editor stays small. Click in to edit:
+
+\`\`\`mermaid
+flowchart LR
+  Type[Type markdown] --> Render[Render in place]
+  Render --> Edit[Cursor in = raw source]
+  Edit --> Type
+\`\`\`
 
 | Good fit | Not the tool |
 | --- | --- |
@@ -235,6 +268,7 @@ export function EditorPlayground() {
           slashItems={slashItems}
           triggers={[mentionTrigger]}
           tokens={[mentionToken]}
+          codeBlockRenderers={codeBlockRenderers}
           placeholder="Start writing…"
           // The `minHeight` option (ADR-0018) reserves the editable height on the editor itself, so
           // the editor fills the card and clicking anywhere — even the empty space under the table —

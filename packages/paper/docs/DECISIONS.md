@@ -74,12 +74,23 @@ change needs an ADR vs. a changeset. Each bullet below links to its ADR.
   doc-mutating entry points (image ingest, paste-to-table, and the **table cell subview**, which is a
   separate `EditorView` the parent's `editable` does not reach) each guard on `view.state.readOnly`,
   while the copy buttons keep working. Sizing puts the reserved height on the **editable surface**
-  (`.cm-content`), so clicking anywhere in it places a cursor (no dead zone).
+  (`.cm-content`), so clicking anywhere in it places a cursor (no dead zone). The family extends to the
+  **render layer**: `codeBlockRenderers?: Record<lang, (code, el, ctx) => void | Promise<void>>` lets a
+  consumer render a registered fence (e.g. ` ```mermaid `) as a diagram. This is the _inverse_ of the
+  image split — there _render_ was trivial and only _ingest_ was delegated; here the render itself needs a
+  heavy lib (~3MB), so the **render seam is mechanism, the renderer is policy**. paper ships zero renderer
+  bytes; the consumer lazy-`import`s the lib. Live-Preview (raw on-cursor, diagram off-cursor) via a
+  **StateField** block decoration (CM6 forbids block decos from a ViewPlugin), split model/render like the
+  footnotes — but recomputing on `tr.selection` too, since a code-render widget is cursor-_dependent_.
+  Scheme is part of widget identity (a diagram bakes colors at render time, unlike CSS-token constructs),
+  so a flip re-renders via an explicit `colorSchemeChangeEffect`; paper owns a `(code, scheme)` cache so a
+  flip-back is instant. Throw/reject ⇒ error text (covers syntax errors + install hints).
   ([ADR-0011](./adr/0011-images-render-vs-ingest-consumer-delegation.md),
   [ADR-0012](./adr/0012-slash-items-consumer-config.md),
   [ADR-0016](./adr/0016-declarative-trigger-api.md),
   [ADR-0017](./adr/0017-atomic-token-rendering.md),
-  [ADR-0018](./adr/0018-embedding-options-placeholder-readonly-sizing.md))
+  [ADR-0018](./adr/0018-embedding-options-placeholder-readonly-sizing.md),
+  [ADR-0023](./adr/0023-consumer-delegated-code-block-rendering.md))
 - **Package shape.** Two layers: a framework-agnostic **core** (`createEditor`, zero React) plus a
   thin **React wrapper** (`<Paper>`). Uncontrolled (`defaultValue` + `ref.setValue()`);
   `onChange` emits full markdown on user edits only (IME-guarded; `setValue` does not echo). A

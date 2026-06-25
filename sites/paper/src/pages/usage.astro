@@ -61,6 +61,34 @@ function Annotator() {
     </>
   );
 }`;
+
+const mermaidCode = `import { Paper } from "@beaket/paper/react";
+import mermaid from "mermaid";
+
+mermaid.initialize({ startOnLoad: false });
+let id = 0;
+
+<Paper
+  codeBlockRenderers={{
+    // the key is the fence language; turn its body into DOM — that's the whole API
+    mermaid: async (code, el) => {
+      el.innerHTML = (await mermaid.render(\`m\${id++}\`, code)).svg;
+    },
+  }}
+/>;`;
+
+const mermaidProdCode = `// Lazy-load mermaid so its ~3MB only loads when a diagram first appears, and read
+// ctx.colorScheme so diagrams follow light/dark — Paper re-renders the block on a flip.
+let load: Promise<typeof import("mermaid").default> | undefined;
+let id = 0;
+
+const renderMermaid = async (code, el, ctx) => {
+  const mermaid = await (load ??= import("mermaid").then((m) => m.default));
+  mermaid.initialize({ startOnLoad: false, theme: ctx.colorScheme === "dark" ? "dark" : "default" });
+  el.innerHTML = (await mermaid.render(\`m\${id++}\`, code)).svg; // throws on a syntax error
+};
+
+<Paper codeBlockRenderers={{ mermaid: renderMermaid }} />;`;
 ---
 
 <Base title="Usage — Paper">
@@ -127,6 +155,39 @@ function Annotator() {
     change, while <code>activeHighlightId</code> syncs the visual emphasis declaratively. The full demo
     component (toolbar positioning, state) is on
     <a href="https://github.com/beaket/ui/blob/main/sites/paper/src/components/highlights-demo.tsx">GitHub ↗</a>.
+  </p>
+
+  <h2 id="code-blocks">Mermaid diagrams</h2>
+  <p>
+    Give Paper a renderer for the <code>mermaid</code> fence language and a <code>&#96;&#96;&#96;mermaid</code>
+    block shows as a diagram when the cursor is outside it, and reveals its raw source when you click in
+    (the usual Live-Preview rule). Paper bundles <strong>no renderer</strong> — you bring <code>mermaid</code>
+    and hand it the fence body. The whole integration:
+  </p>
+  <CodeBlock code={mermaidCode} lang="tsx" />
+  <p>
+    That is the entire API: <code>codeBlockRenderers</code> maps a fence language to a
+    <code>(code, el) =&gt; void | Promise&lt;void&gt;</code> that fills <code>el</code>. (It is not
+    mermaid-specific — the same hook renders KaTeX, ABC notation, or anything you can draw into an element.)
+  </p>
+  <p>
+    For production you will want two refinements — <strong>lazy-load</strong> mermaid so its ~3MB only ships
+    when a diagram first appears, and pass <code>ctx.colorScheme</code> into it so diagrams follow light/dark
+    (Paper re-renders the block on a theme flip, and caches per <code>(language, scheme, code)</code> so a
+    flip-back is instant):
+  </p>
+  <CodeBlock code={mermaidProdCode} lang="tsx" />
+  <p>
+    If your renderer <strong>throws or rejects</strong>, Paper shows the message in place — a mermaid syntax
+    error surfaces for free, and you can <code>catch</code>-and-rethrow a friendlier message of your own
+    (e.g. <code>"Install mermaid to render diagrams"</code>). Languages you do not register stay ordinary
+    code blocks.
+  </p>
+  <p class="callout callout-tip">
+    <svg class="callout-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+      <path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863.5 8 .5s5.5 1.81 5.5 4.75c0 1.516-.701 2.5-1.318 3.282-.095.115-.184.22-.268.32-.207.245-.383.453-.541.68-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z" />
+    </svg>
+    <span><strong>Try it</strong> — the <a href={withBase('')}>editor on the intro page</a> wires exactly this; the <code>mermaid</code> fence near the top renders live (click into it to edit the source).</span>
   </p>
 
   <h2 id="core">Framework-agnostic core</h2>

@@ -2,6 +2,9 @@
 // The framework-agnostic core is the main body. The React wrapper is a separate subpath `./react` (src/react/index.ts).
 export { createEditor, defaultSlashItems } from "./editor/create-editor";
 export type {
+  CodeBlockRenderContext,
+  CodeBlockRenderer,
+  CodeBlockRenderers,
   EditorOptions,
   SlashItemSpec,
   SlashItemsConfig,

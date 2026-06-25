@@ -46,6 +46,36 @@ surface clickable (no dead zone below short content).
 
 See the [API reference](https://beaket.github.io/ui/paper/api) for the full prop and handle surface.
 
+## Mermaid diagrams
+
+A registered fenced language renders as a diagram off-cursor and reveals its raw source on-cursor. Paper
+ships **no renderer** — you bring `mermaid` and hand it the fence body. That is the whole integration:
+
+```tsx
+import { Paper } from "@beaket/paper/react";
+import mermaid from "mermaid";
+
+mermaid.initialize({ startOnLoad: false });
+let id = 0;
+
+<Paper
+  codeBlockRenderers={{
+    mermaid: async (code, el) => {
+      el.innerHTML = (await mermaid.render(`m${id++}`, code)).svg;
+    },
+  }}
+/>;
+```
+
+`codeBlockRenderers` maps a fence language to a `(code, el, ctx) => void | Promise<void>` that fills `el`
+— not mermaid-specific (KaTeX, ABC notation, anything). If it **throws or rejects**, Paper shows the
+message in place (a syntax error, or your own message like "Install mermaid to render diagrams");
+unregistered languages stay normal
+code blocks. For production, lazy-`import()` mermaid so its ~3MB loads only when a diagram first appears,
+and pass `ctx.colorScheme` so diagrams follow light/dark (Paper re-renders on a flip, and caches per
+`(language, scheme, code)`). The full recipe is in the
+[usage guide](https://beaket.github.io/ui/paper/usage#code-blocks).
+
 ## Framework-agnostic core
 
 No React? Mount the core onto any element — it returns the CodeMirror `EditorView`. The React wrapper
