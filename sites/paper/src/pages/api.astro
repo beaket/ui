@@ -55,7 +55,7 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
       <tr><td><code>onInsertImage</code></td><td><code>ImageResolver</code></td><td>Image placement resolver.</td></tr>
       <tr><td><code>slashItems</code></td><td><code>SlashItemsConfig</code></td><td>Slash-menu customization.</td></tr>
       <tr><td><code>triggers</code></td><td><code>TriggerSpec[]</code></td><td>Declarative <code>@</code> / <code>[[</code> autocomplete triggers (async <code>onQuery</code>; declarative insert). Same in core and React.</td></tr>
-      <tr><td><code>tokens</code></td><td><code>TokenSpec[]</code></td><td>Atomic token rendering — <code>pattern</code>-matched markdown as chips the caret steps over (declarative <code>render</code>). Same in core and React.</td></tr>
+      <tr><td><code>tokens</code></td><td><code>TokenSpec[]</code></td><td>Atomic token rendering — <code>pattern</code>-matched markdown rendered inline (link visual language by default) as atomic units the caret steps over (declarative <code>render</code>). Same in core and React.</td></tr>
       <tr><td><code>colorScheme</code></td><td><code>"light" | "dark" | "system"</code></td><td>Light/dark scheme. Flip live (without recreating) via <code>setColorScheme(view, scheme)</code>.</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td>Hint shown on an empty document. Fixed at creation.</td></tr>
       <tr><td><code>readOnly</code></td><td><code>boolean</code></td><td>Read-only mode. Flip live via <code>setReadOnly(view, readOnly)</code>. Disables editing/ingest; copy + selection still work.</td></tr>
