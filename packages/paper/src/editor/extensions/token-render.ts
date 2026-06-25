@@ -201,12 +201,15 @@ function deleteTokenAt(edge: "to" | "from"): (view: EditorView) => boolean {
 }
 
 const tokenTheme = EditorView.theme({
-  // Porcelain chip — radius 0 (ADR-0009), accent-tinted. The consumer fully restyles via `className`.
+  // Accent text + accent underline — one inline "go elsewhere" language shared with links and bare URLs
+  // (see markdown.ts highlightStyle). No box: a bordered chip read as a second, competing affordance next
+  // to links on the same line (#556). `whiteSpace: nowrap` keeps the atomic token from wrapping mid-word;
+  // the consumer fully restyles via `className`.
   ".cm-token": {
-    backgroundColor: "var(--accent-sel)",
     color: "var(--accent)",
-    border: "1px solid var(--accent)",
-    padding: "0 0.25em",
+    textDecoration: "underline",
+    textDecorationColor: "var(--accent)",
+    textUnderlineOffset: "2px",
     whiteSpace: "nowrap",
   },
 });

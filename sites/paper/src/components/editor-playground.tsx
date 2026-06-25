@@ -63,8 +63,9 @@ const mentionTrigger: TriggerSpec = {
 };
 
 // The atomic-token counterpart (ADR-0017): the same `[@Name](user:id)` markdown the trigger inserts is
-// rendered as a chip — the caret steps over it, one Backspace deletes it whole. The id round-trips in
-// the markdown, recovered from the capture group; no second document model.
+// rendered inline (accent + underline, the link visual language — #556) but atomic — the caret steps
+// over it, one Backspace deletes it whole. The id round-trips in the markdown, recovered from the
+// capture group; no second document model.
 const mentionToken: TokenSpec = {
   pattern: /\[@([^\]]+)\]\(user:([^)]+)\)/,
   render: (m) => ({ label: `@${m[1]}`, className: "mention-token" }),
@@ -81,7 +82,7 @@ Paper makes one promise its central invariant: **never break composition** — n
 Try it:
 
 - Type \`/\` to open the slash menu — items load async and are grouped (Blocks · Templates)
-- Type \`@\` to mention someone — it renders as an atomic chip (Backspace removes it whole)
+- Type \`@\` to mention someone — it renders inline like a link, but atomic (Backspace removes it whole)
 - Drop an image, paste a table, write some \`code\`
 
 | Good fit | Not the tool |
