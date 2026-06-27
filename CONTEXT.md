@@ -42,17 +42,8 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export function ComponentName({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="component-name"
-      className={cn("base-styles", className)}
-      {...props}
-    />
-  );
+export function ComponentName({ className, ...props }: React.ComponentProps<"div">) {
+  return <div data-slot="component-name" className={cn("base-styles", className)} {...props} />;
 }
 ```
 
