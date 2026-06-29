@@ -1084,21 +1084,38 @@ class TableWidget extends WidgetType {
   }
 }
 
-function buildTableDecorations(state: EditorState): DecorationSet {
+// Block-container node names that can directly or transitively hold a GFM Table node in the
+// syntax tree produced by the configured dialect (CommonMark + GFM + our footnotes extension).
+// All other node types are leaf/inline nodes — returning false there prunes the descent and
+// avoids walking the inline children of every Paragraph/Heading/etc. on every docChanged.
+// FootnoteDefinition is single-line only in this implementation (footnotes-syntax.ts), so it
+// can never contain a multi-line Table and is intentionally excluded from this set.
+const TABLE_CONTAINERS = new Set([
+  "Document",
+  "Blockquote",
+  "BulletList",
+  "OrderedList",
+  "ListItem",
+]);
+
+/** Build the full DecorationSet of table block widgets for the given state. Pure — a test seam. */
+export function buildTableDecorations(state: EditorState): DecorationSet {
   const decorations: ReturnType<Decoration["range"]>[] = [];
 
   syntaxTree(state).iterate({
     enter(node) {
-      if (node.name !== "Table") return;
-      const data = parseTable(state, node.from, node.to);
-      const to = state.doc.lineAt(node.to).to;
-      decorations.push(
-        Decoration.replace({ widget: new TableWidget(data), block: true }).range(
-          data.tableFrom,
-          to,
-        ),
-      );
-      return false;
+      if (node.name === "Table") {
+        const data = parseTable(state, node.from, node.to);
+        const to = state.doc.lineAt(node.to).to;
+        decorations.push(
+          Decoration.replace({ widget: new TableWidget(data), block: true }).range(
+            data.tableFrom,
+            to,
+          ),
+        );
+        return false;
+      }
+      if (!TABLE_CONTAINERS.has(node.name)) return false;
     },
   });
 

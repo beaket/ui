@@ -113,6 +113,13 @@ there is no second document model. Everything else follows from this:
 - `extensions/paste-table-convert.ts` — entry point: paste HTML/TSV tables → markdown table.
 - `extensions/cell-inline-renderer.ts` — inline markdown rendering for non-editing cells.
 
+> **Tree-walk invariant.** GFM tables **do** nest inside blockquotes and list items — the lezer GFM
+> parser places `Table` nodes under `Blockquote` / `ListItem` as well as at the top `Document` level.
+> `buildTableDecorations` descends only through the block-container set (`Document`, `Blockquote`,
+> `BulletList`, `OrderedList`, `ListItem`), pruning all other nodes to avoid walking inline children
+> on every `docChanged`. `FootnoteDefinition` is excluded because our v1 implementation is
+> single-line only and cannot contain a multi-line table.
+
 **IME & consumer notifications**
 
 - `extensions/composing-guard.ts` — invariant #1; `guardedDecorations` (opt-in `{atomic}` also exposes
