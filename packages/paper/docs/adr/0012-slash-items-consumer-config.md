@@ -107,8 +107,7 @@ The transformer may now return a `Promise`:
 
 ```ts
 type SlashItemsConfig =
-  | SlashItemSpec[]
-  | ((defaults: SlashItemSpec[]) => SlashItemSpec[] | Promise<SlashItemSpec[]>);
+  SlashItemSpec[] | ((defaults: SlashItemSpec[]) => SlashItemSpec[] | Promise<SlashItemSpec[]>);
 ```
 
 The catalog is resolved **once** on the menu's first open and **cached**, then filtered synchronously
