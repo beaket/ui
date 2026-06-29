@@ -61,8 +61,7 @@ export type AnchorStatus = "exact" | "approximate" | "orphaned";
 
 /** Re-resolve result — gives from/to alongside the status since the decoration layer uses positions. orphaned has no position. */
 export type ResolvedAnchor =
-  | { status: "exact" | "approximate"; from: number; to: number }
-  | { status: "orphaned" };
+  { status: "exact" | "approximate"; from: number; to: number } | { status: "orphaned" };
 
 // Ported tuning constants (beaket quote-highlights.ts). Named so they can be adjusted after observing real orphan rates.
 const FUZZY_RADIUS_FLOOR = 120; // Lower bound on the search radius around offset — ties perf to quote length, not doc length

@@ -47,8 +47,7 @@ export interface SlashItemSpec {
  *   are deliberately not offered here — that is what the `triggers` API (ADR-0016) is for.
  */
 export type SlashItemsConfig =
-  | SlashItemSpec[]
-  | ((defaults: SlashItemSpec[]) => SlashItemSpec[] | Promise<SlashItemSpec[]>);
+  SlashItemSpec[] | ((defaults: SlashItemSpec[]) => SlashItemSpec[] | Promise<SlashItemSpec[]>);
 
 /** Internal item — includes the privileged action (after). Not exposed. */
 interface SlashItem {
