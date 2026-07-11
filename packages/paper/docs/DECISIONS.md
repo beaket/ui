@@ -174,11 +174,42 @@ chains (single source of truth), forced-block-only — never merged into the tok
 Not yet exposed (deliberate scope cut, revisit on demand): a `theme?: Extension` option to append a
 consumer CodeMirror theme.
 
-## Deferred (not bugs)
+## Deferred (not bugs) — adjudicated for 1.0 ([#481](https://github.com/beaket/ui/issues/481))
 
-- Physical-key Korean IME spot-check for the guarded paths (`setValue`, highlight deferral, coalesced
-  `onSelect` flush) — verified with synthetic composition events only.
-- Orphan-status re-emit during a delete; prefix/suffix context anchors (the `Anchor` type reserves
-  both fields) — defer until real orphan rates are observed.
-- `.cm-selectionBackground` is dormant (no `drawSelection()`); selection uses the browser-native
-  highlight. Add `drawSelection()` if a porcelain selection tint is wanted.
+These were reviewed against the 1.0 exit criterion — _"no open P1/P2 bugs, and every Deferred item
+resolved or consciously accepted with written rationale"_ ([#481](https://github.com/beaket/ui/issues/481)).
+None is a code defect; each is recorded below with its disposition, verified still-current against the
+code at adjudication time. The three keep three **distinct** shapes on purpose — a verification carve-out,
+a live design deferral, and dormant-code housekeeping — don't flatten them into one "accepted" bullet.
+
+- **Physical-key Korean IME spot-check — _redirected_, not a code deferral.** The guarded paths
+  (`setValue`, highlight deferral via `createHighlightController`'s composition hold, and the coalesced
+  `onSelect` / `activeHighlightId` flush) are verified with **synthetic** composition events only.
+  Real hardware-IME verification is the deliberate boundary of the jsdom strategy
+  ([ADR-0005](./adr/0005-quality-via-jsdom-contract-and-regression-tests.md) — jsdom cannot reproduce a
+  genuine IME pipeline), and it is owned by the **CJK/IME real-device verification** exit criterion
+  ([#483](https://github.com/beaket/ui/issues/483), blocked by the verification-method precursor
+  [#479](https://github.com/beaket/ui/issues/479)), not by #481. That exact list of guarded paths is the
+  concrete test matrix #483 inherits. Until #483 passes, IME is **delegated and still owed — not verified.**
+
+- **Orphan-status re-emit on in-session delete; prefix/suffix context anchors — _accepted for 1.0_.**
+  Reaffirms [ADR-0014](./adr/0014-selection-annotation-mechanism.md) decisions 2 / 7. Bounded
+  consequence: when an in-session edit deletes anchored text, `highlightField` only maps positions on
+  `docChanged` (no re-resolution), so the collapsed range is dropped by the `from < to` filter **but the
+  status map still reports the stale `exact` / `approximate`** — self-healing on the next `setHighlights`
+  or reload (the main re-resolution path). prefix/suffix stay reserved additive-optional `Anchor` slots
+  (decision 7 — evolution is additive-optional only), and `onHighlightStatusChange` already emits a full
+  map, so both a later orphan re-emit and the B→C context-anchor extension change only _when / what fills
+  the map_, never the signature — **the 1.0 interface freeze is not blocked either way.** Resumption
+  trigger retained: revisit if observed orphan rates justify prefix/suffix or eager re-emit.
+
+- **`.cm-selectionBackground` dormant — _accepted for 1.0_ (browser-native selection).** The rule in
+  `theme.ts` styles `.cm-selectionBackground` with `--accent-sel`, but CM6 only emits that element when
+  `drawSelection()` is installed — it is not, so selection stays browser-native and the rule never
+  matches. Not installing `drawSelection()` is deliberate: it swaps native selection for a synthetic
+  drawn layer that interacts with the contentEditable caret/composition rendering — a poor trade against
+  the composing guard (the package's most expensive invariant,
+  [ADR-0004](./adr/0004-composing-guard-defer-plus-map.md)) for a purely cosmetic selection tint no
+  consumer has requested (lightness — _"there must be a reason to add it"_). The rule is **kept and
+  annotated dormant** at the call site: it is the already-wired, dark-aware, consumer-overridable token
+  path, so the decision is reversible in one line if demand ever flips. No `drawSelection()` for 1.0.

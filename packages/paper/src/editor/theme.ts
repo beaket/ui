@@ -197,6 +197,10 @@ export const baseTheme = EditorView.theme({
   "&.cm-focused": {
     outline: "none",
   },
+  // Dormant for 1.0: no `drawSelection()` is installed, so CM6 keeps browser-native selection and never
+  // emits `.cm-selectionBackground` — this rule never matches. Kept as the already-wired token path; a
+  // porcelain selection tint is a one-line `drawSelection()` add, deliberately declined (IME risk vs. the
+  // composing guard, and lightness). See DECISIONS.md "Deferred (not bugs) — adjudicated for 1.0" (#481).
   ".cm-selectionBackground, &.cm-focused .cm-selectionBackground": {
     backgroundColor: "var(--accent-sel)",
   },
