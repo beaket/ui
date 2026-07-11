@@ -3,6 +3,7 @@ import { type EditorState, type Extension, StateField } from "@codemirror/state"
 import type { DecorationSet } from "@codemirror/view";
 import { Decoration, EditorView, WidgetType } from "@codemirror/view";
 import { guardedDecorations } from "./composing-guard";
+import { selectionTouches } from "./selection-utils";
 
 // Live-Preview rendering for footnotes. A `[^label]` reference renders as a superscript ordinal
 // off-cursor and reveals its raw `[^label]` when the cursor touches it — the same reveal-on-cursor
@@ -150,10 +151,6 @@ class FootnoteDefWidget extends WidgetType {
   ignoreEvent(): boolean {
     return false;
   }
-}
-
-function selectionTouches(state: EditorState, from: number, to: number): boolean {
-  return state.selection.ranges.some((range) => range.from <= to && range.to >= from);
 }
 
 function computeRefDecorations(view: EditorView): DecorationSet {
