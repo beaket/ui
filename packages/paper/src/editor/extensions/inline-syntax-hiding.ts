@@ -1,8 +1,9 @@
 import { syntaxTree } from "@codemirror/language";
-import type { EditorState, Extension } from "@codemirror/state";
+import type { Extension } from "@codemirror/state";
 import type { DecorationSet } from "@codemirror/view";
 import { Decoration, EditorView } from "@codemirror/view";
 import { guardedDecorations } from "./composing-guard";
+import { selectionTouches } from "./selection-utils";
 
 // Live Preview rule: for inline format ranges without a cursor, hide the marks (**, *, ~~, `)
 // and keep only the rendered style (highlight). When the cursor touches the range, expose the original.
@@ -14,10 +15,6 @@ const hideMark = Decoration.replace({});
 // The inline code chip (background) applies only to InlineCode nodes — if given via a monospace highlight tag,
 // it would leak into fenced code content (CodeText) too and double up with the code-block line background.
 const inlineCodeChip = Decoration.mark({ class: "cm-inline-code" });
-
-function selectionTouches(state: EditorState, from: number, to: number): boolean {
-  return state.selection.ranges.some((range) => range.from <= to && range.to >= from);
-}
 
 function computeDecorations(view: EditorView): DecorationSet {
   const { state } = view;
