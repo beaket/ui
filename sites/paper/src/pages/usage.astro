@@ -109,7 +109,9 @@ const renderMermaid = async (code, el, ctx) => {
   <CodeBlock code={setValueCode} lang="ts" />
   <p>
     For anything the curated handle does not expose, <code>ref.current.getView()</code> returns the
-    underlying CodeMirror <code>EditorView</code> as an escape hatch. See the
+    underlying CodeMirror <code>EditorView</code> as an escape hatch. It returns <code>undefined</code>
+    until the view has mounted (e.g. when called from a ref callback), so guard with
+    <code>const v = ref.current?.getView(); if (!v) return;</code>. See the
     <a href={withBase('api')}>API Reference</a> for the full prop and handle surface.
   </p>
 

@@ -233,3 +233,11 @@ The body above is **historical** — it was written on 2026-06-17, before the re
 - `PaperProps` now includes the live anchor/highlight props (`highlights`, `activeHighlightId`, `onHighlightStatusChange`, `onHighlightClick`, `onSelect`) of ADR-0014, reconfigured live via dedicated controllers — no longer "left blank."
 - A `colorScheme` live prop (`"light" | "dark" | "system"`) exists, flipped via a compartment reconfigure without recreation (dark mode, which the body deferred under ADR-0009, has shipped — v0.2.0).
 - The package now lives in the `beaket.ui` monorepo at `packages/paper` — i.e. the co-location of **Decision 7** (recorded as deferred future work in the body) has since been carried out.
+
+## Amendment (2026-07-11) — `getView()` returns `undefined` before mount instead of throwing (#511)
+
+Decision 3's escape hatch was typed `getView(): EditorView` and **threw** `Paper: view is not mounted yet` whenever `viewRef.current` was null. But the view is created in a passive `useEffect`, which runs _after_ the commit phase — so a consumer calling `getView()` from a React `ref` callback (the documented hatch for attaching extensions post-mount) crashed the tree on first render, forcing a `try/catch` + `requestAnimationFrame`-poll dance.
+
+`getView()` now returns `EditorView | undefined`, yielding `undefined` until the view mounts. This makes the idiomatic `const v = h.getView(); if (!v) return;` work and brings the hatch in line with its curated siblings — `getSelection()` returns `null`, `getValue()` returns `""` — rather than being the one handle that throws. The project's own docs-site demos already assumed this falsy-return shape (`editor-playground.tsx`, `highlights-demo.tsx`).
+
+The signature change (`EditorView` → `EditorView | undefined`) is a semver-legal breaking change on `0.x` (see `DECISIONS.md` → Versioning). Option A of #511 (`getView()` returns `undefined`) was taken; the requested `onReady`/`onCreateView` callback (option B) was not added — the falsy-return contract covers the reported need without growing the surface that freezes at 1.0 — and the raw `extensions[]` injection slot (option C) stays foreclosed by ADR-0015.

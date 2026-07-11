@@ -45,7 +45,7 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
       <tr><td><code>setValue(md)</code></td><td><code>void</code></td><td>Replace the whole document. Deferred until an active IME composition settles. Does not fire <code>onChange</code>.</td></tr>
       <tr><td><code>focus()</code></td><td><code>void</code></td><td>Focus the editor.</td></tr>
       <tr><td><code>getSelection()</code></td><td><code>&#123; from, to, text &#125; | null</code></td><td>Current selection in source coordinates; <code>null</code> when empty.</td></tr>
-      <tr><td><code>getView()</code></td><td><code>EditorView</code></td><td>Escape hatch — the raw CodeMirror 6 <code>EditorView</code>. No cross-version guarantees.</td></tr>
+      <tr><td><code>getView()</code></td><td><code>EditorView | undefined</code></td><td>Escape hatch — the raw CodeMirror 6 <code>EditorView</code>. No cross-version guarantees. Returns <code>undefined</code> until the view has mounted, so a ref callback can guard with <code>const v = h.getView(); if (!v) return;</code>.</td></tr>
     </tbody>
   </table>
   </div>
