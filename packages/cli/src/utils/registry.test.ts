@@ -28,6 +28,21 @@ function rejectingFetch(error: Error) {
   return vi.fn(() => Promise.reject(error));
 }
 
+// Headers arrive immediately (fetch resolves) but the body read hangs until the
+// signal aborts — mirrors a CDN that stalls mid-body after sending headers.
+function bodyHangsFetch() {
+  return vi.fn((_url: string, init?: { signal?: AbortSignal }) => {
+    const signal = init?.signal;
+    const hang = () =>
+      new Promise<never>((_resolve, reject) => {
+        signal?.addEventListener("abort", () => {
+          reject(new DOMException("The operation was aborted", "AbortError"));
+        });
+      });
+    return Promise.resolve({ ok: true, json: hang, text: hang } as unknown as Response);
+  });
+}
+
 const buttonDef: ComponentDefinition = {
   name: "button",
   dependencies: [],
@@ -69,6 +84,17 @@ describe("fetchRegistry", () => {
     );
 
     await expect(fetchRegistry()).rejects.toThrow(/HTTP 404/);
+  });
+
+  it("aborts when the body read stalls after headers arrive", async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal("fetch", bodyHangsFetch());
+
+    const promise = fetchRegistry();
+    const assertion = expect(promise).rejects.toThrow(/request timed out after 10s/);
+
+    await vi.advanceTimersByTimeAsync(FETCH_TIMEOUT_MS);
+    await assertion;
   });
 });
 

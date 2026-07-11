@@ -22,12 +22,22 @@ const GITHUB_RAW_BASE = "https://raw.githubusercontent.com/beaket/ui/main";
 // hangs the CLI until the OS-level TCP timeout fires (minutes).
 export const FETCH_TIMEOUT_MS = 10_000;
 
-async function fetchWithTimeout(url: string): Promise<Response> {
+// The timer stays armed until readBody resolves so the body download is covered
+// too — fetch() resolves when headers arrive, not when the body is fully read, so
+// a CDN that stalls mid-body would otherwise slip past the timeout.
+async function fetchWithTimeout<T>(
+  url: string,
+  readBody: (res: Response) => Promise<T>,
+): Promise<T> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
   try {
-    return await fetch(url, { signal: controller.signal });
+    const response = await fetch(url, { signal: controller.signal });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    return await readBody(response);
   } finally {
     clearTimeout(timer);
   }
@@ -49,11 +59,7 @@ export async function fetchRegistry(): Promise<Registry> {
   const url = `${GITHUB_RAW_BASE}/registry/registry.json`;
 
   try {
-    const response = await fetchWithTimeout(url);
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    return (await response.json()) as Registry;
+    return await fetchWithTimeout(url, async (res) => (await res.json()) as Registry);
   } catch (error) {
     throw new Error(
       `Failed to fetch registry from ${url}: ${describeFetchError(error)}. Make sure the repository is public.`,
@@ -68,11 +74,7 @@ export async function fetchComponent(componentDef: ComponentDefinition): Promise
     const url = `${GITHUB_RAW_BASE}/src/${filePath}`;
 
     try {
-      const response = await fetchWithTimeout(url);
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-      const content = await response.text();
+      const content = await fetchWithTimeout(url, (res) => res.text());
       files.push({ path: filePath, content });
     } catch (error) {
       throw new Error(`Failed to fetch ${filePath} from ${url}: ${describeFetchError(error)}`);
