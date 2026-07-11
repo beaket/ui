@@ -15,7 +15,8 @@ any behavior change:
   `onSelect`/active flush) are recorded as the matrix #483 inherits; IME stays delegated, not verified.
 - **Orphan re-emit on in-session delete; prefix/suffix context anchors** — accepted for 1.0 with the
   bounded consequence named (a stale `exact`/`approximate` status until the next `setHighlights`/reload;
-  the decoration itself is dropped by the `from < to` filter) and the ADR-0014 resumption trigger kept.
+  the decoration itself is dropped on map — empty mark decorations are removed) and the ADR-0014
+  resumption trigger kept.
   The `Anchor` slots and `onHighlightStatusChange` map are additive-only, so the 1.0 interface freeze is
   not blocked.
 - **`.cm-selectionBackground` dormant** — accepted for 1.0 (browser-native selection); `drawSelection()`

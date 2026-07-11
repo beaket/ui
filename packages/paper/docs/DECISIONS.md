@@ -195,8 +195,9 @@ a live design deferral, and dormant-code housekeeping — don't flatten them int
 - **Orphan-status re-emit on in-session delete; prefix/suffix context anchors — _accepted for 1.0_.**
   Reaffirms [ADR-0014](./adr/0014-selection-annotation-mechanism.md) decisions 2 / 7. Bounded
   consequence: when an in-session edit deletes anchored text, `highlightField` only maps positions on
-  `docChanged` (no re-resolution), so the collapsed range is dropped by the `from < to` filter **but the
-  status map still reports the stale `exact` / `approximate`** — self-healing on the next `setHighlights`
+  `docChanged` (no re-resolution), so the collapsed range is dropped on map (empty mark decorations are
+  removed) **but the status map still reports the stale `exact` / `approximate`** — self-healing on the
+  next `setHighlights`
   or reload (the main re-resolution path). prefix/suffix stay reserved additive-optional `Anchor` slots
   (decision 7 — evolution is additive-optional only), and `onHighlightStatusChange` already emits a full
   map, so both a later orphan re-emit and the B→C context-anchor extension change only _when / what fills
