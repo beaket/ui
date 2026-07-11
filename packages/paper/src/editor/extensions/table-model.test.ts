@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseAligns, parseRowCells, serializeDelimiter, serializeRow } from "./table-widget";
+import { parseAligns, parseRowCells, serializeDelimiter, serializeRow } from "./table-model";
 
 describe("parseRowCells", () => {
   it("splits a basic row into cell ranges", () => {
