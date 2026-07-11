@@ -38,6 +38,26 @@ change needs an ADR vs. a changeset. Each bullet below links to its ADR.
   ([ADR-0002](./adr/0002-table-structure-syntax-permanently-hidden.md),
   [ADR-0003](./adr/0003-cell-editor-as-codemirror-subview.md),
   [ADR-0008](./adr/0008-table-cell-line-break-hidden-br.md))
+- **Table keymap invariants.** The grid is a single atomic range (`EditorView.atomicRanges`), so
+  the caret never lands _inside_ the table's source text — every table key is an explicit override
+  of that default. The rules future work must preserve (no ADR — these document existing behavior;
+  they live in `extensions/table-widget.ts`, split model in `extensions/table-model.ts`):
+  - **In the cell subview** — `Enter` moves down one row (creating a row past the last one);
+    `Shift-Enter` inserts a hidden `<br>` line break (ADR-0008); `Tab` / `Shift-Tab` step to the
+    next / previous cell in sequence (wrapping across rows, growing the grid at the end); `↑` / `↓`
+    _at the cell's visual top/bottom edge_ move to the adjacent row or **escape** the table (raw
+    `↑`/`↓` inside the cell fall through to default intra-cell movement); `←` / `→` _at the text
+    start/end_ step to the previous / next cell or escape; `Escape` ends editing and leaves the
+    table **block-selected** (outline ring). **Every one of these is suppressed during IME
+    composition** (`view.composing`) — commit only, never navigate — per the composing-guard
+    contract (invariant #1, CJK first-class).
+  - **Around the table (main view)** — `Backspace` immediately after a table first **selects** the
+    whole table, and a second `Backspace` **deletes** it (an Obsidian-style two-step, overriding the
+    atomic range's one-press delete); `↑` / `↓` on the line adjacent to a table **enters** it
+    (symmetric to the edge-arrow escape).
+  - **Boundary guard** — a transaction filter blocks deleting the blank-line separator newline(s)
+    after a table, which would otherwise let GFM absorb the following paragraph into a table row;
+    a change that removes the whole table is allowed through.
 - **Composing guard contract (the most expensive invariant).** During `view.composing`: no
   decoration recompute, no widget DOM rebuild, no menu action; map existing decorations to the new
   coordinates; re-evaluate on `compositionend`. **Every new extension or feature must honor this.**
