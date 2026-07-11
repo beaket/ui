@@ -24,8 +24,13 @@ export interface PaperHandle {
   focus(): void;
   /** Selection range (source coordinates). null on empty selection. The anchor input surface of ADR-0014. */
   getSelection(): { from: number; to: number; text: string } | null;
-  /** Raw CM6 EditorView — no cross-version guarantees (unsafe). Power-user escape hatch. */
-  getView(): EditorView;
+  /**
+   * Raw CM6 EditorView — no cross-version guarantees (unsafe). Power-user escape hatch.
+   * Returns `undefined` until the view has mounted (the effect that creates it runs after
+   * commit), so a ref callback can guard with `const v = h.getView(); if (!v) return;` —
+   * matching `getSelection()` (null) and `getValue()` ("") rather than throwing.
+   */
+  getView(): EditorView | undefined;
 }
 
 export interface PaperProps {
@@ -170,11 +175,7 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
         if (from === to) return null;
         return { from, to, text: view.state.sliceDoc(from, to) };
       },
-      getView: () => {
-        const view = viewRef.current;
-        if (!view) throw new Error("Paper: view is not mounted yet");
-        return view;
-      },
+      getView: () => viewRef.current ?? undefined,
     }),
     [],
   );
