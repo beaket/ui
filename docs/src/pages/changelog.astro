@@ -19,7 +19,7 @@ const { Content } = await render(entry);
 
 <style>
   .changelog-intro {
-    color: var(--steel);
+    color: var(--color-fg-muted);
     margin-bottom: 28px;
   }
 
@@ -30,12 +30,12 @@ const { Content } = await render(entry);
   .changelog-content :global(h2) {
     margin-top: 28px;
     padding-top: 14px;
-    border-top: 1px solid var(--chrome);
+    border-top: 1px solid var(--color-border-muted);
   }
 
   .changelog-content :global(h3) {
     margin-top: 14px;
-    color: var(--slate);
+    color: var(--color-fg-muted);
   }
 
   .changelog-content :global(ul) {
@@ -48,7 +48,7 @@ const { Content } = await render(entry);
   }
 
   .changelog-content :global(code) {
-    background: var(--frost);
+    background: var(--color-bg-hover);
     padding: 2px 4px;
     font-family: var(--font-mono);
     font-size: 13px;

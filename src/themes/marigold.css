@@ -1,111 +1,98 @@
 /*
- * Beaket UI Design System - Marigold Theme
- * A neon sign snapping on. Screen-printed posters in a design studio.
- * Light: pure white canvas, ink-black heavy shadows, maximum saturation.
- * Dark: neon signs at night — vivid electric colors on near-black canvas.
+ * Beaket UI Design System — Marigold palette
+ * Pure-grey paper and ink — the loudest signals, kept bright by design.
+ * 32 values; semantic.css turns them into the 64 names components use.
  */
 
-@theme {
-  /* Neutral palette */
-  --color-graphite: #1f1f1f;
-  --color-ink: #0a0a0a;
-  --color-branch: #1a1a1a;
-  --color-iron: #141414;
-  --color-slate: #3a3a3a;
-  --color-zinc: #4e4e4e;
-  --color-steel: #5a5a5a;
-  --color-muted: #6e6e6e;
-  --color-aluminum: #949494;
-  --color-chrome: #c0c0c0;
-  --color-silver: #cfcfcf;
-  --color-platinum: #e0e0e0;
-  --color-frost: #f0f0f0;
-  --color-paper: #ffffff;
-  --color-inverse: var(--color-paper);
+:root {
+  /* Surface — the page and what sits on it */
+  --surface-0: #ebebeb;
+  --surface-1: #f8f8f8;
+  --surface-2: #ffffff;
+  --surface-brand: #1a1a1a;
 
-  /* Signal colors — LOUD, max saturation, screen-print ink */
-  --color-signal-blue: #0044ee;
-  --color-signal-red: #e82010;
-  --color-signal-red-hover: #cc1c0e;
-  --color-signal-red-active: #b0180c;
-  --color-signal-red-text: #cc1c0e;
-  --color-signal-green: #008050;
-  --color-signal-green-hover: #006a42;
-  --color-signal-green-active: #005535;
-  --color-signal-amber: #f07800;
-  --color-signal-amber-hover: #d06800;
-  --color-signal-amber-active: #b05800;
-  --color-signal-amber-text: #cc6600;
-  --color-signal-purple: #8b22ff;
-  --color-signal-cyan: #00b4cc;
+  /* Tone — the neutral ramp: 0 is the paper end, 11 the deepest ink */
+  --tone-0: #ebebeb;
+  --tone-1: #e3e2e2;
+  --tone-2: #dadad9;
+  --tone-3: #bcbbbb;
+  --tone-4: #868686;
+  --tone-5: #7b7a7a;
+  --tone-6: #6a6969;
+  --tone-7: #4e4e4d;
+  --tone-8: #3b3b3a;
+  --tone-9: #2b2b2a;
+  --tone-10: #141313;
+  --tone-11: #0e0e0e;
 
-  /* Surface layers (visual depth) */
-  --color-surface-0: #ebebeb;
-  --color-surface-1: #f8f8f8;
-  --color-surface-2: #ffffff;
+  /* Signal — one ink per meaning; only the accent is vivid */
+  --signal-danger: #f24e1e;
+  --signal-warning: #ff9500;
+  --signal-success: #00cc81;
+  --signal-info: #0055ff;
+  --signal-info-alt: #00bcd4;
+  --signal-accent: #a259ff;
 
-  /* Shadows — ink-black, heavy, graphic */
-  --shadow-offset: 3px 3px 0px 0px var(--color-iron);
-  --shadow-offset-dark: 3px 3px 0px 0px var(--color-ink);
-  --shadow-offset-hover: 4px 4px 0px 0px var(--color-ink);
-  --shadow-offset-active: 1px 1px 0px 0px var(--color-ink);
+  /* Knockout — which end of the ramp carries type on each solid */
+  --signal-danger-on: var(--tone-11);
+  --signal-success-on: var(--tone-11);
+  --signal-warning-on: var(--tone-11);
+  --signal-info-on: var(--tone-0);
+  --signal-info-alt-on: var(--tone-11);
+  --signal-accent-on: var(--tone-11);
 
-  /* Animations */
-  --animate-navigation-progress: navigation-progress 1s ease-in-out infinite;
+  /* Shadow — elevation is drawn, not lit */
+  --shadow-size: 3px;
+  --shadow-size-active: 1px;
+  --shadow-color: #121212;
+  --shadow-color-overlay: #0a0a0a;
 }
 
 /*
- * Dark mode — neon signs at night.
- * Neutrals flip (paper→black, ink→white). Shadows auto-flip via token
- * references (white edge on black = neon glow effect). Signal colors
- * brightened to neon-max for dark canvas contrast.
+ * Marigold Dark — marigold inverted: the loud signals on black.
  */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Neutral palette — pure achromatic for maximum neon contrast */
-    --color-graphite: #d8d8d8;
-    --color-ink: #f5f5f5;
-    --color-branch: #e0e0e0;
-    --color-iron: #c0c0c0;
-    --color-slate: #bfbfbf;
-    --color-zinc: #acacac;
-    --color-steel: #999999;
-    --color-muted: #858585;
-    --color-aluminum: #666666;
-    --color-chrome: #404040;
-    --color-silver: #303030;
-    --color-platinum: #222222;
-    --color-frost: #161616;
-    --color-paper: #101010;
+    /* Surface */
+    --surface-0: #141414;
+    --surface-1: #1a1a1a;
+    --surface-2: #222222;
+    --surface-brand: #e0e0e0;
 
-    /* Signal colors — neon-bright for dark canvas */
-    --color-signal-blue: #4488ff;
-    --color-signal-red: #ff2a1a;
-    --color-signal-red-hover: #e52518;
-    --color-signal-red-active: #cc2012;
-    --color-signal-red-text: #ff4838;
-    --color-signal-green: #00cc66;
-    --color-signal-green-hover: #00b058;
-    --color-signal-green-active: #009448;
-    --color-signal-amber: #ff8800;
-    --color-signal-amber-hover: #e07800;
-    --color-signal-amber-active: #c06800;
-    --color-signal-amber-text: #ffa030;
-    --color-signal-purple: #bb55ff;
-    --color-signal-cyan: #00ccdd;
+    /* Tone */
+    --tone-0: #141414;
+    --tone-1: #1c1c1b;
+    --tone-2: #242323;
+    --tone-3: #393939;
+    --tone-4: #636262;
+    --tone-5: #6e6e6d;
+    --tone-6: #7e7e7e;
+    --tone-7: #a0a0a0;
+    --tone-8: #bbbaba;
+    --tone-9: #d1d1d0;
+    --tone-10: #ecebeb;
+    --tone-11: #f0f0f0;
 
-    /* Surface layers — elevation = lighter */
-    --color-surface-0: #141414;
-    --color-surface-1: #1a1a1a;
-    --color-surface-2: #222222;
-  }
-}
+    /* Signal */
+    --signal-danger: #ff2a1a;
+    --signal-warning: #ff8800;
+    --signal-success: #00cc66;
+    --signal-info: #4488ff;
+    --signal-info-alt: #00ccdd;
+    --signal-accent: #bb55ff;
 
-@keyframes navigation-progress {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(400%);
+    /* Knockout */
+    --signal-danger-on: var(--tone-0);
+    --signal-success-on: var(--tone-0);
+    --signal-warning-on: var(--tone-0);
+    --signal-info-on: var(--tone-0);
+    --signal-info-alt-on: var(--tone-0);
+    --signal-accent-on: var(--tone-0);
+
+    /* Shadow */
+    --shadow-size: 3px;
+    --shadow-size-active: 1px;
+    --shadow-color: #ececec;
+    --shadow-color-overlay: #f5f5f5;
   }
 }

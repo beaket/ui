@@ -48,7 +48,7 @@ export const Required: Story = {
       <div className="space-y-1.5">
         <Label htmlFor="email-required">
           Email
-          <span className="text-signal-red ml-1">*</span>
+          <span className="text-danger-fg ml-1">*</span>
         </Label>
         <Input id="email-required" type="email" required placeholder="email@example.com" />
       </div>
@@ -70,7 +70,7 @@ export const AllStates: Story = {
       <div className="flex max-w-sm flex-col gap-1.5">
         <Label htmlFor="input-required">
           Required field
-          <span className="text-signal-red ml-1">*</span>
+          <span className="text-danger-fg ml-1">*</span>
         </Label>
         <Input id="input-required" required placeholder="Required" />
       </div>

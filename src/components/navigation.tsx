@@ -33,12 +33,12 @@ function NavigationLink({ className, active, ...props }: NavigationLinkProps) {
       data-active={active || undefined}
       className={cn(
         "inline-block px-3 py-1 text-left text-sm no-underline",
-        "border-graphite bg-paper text-ink border",
+        "border-border-strong bg-bg-raised text-fg border",
         "shadow-offset hover:shadow-offset-hover active:shadow-offset-active",
-        "hover:bg-frost",
-        "focus-visible:outline-signal-blue focus-visible:outline-2 focus-visible:outline-offset-2",
+        "hover:bg-bg-hover",
+        "focus-visible:outline-border-focus focus-visible:outline-2 focus-visible:outline-offset-2",
         "transition-shadow duration-100",
-        "data-[active]:text-inverse data-[active]:bg-branch data-[active]:hover:bg-branch data-[active]:shadow-none data-[active]:hover:shadow-none",
+        "data-[active]:text-fg-on-emphasis data-[active]:bg-bg-emphasis data-[active]:hover:bg-bg-emphasis data-[active]:shadow-none data-[active]:hover:shadow-none",
         className,
       )}
       aria-current={active ? "page" : undefined}

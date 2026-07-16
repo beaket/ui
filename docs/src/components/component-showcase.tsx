@@ -25,20 +25,22 @@ export function ComponentShowcase({ components, version }: ComponentShowcaseProp
       <a
         href="/ui/installation"
         data-slot="branding-card"
-        className="shadow-offset hover:shadow-offset-hover active:shadow-offset-active border-ink bg-branch flex flex-col justify-between border-2 p-4 no-underline transition-shadow outline-none"
+        className="shadow-offset hover:shadow-offset-hover active:shadow-offset-active border-border-strong bg-bg-emphasis flex flex-col justify-between border-2 p-4 no-underline transition-shadow outline-none"
       >
         <div>
           <div>
-            <span className="text-paper text-sm font-bold tracking-wide uppercase">Beaket UI</span>
-            <span className="text-paper/60 ml-1.5 text-[10px]">v{version}</span>
+            <span className="text-fg-on-emphasis text-sm font-bold tracking-wide uppercase">
+              Beaket UI
+            </span>
+            <span className="text-fg-on-emphasis/60 ml-1.5 text-[10px]">v{version}</span>
           </div>
-          <p className="text-paper/80 m-0 mt-3 text-sm leading-relaxed">
+          <p className="text-fg-on-emphasis/80 m-0 mt-3 text-sm leading-relaxed">
             Brutalist React components.
             <br />
             Copy-paste into your project.
           </p>
         </div>
-        <div className="bg-paper text-ink mt-4 inline-block px-3 py-1.5 text-xs font-bold">
+        <div className="bg-bg text-fg mt-4 inline-block px-3 py-1.5 text-xs font-bold">
           → Get Started
         </div>
       </a>
@@ -51,13 +53,13 @@ export function ComponentShowcase({ components, version }: ComponentShowcaseProp
         return (
           <div
             key={component.name}
-            className={`border-chrome bg-surface-1 flex flex-col border p-4 ${colClass}`}
+            className={`border-border bg-bg-raised flex flex-col border p-4 ${colClass}`}
             style={rowSpan > 1 ? { gridRow: `span ${rowSpan}` } : undefined}
           >
             <a
               data-slot="component-link"
               href={`/ui/components/${component.name}`}
-              className="text-ink hover:decoration-ink inline text-xs font-semibold tracking-wide uppercase underline decoration-transparent underline-offset-2 outline-none"
+              className="text-fg hover:decoration-ink inline text-xs font-semibold tracking-wide uppercase underline decoration-transparent underline-offset-2 outline-none"
             >
               {component.docs.title} →
             </a>

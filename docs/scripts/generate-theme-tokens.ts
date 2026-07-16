@@ -1,9 +1,13 @@
 /**
- * Extracts design tokens from src/themes/*.css and generates
- * docs/src/data/theme-tokens.json — the single derived artifact
- * consumed by the docs site (theme-switcher, tokens page, theme-demo).
+ * Extracts design tokens from src/themes/*.css and generates:
+ *  - docs/src/data/theme-tokens.json — consumed by the docs site
+ *    (theme-switcher, tokens page, theme-demo)
+ *  - docs/public/theme-init.js — self-contained head script (no imports
+ *    allowed there) that applies the stored theme before first paint.
  *
- * Source of truth: src/themes/*.css (@theme blocks + dark-mode overrides).
+ * Source of truth: src/themes/semantic.css (the 64 shared semantic names)
+ * + src/themes/<theme>.css (32-value palettes, light `:root` block plus an
+ * optional dark twin in a prefers-color-scheme media query).
  * Code-highlight tokens (--astro-code-*) are docs-specific and defined here.
  */
 import * as fs from "fs";
@@ -13,11 +17,25 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const THEMES_DIR = path.resolve(__dirname, "../../src/themes");
 const OUTPUT_FILE = path.resolve(__dirname, "../src/data/theme-tokens.json");
+const THEME_INIT_FILE = path.resolve(__dirname, "../public/theme-init.js");
 
 // ---------------------------------------------------------------------------
 // Code-highlight tokens (docs-specific, not in theme CSS)
 // ---------------------------------------------------------------------------
 const codeHighlightTokens: Record<string, Record<string, string>> = {
+  solace: {
+    "--astro-code-foreground": "#05070c",
+    "--astro-code-background": "#f3f4f2",
+    "--astro-code-token-keyword": "#4c6bb6",
+    "--astro-code-token-string": "#00896c",
+    "--astro-code-token-string-expression": "#00896c",
+    "--astro-code-token-comment": "#727578",
+    "--astro-code-token-function": "#2b5bff",
+    "--astro-code-token-constant": "#008597",
+    "--astro-code-token-parameter": "#05070c",
+    "--astro-code-token-punctuation": "#727578",
+    "--astro-code-token-link": "#4c6bb6",
+  },
   porcelain: {
     "--astro-code-foreground": "#080b10",
     "--astro-code-background": "#f3f4f6",
@@ -135,76 +153,143 @@ function parseDeclarations(block: string): Record<string, string> {
     const key = `--${m[1]}`;
     // Skip animation tokens — not needed for docs
     if (key.startsWith("--animate-")) continue;
-    tokens[key] = m[2].trim();
+    tokens[key] = m[2].replace(/\s+/g, " ").trim();
   }
   return tokens;
 }
 
+/** Substitute var() references until a fixpoint (handles chained refs). */
 function resolveVars(tokens: Record<string, string>): Record<string, string> {
-  const resolved: Record<string, string> = {};
-  for (const [key, value] of Object.entries(tokens)) {
-    resolved[key] = value.replace(/var\(([^)]+)\)/g, (_, ref: string) => {
-      const refKey = ref.trim();
-      return tokens[refKey] ?? resolved[refKey] ?? `var(${ref})`;
-    });
+  const resolved: Record<string, string> = { ...tokens };
+  for (let pass = 0; pass < 8; pass++) {
+    let changed = false;
+    for (const [key, value] of Object.entries(resolved)) {
+      const next = value.replace(/var\((--[\w-]+)\)/g, (whole, ref: string) => {
+        const target = resolved[ref];
+        return target !== undefined && !target.includes(`var(${ref})`) ? target : whole;
+      });
+      if (next !== value) {
+        resolved[key] = next;
+        changed = true;
+      }
+    }
+    if (!changed) break;
   }
   return resolved;
 }
 
-function parseCSSFile(filePath: string): {
+function parsePaletteFile(filePath: string): {
   light: Record<string, string>;
-  dark: Record<string, string>;
+  dark: Record<string, string> | null;
 } {
   const content = fs.readFileSync(filePath, "utf-8");
 
-  // Extract @theme { ... } block
-  const themeMatch = content.match(/@theme\s*\{([\s\S]*?)\n\}/);
-  const lightRaw = themeMatch ? parseDeclarations(themeMatch[1]) : {};
+  // Light palette: the top-level `:root { ... }` block (before any @media)
+  const beforeMedia = content.split("@media")[0];
+  const lightMatch = beforeMedia.match(/:root\s*\{([\s\S]*?)\}/);
+  const light = lightMatch ? parseDeclarations(lightMatch[1]) : {};
 
-  // Extract @media (prefers-color-scheme: dark) { :root { ... } }
+  // Dark twin: @media (prefers-color-scheme: dark) { :root { ... } }
   const darkMatch = content.match(
     /@media\s*\(prefers-color-scheme:\s*dark\)\s*\{\s*:root\s*\{([\s\S]*?)\}\s*\}/,
   );
-  const darkOverrides = darkMatch ? parseDeclarations(darkMatch[1]) : {};
+  const dark = darkMatch ? parseDeclarations(darkMatch[1]) : null;
 
-  return {
-    light: resolveVars(lightRaw),
-    dark: resolveVars({ ...lightRaw, ...darkOverrides }),
-  };
+  return { light, dark };
+}
+
+function parseSemantic(): Record<string, string> {
+  const content = fs.readFileSync(path.join(THEMES_DIR, "semantic.css"), "utf-8");
+  const themeMatch = content.match(/@theme\s*\{([\s\S]*?)\n\}/);
+  if (!themeMatch) throw new Error("semantic.css: @theme block not found");
+  return parseDeclarations(themeMatch[1]);
+}
+
+// ---------------------------------------------------------------------------
+// theme-init.js emission
+// ---------------------------------------------------------------------------
+function emitThemeInit(output: Record<string, Record<string, string>>) {
+  const script = `// AUTO-GENERATED by docs/scripts/generate-theme-tokens.ts — do not edit by hand.
+// Runs before page render to prevent theme flash on navigation.
+// Self-contained copy of theme-tokens.json because <script> tags in <head>
+// cannot import modules.
+(function () {
+  var themes = ${JSON.stringify(output, null, 2).replace(/\n/g, "\n  ")};
+  function resolveTheme(name) {
+    var scheme = localStorage.getItem("beaket-color-scheme");
+    var isDark;
+    if (scheme === "light") isDark = false;
+    else if (scheme === "dark") isDark = true;
+    else isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (isDark && themes[name + "-dark"]) return name + "-dark";
+    return name;
+  }
+
+  function applyTokens(name) {
+    var tokens = themes[name];
+    if (!tokens) return;
+    var root = document.documentElement;
+    for (var key in tokens) {
+      root.style.setProperty(key, tokens[key]);
+    }
+  }
+
+  var params = new URLSearchParams(window.location.search);
+  var rawTheme = params.get("theme") || localStorage.getItem("beaket-theme") || "solace";
+  var baseName = rawTheme;
+  if (rawTheme.match(/-dark$/) && themes[rawTheme]) {
+    baseName = rawTheme.replace(/-dark$/, "");
+    localStorage.setItem("beaket-color-scheme", "dark");
+  }
+  applyTokens(resolveTheme(baseName));
+
+  // Live-switch when OS dark mode changes
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+    var current = localStorage.getItem("beaket-theme") || "solace";
+    applyTokens(resolveTheme(current));
+  });
+})();
+`;
+  fs.writeFileSync(THEME_INIT_FILE, script);
 }
 
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 function main() {
+  const semantic = parseSemantic();
+
   const cssFiles = fs
     .readdirSync(THEMES_DIR)
-    .filter((f) => f.endsWith(".css"))
+    .filter((f) => f.endsWith(".css") && f !== "semantic.css")
     .sort();
 
   const output: Record<string, Record<string, string>> = {};
 
   for (const file of cssFiles) {
     const themeName = path.basename(file, ".css");
-    const { light, dark } = parseCSSFile(path.join(THEMES_DIR, file));
+    const { light, dark } = parsePaletteFile(path.join(THEMES_DIR, file));
 
     output[themeName] = {
-      ...light,
+      ...resolveVars({ ...light, ...semantic }),
       ...codeHighlightTokens[themeName],
     };
 
-    output[`${themeName}-dark`] = {
-      ...dark,
-      ...codeHighlightTokens[`${themeName}-dark`],
-    };
+    // Light-only themes (e.g. solace) have no dark twin by declaration.
+    if (dark) {
+      output[`${themeName}-dark`] = {
+        ...resolveVars({ ...light, ...dark, ...semantic }),
+        ...codeHighlightTokens[`${themeName}-dark`],
+      };
+    }
   }
 
   fs.writeFileSync(OUTPUT_FILE, JSON.stringify(output, null, 2) + "\n");
+  emitThemeInit(output);
 
-  const themeCount = cssFiles.length;
   const variantCount = Object.keys(output).length;
   console.log(
-    `Generated ${variantCount} theme variants (${themeCount} themes × light/dark) → ${path.relative(process.cwd(), OUTPUT_FILE)}`,
+    `Generated ${variantCount} theme variants (${cssFiles.length} palettes + dark twins) → ${path.relative(process.cwd(), OUTPUT_FILE)} & ${path.relative(process.cwd(), THEME_INIT_FILE)}`,
   );
 }
 

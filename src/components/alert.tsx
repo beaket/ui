@@ -10,14 +10,14 @@ const alertVariants = cva(
   {
     variants: {
       variant: {
-        note: "bg-surface-1 text-ink border-signal-blue [&>svg]:text-signal-blue [&_[data-slot=alert-description]]:text-steel",
-        tip: "bg-surface-1 text-ink border-signal-green [&>svg]:text-signal-green [&_[data-slot=alert-description]]:text-steel",
+        note: "bg-bg-raised text-fg border-info-solid [&>svg]:text-info-solid [&_[data-slot=alert-description]]:text-fg-muted",
+        tip: "bg-bg-raised text-fg border-success-solid [&>svg]:text-success-solid [&_[data-slot=alert-description]]:text-fg-muted",
         important:
-          "bg-surface-1 text-ink border-signal-purple [&>svg]:text-signal-purple [&_[data-slot=alert-description]]:text-steel",
+          "bg-bg-raised text-fg border-accent-solid [&>svg]:text-accent-solid [&_[data-slot=alert-description]]:text-fg-muted",
         warning:
-          "bg-surface-1 text-ink border-signal-amber-text [&>svg]:text-signal-amber-text [&_[data-slot=alert-description]]:text-steel",
+          "bg-bg-raised text-fg border-warning-fg [&>svg]:text-warning-fg [&_[data-slot=alert-description]]:text-fg-muted",
         caution:
-          "bg-surface-1 text-ink border-signal-red [&>svg]:text-signal-red [&_[data-slot=alert-description]]:text-steel",
+          "bg-bg-raised text-fg border-danger-solid [&>svg]:text-danger-solid [&_[data-slot=alert-description]]:text-fg-muted",
       },
     },
     defaultVariants: {

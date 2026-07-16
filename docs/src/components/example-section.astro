@@ -14,7 +14,7 @@ const { componentName, storyName, displayName, source } = Astro.props;
 
 <div>
   <h3>{displayName}</h3>
-  <div class="preview-box mt-2 border border-[var(--chrome)] bg-[var(--paper)] p-4">
+  <div class="preview-box mt-2 border border-[var(--color-border-muted)] bg-[var(--color-bg)] p-4">
     <StoryPreview componentName={componentName} storyName={storyName} client:visible />
   </div>
   {source && (

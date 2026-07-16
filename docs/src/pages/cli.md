@@ -15,14 +15,14 @@ Prompts for:
 
 1. **Component directory** — where component files are placed (auto-detected from tsconfig)
 2. **CSS file** — where design tokens are written (auto-detected from framework)
-3. **Theme** — `porcelain`, `tobacco`, `marigold`, or `eucalyptus`
+3. **Theme** — `solace`, `porcelain`, `tobacco`, `marigold`, or `eucalyptus`
 
 Creates `beaket.ui.json` with your component path and selected theme.
 
-| Option           | Description                                                 |
-| ---------------- | ----------------------------------------------------------- |
-| `-y`             | Skip prompts, use defaults (porcelain theme)                |
-| `--theme <name>` | Set theme: `porcelain`, `tobacco`, `marigold`, `eucalyptus` |
+| Option           | Description                                                           |
+| ---------------- | --------------------------------------------------------------------- |
+| `-y`             | Skip prompts, use defaults (solace theme)                             |
+| `--theme <name>` | Set theme: `solace`, `porcelain`, `tobacco`, `marigold`, `eucalyptus` |
 
 ```bash
 npx @beaket/ui init --theme tobacco

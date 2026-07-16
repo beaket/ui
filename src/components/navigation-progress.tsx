@@ -32,10 +32,13 @@ export function NavigationProgress({ active, className, ...props }: NavigationPr
       role="progressbar"
       aria-label="Loading"
       aria-valuetext="Loading"
-      className={cn("bg-chrome fixed top-0 right-0 left-0 z-50 h-0.5 overflow-hidden", className)}
+      className={cn(
+        "bg-border-muted fixed top-0 right-0 left-0 z-50 h-0.5 overflow-hidden",
+        className,
+      )}
       {...props}
     >
-      <div className="animate-navigation-progress bg-ink h-full w-1/3 will-change-transform" />
+      <div className="animate-navigation-progress bg-bg-emphasis h-full w-1/3 will-change-transform" />
     </div>
   );
 }

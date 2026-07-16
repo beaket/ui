@@ -101,7 +101,7 @@ export const WithPrefixAndSuffix: Story = {
             <button
               type="button"
               onClick={() => setValue("")}
-              className="hover:text-ink cursor-pointer"
+              className="hover:text-fg cursor-pointer"
             >
               <X />
             </button>
@@ -125,7 +125,7 @@ export const PasswordToggle: Story = {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="hover:text-ink cursor-pointer"
+            className="hover:text-fg cursor-pointer"
           >
             {showPassword ? <EyeOff /> : <Eye />}
           </button>
@@ -141,7 +141,7 @@ export const AllStates = () => (
     <Input placeholder="Enter text..." aria-label="Text input" />
     <div>
       <Input defaultValue="Invalid" aria-invalid="true" aria-label="Invalid input example" />
-      <span className="text-signal-red-text mt-1 block text-xs">This field is required</span>
+      <span className="text-danger-fg mt-1 block text-xs">This field is required</span>
     </div>
     <Input disabled placeholder="Disabled" />
     <Input placeholder="Search" suffix={<Search />} aria-label="Search" />
@@ -235,7 +235,7 @@ export const RefTest: Story = {
           type="button"
           data-testid="focus-btn"
           onClick={() => inputRef.current?.focus()}
-          className="border-graphite border px-3 py-1 text-sm"
+          className="border-border-strong border px-3 py-1 text-sm"
         >
           Focus via ref
         </button>
@@ -263,7 +263,7 @@ export const RefWithPrefixTest: Story = {
           type="button"
           data-testid="focus-btn"
           onClick={() => inputRef.current?.focus()}
-          className="border-graphite border px-3 py-1 text-sm"
+          className="border-border-strong border px-3 py-1 text-sm"
         >
           Focus via ref
         </button>

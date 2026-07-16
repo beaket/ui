@@ -1,0 +1,107 @@
+/*
+ * Beaket UI Design System — Semantic tokens
+ * The 64 names components use. Authored once — every theme shares these
+ * definitions verbatim. A theme never touches this layer; it only supplies
+ * the 32-value palette (surface / tone / signal / knockout / shadow) that
+ * these definitions point at. Palettes live in src/themes/<theme>.css.
+ */
+
+@theme {
+  /* Background */
+  --color-bg: var(--surface-0);
+  --color-bg-raised: var(--surface-1);
+  --color-bg-overlay: var(--surface-2);
+  --color-bg-input: var(--tone-0);
+  --color-bg-hover: var(--tone-1);
+  --color-bg-active: var(--tone-2);
+  --color-bg-disabled: var(--tone-1);
+  --color-bg-emphasis: var(--tone-11);
+
+  /* Foreground */
+  --color-fg: var(--tone-11);
+  --color-fg-muted: var(--tone-7);
+  --color-fg-subtle: var(--tone-6);
+  --color-fg-disabled: var(--tone-5);
+  --color-fg-on-emphasis: var(--tone-0);
+  --color-fg-link: var(--signal-info);
+
+  /* Border */
+  --color-border: var(--tone-4);
+  --color-border-muted: var(--tone-3);
+  --color-border-strong: var(--tone-11);
+  --color-border-focus: var(--signal-info);
+
+  /* Role — danger */
+  --color-danger-solid: var(--signal-danger);
+  --color-danger-fg-on-solid: var(--signal-danger-on);
+  --color-danger-solid-hover: color-mix(in oklab, var(--signal-danger) 90%, black);
+  --color-danger-solid-active: color-mix(in oklab, var(--signal-danger) 80%, black);
+  --color-danger-fg: color-mix(in oklab, var(--signal-danger) 60%, var(--tone-11));
+  --color-danger-bg: color-mix(in oklab, var(--signal-danger) 17%, var(--tone-0));
+  --color-danger-border: color-mix(in oklab, var(--signal-danger) 60%, var(--tone-0));
+
+  /* Role — success */
+  --color-success-solid: var(--signal-success);
+  --color-success-fg-on-solid: var(--signal-success-on);
+  --color-success-solid-hover: color-mix(in oklab, var(--signal-success) 90%, black);
+  --color-success-solid-active: color-mix(in oklab, var(--signal-success) 80%, black);
+  --color-success-fg: color-mix(in oklab, var(--signal-success) 60%, var(--tone-11));
+  --color-success-bg: color-mix(in oklab, var(--signal-success) 17%, var(--tone-0));
+  --color-success-border: color-mix(in oklab, var(--signal-success) 60%, var(--tone-0));
+
+  /* Role — warning */
+  --color-warning-solid: var(--signal-warning);
+  --color-warning-fg-on-solid: var(--signal-warning-on);
+  --color-warning-solid-hover: color-mix(in oklab, var(--signal-warning) 90%, black);
+  --color-warning-solid-active: color-mix(in oklab, var(--signal-warning) 80%, black);
+  --color-warning-fg: color-mix(in oklab, var(--signal-warning) 60%, var(--tone-11));
+  --color-warning-bg: color-mix(in oklab, var(--signal-warning) 17%, var(--tone-0));
+  --color-warning-border: color-mix(in oklab, var(--signal-warning) 60%, var(--tone-0));
+
+  /* Role — info */
+  --color-info-solid: var(--signal-info);
+  --color-info-fg-on-solid: var(--signal-info-on);
+  --color-info-solid-hover: color-mix(in oklab, var(--signal-info) 90%, black);
+  --color-info-solid-active: color-mix(in oklab, var(--signal-info) 80%, black);
+  --color-info-fg: color-mix(in oklab, var(--signal-info) 60%, var(--tone-11));
+  --color-info-bg: color-mix(in oklab, var(--signal-info) 17%, var(--tone-0));
+  --color-info-border: color-mix(in oklab, var(--signal-info) 60%, var(--tone-0));
+
+  /* Role — info-alt */
+  --color-info-alt-solid: var(--signal-info-alt);
+  --color-info-alt-fg-on-solid: var(--signal-info-alt-on);
+  --color-info-alt-solid-hover: color-mix(in oklab, var(--signal-info-alt) 90%, black);
+  --color-info-alt-solid-active: color-mix(in oklab, var(--signal-info-alt) 80%, black);
+  --color-info-alt-fg: color-mix(in oklab, var(--signal-info-alt) 60%, var(--tone-11));
+  --color-info-alt-bg: color-mix(in oklab, var(--signal-info-alt) 17%, var(--tone-0));
+  --color-info-alt-border: color-mix(in oklab, var(--signal-info-alt) 60%, var(--tone-0));
+
+  /* Role — accent */
+  --color-accent-solid: var(--signal-accent);
+  --color-accent-fg-on-solid: var(--signal-accent-on);
+  --color-accent-solid-hover: color-mix(in oklab, var(--signal-accent) 90%, black);
+  --color-accent-solid-active: color-mix(in oklab, var(--signal-accent) 80%, black);
+  --color-accent-fg: color-mix(in oklab, var(--signal-accent) 60%, var(--tone-11));
+  --color-accent-bg: color-mix(in oklab, var(--signal-accent) 17%, var(--tone-0));
+  --color-accent-border: color-mix(in oklab, var(--signal-accent) 60%, var(--tone-0));
+
+  /* Shadow — elevation is drawn, not lit */
+  --shadow-offset: var(--shadow-size) var(--shadow-size) 0 0 var(--shadow-color);
+  --shadow-offset-hover: calc(var(--shadow-size) + 1px) calc(var(--shadow-size) + 1px) 0 0
+    var(--shadow-color);
+  --shadow-offset-active: var(--shadow-size-active) var(--shadow-size-active) 0 0
+    var(--shadow-color);
+  --shadow-offset-overlay: var(--shadow-size) var(--shadow-size) 0 0 var(--shadow-color-overlay);
+
+  /* Animations */
+  --animate-navigation-progress: navigation-progress 1s ease-in-out infinite;
+}
+
+@keyframes navigation-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}

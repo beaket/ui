@@ -9,7 +9,7 @@ export function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="skeleton"
       role="status"
       aria-label="Loading"
-      className={cn("bg-frost animate-pulse", className)}
+      className={cn("bg-bg-active animate-pulse", className)}
       {...props}
     />
   );

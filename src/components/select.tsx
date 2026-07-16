@@ -31,10 +31,10 @@ function SelectTrigger({ className, size = "default", children, ...props }: Sele
       data-size={size}
       className={cn(
         "flex w-full items-center justify-between gap-2",
-        "border-graphite bg-paper text-ink border px-3 py-2 text-sm",
-        "focus-visible:outline-signal-blue focus-visible:outline-2 focus-visible:outline-offset-2",
-        "disabled:bg-frost disabled:text-steel disabled:border-chrome disabled:cursor-not-allowed disabled:border-dashed",
-        "aria-[invalid=true]:border-signal-red aria-[invalid=true]:focus-visible:outline-signal-red",
+        "border-border-strong bg-bg-input text-fg border px-3 py-2 text-sm",
+        "focus-visible:outline-border-focus focus-visible:outline-2 focus-visible:outline-offset-2",
+        "disabled:bg-bg-disabled disabled:text-fg-disabled disabled:border-border-muted disabled:cursor-not-allowed disabled:border-dashed",
+        "aria-[invalid=true]:border-danger-solid aria-[invalid=true]:focus-visible:outline-danger-solid",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0",
         className,
       )}
@@ -59,7 +59,7 @@ function SelectContent({
       <SelectPrimitive.Content
         data-slot="select-content"
         className={cn(
-          "shadow-offset border-ink bg-surface-2 relative z-50 max-h-96 min-w-[8rem] overflow-hidden border",
+          "shadow-offset border-border-strong bg-bg-overlay relative z-50 max-h-96 min-w-[8rem] overflow-hidden border",
           "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
           className,
         )}
@@ -81,7 +81,7 @@ function SelectLabel({ className, ...props }: React.ComponentProps<typeof Select
   return (
     <SelectPrimitive.Label
       data-slot="select-label"
-      className={cn("text-steel px-2 py-1.5 text-xs font-semibold", className)}
+      className={cn("text-fg-muted px-2 py-1.5 text-xs font-semibold", className)}
       {...props}
     />
   );
@@ -97,10 +97,10 @@ function SelectItem({
       data-slot="select-item"
       className={cn(
         "relative flex w-full cursor-default items-center gap-2 select-none",
-        "text-ink py-1.5 pr-8 pl-2 text-sm outline-none",
-        "focus:bg-ink focus:text-paper",
-        "data-[highlighted]:bg-ink data-[highlighted]:text-paper",
-        "data-[disabled]:text-steel data-[disabled]:pointer-events-none",
+        "text-fg py-1.5 pr-8 pl-2 text-sm outline-none",
+        "focus:bg-bg-emphasis focus:text-fg-on-emphasis",
+        "data-[highlighted]:bg-bg-emphasis data-[highlighted]:text-fg-on-emphasis",
+        "data-[disabled]:text-fg-disabled data-[disabled]:pointer-events-none",
         className,
       )}
       {...props}
@@ -122,7 +122,7 @@ function SelectSeparator({
   return (
     <SelectPrimitive.Separator
       data-slot="select-separator"
-      className={cn("bg-chrome pointer-events-none -mx-1 my-1 h-px", className)}
+      className={cn("bg-border-muted pointer-events-none -mx-1 my-1 h-px", className)}
       {...props}
     />
   );

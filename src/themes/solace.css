@@ -1,0 +1,52 @@
+/*
+ * Beaket UI Design System — Solace palette
+ * Warm paper, cool ink — equal-weight signals, one vivid blue for action.
+ * "Every mark is an ink of equal weight, hue carries meaning but never
+ * emphasis, and the one vivid voice belongs solely to what you can act on."
+ * Light-only by declaration. 32 values; semantic.css turns them into the
+ * 64 names components use.
+ */
+
+:root {
+  /* Surface — the page and what sits on it */
+  --surface-0: #fcfcfa;
+  --surface-1: #fdfdfb;
+  --surface-2: #fefefc;
+  --surface-brand: #05070c;
+
+  /* Tone — the neutral ramp: 0 is the paper end, 11 the deepest ink */
+  --tone-0: #fcfcfa;
+  --tone-1: #f3f4f2;
+  --tone-2: #e9e9e8;
+  --tone-3: #c9cac9;
+  --tone-4: #909294;
+  --tone-5: #838588;
+  --tone-6: #727578;
+  --tone-7: #54575b;
+  --tone-8: #414449;
+  --tone-9: #323539;
+  --tone-10: #202228;
+  --tone-11: #05070c;
+
+  /* Signal — one ink per meaning; only the accent is vivid */
+  --signal-danger: #b45845;
+  --signal-warning: #ce8042;
+  --signal-success: #00896c;
+  --signal-info: #4c6bb6;
+  --signal-info-alt: #008597;
+  --signal-accent: #2b5bff;
+
+  /* Knockout — which end of the ramp carries type on each solid */
+  --signal-danger-on: var(--tone-0);
+  --signal-success-on: var(--tone-11);
+  --signal-warning-on: var(--tone-11);
+  --signal-info-on: var(--tone-0);
+  --signal-info-alt-on: var(--tone-11);
+  --signal-accent-on: var(--tone-0);
+
+  /* Shadow — elevation is drawn, not lit */
+  --shadow-size: 2px;
+  --shadow-size-active: 1px;
+  --shadow-color: #c0c4ca;
+  --shadow-color-overlay: #a0a3a7;
+}

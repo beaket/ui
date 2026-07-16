@@ -28,7 +28,7 @@ export const Default: Story = {
         <Card.Description>Card description text goes here.</Card.Description>
       </Card.Header>
       <Card.Content>
-        <p className="text-steel text-sm">
+        <p className="text-fg-muted text-sm">
           This is the card content. You can put any content here.
         </p>
       </Card.Content>
@@ -52,7 +52,7 @@ export const WithAction: Story = {
         </Card.Action>
       </Card.Header>
       <Card.Content>
-        <p className="text-steel text-sm">
+        <p className="text-fg-muted text-sm">
           Configure project name, description, and visibility settings.
         </p>
       </Card.Content>
@@ -78,7 +78,7 @@ export const AllStates = () => (
         <Card.Description>A simple card with header and content.</Card.Description>
       </Card.Header>
       <Card.Content>
-        <p className="text-steel text-sm">Card content goes here.</p>
+        <p className="text-fg-muted text-sm">Card content goes here.</p>
       </Card.Content>
     </Card>
 
@@ -88,7 +88,7 @@ export const AllStates = () => (
         <Card.Description>Card with action buttons in footer.</Card.Description>
       </Card.Header>
       <Card.Content>
-        <p className="text-steel text-sm">Some content here.</p>
+        <p className="text-fg-muted text-sm">Some content here.</p>
       </Card.Content>
       <Card.Footer>
         <Button variant="outline">Cancel</Button>
@@ -107,17 +107,17 @@ export const AllStates = () => (
         </Card.Action>
       </Card.Header>
       <Card.Content>
-        <p className="text-steel text-sm">Content with header action.</p>
+        <p className="text-fg-muted text-sm">Content with header action.</p>
       </Card.Content>
     </Card>
 
     <Card>
-      <Card.Header className="border-chrome border-b">
+      <Card.Header className="border-border border-b">
         <Card.Title>With Bordered Header</Card.Title>
         <Card.Description>The header has a bottom border.</Card.Description>
       </Card.Header>
       <Card.Content>
-        <p className="text-steel text-sm">Content below bordered header.</p>
+        <p className="text-fg-muted text-sm">Content below bordered header.</p>
       </Card.Content>
     </Card>
   </div>

@@ -73,7 +73,7 @@ export const DisabledWithValue: Story = {
 export const AllStates = () => (
   <div className="flex flex-col gap-6">
     <div className="flex flex-col gap-2">
-      <span className="text-steel text-xs tracking-wide uppercase">Horizontal</span>
+      <span className="text-fg-muted text-xs tracking-wide uppercase">Horizontal</span>
       <RadioGroup defaultValue="option1" aria-label="Horizontal options">
         <div className="flex items-center gap-1">
           <RadioItem value="option1" id="h-opt1" />
@@ -96,7 +96,7 @@ export const AllStates = () => (
       </RadioGroup>
     </div>
     <div className="flex flex-col gap-2">
-      <span className="text-steel text-xs tracking-wide uppercase">Vertical</span>
+      <span className="text-fg-muted text-xs tracking-wide uppercase">Vertical</span>
       <RadioGroup
         defaultValue="option2"
         orientation="vertical"
@@ -124,17 +124,17 @@ export const AllStates = () => (
       </RadioGroup>
     </div>
     <div className="flex flex-col gap-2">
-      <span className="text-steel text-xs tracking-wide uppercase">Disabled</span>
+      <span className="text-fg-muted text-xs tracking-wide uppercase">Disabled</span>
       <RadioGroup disabled defaultValue="option1" aria-label="Disabled options">
         <div className="flex items-center gap-1">
           <RadioItem value="option1" id="d-opt1" />
-          <label htmlFor="d-opt1" className="text-steel text-sm">
+          <label htmlFor="d-opt1" className="text-fg-muted text-sm">
             Option 1
           </label>
         </div>
         <div className="flex items-center gap-1">
           <RadioItem value="option2" id="d-opt2" />
-          <label htmlFor="d-opt2" className="text-steel text-sm">
+          <label htmlFor="d-opt2" className="text-fg-muted text-sm">
             Option 2
           </label>
         </div>

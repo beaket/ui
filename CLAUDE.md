@@ -17,20 +17,26 @@ The editor (`@beaket/paper`) is **exempt from the component checklist** — no r
 
 - **Self-contained**: Each component includes its own `cn` utility. No shared imports.
 - **Dependencies in registry**: List npm packages in `registry/registry.json`.
-- **CSS tokens**: `src/themes/*.css`. Single source of truth — Storybook imports `porcelain.css` via `src/styles.css`; CLI injects the chosen theme at `init`.
+- **CSS tokens, two layers**: `src/themes/semantic.css` holds the 64 semantic names components use (authored once, shared by every theme). Each theme (`solace`, `porcelain`, `tobacco`, `marigold`, `eucalyptus`) authors only its 32-value palette (`--surface-*`, `--tone-0…11`, `--signal-*`, `--signal-*-on`, `--shadow-*`) in `src/themes/<theme>.css`. Storybook imports `semantic.css` + `solace.css` via `src/styles.css`; CLI injects semantic + chosen palette at `init`.
 
 ## Design Rules
 
-Brutalist design system. No gradients, no border-radius (except Radio), no blur shadows, no opacity for styling. Use design tokens from `styles.css`.
+Brutalist design system. No gradients, no border-radius (except Radio), no blur shadows, no opacity for styling. Components use **only the 64 semantic tokens** from `src/themes/semantic.css` — never theme palette values (`--tone-*`, `--surface-*`, `--signal-*`) and never raw colors.
 
-| Do                                                                                         | Don't                                  |
-| ------------------------------------------------------------------------------------------ | -------------------------------------- |
-| `bg-paper`, `text-ink`, `border-chrome`                                                    | `bg-white`, `opacity-50`, `rounded-lg` |
-| `shadow-offset` / `shadow-offset-dark`                                                     | `shadow-md`, `shadow-lg` (blur)        |
-| `focus-visible:outline-2 focus-visible:outline-signal-blue focus-visible:outline-offset-2` | Inconsistent focus patterns            |
-| `disabled:border-dashed disabled:border-chrome disabled:bg-frost disabled:text-steel`      | Inconsistent disabled patterns         |
-| `before:absolute before:inset-[-14px] before:content-['']` on small controls               | Touch targets below 44px               |
-| `bg-branch` for active nav/tabs/pagination/badges, `bg-ink` for text/tooltips/checked      | Using `bg-ink` for brand surfaces      |
+| Do                                                                                                       | Don't                                         |
+| -------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| `bg-bg` / `bg-bg-raised` (cards) / `bg-bg-overlay` (dialogs, menus) / `bg-bg-input`                      | `bg-white`, `opacity-50`, `rounded-lg`        |
+| `text-fg`, `text-fg-muted` (secondary), `text-fg-subtle` (placeholders), `text-fg-link`                  | Raw hex or Tailwind default palette           |
+| `border-border`, `border-border-muted` (dividers, disabled), `border-border-strong` (inputs)             | Palette values like `--tone-4`                |
+| `shadow-offset` / `shadow-offset-overlay`                                                                | `shadow-md`, `shadow-lg` (blur)               |
+| `focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2`              | Inconsistent focus patterns                   |
+| `disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled`  | Inconsistent disabled patterns                |
+| `before:absolute before:inset-[-14px] before:content-['']` on small controls                             | Touch targets below 44px                      |
+| `bg-bg-emphasis` + `text-fg-on-emphasis` for primary/checked/tooltips/active nav                         | Signal solids without their knockout          |
+| Role solids paired with their knockout: `bg-danger-solid text-danger-fg-on-solid` (+ `-hover`/`-active`) | Hand-picked text colors on solids             |
+| Role tints: `bg-{role}-bg` + `border-{role}-border` + `text-{role}-fg`                                   | Mixing roles (e.g. warning text on info tint) |
+
+Roles: `danger`, `success`, `warning`, `info`, `info-alt`, `accent` — 7 slots each (`-solid`, `-fg-on-solid`, `-solid-hover`, `-solid-active`, `-fg`, `-bg`, `-border`).
 
 Shadow states: default, hover (grows), active (shrinks), disabled `none`. Sizes vary by theme.
 

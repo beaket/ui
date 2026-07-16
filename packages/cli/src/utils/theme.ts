@@ -119,7 +119,7 @@ export async function syncTheme(
   themeCssMap: Record<string, string>,
   options: SyncThemeOptions = {},
 ): Promise<boolean> {
-  const themeName = config.theme || "porcelain";
+  const themeName = config.theme || "solace";
   const themeCss = themeCssMap[themeName];
 
   if (!themeCss) {

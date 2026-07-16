@@ -28,10 +28,10 @@ Each `.tsx` file is copied verbatim into the consumer's project by the CLI — t
 ### Load-bearing invariants — never break
 
 1. **No shared imports.** Each component inlines its own `cn` (clsx + tailwind-merge). No cross-component or shared-util imports. The file must compile standalone after it is pasted.
-2. **Brutalist tokens only.** Use design tokens from the active theme CSS: `bg-paper`, `text-ink`, `border-chrome`, `shadow-offset`, `bg-branch`, `bg-frost`, etc. Never use `bg-white`, `rounded-lg` (except Radio), `shadow-md`/`shadow-lg` (blur), `opacity-*`, or raw color values.
+2. **Semantic tokens only.** Components use only the 64 shared semantic names from `src/themes/semantic.css`: `bg-bg`, `text-fg`, `border-border`, `shadow-offset`, `bg-bg-emphasis`, `bg-danger-solid`, etc. Never use `bg-white`, `rounded-lg` (except Radio), `shadow-md`/`shadow-lg` (blur), `opacity-*`, raw color values, or theme palette values (`--tone-*`, `--surface-*`, `--signal-*`).
 3. **`data-slot` on every root element.** Required for stable consumer CSS targeting.
 4. **`cn` + `className` spread on every exported component.** Enables override via prop.
-5. **Consistent disabled / focus patterns.** Disabled: `disabled:border-dashed disabled:border-chrome disabled:bg-frost disabled:text-steel`. Focus: `focus-visible:outline-2 focus-visible:outline-signal-blue focus-visible:outline-offset-2`.
+5. **Consistent disabled / focus patterns.** Disabled: `disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled`. Focus: `focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2`.
 6. **Touch targets ≥ 44 px on small controls.** Via `before:absolute before:inset-[-14px] before:content-['']`.
 
 ### Component template

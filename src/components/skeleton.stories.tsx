@@ -20,14 +20,14 @@ export const Default: Story = {
 export const AllStates = () => (
   <div className="flex flex-col gap-4">
     <div className="space-y-2">
-      <p className="text-steel text-xs font-medium">Text lines</p>
+      <p className="text-fg-muted text-xs font-medium">Text lines</p>
       <Skeleton className="h-4 w-full" />
       <Skeleton className="h-4 w-5/6" />
       <Skeleton className="h-4 w-4/5" />
     </div>
 
     <div className="space-y-2">
-      <p className="text-steel text-xs font-medium">Avatar + text</p>
+      <p className="text-fg-muted text-xs font-medium">Avatar + text</p>
       <div className="flex items-center gap-3">
         <Skeleton className="size-10 shrink-0" />
         <div className="flex-1 space-y-2">
@@ -38,8 +38,8 @@ export const AllStates = () => (
     </div>
 
     <div className="space-y-2">
-      <p className="text-steel text-xs font-medium">Card</p>
-      <div className="border-chrome space-y-3 border p-4">
+      <p className="text-fg-muted text-xs font-medium">Card</p>
+      <div className="border-border space-y-3 border p-4">
         <Skeleton className="h-6 w-32" />
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-3/4" />

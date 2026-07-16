@@ -21,7 +21,7 @@ export function Avatar({ className, shadow, ...props }: Props) {
     <AvatarPrimitive.Root
       data-slot="avatar"
       className={cn(
-        "border-chrome relative flex size-10 shrink-0 overflow-hidden border",
+        "border-border relative flex size-10 shrink-0 overflow-hidden border",
         shadow && "shadow-offset",
         className,
       )}
@@ -72,7 +72,7 @@ function AvatarFallback({
   return (
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
-      className={cn("bg-frost text-ink flex size-full items-center justify-center", className)}
+      className={cn("bg-bg-hover text-fg flex size-full items-center justify-center", className)}
       {...props}
     />
   );

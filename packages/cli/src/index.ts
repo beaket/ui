@@ -17,7 +17,7 @@ program
   .command("init")
   .description("Initialize Beaket UI in your project")
   .option("-y, --yes", "Use defaults without prompting")
-  .option("--theme <preset>", "Theme: porcelain, tobacco, marigold, or eucalyptus")
+  .option("--theme <preset>", "Theme: solace, porcelain, tobacco, marigold, or eucalyptus")
   .action(init);
 
 program
@@ -30,7 +30,7 @@ program
 program
   .command("theme")
   .description("Sync theme CSS tokens to your project")
-  .option("--theme <preset>", "Switch theme: porcelain, tobacco, marigold, or eucalyptus")
+  .option("--theme <preset>", "Switch theme: solace, porcelain, tobacco, marigold, or eucalyptus")
   .action(theme);
 
 program.parse();

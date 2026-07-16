@@ -29,14 +29,14 @@ export function RadioItem({ className, ...props }: RadioItemProps) {
     <RadioGroupPrimitive.Item
       data-slot="radio-item"
       className={cn(
-        "group peer border-graphite relative size-4 shrink-0 rounded-full border before:absolute before:inset-[-14px] before:content-['']",
-        "bg-paper",
-        "hover:border-steel",
-        "focus-visible:outline-signal-blue focus-visible:outline-2 focus-visible:outline-offset-2",
-        "data-[state=checked]:border-ink",
-        "disabled:border-chrome disabled:bg-frost disabled:text-steel disabled:hover:border-chrome disabled:cursor-not-allowed disabled:border-dashed",
-        "disabled:data-[state=checked]:border-chrome",
-        "aria-[invalid=true]:border-signal-red aria-[invalid=true]:focus-visible:outline-signal-red",
+        "group peer border-border-strong relative size-4 shrink-0 rounded-full border before:absolute before:inset-[-14px] before:content-['']",
+        "bg-bg-input",
+        "hover:border-border",
+        "focus-visible:outline-border-focus focus-visible:outline-2 focus-visible:outline-offset-2",
+        "data-[state=checked]:border-border-strong",
+        "disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:hover:border-border-muted disabled:cursor-not-allowed disabled:border-dashed",
+        "disabled:data-[state=checked]:border-border-muted",
+        "aria-[invalid=true]:border-danger-solid aria-[invalid=true]:focus-visible:outline-danger-solid",
         className,
       )}
       {...props}
@@ -45,7 +45,7 @@ export function RadioItem({ className, ...props }: RadioItemProps) {
         data-slot="radio-indicator"
         className="flex items-center justify-center"
       >
-        <span className="bg-ink group-disabled:bg-steel size-2 rounded-full" />
+        <span className="bg-bg-emphasis group-disabled:bg-fg-disabled size-2 rounded-full" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   );
