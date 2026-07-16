@@ -105,7 +105,7 @@ export function StoryPreview({
   }, [isVisible, componentName, storyName]);
 
   if (error) {
-    return <span className="text-[var(--steel)]">{error}</span>;
+    return <span className="text-[var(--color-fg-muted)]">{error}</span>;
   }
 
   if (!Story) {
@@ -114,7 +114,7 @@ export function StoryPreview({
 
   const { Component, args, isComposition } = Story;
   if (!Component) {
-    return <span className="text-[var(--steel)]">—</span>;
+    return <span className="text-[var(--color-fg-muted)]">—</span>;
   }
 
   return isComposition ? <Component /> : <Component {...args} />;

@@ -146,7 +146,7 @@ export function DataTable<TData, TValue>({
       {searchable && (
         <div className="mb-4 flex items-center gap-2">
           <div className="relative max-w-sm flex-1">
-            <Search className="text-steel absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+            <Search className="text-fg-muted absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               type="search"
               placeholder={searchPlaceholder}
@@ -159,7 +159,7 @@ export function DataTable<TData, TValue>({
         </div>
       )}
 
-      <div className="border-chrome bg-surface-1 overflow-x-auto border">
+      <div className="border-border bg-bg-raised overflow-x-auto border">
         <Table className="min-w-full">
           <Table.Header>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -218,7 +218,7 @@ export function DataTable<TData, TValue>({
                               ) : sortDirection === "desc" ? (
                                 <ArrowDown className="h-4 w-4" />
                               ) : (
-                                <ArrowUpDown className="text-steel h-4 w-4" />
+                                <ArrowUpDown className="text-fg-muted h-4 w-4" />
                               )}
                             </div>
                           )}
@@ -253,7 +253,7 @@ export function DataTable<TData, TValue>({
                   onMouseLeave={() => onRowMouseLeave?.(row.original)}
                   className={cn(
                     onRowClick &&
-                      "focus-visible:outline-signal-blue cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-[-2px]",
+                      "focus-visible:outline-border-focus cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-[-2px]",
                     compact && "h-10",
                     getRowClassName?.(row.original),
                   )}
@@ -287,7 +287,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length + (selectable ? 1 : 0)}
                   className="h-64 text-center"
                 >
-                  {emptyState || <div className="text-steel">{emptyMessage}</div>}
+                  {emptyState || <div className="text-fg-muted">{emptyMessage}</div>}
                 </Table.Cell>
               </Table.Row>
             )}
@@ -297,7 +297,7 @@ export function DataTable<TData, TValue>({
 
       {paginated && (
         <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
-          <div className="text-steel text-sm">
+          <div className="text-fg-muted text-sm">
             Showing{" "}
             {table.getFilteredRowModel().rows.length === 0
               ? 0

@@ -13,7 +13,7 @@ function CardRoot({ className, shadow, ...props }: CardRootProps) {
     <div
       data-slot="card"
       className={cn(
-        "border-chrome bg-surface-1 text-ink flex flex-col gap-0 border",
+        "border-border bg-bg-raised text-fg flex flex-col gap-0 border",
         shadow && "shadow-offset",
         className,
       )}
@@ -42,7 +42,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"h4">) {
 }
 
 function CardDescription({ className, ...props }: React.ComponentProps<"p">) {
-  return <p data-slot="card-description" className={cn("text-steel", className)} {...props} />;
+  return <p data-slot="card-description" className={cn("text-fg-muted", className)} {...props} />;
 }
 
 function CardAction({ className, ...props }: React.ComponentProps<"div">) {

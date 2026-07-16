@@ -82,12 +82,12 @@ export function Textarea({
       ref={mergedRef}
       data-slot="textarea"
       className={cn(
-        "border-graphite bg-paper text-ink w-full border px-3 py-2 text-sm",
-        "placeholder:text-steel",
-        "focus-visible:outline-signal-blue focus-visible:outline-2 focus-visible:outline-offset-2",
-        "disabled:border-chrome disabled:bg-frost disabled:text-steel disabled:cursor-not-allowed disabled:border-dashed",
-        "read-only:bg-frost read-only:cursor-default",
-        "aria-[invalid=true]:border-signal-red aria-[invalid=true]:focus-visible:outline-signal-red",
+        "border-border-strong bg-bg-input text-fg w-full border px-3 py-2 text-sm",
+        "placeholder:text-fg-subtle",
+        "focus-visible:outline-border-focus focus-visible:outline-2 focus-visible:outline-offset-2",
+        "disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:cursor-not-allowed disabled:border-dashed",
+        "read-only:bg-bg-disabled read-only:cursor-default",
+        "aria-[invalid=true]:border-danger-solid aria-[invalid=true]:focus-visible:outline-danger-solid",
         autoResize && !resizable && "resize-none overflow-hidden",
         autoResize && resizable && "resize-y overflow-hidden",
         !autoResize && resizable && "resize-y",

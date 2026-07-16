@@ -1,109 +1,98 @@
 /*
- * Beaket UI Design System - Porcelain Theme
- * Industrial precision. Etched on control panels in black synthetic lacquer.
- * Pure white, cold blue-black ink, ghostly shadows, teal accent.
+ * Beaket UI Design System — Porcelain palette
+ * Near-white paper, cool graphite ink — balanced signals; the neutral default.
+ * 32 values; semantic.css turns them into the 64 names components use.
  */
 
-@theme {
-  /* Neutral palette */
-  --color-graphite: #1e2229;
-  --color-ink: #0a0d14;
-  --color-branch: #05070c;
-  --color-iron: #15191f;
-  --color-slate: #3e4145;
-  --color-zinc: #53565b;
-  --color-steel: #686b6f;
-  --color-muted: #7a7d81;
-  --color-aluminum: #a0a3a7;
-  --color-chrome: #c0c4ca;
-  --color-silver: #d5d8dc;
-  --color-platinum: #e8eaec;
-  --color-frost: #f3f4f6;
-  --color-paper: #ffffff;
-  --color-inverse: var(--color-paper);
+:root {
+  /* Surface — the page and what sits on it */
+  --surface-0: #eff0f1;
+  --surface-1: #f8f8f9;
+  --surface-2: #ffffff;
+  --surface-brand: #05070c;
 
-  /* Signal colors — cold, precise, teal accent */
-  --color-signal-blue: #0c6bae;
-  --color-signal-red: #c41028;
-  --color-signal-red-hover: #a80d22;
-  --color-signal-red-active: #8c0b1c;
-  --color-signal-red-text: #a80d22;
-  --color-signal-green: #0a7653;
-  --color-signal-green-hover: #086248;
-  --color-signal-green-active: #064e3a;
-  --color-signal-amber: #e09800;
-  --color-signal-amber-hover: #c48400;
-  --color-signal-amber-active: #a87000;
-  --color-signal-amber-text: #b87c00;
-  --color-signal-purple: #6122aa;
-  --color-signal-cyan: #007e8c;
+  /* Tone — the neutral ramp: 0 is the paper end, 11 the deepest ink */
+  --tone-0: #eff0f1;
+  --tone-1: #e6e7e9;
+  --tone-2: #dddee0;
+  --tone-3: #bec0c2;
+  --tone-4: #87898c;
+  --tone-5: #7b7e81;
+  --tone-6: #6a6d71;
+  --tone-7: #4d5154;
+  --tone-8: #3a3d42;
+  --tone-9: #2a2d32;
+  --tone-10: #15181d;
+  --tone-11: #05080c;
 
-  /* Surface layers (visual depth) */
-  --color-surface-0: #eff0f1;
-  --color-surface-1: #f8f8f9;
-  --color-surface-2: #ffffff;
+  /* Signal — one ink per meaning; only the accent is vivid */
+  --signal-danger: #d02c2d;
+  --signal-warning: #b28200;
+  --signal-success: #0d7b64;
+  --signal-info: #1564c2;
+  --signal-info-alt: #058491;
+  --signal-accent: #6a1b9a;
 
-  /* Shadows — ghostly, precise */
-  --shadow-offset: 1px 1px 0px 0px var(--color-chrome);
-  --shadow-offset-dark: 1px 1px 0px 0px var(--color-aluminum);
-  --shadow-offset-hover: 2px 2px 0px 0px var(--color-chrome);
-  --shadow-offset-active: 0px 0px 0px 0px var(--color-chrome);
+  /* Knockout — which end of the ramp carries type on each solid */
+  --signal-danger-on: var(--tone-0);
+  --signal-success-on: var(--tone-0);
+  --signal-warning-on: var(--tone-11);
+  --signal-info-on: var(--tone-0);
+  --signal-info-alt-on: var(--tone-11);
+  --signal-accent-on: var(--tone-0);
 
-  /* Animations */
-  --animate-navigation-progress: navigation-progress 1s ease-in-out infinite;
+  /* Shadow — elevation is drawn, not lit */
+  --shadow-size: 1px;
+  --shadow-size-active: 0px;
+  --shadow-color: #c0c4ca;
+  --shadow-color-overlay: #a0a3a7;
 }
 
 /*
- * Dark mode — X-ray lightbox.
- * Cold blue-steel instruments in a dark examination room.
- * Neutrals tinted cold blue-black. Ghostly shadows become spectral.
+ * Porcelain Dark — porcelain inverted: cool light ink on a near-black page.
  */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Neutral palette — cold blue-tinted for clinical dark precision */
-    --color-graphite: #c4cad4;
-    --color-ink: #e6eaee;
-    --color-branch: #c8d0da;
-    --color-iron: #aab2bd;
-    --color-slate: #9ca4b2;
-    --color-zinc: #848c9e;
-    --color-steel: #6c7486;
-    --color-muted: #586070;
-    --color-aluminum: #3e4454;
-    --color-chrome: #2a303e;
-    --color-silver: #1e242e;
-    --color-platinum: #161a22;
-    --color-frost: #0e1016;
-    --color-paper: #0d1117;
+    /* Surface */
+    --surface-0: #0c0e15;
+    --surface-1: #12141d;
+    --surface-2: #1a1c27;
+    --surface-brand: #c8d0da;
 
-    /* Signal colors — cold, brightened for dark canvas */
-    --color-signal-blue: #1a8ed8;
-    --color-signal-red: #e03040;
-    --color-signal-red-hover: #c82a38;
-    --color-signal-red-active: #b02430;
-    --color-signal-red-text: #f04852;
-    --color-signal-green: #10a66e;
-    --color-signal-green-hover: #0e8e5e;
-    --color-signal-green-active: #0c764e;
-    --color-signal-amber: #e89a28;
-    --color-signal-amber-hover: #cc8620;
-    --color-signal-amber-active: #b07218;
-    --color-signal-amber-text: #f0a020;
-    --color-signal-purple: #7e3ec4;
-    --color-signal-cyan: #1aa0b8;
+    /* Tone */
+    --tone-0: #0c0e15;
+    --tone-1: #15171f;
+    --tone-2: #1d1f27;
+    --tone-3: #34363e;
+    --tone-4: #5c5f67;
+    --tone-5: #676b72;
+    --tone-6: #787c82;
+    --tone-7: #999ca3;
+    --tone-8: #b3b7bc;
+    --tone-9: #c9cdd2;
+    --tone-10: #e1e5ea;
+    --tone-11: #e1e5ea;
 
-    /* Surface layers — elevation = lighter */
-    --color-surface-0: #0c0e15;
-    --color-surface-1: #12141d;
-    --color-surface-2: #1a1c27;
-  }
-}
+    /* Signal */
+    --signal-danger: #e53644;
+    --signal-warning: #d4a010;
+    --signal-success: #10a66e;
+    --signal-info: #1a8ed8;
+    --signal-info-alt: #1aa0b8;
+    --signal-accent: #7e3ec4;
 
-@keyframes navigation-progress {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(400%);
+    /* Knockout */
+    --signal-danger-on: var(--tone-0);
+    --signal-success-on: var(--tone-0);
+    --signal-warning-on: var(--tone-0);
+    --signal-info-on: var(--tone-0);
+    --signal-info-alt-on: var(--tone-0);
+    --signal-accent-on: var(--tone-11);
+
+    /* Shadow */
+    --shadow-size: 1px;
+    --shadow-size-active: 0px;
+    --shadow-color: #2a303e;
+    --shadow-color-overlay: #3e4454;
   }
 }

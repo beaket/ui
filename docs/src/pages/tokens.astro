@@ -3,88 +3,113 @@ import Layout from '../layouts/doc.astro';
 import { TokenTable } from '../components/token-table';
 import themeTokensData from '../data/theme-tokens.json';
 
-const porcelain: Record<string, string> = themeTokensData.porcelain;
+const solace: Record<string, string> = themeTokensData.solace;
 
-/** Map display name (e.g. "--graphite") to CSS value from generated JSON */
+/** Look up a token's resolved value in the Solace palette (docs default). */
 function val(name: string): string {
-  // Color tokens: --graphite → --color-graphite
-  const colorKey = name.replace(/^--/, "--color-");
-  if (porcelain[colorKey]) return porcelain[colorKey];
-  // Shadow tokens: --shadow-offset → --shadow-offset (same key)
-  if (porcelain[name]) return porcelain[name];
-  return "";
+  return solace[name] ?? "";
 }
 
-const neutrals = [
-  { name: "--graphite", usage: "Deepest tone" },
-  { name: "--ink", usage: "Primary text" },
-  { name: "--branch", usage: "Brand surfaces" },
-  { name: "--iron", usage: "Dark borders" },
-  { name: "--slate", usage: "Dark secondary" },
-  { name: "--zinc", usage: "Dark muted" },
-  { name: "--steel", usage: "Secondary text" },
-  { name: "--muted", usage: "Muted text" },
-  { name: "--aluminum", usage: "Decorative, shadows" },
-  { name: "--chrome", usage: "Primary border" },
-  { name: "--silver", usage: "Light border" },
-  { name: "--platinum", usage: "Light background" },
-  { name: "--frost", usage: "Hover, inputs" },
-  { name: "--paper", usage: "Primary background" },
+const backgrounds = [
+  { name: "--color-bg", usage: "Page background" },
+  { name: "--color-bg-raised", usage: "Cards, panels" },
+  { name: "--color-bg-overlay", usage: "Dialogs, menus, popovers" },
+  { name: "--color-bg-input", usage: "Form controls" },
+  { name: "--color-bg-hover", usage: "Hover surface" },
+  { name: "--color-bg-active", usage: "Active / selected surface" },
+  { name: "--color-bg-disabled", usage: "Disabled surface" },
+  { name: "--color-bg-emphasis", usage: "Primary buttons, checked, tooltips, active nav" },
 ].map(t => ({ ...t, value: val(t.name) }));
 
-const signals = [
-  { name: "--signal-blue", usage: "Links, info" },
-  { name: "--signal-red", usage: "Error, destructive" },
-  { name: "--signal-green", usage: "Success" },
-  { name: "--signal-amber", usage: "Warning" },
-  { name: "--signal-purple", usage: "Accent" },
-  { name: "--signal-cyan", usage: "Info alternate" },
+const foregrounds = [
+  { name: "--color-fg", usage: "Primary text" },
+  { name: "--color-fg-muted", usage: "Secondary text, descriptions" },
+  { name: "--color-fg-subtle", usage: "Placeholders, decorative text" },
+  { name: "--color-fg-disabled", usage: "Disabled text" },
+  { name: "--color-fg-on-emphasis", usage: "Text on bg-emphasis" },
+  { name: "--color-fg-link", usage: "Links" },
 ].map(t => ({ ...t, value: val(t.name) }));
 
-const surfaces = [
-  { name: "--surface-0", usage: "Page background" },
-  { name: "--surface-1", usage: "Cards, panels" },
-  { name: "--surface-2", usage: "Nested, elevated" },
+const borders = [
+  { name: "--color-border", usage: "Default borders" },
+  { name: "--color-border-muted", usage: "Dividers, disabled borders" },
+  { name: "--color-border-strong", usage: "Inputs, overlays, emphasis" },
+  { name: "--color-border-focus", usage: "Focus outline" },
 ].map(t => ({ ...t, value: val(t.name) }));
+
+const roleSlots = [
+  { name: "--color-{role}-solid", key: "--color-danger-solid", usage: "Solid fill (buttons, badges)" },
+  { name: "--color-{role}-fg-on-solid", key: "--color-danger-fg-on-solid", usage: "Type on the solid — the knockout" },
+  { name: "--color-{role}-solid-hover", key: "--color-danger-solid-hover", usage: "Solid, hovered" },
+  { name: "--color-{role}-solid-active", key: "--color-danger-solid-active", usage: "Solid, pressed" },
+  { name: "--color-{role}-fg", key: "--color-danger-fg", usage: "Role-colored text on the page" },
+  { name: "--color-{role}-bg", key: "--color-danger-bg", usage: "Tinted background" },
+  { name: "--color-{role}-border", key: "--color-danger-border", usage: "Border on tinted background" },
+].map(t => ({ name: t.name, usage: t.usage, value: val(t.key) }));
 
 const shadows = [
   { name: "--shadow-offset", usage: "Default interactive" },
   { name: "--shadow-offset-hover", usage: "Hover" },
   { name: "--shadow-offset-active", usage: "Active/pressed" },
-  { name: "--shadow-offset-dark", usage: "Overlays" },
+  { name: "--shadow-offset-overlay", usage: "Overlays" },
 ].map(t => ({ ...t, value: val(t.name) }));
+
+const palette = [
+  { name: "--surface-0 … --surface-2", key: "--surface-0", usage: "The page and what sits on it" },
+  { name: "--surface-brand", key: "--surface-brand", usage: "Brand surface" },
+  { name: "--tone-0 … --tone-11", key: "--tone-7", usage: "Neutral ramp: 0 = paper end, 11 = deepest ink" },
+  { name: "--signal-{role}", key: "--signal-danger", usage: "One ink per meaning; only the accent is vivid" },
+  { name: "--signal-{role}-on", key: "--signal-danger-on", usage: "Which ramp end carries type on each solid" },
+  { name: "--shadow-size / -active / -color / -color-overlay", key: "--shadow-color", usage: "Shadow geometry and ink" },
+].map(t => ({ name: t.name, usage: t.usage, value: val(t.key) }));
 ---
 
 <Layout title="Design Tokens">
 
 <h1>Design Tokens</h1>
 
-<p>The <code>init</code> command adds design tokens to your CSS file. After initialization, you own them — customize freely. Values shown are Porcelain (default). See <a href="/ui/themes">Themes</a> for other presets.</p>
+<p>Two layers. A theme authors <strong>32 palette values</strong> by hand and nothing else; the <strong>64 semantic names</strong> components actually use are written once and shared by every theme. The <code>init</code> command adds both to your CSS file — after that you own them. Values shown are Solace (default). See <a href="/ui/themes">Themes</a> for other presets.</p>
 
-<h2>Neutral</h2>
+<h2>Background</h2>
 
-<TokenTable tokens={neutrals} />
+<TokenTable tokens={backgrounds} />
 
-<p>Use as Tailwind utilities: <code>bg-paper</code>, <code>text-ink</code>, <code>border-chrome</code>, etc.</p>
+<p>Use as Tailwind utilities: <code>bg-bg</code>, <code>bg-bg-raised</code>, <code>bg-bg-emphasis</code>, etc.</p>
 
-<h2>Signal Colors</h2>
+<h2>Foreground</h2>
 
-<TokenTable tokens={signals} />
+<TokenTable tokens={foregrounds} />
 
-<p>Each has <code>hover</code> and <code>active</code> variants (e.g., <code>--signal-red-hover</code>). Use as <code>bg-signal-red</code>, <code>text-signal-blue</code>, etc.</p>
+<p>Use as <code>text-fg</code>, <code>text-fg-muted</code>, <code>text-fg-link</code>, etc.</p>
 
-<h2>Surface Layers</h2>
+<h2>Border</h2>
 
-<TokenTable tokens={surfaces} />
+<TokenTable tokens={borders} />
+
+<p>Use as <code>border-border</code>, <code>divide-border-muted</code>, <code>outline-border-focus</code>, etc.</p>
+
+<h2>Roles</h2>
+
+<p>Six roles — <code>danger</code>, <code>success</code>, <code>warning</code>, <code>info</code>, <code>info-alt</code>, <code>accent</code> — each with seven slots. Values below show the <code>danger</code> role.</p>
+
+<TokenTable tokens={roleSlots} />
+
+<p>Use as <code>bg-danger-solid</code>, <code>text-danger-fg-on-solid</code>, <code>text-success-fg</code>, <code>bg-info-bg</code>, <code>border-warning-border</code>, etc.</p>
 
 <h2>Shadows</h2>
 
 <TokenTable tokens={shadows} showSwatch={false} />
 
-<p>Use as <code>shadow-offset</code>, <code>hover:shadow-offset-hover</code>, <code>active:shadow-offset-active</code>. Size and color vary by theme.</p>
+<p>Use as <code>shadow-offset</code>, <code>hover:shadow-offset-hover</code>, <code>active:shadow-offset-active</code>, <code>shadow-offset-overlay</code>. Size and color vary by theme.</p>
+
+<h2>Palette — authored by the theme</h2>
+
+<p>The layer a theme supplies. Components never reference these directly; the semantic names above point at them.</p>
+
+<TokenTable tokens={palette} showSwatch={false} />
 
 <h2>Customization</h2>
 
-<p>After <code>init</code>, these tokens are yours. The library will not update them automatically. Check the <a href="/ui/changelog">Changelog</a> when updating.</p>
+<p>After <code>init</code>, these tokens are yours. To restyle an app, edit the 32 palette values — the semantic layer follows. The library will not update them automatically. Check the <a href="/ui/changelog">Changelog</a> when updating.</p>
 
 </Layout>

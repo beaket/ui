@@ -27,7 +27,7 @@ export function TokenTable({
               textAlign: "left",
               fontWeight: 600,
               padding: "0.375rem 0.75rem",
-              borderBottom: "2px solid var(--graphite)",
+              borderBottom: "2px solid var(--color-border-strong)",
               whiteSpace: "nowrap",
             }}
           >
@@ -38,7 +38,7 @@ export function TokenTable({
               textAlign: "left",
               fontWeight: 600,
               padding: "0.375rem 0.75rem",
-              borderBottom: "2px solid var(--graphite)",
+              borderBottom: "2px solid var(--color-border-strong)",
               whiteSpace: "nowrap",
             }}
           >
@@ -49,7 +49,7 @@ export function TokenTable({
               textAlign: "left",
               fontWeight: 600,
               padding: "0.375rem 0.75rem",
-              borderBottom: "2px solid var(--graphite)",
+              borderBottom: "2px solid var(--color-border-strong)",
             }}
           >
             Usage
@@ -62,14 +62,19 @@ export function TokenTable({
             <td
               style={{
                 padding: "0.375rem 0.75rem",
-                borderBottom: "1px solid var(--chrome)",
+                borderBottom: "1px solid var(--color-border-muted)",
                 fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
                 fontSize: "0.75rem",
               }}
             >
               {token.name}
             </td>
-            <td style={{ padding: "0.375rem 0.75rem", borderBottom: "1px solid var(--chrome)" }}>
+            <td
+              style={{
+                padding: "0.375rem 0.75rem",
+                borderBottom: "1px solid var(--color-border-muted)",
+              }}
+            >
               <span style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>
                 {showSwatch && (
                   <span
@@ -78,7 +83,7 @@ export function TokenTable({
                       width: 14,
                       height: 14,
                       backgroundColor: token.value,
-                      border: "1px solid var(--chrome)",
+                      border: "1px solid var(--color-border-muted)",
                       flexShrink: 0,
                     }}
                   />
@@ -86,7 +91,7 @@ export function TokenTable({
                 <code
                   style={{
                     fontSize: "0.75rem",
-                    background: "var(--platinum)",
+                    background: "var(--color-bg-active)",
                     padding: "0.1rem 0.2rem",
                   }}
                 >
@@ -97,8 +102,8 @@ export function TokenTable({
             <td
               style={{
                 padding: "0.375rem 0.75rem",
-                borderBottom: "1px solid var(--chrome)",
-                color: "var(--steel)",
+                borderBottom: "1px solid var(--color-border-muted)",
+                color: "var(--color-fg-muted)",
               }}
             >
               {token.usage}

@@ -1,109 +1,98 @@
 /*
- * Beaket UI Design System - Eucalyptus Theme
- * Enterprise titanium. Navy ink, blue-gray surfaces, structured shadows.
- * Cold precision for office and productivity applications.
+ * Beaket UI Design System — Eucalyptus palette
+ * Cool-blue paper, blue-black ink — vivid, high-chroma signals.
+ * 32 values; semantic.css turns them into the 64 names components use.
  */
 
-@theme {
-  /* Neutral palette */
-  --color-graphite: #1e2638;
-  --color-ink: #0e1628;
-  --color-branch: #1c2a42;
-  --color-iron: #151d30;
-  --color-slate: #2f3f58;
-  --color-zinc: #384d68;
-  --color-steel: #3d5170;
-  --color-muted: #5a6d88;
-  --color-aluminum: #8295ae;
-  --color-chrome: #c0cddb;
-  --color-silver: #cdd8e4;
-  --color-platinum: #dce3ed;
-  --color-frost: #eff2f8;
-  --color-paper: #f8f9fc;
-  --color-inverse: var(--color-paper);
+:root {
+  /* Surface — the page and what sits on it */
+  --surface-0: #e6ebf2;
+  --surface-1: #f8f9fc;
+  --surface-2: #ffffff;
+  --surface-brand: #1c2a42;
 
-  /* Signal colors — deep cobalt, formal crimson, jade, brass */
-  --color-signal-blue: #1535c0;
-  --color-signal-red: #b81c38;
-  --color-signal-red-hover: #9e1830;
-  --color-signal-red-active: #841428;
-  --color-signal-red-text: #9e1830;
-  --color-signal-green: #0a7860;
-  --color-signal-green-hover: #086450;
-  --color-signal-green-active: #065040;
-  --color-signal-amber: #b87500;
-  --color-signal-amber-hover: #9c6300;
-  --color-signal-amber-active: #805200;
-  --color-signal-amber-text: #9c6300;
-  --color-signal-purple: #5b22c8;
-  --color-signal-cyan: #0078a8;
+  /* Tone — the neutral ramp: 0 is the paper end, 11 the deepest ink */
+  --tone-0: #e6ebf2;
+  --tone-1: #dde2ea;
+  --tone-2: #d4dae2;
+  --tone-3: #b5bcc7;
+  --tone-4: #7f8696;
+  --tone-5: #727a8a;
+  --tone-6: #616a7b;
+  --tone-7: #454d60;
+  --tone-8: #31394e;
+  --tone-9: #21293e;
+  --tone-10: #10182d;
+  --tone-11: #10182d;
 
-  /* Surface layers (visual depth) */
-  --color-surface-0: #e6ebf2;
-  --color-surface-1: #f8f9fc;
-  --color-surface-2: #ffffff;
+  /* Signal — one ink per meaning; only the accent is vivid */
+  --signal-danger: #d2171c;
+  --signal-warning: #cc6f00;
+  --signal-success: #059669;
+  --signal-info: #2260e7;
+  --signal-info-alt: #0891b2;
+  --signal-accent: #7c3aed;
 
-  /* Shadows — blue-gray, structured */
-  --shadow-offset: 2px 2px 0px 0px var(--color-chrome);
-  --shadow-offset-dark: 2px 2px 0px 0px var(--color-aluminum);
-  --shadow-offset-hover: 3px 3px 0px 0px var(--color-chrome);
-  --shadow-offset-active: 1px 1px 0px 0px var(--color-chrome);
+  /* Knockout — which end of the ramp carries type on each solid */
+  --signal-danger-on: var(--tone-0);
+  --signal-success-on: var(--tone-11);
+  --signal-warning-on: var(--tone-11);
+  --signal-info-on: var(--tone-0);
+  --signal-info-alt-on: var(--tone-11);
+  --signal-accent-on: var(--tone-0);
 
-  /* Animations */
-  --animate-navigation-progress: navigation-progress 1s ease-in-out infinite;
+  /* Shadow — elevation is drawn, not lit */
+  --shadow-size: 2px;
+  --shadow-size-active: 1px;
+  --shadow-color: #c0cddb;
+  --shadow-color-overlay: #8295ae;
 }
 
 /*
- * Dark mode — mission control.
- * Command center at night. Navy-blue darkness with structured panels.
- * Navy-tinted neutrals. Signals glow with focused intensity.
+ * Eucalyptus Dark — eucalyptus inverted: blue ink on a blue-black page.
  */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Neutral palette — navy-tinted for professional dark authority */
-    --color-graphite: #c6cdde;
-    --color-ink: #e8ecf4;
-    --color-branch: #c4cede;
-    --color-iron: #a6aec4;
-    --color-slate: #98a2b8;
-    --color-zinc: #808aa2;
-    --color-steel: #687288;
-    --color-muted: #546070;
-    --color-aluminum: #3c4858;
-    --color-chrome: #283444;
-    --color-silver: #1e2836;
-    --color-platinum: #141a2a;
-    --color-frost: #0c1020;
-    --color-paper: #0e1320;
+    /* Surface */
+    --surface-0: #0a0e1a;
+    --surface-1: #101422;
+    --surface-2: #18202e;
+    --surface-brand: #c4cede;
 
-    /* Signal colors — professional, brightened for dark canvas */
-    --color-signal-blue: #3060e0;
-    --color-signal-red: #d43450;
-    --color-signal-red-hover: #bc2e46;
-    --color-signal-red-active: #a4283c;
-    --color-signal-red-text: #e84c64;
-    --color-signal-green: #14a878;
-    --color-signal-green-hover: #108e64;
-    --color-signal-green-active: #0c7450;
-    --color-signal-amber: #d89420;
-    --color-signal-amber-hover: #bc801c;
-    --color-signal-amber-active: #a06c18;
-    --color-signal-amber-text: #e8a830;
-    --color-signal-purple: #9454e8;
-    --color-signal-cyan: #2094c8;
+    /* Tone */
+    --tone-0: #0a0e1a;
+    --tone-1: #131724;
+    --tone-2: #1b202c;
+    --tone-3: #323743;
+    --tone-4: #5a606c;
+    --tone-5: #656b77;
+    --tone-6: #767b87;
+    --tone-7: #979ca8;
+    --tone-8: #b1b7c1;
+    --tone-9: #c7cdd6;
+    --tone-10: #e2e7f0;
+    --tone-11: #e2e7f0;
 
-    /* Surface layers — elevation = lighter */
-    --color-surface-0: #0a0e1a;
-    --color-surface-1: #101422;
-    --color-surface-2: #18202e;
-  }
-}
+    /* Signal */
+    --signal-danger: #de3e58;
+    --signal-warning: #d89420;
+    --signal-success: #14a878;
+    --signal-info: #2e5ddd;
+    --signal-info-alt: #2094c8;
+    --signal-accent: #9758ec;
 
-@keyframes navigation-progress {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(400%);
+    /* Knockout */
+    --signal-danger-on: var(--tone-0);
+    --signal-success-on: var(--tone-0);
+    --signal-warning-on: var(--tone-0);
+    --signal-info-on: var(--tone-11);
+    --signal-info-alt-on: var(--tone-0);
+    --signal-accent-on: var(--tone-0);
+
+    /* Shadow */
+    --shadow-size: 2px;
+    --shadow-size-active: 1px;
+    --shadow-color: #283444;
+    --shadow-color-overlay: #3c4858;
   }
 }

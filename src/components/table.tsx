@@ -26,7 +26,7 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("[&_tr]:border-graphite [&_tr]:bg-frost [&_tr]:border-b", className)}
+      className={cn("[&_tr]:border-border-strong [&_tr]:bg-bg-hover [&_tr]:border-b", className)}
       {...props}
     />
   );
@@ -47,7 +47,7 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
     <tfoot
       data-slot="table-footer"
       className={cn(
-        "border-chrome bg-frost border-t font-medium [&>tr]:last:border-b-0",
+        "border-border-muted bg-bg-hover border-t font-medium [&>tr]:last:border-b-0",
         className,
       )}
       {...props}
@@ -60,7 +60,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
     <tr
       data-slot="table-row"
       className={cn(
-        "border-chrome bg-surface-1 hover:bg-frost data-[state=selected]:bg-platinum border-b",
+        "border-border-muted bg-bg-raised hover:bg-bg-hover data-[state=selected]:bg-bg-active border-b",
         className,
       )}
       {...props}
@@ -73,7 +73,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "text-ink h-10 px-4 py-2 text-left align-middle font-semibold whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "text-fg h-10 px-4 py-2 text-left align-middle font-semibold whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className,
       )}
       {...props}
@@ -99,7 +99,7 @@ function TableSectionHeader({ className, ...props }: React.ComponentProps<"tr">)
     <tr
       data-slot="table-section-header"
       className={cn(
-        "bg-platinum [&>th]:border-chrome [&>th]:border-y [&>th]:px-4 [&>th]:py-2 [&>th]:font-semibold",
+        "bg-bg-active [&>th]:border-border-muted [&>th]:border-y [&>th]:px-4 [&>th]:py-2 [&>th]:font-semibold",
         className,
       )}
       {...props}
@@ -111,7 +111,7 @@ function TableCaption({ className, ...props }: React.ComponentProps<"caption">) 
   return (
     <caption
       data-slot="table-caption"
-      className={cn("text-steel mt-4 text-sm", className)}
+      className={cn("text-fg-muted mt-4 text-sm", className)}
       {...props}
     />
   );

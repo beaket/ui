@@ -12,13 +12,13 @@ export interface Props extends Omit<React.ComponentProps<"input">, "prefix"> {
 
 const inputBaseStyles = [
   "h-9 w-full px-3 text-sm",
-  "bg-paper text-ink",
-  "border border-graphite",
-  "placeholder:text-steel",
-  "focus-visible:outline-2 focus-visible:outline-signal-blue focus-visible:outline-offset-2",
-  "disabled:cursor-not-allowed disabled:border-dashed disabled:border-chrome disabled:bg-frost disabled:text-steel",
-  "aria-[invalid=true]:border-signal-red aria-[invalid=true]:focus-visible:outline-signal-red",
-  "read-only:bg-frost read-only:text-steel",
+  "bg-bg-input text-fg",
+  "border border-border-strong",
+  "placeholder:text-fg-subtle",
+  "focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2",
+  "disabled:cursor-not-allowed disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled",
+  "aria-[invalid=true]:border-danger-solid aria-[invalid=true]:focus-visible:outline-danger-solid",
+  "read-only:bg-bg-disabled read-only:text-fg-muted",
 ].join(" ");
 
 export function Input({ className, type = "text", prefix, suffix, ref, ...props }: Props) {
@@ -39,7 +39,7 @@ export function Input({ className, type = "text", prefix, suffix, ref, ...props 
       {prefix && (
         <span
           data-slot="input-prefix"
-          className="text-steel pointer-events-none absolute left-3 flex items-center [&_svg]:size-4"
+          className="text-fg-muted pointer-events-none absolute left-3 flex items-center [&_svg]:size-4"
         >
           {prefix}
         </span>
@@ -54,7 +54,7 @@ export function Input({ className, type = "text", prefix, suffix, ref, ...props 
       {suffix && (
         <span
           data-slot="input-suffix"
-          className="text-steel absolute right-3 flex items-center [&_svg]:size-4"
+          className="text-fg-muted absolute right-3 flex items-center [&_svg]:size-4"
         >
           {suffix}
         </span>

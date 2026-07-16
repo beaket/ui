@@ -73,8 +73,8 @@ const buttonVariants = cva(
     "shadow-offset",
     "hover:shadow-offset-hover",
     "active:shadow-offset-active",
-    "disabled:shadow-none disabled:cursor-not-allowed disabled:border-dashed disabled:border-chrome disabled:bg-frost disabled:text-steel",
-    "focus-visible:outline-2 focus-visible:outline-signal-blue focus-visible:outline-offset-2",
+    "disabled:shadow-none disabled:cursor-not-allowed disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled",
+    "focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2",
     "[&_svg]:size-4",
     "transition-shadow duration-100",
   ].join(" "),
@@ -82,20 +82,21 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-branch text-paper border border-branch hover:bg-graphite hover:border-graphite active:bg-ink disabled:text-steel no-underline",
+          "bg-bg-emphasis text-fg-on-emphasis border border-border-strong disabled:text-fg-disabled no-underline",
         destructive:
-          "bg-signal-red text-paper border border-signal-red hover:bg-signal-red-hover hover:border-signal-red-hover active:bg-signal-red-active disabled:text-steel no-underline",
-        outline: "border border-chrome bg-transparent text-ink hover:bg-frost active:bg-platinum",
-        secondary: "bg-frost text-ink border border-chrome hover:bg-platinum active:bg-silver",
+          "bg-danger-solid text-danger-fg-on-solid border border-danger-solid hover:bg-danger-solid-hover hover:border-danger-solid-hover active:bg-danger-solid-active disabled:text-fg-disabled no-underline",
+        outline:
+          "border border-border bg-transparent text-fg hover:bg-bg-hover active:bg-bg-active",
+        secondary: "bg-bg-hover text-fg border border-border hover:bg-bg-active",
         ghost:
-          "text-ink hover:bg-frost active:bg-platinum shadow-none hover:shadow-none active:shadow-none",
-        link: "text-signal-blue underline-offset-4 hover:underline shadow-none hover:shadow-none active:shadow-none",
+          "text-fg hover:bg-bg-hover active:bg-bg-active shadow-none hover:shadow-none active:shadow-none",
+        link: "text-fg-link underline-offset-4 hover:underline shadow-none hover:shadow-none active:shadow-none",
         success:
-          "bg-signal-green text-paper border border-signal-green hover:bg-signal-green-hover hover:border-signal-green-hover active:bg-signal-green-active disabled:text-steel no-underline",
+          "bg-success-solid text-success-fg-on-solid border border-success-solid hover:bg-success-solid-hover hover:border-success-solid-hover active:bg-success-solid-active disabled:text-fg-disabled no-underline",
         stark:
-          "border border-ink bg-transparent text-ink hover:bg-ink hover:text-paper active:bg-graphite",
+          "border border-border-strong bg-transparent text-fg hover:bg-bg-emphasis hover:text-fg-on-emphasis active:bg-bg-emphasis",
         warning:
-          "bg-signal-amber text-graphite border border-signal-amber hover:bg-signal-amber-hover hover:border-signal-amber-hover active:bg-signal-amber-active disabled:text-steel no-underline",
+          "bg-warning-solid text-warning-fg-on-solid border border-warning-solid hover:bg-warning-solid-hover hover:border-warning-solid-hover active:bg-warning-solid-active disabled:text-fg-disabled no-underline",
       },
       size: {
         sm: "h-8 px-3 text-xs",

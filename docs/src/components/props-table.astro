@@ -15,12 +15,12 @@ const { props } = Astro.props;
 ---
 
 {props.length === 0 ? (
-  <p class="text-sm text-[var(--steel)]">—</p>
+  <p class="text-sm text-[var(--color-fg-muted)]">—</p>
 ) : (
   <div class="props-table-scroll overflow-x-auto">
   <table class="w-full min-w-[500px] font-mono text-xs">
     <thead>
-      <tr class="border-b border-[var(--chrome)] text-left tracking-wide text-[var(--steel)] uppercase">
+      <tr class="border-b border-[var(--color-border-muted)] text-left tracking-wide text-[var(--color-fg-muted)] uppercase">
         <th class="py-1.5 pr-3 font-medium">Name</th>
         <th class="py-1.5 pr-3 font-medium">Type</th>
         <th class="py-1.5 pr-3 font-medium">Default</th>
@@ -29,14 +29,14 @@ const { props } = Astro.props;
     </thead>
     <tbody class="text-[13px]">
       {props.map((p) => (
-        <tr class="border-b border-[var(--chrome)]">
+        <tr class="border-b border-[var(--color-border-muted)]">
           <td class="py-1.5 pr-3">
             {p.name}
-            {p.required && <span class="text-[var(--signal-red)]">*</span>}
+            {p.required && <span class="text-[var(--color-danger-solid)]">*</span>}
           </td>
-          <td class="py-1.5 pr-3 text-[var(--steel)]">{p.type}</td>
+          <td class="py-1.5 pr-3 text-[var(--color-fg-muted)]">{p.type}</td>
           <td class="py-1.5 pr-3">{p.defaultValue ?? '—'}</td>
-          <td class="py-1.5 font-sans text-[var(--steel)]">{p.description}</td>
+          <td class="py-1.5 font-sans text-[var(--color-fg-muted)]">{p.description}</td>
         </tr>
       ))}
     </tbody>

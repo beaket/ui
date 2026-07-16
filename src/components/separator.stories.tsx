@@ -23,12 +23,12 @@ export const Default: Story = {
     <div className="max-w-sm">
       <div className="space-y-1">
         <h4 className="text-sm leading-none font-medium">Section Title</h4>
-        <p className="text-steel text-sm">Section description text.</p>
+        <p className="text-fg-muted text-sm">Section description text.</p>
       </div>
       <Separator className="my-4" />
       <div className="space-y-1">
         <h4 className="text-sm leading-none font-medium">Another Section</h4>
-        <p className="text-steel text-sm">More content here.</p>
+        <p className="text-fg-muted text-sm">More content here.</p>
       </div>
     </div>
   ),
@@ -61,29 +61,29 @@ export const AllStates = () => (
     <div>
       <h3 className="mb-4 text-sm font-medium">Horizontal (default)</h3>
       <div className="max-w-sm space-y-4">
-        <p className="text-steel text-sm">Section A</p>
+        <p className="text-fg-muted text-sm">Section A</p>
         <Separator />
-        <p className="text-steel text-sm">Section B</p>
+        <p className="text-fg-muted text-sm">Section B</p>
       </div>
     </div>
 
     <div>
       <h3 className="mb-4 text-sm font-medium">Vertical</h3>
       <div className="flex h-6 items-center gap-4">
-        <span className="text-steel text-sm">Home</span>
+        <span className="text-fg-muted text-sm">Home</span>
         <Separator orientation="vertical" />
-        <span className="text-steel text-sm">About</span>
+        <span className="text-fg-muted text-sm">About</span>
         <Separator orientation="vertical" />
-        <span className="text-steel text-sm">Contact</span>
+        <span className="text-fg-muted text-sm">Contact</span>
       </div>
     </div>
 
     <div>
       <h3 className="mb-4 text-sm font-medium">In a card-like layout</h3>
-      <div className="border-chrome max-w-sm border p-4">
+      <div className="border-border max-w-sm border p-4">
         <h4 className="font-medium">Card Title</h4>
         <Separator className="my-3" />
-        <p className="text-steel text-sm">Card content goes here.</p>
+        <p className="text-fg-muted text-sm">Card content goes here.</p>
       </div>
     </div>
   </div>

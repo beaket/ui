@@ -132,12 +132,12 @@ export function Sheet({
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay
           data-slot="sheet-overlay"
-          className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 bg-ink/50 fixed inset-0 z-40"
+          className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 bg-bg-emphasis/50 fixed inset-0 z-40"
         />
         <DialogPrimitive.Content
           data-slot="sheet-content"
           className={cn(
-            "shadow-offset-dark border-chrome bg-surface-1 fixed z-50 gap-4 border p-4",
+            "shadow-offset-overlay border-border bg-bg-overlay fixed z-50 gap-4 border p-4",
             fullScreen ? sidePositionsFullScreen[side] : sidePositions[side],
             sideAnimations[side],
           )}
@@ -148,7 +148,7 @@ export function Sheet({
           {!hideCloseButton && (
             <DialogPrimitive.Close
               data-slot="sheet-close"
-              className="text-steel hover:text-ink focus-visible:outline-signal-blue absolute top-4 right-4 transition-colors before:absolute before:inset-[-14px] before:content-[''] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none"
+              className="text-fg-muted hover:text-fg focus-visible:outline-border-focus absolute top-4 right-4 transition-colors before:absolute before:inset-[-14px] before:content-[''] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none"
               aria-label="Close sheet"
             >
               <X className="size-4" aria-hidden="true" />
@@ -164,7 +164,7 @@ function SheetTitle({ className, ...props }: React.ComponentProps<typeof DialogP
   return (
     <DialogPrimitive.Title
       data-slot="sheet-title"
-      className={cn("text-ink text-xl leading-7 font-semibold", className)}
+      className={cn("text-fg text-xl leading-7 font-semibold", className)}
       {...props}
     />
   );
@@ -177,7 +177,7 @@ function SheetDescription({
   return (
     <DialogPrimitive.Description
       data-slot="sheet-description"
-      className={cn("text-steel text-sm", className)}
+      className={cn("text-fg-muted text-sm", className)}
       {...props}
     />
   );

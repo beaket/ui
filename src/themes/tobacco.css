@@ -1,109 +1,98 @@
 /*
- * Beaket UI Design System - Tobacco Theme
- * Golden hour in a library. Pampas warmth, terracotta accent.
- * Warm gray-cream surface, brown shadows, earthy signals.
+ * Beaket UI Design System — Tobacco palette
+ * Warm earthen paper, warm-grey ink — quiet, low-chroma signals.
+ * 32 values; semantic.css turns them into the 64 names components use.
  */
 
-@theme {
-  /* Neutral palette */
-  --color-graphite: #26231e;
-  --color-ink: #14130f;
-  --color-branch: #222120;
-  --color-iron: #1c1a16;
-  --color-slate: #46443e;
-  --color-zinc: #585650;
-  --color-steel: #5e5d54;
-  --color-muted: #6b6a60;
-  --color-aluminum: #9c9a90;
-  --color-chrome: #d0cec5;
-  --color-silver: #dddbd3;
-  --color-platinum: #e8e7e0;
-  --color-frost: #edece6;
-  --color-paper: #f4f3ee;
-  --color-inverse: var(--color-paper);
+:root {
+  /* Surface — the page and what sits on it */
+  --surface-0: #e8e7e0;
+  --surface-1: #f4f3ee;
+  --surface-2: #faf9f5;
+  --surface-brand: #222120;
 
-  /* Signal colors — warm, earthy: old ink, fired brick, forest, ochre */
-  --color-signal-blue: #35388a;
-  --color-signal-red: #b03525;
-  --color-signal-red-hover: #962d1f;
-  --color-signal-red-active: #7c2519;
-  --color-signal-red-text: #962d1f;
-  --color-signal-green: #3a7040;
-  --color-signal-green-hover: #305c35;
-  --color-signal-green-active: #26482a;
-  --color-signal-amber: #a57218;
-  --color-signal-amber-hover: #8c6014;
-  --color-signal-amber-active: #734f10;
-  --color-signal-amber-text: #8c6014;
-  --color-signal-purple: #7c336e;
-  --color-signal-cyan: #187566;
+  /* Tone — the neutral ramp: 0 is the paper end, 11 the deepest ink */
+  --tone-0: #e8e7e0;
+  --tone-1: #dfdfd8;
+  --tone-2: #d6d5cf;
+  --tone-3: #b9b8b3;
+  --tone-4: #84837f;
+  --tone-5: #787874;
+  --tone-6: #686864;
+  --tone-7: #4c4b49;
+  --tone-8: #383836;
+  --tone-9: #282726;
+  --tone-10: #151514;
+  --tone-11: #151514;
 
-  /* Surface layers (visual depth) */
-  --color-surface-0: #e8e7e0;
-  --color-surface-1: #f4f3ee;
-  --color-surface-2: #faf9f5;
+  /* Signal — one ink per meaning; only the accent is vivid */
+  --signal-danger: #c5623f;
+  --signal-warning: #ac7c00;
+  --signal-success: #4c8c60;
+  --signal-info: #3a5f9e;
+  --signal-info-alt: #388a8e;
+  --signal-accent: #80579c;
 
-  /* Shadows — warm brown, grounded */
-  --shadow-offset: 2px 2px 0px 0px var(--color-iron);
-  --shadow-offset-dark: 2px 2px 0px 0px var(--color-slate);
-  --shadow-offset-hover: 3px 3px 0px 0px var(--color-iron);
-  --shadow-offset-active: 1px 1px 0px 0px var(--color-iron);
+  /* Knockout — which end of the ramp carries type on each solid */
+  --signal-danger-on: var(--tone-11);
+  --signal-success-on: var(--tone-11);
+  --signal-warning-on: var(--tone-11);
+  --signal-info-on: var(--tone-0);
+  --signal-info-alt-on: var(--tone-11);
+  --signal-accent-on: var(--tone-0);
 
-  /* Animations */
-  --animate-navigation-progress: navigation-progress 1s ease-in-out infinite;
+  /* Shadow — elevation is drawn, not lit */
+  --shadow-size: 2px;
+  --shadow-size-active: 1px;
+  --shadow-color: #312f2c;
+  --shadow-color-overlay: #46443e;
 }
 
 /*
- * Dark mode — whiskey bar at midnight.
- * Late-night library, amber reading lamps, worn leather.
- * Warm sepia-tinted neutrals. Signals glow like stained glass.
+ * Tobacco Dark — tobacco inverted: warm ink on a warm-black page.
  */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Neutral palette — warm sepia-tinted for intimate darkness */
-    --color-graphite: #cfcabc;
-    --color-ink: #eceae0;
-    --color-branch: #d4d0c6;
-    --color-iron: #b4b0a6;
-    --color-slate: #a8a49a;
-    --color-zinc: #908c82;
-    --color-steel: #787468;
-    --color-muted: #646054;
-    --color-aluminum: #4a4840;
-    --color-chrome: #343230;
-    --color-silver: #282624;
-    --color-platinum: #1e1c1a;
-    --color-frost: #141312;
-    --color-paper: #14130f;
+    /* Surface */
+    --surface-0: #121110;
+    --surface-1: #1a1918;
+    --surface-2: #222120;
+    --surface-brand: #d4d0c6;
 
-    /* Signal colors — warm stained glass glow */
-    --color-signal-blue: #5068c0;
-    --color-signal-red: #d04838;
-    --color-signal-red-hover: #b84030;
-    --color-signal-red-active: #a03828;
-    --color-signal-red-text: #e06050;
-    --color-signal-green: #48a850;
-    --color-signal-green-hover: #3c8e44;
-    --color-signal-green-active: #307438;
-    --color-signal-amber: #d09828;
-    --color-signal-amber-hover: #b48420;
-    --color-signal-amber-active: #987018;
-    --color-signal-amber-text: #e0a838;
-    --color-signal-purple: #a05088;
-    --color-signal-cyan: #28a890;
+    /* Tone */
+    --tone-0: #121110;
+    --tone-1: #1b1918;
+    --tone-2: #232220;
+    --tone-3: #393835;
+    --tone-4: #62615d;
+    --tone-5: #6e6d68;
+    --tone-6: #7e7d77;
+    --tone-7: #a09e98;
+    --tone-8: #bab8b0;
+    --tone-9: #d0cec5;
+    --tone-10: #e7e5db;
+    --tone-11: #e7e5db;
 
-    /* Surface layers — elevation = lighter */
-    --color-surface-0: #121110;
-    --color-surface-1: #1a1918;
-    --color-surface-2: #222120;
-  }
-}
+    /* Signal */
+    --signal-danger: #d64e3d;
+    --signal-warning: #d09828;
+    --signal-success: #48a850;
+    --signal-info: #4a61b8;
+    --signal-info-alt: #28a890;
+    --signal-accent: #9a4a82;
 
-@keyframes navigation-progress {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(400%);
+    /* Knockout */
+    --signal-danger-on: var(--tone-0);
+    --signal-success-on: var(--tone-0);
+    --signal-warning-on: var(--tone-0);
+    --signal-info-on: var(--tone-11);
+    --signal-info-alt-on: var(--tone-0);
+    --signal-accent-on: var(--tone-11);
+
+    /* Shadow */
+    --shadow-size: 2px;
+    --shadow-size-active: 1px;
+    --shadow-color: #c0bcb2;
+    --shadow-color-overlay: #a8a49a;
   }
 }

@@ -1,5 +1,6 @@
 @import "tailwindcss";
-@import "./themes/porcelain.css";
+@import "./themes/semantic.css";
+@import "./themes/solace.css";
 
 @theme {
   /* ===========================================
@@ -11,31 +12,6 @@
 }
 
 :root {
-  /* ===========================================
-   * FUNCTIONAL TOKENS
-   * Semantic mappings for consistent usage
-   * =========================================== */
-
-  /* Text */
-  --color-text-primary: var(--color-graphite);
-  --color-text-secondary: var(--color-steel);
-  --color-text-muted: var(--color-muted);
-  --color-text-inverse: var(--color-paper);
-  --color-text-link: var(--color-signal-blue);
-
-  /* Backgrounds */
-  --color-bg-primary: var(--color-paper);
-  --color-bg-secondary: var(--color-frost);
-  --color-bg-tertiary: var(--color-platinum);
-  --color-bg-inverse: var(--color-ink);
-  --color-bg-hover: var(--color-frost);
-  --color-bg-active: var(--color-platinum);
-
-  /* Borders */
-  --color-border-default: var(--color-chrome);
-  --color-border-strong: var(--color-ink);
-  --color-border-muted: var(--color-silver);
-
   /* ===========================================
    * TYPOGRAPHY
    * Type scale and font stacks
@@ -85,21 +61,4 @@
   --border-width-medium: 2px;
   --radius-none: 0;
   --radius-full: 9999px; /* Only for Radio buttons */
-}
-
-/* ===========================================
- * HIGH CONTRAST ESCAPE HATCH
- * Restore maximum-contrast prose body for users who explicitly
- * request it via OS-level `prefers-contrast: more`. Text-only —
- * paper/iron/ink stay tuned so structural identity is preserved.
- * =========================================== */
-@media (prefers-contrast: more) {
-  :root {
-    --color-graphite: #080b10;
-  }
-}
-@media (prefers-contrast: more) and (prefers-color-scheme: dark) {
-  :root {
-    --color-graphite: #e6eaee;
-  }
 }

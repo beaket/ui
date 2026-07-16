@@ -78,7 +78,7 @@ export const AllStates = () => (
   <TooltipProvider>
     <div className="flex flex-col gap-8 py-12">
       <div className="flex items-center gap-4">
-        <span className="text-steel w-24 text-sm">Default</span>
+        <span className="text-fg-muted w-24 text-sm">Default</span>
         <Tooltip>
           <Tooltip.Trigger asChild>
             <Button variant="outline">Hover</Button>
@@ -88,11 +88,11 @@ export const AllStates = () => (
       </div>
 
       <div className="flex items-center gap-4">
-        <span className="text-steel w-24 text-sm">On icon</span>
+        <span className="text-fg-muted w-24 text-sm">On icon</span>
         <Tooltip>
           <Tooltip.Trigger asChild>
             <button
-              className="border-chrome text-steel hover:text-ink inline-flex size-8 items-center justify-center border"
+              className="border-border text-fg-muted hover:text-fg inline-flex size-8 items-center justify-center border"
               aria-label="Help"
             >
               ?
@@ -103,7 +103,7 @@ export const AllStates = () => (
       </div>
 
       <div className="flex items-center gap-4">
-        <span className="text-steel w-24 text-sm">Long text</span>
+        <span className="text-fg-muted w-24 text-sm">Long text</span>
         <Tooltip>
           <Tooltip.Trigger asChild>
             <Button variant="outline">Long tooltip</Button>

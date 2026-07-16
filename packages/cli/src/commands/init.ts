@@ -103,7 +103,7 @@ export async function init(options: InitOptions) {
     response = {
       components: detectedComponentsPath,
       css: detectedCssPath,
-      theme: options.theme || "porcelain",
+      theme: options.theme || "solace",
     };
   } else {
     const answers = await prompts([
@@ -124,10 +124,14 @@ export async function init(options: InitOptions) {
         name: "theme",
         message: "Choose a theme",
         choices: [
-          { title: "Porcelain — pure white, cold precision, teal accent", value: "porcelain" },
-          { title: "Tobacco — warm pampas cream, terracotta, brown shadows", value: "tobacco" },
-          { title: "Marigold — pure white, ink-black shadows, loud signals", value: "marigold" },
-          { title: "Eucalyptus — titanium blue-gray, navy ink, enterprise", value: "eucalyptus" },
+          { title: "Solace — warm paper, cool ink, one vivid blue for action", value: "solace" },
+          {
+            title: "Porcelain — near-white paper, cool graphite ink, balanced",
+            value: "porcelain",
+          },
+          { title: "Tobacco — warm earthen paper, quiet low-chroma signals", value: "tobacco" },
+          { title: "Marigold — pure-grey paper, the loudest signals", value: "marigold" },
+          { title: "Eucalyptus — cool-blue paper, vivid high-chroma signals", value: "eucalyptus" },
         ],
         initial: 0,
       },
@@ -141,7 +145,7 @@ export async function init(options: InitOptions) {
     response = {
       components: answers.components,
       css: answers.css,
-      theme: options.theme || answers.theme || "porcelain",
+      theme: options.theme || answers.theme || "solace",
     };
   }
 

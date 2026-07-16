@@ -5,6 +5,7 @@ const themeTokens: Record<string, Record<string, string>> = themeTokensData;
 
 /** Base theme names shown in the switcher UI (excludes dark variants) */
 const themeLabels: Record<string, string> = {
+  solace: "Solace",
   porcelain: "Porcelain",
   tobacco: "Tobacco",
   marigold: "Marigold",
@@ -39,9 +40,6 @@ function applyTheme(baseName: string, updateUrl = true) {
   const root = document.documentElement;
   for (const [key, value] of Object.entries(tokens)) {
     root.style.setProperty(key, value);
-    if (key.startsWith("--color-")) {
-      root.style.setProperty(key.replace("--color-", "--"), value);
-    }
   }
   localStorage.setItem("beaket-theme", baseName);
   if (updateUrl) {
@@ -67,7 +65,7 @@ function getInitialTheme(): string {
   }
   const fromStorage = localStorage.getItem("beaket-theme");
   if (fromStorage && themeLabels[fromStorage]) return fromStorage;
-  return "porcelain";
+  return "solace";
 }
 
 function SunIcon() {
@@ -104,7 +102,7 @@ function MoonIcon() {
 }
 
 export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "inline" }) {
-  const [active, setActive] = useState("porcelain");
+  const [active, setActive] = useState("solace");
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
@@ -117,7 +115,7 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     const onChange = () => {
       if (getColorScheme() !== "auto") return;
-      const current = localStorage.getItem("beaket-theme") || "porcelain";
+      const current = localStorage.getItem("beaket-theme") || "solace";
       setDark(isDarkMode());
       applyTheme(current, false);
     };
@@ -139,7 +137,7 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
     const newDark = !dark;
     localStorage.setItem("beaket-color-scheme", newDark ? "dark" : "light");
     setDark(newDark);
-    const current = localStorage.getItem("beaket-theme") || "porcelain";
+    const current = localStorage.getItem("beaket-theme") || "solace";
     applyTheme(current, false);
     window.dispatchEvent(new Event("beaket-scheme-change"));
   };
@@ -156,7 +154,7 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
                 data-slot="theme-link"
                 onClick={() => handleClick(name)}
                 data-active={active === name || undefined}
-                className="border-graphite text-ink shadow-offset hover:shadow-offset-hover active:shadow-offset-active hover:bg-frost data-[active]:text-paper data-[active]:bg-branch data-[active]:hover:bg-branch inline-block cursor-pointer border bg-transparent px-2 py-0.5 text-left text-xs no-underline transition-shadow duration-100 data-[active]:shadow-none data-[active]:hover:shadow-none"
+                className="border-border-strong text-fg shadow-offset hover:shadow-offset-hover active:shadow-offset-active hover:bg-bg-hover data-[active]:text-fg-on-emphasis data-[active]:bg-bg-emphasis data-[active]:hover:bg-bg-emphasis inline-block cursor-pointer border bg-transparent px-2 py-0.5 text-left text-xs no-underline transition-shadow duration-100 data-[active]:shadow-none data-[active]:hover:shadow-none"
               >
                 {themeLabels[name]}
               </button>
@@ -168,7 +166,7 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
           value={active}
           onChange={(e) => handleClick(e.target.value)}
           aria-label="Theme"
-          className="border-graphite text-ink border bg-transparent px-2 py-1 text-xs sm:hidden"
+          className="border-border-strong text-fg border bg-transparent px-2 py-1 text-xs sm:hidden"
         >
           {baseThemes.map((name) => (
             <option key={name} value={name}>
@@ -181,7 +179,7 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
           onClick={toggleDark}
           aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
           title={dark ? "Switch to light mode" : "Switch to dark mode"}
-          className="border-graphite text-ink shadow-offset hover:shadow-offset-hover active:shadow-offset-active hover:bg-frost inline-flex cursor-pointer items-center justify-center border bg-transparent px-1.5 py-0.5 transition-shadow duration-100"
+          className="border-border-strong text-fg shadow-offset hover:shadow-offset-hover active:shadow-offset-active hover:bg-bg-hover inline-flex cursor-pointer items-center justify-center border bg-transparent px-1.5 py-0.5 transition-shadow duration-100"
         >
           {dark ? <SunIcon /> : <MoonIcon />}
         </button>
@@ -193,7 +191,7 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
     <>
       {baseThemes.map((name) => {
         const resolvedKey = dark && themeTokens[`${name}-dark`] ? `${name}-dark` : name;
-        const chromeColor = themeTokens[resolvedKey]["--color-chrome"];
+        const chromeColor = themeTokens[resolvedKey]["--color-border"];
         return (
           <button
             type="button"
@@ -208,7 +206,7 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
                 width: 8,
                 height: 8,
                 backgroundColor: chromeColor,
-                border: active === name ? "1px solid var(--ink)" : "none",
+                border: active === name ? "1px solid var(--color-fg)" : "none",
                 flexShrink: 0,
               }}
             />
@@ -239,7 +237,7 @@ export function DarkModeToggle() {
     const newDark = !dark;
     localStorage.setItem("beaket-color-scheme", newDark ? "dark" : "light");
     setDark(newDark);
-    const current = localStorage.getItem("beaket-theme") || "porcelain";
+    const current = localStorage.getItem("beaket-theme") || "solace";
     applyTheme(current, false);
     window.dispatchEvent(new Event("beaket-scheme-change"));
   };
@@ -250,7 +248,7 @@ export function DarkModeToggle() {
       onClick={toggle}
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
       title={dark ? "Switch to light mode" : "Switch to dark mode"}
-      className="text-steel hover:text-ink inline-flex cursor-pointer items-center justify-center bg-transparent p-0 transition-colors duration-100"
+      className="text-fg-muted hover:text-fg inline-flex cursor-pointer items-center justify-center bg-transparent p-0 transition-colors duration-100"
       style={{ border: "none", lineHeight: 0 }}
     >
       {dark ? <SunIcon /> : <MoonIcon />}

@@ -113,7 +113,7 @@ export const AllStates = () => (
 
     <div>
       <h3 className="mb-4 text-sm font-medium">Single Page (Hidden)</h3>
-      <p className="text-steel text-sm">Pagination is hidden when totalPages = 1</p>
+      <p className="text-fg-muted text-sm">Pagination is hidden when totalPages = 1</p>
       <Pagination page={1} totalPages={1} buildPageUrl={buildPageUrl} />
     </div>
 
@@ -213,7 +213,7 @@ const ButtonModeWrapper = ({ initialPage = 1, totalPages = 10 }) => {
   const [page, setPage] = useState(initialPage);
   return (
     <div className="space-y-2">
-      <p className="text-steel text-sm" data-testid="page-info">
+      <p className="text-fg-muted text-sm" data-testid="page-info">
         Page {page} of {totalPages}
       </p>
       <Pagination mode="button" page={page} totalPages={totalPages} onPageChange={setPage} />

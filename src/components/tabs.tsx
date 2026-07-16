@@ -24,7 +24,7 @@ function TabsList({ className, shadow, ...props }: TabsListProps) {
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
-        "border-chrome bg-frost text-ink inline-flex h-9 w-fit items-center justify-center border p-[3px]",
+        "border-border bg-bg-hover text-fg inline-flex h-9 w-fit items-center justify-center border p-[3px]",
         shadow && "shadow-offset",
         className,
       )}
@@ -39,10 +39,10 @@ function TabsTrigger({ className, ...props }: React.ComponentProps<typeof TabsPr
       data-slot="tabs-trigger"
       className={cn(
         "inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 px-2 py-1 text-sm font-medium whitespace-nowrap transition-colors",
-        "text-ink border border-transparent",
-        "data-[state=active]:bg-branch data-[state=active]:text-paper",
-        "focus-visible:outline-signal-blue focus-visible:outline-2 focus-visible:outline-offset-2",
-        "disabled:border-chrome disabled:bg-frost disabled:text-steel disabled:pointer-events-none disabled:border-dashed",
+        "text-fg border border-transparent",
+        "data-[state=active]:bg-bg-emphasis data-[state=active]:text-fg-on-emphasis",
+        "focus-visible:outline-border-focus focus-visible:outline-2 focus-visible:outline-offset-2",
+        "disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:pointer-events-none disabled:border-dashed",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
