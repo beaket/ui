@@ -14,35 +14,37 @@ function TabsRoot({ className, ...props }: React.ComponentProps<typeof TabsPrimi
   );
 }
 
-interface TabsListProps extends React.ComponentProps<typeof TabsPrimitive.List> {
-  /** Add offset shadow to the tabs list */
-  shadow?: boolean;
-}
-
-function TabsList({ className, shadow, ...props }: TabsListProps) {
+// One fused instrument: triggers share hairline borders inside a strip that
+// carries a single static accent edge — the same lens grammar as Navigation.
+function TabsList({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.List>) {
   return (
     <TabsPrimitive.List
       data-slot="tabs-list"
-      className={cn(
-        "border-border bg-bg-hover text-fg inline-flex h-9 w-fit items-center justify-center border p-[3px]",
-        shadow && "shadow-offset",
-        className,
-      )}
+      className={cn("shadow-offset-action inline-flex w-fit items-center", className)}
       {...props}
     />
   );
 }
 
+// The selected tab is not stamped in ink — it sits under a glass lens plate:
+// hairline top/left rim, ink bottom/right rim, the faintest accent wash. The
+// plate lies beneath the type, so the label keeps full ink density. There is no
+// press-travel here: Radix activates a tab on mousedown, so pressing *is*
+// selecting — the key never gets a painted frame between "pressed" and "the
+// plate". The switch is snappy on purpose; only the surface tint transitions.
 function TabsTrigger({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
   return (
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 px-2 py-1 text-sm font-medium whitespace-nowrap transition-colors",
-        "text-fg border border-transparent",
-        "data-[state=active]:bg-bg-emphasis data-[state=active]:text-fg-on-emphasis",
-        "focus-visible:outline-border-focus focus-visible:outline-2 focus-visible:outline-offset-2",
-        "disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:pointer-events-none disabled:border-dashed",
+        "group relative isolate flex h-8 items-center justify-center gap-1.5 border px-3.5 text-sm font-medium whitespace-nowrap",
+        "border-border-muted text-fg -ml-px first:ml-0",
+        "before:absolute before:inset-[-8px] before:content-['']",
+        "focus-visible:outline-border-focus focus-visible:z-[2] focus-visible:outline-2 focus-visible:outline-offset-2",
+        "transition-colors duration-100",
+        "data-[state=active]:after:border-t-border-muted data-[state=active]:after:border-l-border-muted data-[state=active]:after:border-r-border-strong data-[state=active]:after:border-b-border-strong data-[state=active]:after:bg-accent-bg-subtle data-[state=active]:cursor-default data-[state=active]:after:absolute data-[state=active]:after:inset-1 data-[state=active]:after:-z-[1] data-[state=active]:after:border data-[state=active]:after:content-['']",
+        "enabled:data-[state=inactive]:hover:bg-bg-hover enabled:data-[state=inactive]:active:bg-bg-active enabled:data-[state=inactive]:cursor-pointer",
+        "disabled:text-fg-disabled disabled:cursor-not-allowed",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
