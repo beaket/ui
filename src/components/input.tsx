@@ -15,10 +15,16 @@ const inputBaseStyles = [
   "bg-bg-input text-fg",
   "border border-border-strong",
   "placeholder:text-fg-subtle",
-  "focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2",
+  // The caret is the pen — the one vivid voice lives where the next letter lands.
+  "caret-accent-solid selection:bg-accent-bg",
+  // Cap-off: writing is quiet at rest; focus engages a static action edge
+  // (no ring, no hover growth, no drop). Read-only takes the grey surface
+  // shade on focus instead — readable, not writable.
+  "focus:outline-hidden not-read-only:focus:shadow-offset-action",
+  "enabled:read-only:focus:shadow-offset",
+  "enabled:read-only:border-border-muted",
   "disabled:cursor-not-allowed disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled",
-  "aria-[invalid=true]:border-danger-solid aria-[invalid=true]:focus-visible:outline-danger-solid",
-  "read-only:bg-bg-disabled read-only:text-fg-muted",
+  "aria-[invalid=true]:border-danger-solid aria-[invalid=true]:not-read-only:focus:shadow-offset-action-danger",
 ].join(" ");
 
 export function Input({ className, type = "text", prefix, suffix, ref, ...props }: Props) {

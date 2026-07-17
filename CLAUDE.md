@@ -17,11 +17,11 @@ The editor (`@beaket/paper`) is **exempt from the component checklist** — no r
 
 - **Self-contained**: Each component includes its own `cn` utility. No shared imports.
 - **Dependencies in registry**: List npm packages in `registry/registry.json`.
-- **CSS tokens, two layers**: `src/themes/semantic.css` holds the 68 semantic names components use (authored once, shared by every theme). Each theme (`solace`, `porcelain`, `tobacco`, `marigold`, `eucalyptus`) authors only its 32-value palette (`--surface-*`, `--tone-0…11`, `--signal-*`, `--signal-*-on`, `--shadow-*`) in `src/themes/<theme>.css`. Storybook imports `semantic.css` + `solace.css` via `src/styles.css`; CLI injects semantic + chosen palette at `init`.
+- **CSS tokens, two layers**: `src/themes/semantic.css` holds the 69 semantic names components use (authored once, shared by every theme). Each theme (`solace`, `porcelain`, `tobacco`, `marigold`, `eucalyptus`) authors only its 32-value palette (`--surface-*`, `--tone-0…11`, `--signal-*`, `--signal-*-on`, `--shadow-*`) in `src/themes/<theme>.css`. Storybook imports `semantic.css` + `solace.css` via `src/styles.css`; CLI injects semantic + chosen palette at `init`.
 
 ## Design Rules
 
-Brutalist design system. No gradients, no border-radius (except Radio), no blur shadows, no opacity for styling. Components use **only the 68 semantic tokens** from `src/themes/semantic.css` — never theme palette values (`--tone-*`, `--surface-*`, `--signal-*`) and never raw colors.
+Brutalist design system. No gradients, no border-radius (except Radio), no blur shadows, no opacity for styling. Components use **only the 69 semantic tokens** from `src/themes/semantic.css` — never theme palette values (`--tone-*`, `--surface-*`, `--signal-*`) and never raw colors.
 
 | Do                                                                                                                                               | Don't                                                                             |
 | ------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
@@ -38,7 +38,7 @@ Brutalist design system. No gradients, no border-radius (except Radio), no blur 
 
 Roles: `danger`, `success`, `warning`, `info`, `info-alt`, `accent` — 7 slots each (`-solid`, `-fg-on-solid`, `-solid-hover`, `-solid-active`, `-fg`, `-bg`, `-border`).
 
-Shadow states — pressables: rest = thin accent edge (`shadow-offset-action`), hover grows (`hover:shadow-offset-action-hover`), active drops onto the edge (`active:shadow-none active:translate-x-px active:translate-y-px`), disabled `none`. Instruments (small controls: checkbox/switch/radio; fused strips: pagination): the chassis keeps a **static** accent edge (no hover growth, no drop) and pressing travels the inner key (indicator/thumb/label) 1px instead; hover is a surface tint. Surfaces keep the static grey `shadow-offset` / `-overlay`. Sizes vary by theme (solace: 1px).
+Shadow states — pressables: rest = thin accent edge (`shadow-offset-action`), hover grows (`hover:shadow-offset-action-hover`), active drops onto the edge (`active:shadow-none active:translate-x-px active:translate-y-px`), disabled `none`. Instruments (small controls: checkbox/switch/radio; fused strips: pagination): the chassis keeps a **static** accent edge (no hover growth, no drop) and pressing travels the inner key (indicator/thumb/label) 1px instead; hover is a surface tint. Writing fields (input, textarea) are quiet at rest and **cap-off** on focus: no ring — a static action edge appears while engaged (`focus:outline-hidden not-read-only:focus:shadow-offset-action`; invalid swaps to `-action-danger`; focused read-only shows the grey `shadow-offset` instead), no hover response, caret is the pen (`caret-accent-solid` + `selection:bg-accent-bg`), read-only frame retreats to `border-border-muted` with full-ink value. Surfaces keep the static grey `shadow-offset` / `-overlay`. Sizes vary by theme (solace: 1px).
 
 ## Component Template
 
