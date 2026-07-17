@@ -1,6 +1,6 @@
 # @beaket/ui
 
-Copy-paste component library for React. Brutalist design system with multiple themes.
+Copy-paste component library for React. Ink & Instrument design system with multiple themes.
 
 Components are copied into your project — you own the code.
 

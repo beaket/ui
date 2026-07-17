@@ -50,9 +50,9 @@ const roleSlots = [
 ].map(t => ({ name: t.name, usage: t.usage, value: val(t.key) }));
 
 const shadows = [
-  { name: "--shadow-offset", usage: "Default interactive" },
-  { name: "--shadow-offset-hover", usage: "Hover" },
-  { name: "--shadow-offset-active", usage: "Active/pressed" },
+  { name: "--shadow-offset", usage: "Surfaces (cards, panels)" },
+  { name: "--shadow-offset-hover", usage: "Legacy grey ladder (navigation only)" },
+  { name: "--shadow-offset-active", usage: "Legacy grey ladder (navigation only)" },
   { name: "--shadow-offset-overlay", usage: "Overlays" },
   { name: "--shadow-offset-action", usage: "Pressables — the accent edge" },
   { name: "--shadow-offset-action-hover", usage: "Pressable hover — edge grows" },
@@ -105,7 +105,7 @@ const palette = [
 
 <TokenTable tokens={shadows} showSwatch={false} />
 
-<p>Use as <code>shadow-offset</code>, <code>hover:shadow-offset-hover</code>, <code>active:shadow-offset-active</code>, <code>shadow-offset-overlay</code>. Pressables carry <code>shadow-offset-action</code> (+ <code>hover:shadow-offset-action-hover</code>); writing fields engage it only on focus, swapping to <code>shadow-offset-action-danger</code> when invalid. Size and color vary by theme.</p>
+<p>Surfaces use <code>shadow-offset</code>; overlays use <code>shadow-offset-overlay</code>. Pressables carry <code>shadow-offset-action</code> (+ <code>hover:shadow-offset-action-hover</code>); writing fields engage it only on focus, swapping to <code>shadow-offset-action-danger</code> when invalid. Size and color vary by theme.</p>
 
 <h2>Palette — authored by the theme</h2>
 

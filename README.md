@@ -1,6 +1,6 @@
 # Beaket UI
 
-A brutalist design system. Two things live in this repo:
+Ink & Instrument — a printed page you can press. Two things live in this repo:
 
 - **`@beaket/ui`** — copy-paste React + Tailwind components (shadcn-style: the CLI copies source into your project, you own it).
 - **`@beaket/paper`** — a standalone, markdown-first / CJK-first Live Preview editor, published to npm.

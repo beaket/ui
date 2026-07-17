@@ -66,7 +66,7 @@ function Typography() {
                   }}
                 >
                   {type.element === "code"
-                    ? "const brutalist = true;"
+                    ? "const ink = tone(11);"
                     : "The quick brown fox jumps over the lazy dog"}
                 </div>
                 <div className="text-fg-subtle mt-2 text-xs">{type.usage}</div>
@@ -210,7 +210,7 @@ export const TypeScale = () => (
             }}
           >
             {type.element === "code"
-              ? "const brutalist = true;"
+              ? "const ink = tone(11);"
               : "The quick brown fox jumps over the lazy dog"}
           </div>
         </div>
