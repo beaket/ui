@@ -38,7 +38,7 @@ Brutalist design system. No gradients, no border-radius (except Radio), no blur 
 
 Roles: `danger`, `success`, `warning`, `info`, `info-alt`, `accent` — 7 slots each (`-solid`, `-fg-on-solid`, `-solid-hover`, `-solid-active`, `-fg`, `-bg`, `-border`).
 
-Shadow states — pressables: rest = thin accent edge (`shadow-offset-action`), hover grows (`hover:shadow-offset-action-hover`), active drops onto the edge (`active:shadow-none active:translate-x-px active:translate-y-px`), disabled `none`. Surfaces keep the static grey `shadow-offset` / `-overlay`. Sizes vary by theme (solace: 1px).
+Shadow states — pressables: rest = thin accent edge (`shadow-offset-action`), hover grows (`hover:shadow-offset-action-hover`), active drops onto the edge (`active:shadow-none active:translate-x-px active:translate-y-px`), disabled `none`. Instruments (small controls: checkbox/switch/radio; fused strips: pagination): the chassis keeps a **static** accent edge (no hover growth, no drop) and pressing travels the inner key (indicator/thumb/label) 1px instead; hover is a surface tint. Surfaces keep the static grey `shadow-offset` / `-overlay`. Sizes vary by theme (solace: 1px).
 
 ## Component Template
 
