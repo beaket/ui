@@ -70,13 +70,13 @@ const buttonVariants = cva(
     "inline-flex items-center justify-center gap-2",
     "font-medium",
     "cursor-pointer",
-    "shadow-offset",
-    "hover:shadow-offset-hover",
-    "active:shadow-offset-active",
+    "shadow-offset-action",
+    "hover:shadow-offset-action-hover",
+    "active:shadow-none active:translate-x-px active:translate-y-px",
     "disabled:shadow-none disabled:cursor-not-allowed disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled",
     "focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2",
     "[&_svg]:size-4",
-    "transition-shadow duration-100",
+    "transition-[box-shadow,translate] duration-100",
   ].join(" "),
   {
     variants: {
@@ -90,8 +90,8 @@ const buttonVariants = cva(
         secondary:
           "bg-accent-bg text-accent-fg border border-accent-border hover:border-accent-solid",
         ghost:
-          "text-fg hover:bg-bg-hover active:bg-bg-active shadow-none hover:shadow-none active:shadow-none",
-        link: "text-fg-link underline-offset-4 hover:underline shadow-none hover:shadow-none active:shadow-none",
+          "text-fg hover:bg-bg-hover active:bg-bg-active shadow-none hover:shadow-none active:shadow-none active:translate-x-0 active:translate-y-0",
+        link: "text-fg-link underline-offset-4 hover:underline shadow-none hover:shadow-none active:shadow-none active:translate-x-0 active:translate-y-0",
         success:
           "bg-success-solid text-success-fg-on-solid border border-success-solid hover:bg-success-solid-hover hover:border-success-solid-hover active:bg-success-solid-active disabled:text-fg-disabled no-underline",
         stark:
