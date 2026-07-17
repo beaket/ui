@@ -116,11 +116,18 @@ export function Pagination(props: PaginationProps) {
   };
 
   const pageNumbers = getPageNumbers();
+  // One fused instrument: cells share borders inside a strip that carries a
+  // single static accent edge; pressing a key travels its label 1px inside the
+  // frame, and the current page stays held down.
   const buttonBaseClass =
-    "flex items-center justify-center h-8 px-3 border text-sm transition-colors relative before:absolute before:inset-[-8px] before:content-['']";
-  const buttonActiveClass = "bg-bg-emphasis text-fg-on-emphasis border-border-strong";
-  const buttonInactiveClass = "border-border hover:bg-bg-hover";
+    "group flex items-center justify-center h-8 px-3 -ml-px first:ml-0 border text-sm transition-colors relative before:absolute before:inset-[-8px] before:content-[''] focus-visible:z-[2] focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2";
+  const buttonActiveClass =
+    "bg-bg-emphasis text-fg-on-emphasis border-border-strong z-[1] cursor-default before:hidden";
+  const buttonInactiveClass = "border-border cursor-pointer hover:bg-bg-hover active:bg-bg-active";
   const buttonDisabledClass = "border-border-muted text-fg-disabled cursor-not-allowed";
+  const keyClass =
+    "inline-block transition-transform duration-100 group-active:translate-x-px group-active:translate-y-px";
+  const heldKeyClass = "inline-block translate-x-px translate-y-px";
 
   const hasPrev = page > 1;
   const hasNext = page < totalPages;
@@ -128,122 +135,143 @@ export function Pagination(props: PaginationProps) {
   return (
     <nav
       data-slot="pagination"
-      className={cn("flex items-center justify-center gap-1", className)}
+      className={cn("flex items-center justify-center", className)}
       aria-label="Pagination"
     >
-      {/* Previous button */}
-      {isButtonMode ? (
-        <button
-          type="button"
-          data-slot="pagination-prev"
-          className={cn(buttonBaseClass, hasPrev ? buttonInactiveClass : buttonDisabledClass)}
-          disabled={!hasPrev}
-          onClick={() => hasPrev && props.onPageChange(page - 1)}
-          aria-label="Previous page"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-      ) : hasPrev ? (
-        <a
-          data-slot="pagination-prev"
-          href={props.buildPageUrl(page - 1)}
-          className={cn(buttonBaseClass, buttonInactiveClass)}
-          aria-label="Previous page"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </a>
-      ) : (
-        <span
-          data-slot="pagination-prev"
-          className={cn(buttonBaseClass, buttonDisabledClass)}
-          role="link"
-          aria-disabled="true"
-          aria-label="Previous page"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </span>
-      )}
-
-      {/* Page numbers */}
-      {pageNumbers.map((pageNum) => {
-        if (pageNum === "ellipsis-start" || pageNum === "ellipsis-end") {
-          return (
-            <span
-              key={pageNum}
-              data-slot="pagination-ellipsis"
-              className="text-fg-subtle px-2 py-1"
-              aria-hidden="true"
-            >
-              ...
+      <div data-slot="pagination-strip" className="shadow-offset-action flex items-center">
+        {/* Previous button */}
+        {isButtonMode ? (
+          <button
+            type="button"
+            data-slot="pagination-prev"
+            className={cn(buttonBaseClass, hasPrev ? buttonInactiveClass : buttonDisabledClass)}
+            disabled={!hasPrev}
+            onClick={() => hasPrev && props.onPageChange(page - 1)}
+            aria-label="Previous page"
+          >
+            {hasPrev ? (
+              <span className={keyClass}>
+                <ChevronLeft className="h-4 w-4" />
+              </span>
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
+          </button>
+        ) : hasPrev ? (
+          <a
+            data-slot="pagination-prev"
+            href={props.buildPageUrl(page - 1)}
+            className={cn(buttonBaseClass, buttonInactiveClass)}
+            aria-label="Previous page"
+          >
+            <span className={keyClass}>
+              <ChevronLeft className="h-4 w-4" />
             </span>
-          );
-        }
+          </a>
+        ) : (
+          <span
+            data-slot="pagination-prev"
+            className={cn(buttonBaseClass, buttonDisabledClass)}
+            role="link"
+            aria-disabled="true"
+            aria-label="Previous page"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </span>
+        )}
 
-        const isCurrentPage = pageNum === page;
+        {/* Page numbers */}
+        {pageNumbers.map((pageNum) => {
+          if (pageNum === "ellipsis-start" || pageNum === "ellipsis-end") {
+            return (
+              <span
+                key={pageNum}
+                data-slot="pagination-ellipsis"
+                className="text-fg-subtle border-border -ml-px flex h-8 items-center justify-center border px-3 select-none"
+                aria-hidden="true"
+              >
+                ...
+              </span>
+            );
+          }
 
-        if (isButtonMode) {
+          const isCurrentPage = pageNum === page;
+
+          if (isButtonMode) {
+            return (
+              <button
+                key={pageNum}
+                type="button"
+                data-slot="pagination-page"
+                className={cn(
+                  buttonBaseClass,
+                  isCurrentPage ? buttonActiveClass : buttonInactiveClass,
+                )}
+                onClick={() => props.onPageChange(pageNum)}
+                aria-current={isCurrentPage ? "page" : undefined}
+              >
+                <span className={isCurrentPage ? heldKeyClass : keyClass}>{pageNum}</span>
+              </button>
+            );
+          }
+
           return (
-            <button
+            <a
               key={pageNum}
-              type="button"
               data-slot="pagination-page"
+              href={props.buildPageUrl(pageNum)}
               className={cn(
                 buttonBaseClass,
                 isCurrentPage ? buttonActiveClass : buttonInactiveClass,
               )}
-              onClick={() => props.onPageChange(pageNum)}
               aria-current={isCurrentPage ? "page" : undefined}
             >
-              {pageNum}
-            </button>
+              <span className={isCurrentPage ? heldKeyClass : keyClass}>{pageNum}</span>
+            </a>
           );
-        }
+        })}
 
-        return (
-          <a
-            key={pageNum}
-            data-slot="pagination-page"
-            href={props.buildPageUrl(pageNum)}
-            className={cn(buttonBaseClass, isCurrentPage ? buttonActiveClass : buttonInactiveClass)}
-            aria-current={isCurrentPage ? "page" : undefined}
+        {/* Next button */}
+        {isButtonMode ? (
+          <button
+            type="button"
+            data-slot="pagination-next"
+            className={cn(buttonBaseClass, hasNext ? buttonInactiveClass : buttonDisabledClass)}
+            disabled={!hasNext}
+            onClick={() => hasNext && props.onPageChange(page + 1)}
+            aria-label="Next page"
           >
-            {pageNum}
+            {hasNext ? (
+              <span className={keyClass}>
+                <ChevronRight className="h-4 w-4" />
+              </span>
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
+          </button>
+        ) : hasNext ? (
+          <a
+            data-slot="pagination-next"
+            href={props.buildPageUrl(page + 1)}
+            className={cn(buttonBaseClass, buttonInactiveClass)}
+            aria-label="Next page"
+          >
+            <span className={keyClass}>
+              <ChevronRight className="h-4 w-4" />
+            </span>
           </a>
-        );
-      })}
-
-      {/* Next button */}
-      {isButtonMode ? (
-        <button
-          type="button"
-          data-slot="pagination-next"
-          className={cn(buttonBaseClass, hasNext ? buttonInactiveClass : buttonDisabledClass)}
-          disabled={!hasNext}
-          onClick={() => hasNext && props.onPageChange(page + 1)}
-          aria-label="Next page"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
-      ) : hasNext ? (
-        <a
-          data-slot="pagination-next"
-          href={props.buildPageUrl(page + 1)}
-          className={cn(buttonBaseClass, buttonInactiveClass)}
-          aria-label="Next page"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </a>
-      ) : (
-        <span
-          data-slot="pagination-next"
-          className={cn(buttonBaseClass, buttonDisabledClass)}
-          role="link"
-          aria-disabled="true"
-          aria-label="Next page"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </span>
-      )}
+        ) : (
+          <span
+            data-slot="pagination-next"
+            className={cn(buttonBaseClass, buttonDisabledClass)}
+            role="link"
+            aria-disabled="true"
+            aria-label="Next page"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </span>
+        )}
+      </div>
     </nav>
   );
 }
