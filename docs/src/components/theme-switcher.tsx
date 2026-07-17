@@ -154,7 +154,7 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
                 data-slot="theme-link"
                 onClick={() => handleClick(name)}
                 data-active={active === name || undefined}
-                className="border-border-strong text-fg shadow-offset hover:shadow-offset-hover active:shadow-offset-active hover:bg-bg-hover data-[active]:text-fg-on-emphasis data-[active]:bg-bg-emphasis data-[active]:hover:bg-bg-emphasis inline-block cursor-pointer border bg-transparent px-2 py-0.5 text-left text-xs no-underline transition-shadow duration-100 data-[active]:shadow-none data-[active]:hover:shadow-none"
+                className="border-border-strong text-fg shadow-offset-action hover:shadow-offset-action-hover hover:bg-bg-hover data-[active]:text-fg-on-emphasis data-[active]:bg-bg-emphasis data-[active]:hover:bg-bg-emphasis inline-block cursor-pointer border bg-transparent px-2 py-0.5 text-left text-xs no-underline transition-[box-shadow,translate] duration-100 active:translate-x-px active:translate-y-px active:shadow-none data-[active]:shadow-none data-[active]:hover:shadow-none data-[active]:active:translate-x-0 data-[active]:active:translate-y-0"
               >
                 {themeLabels[name]}
               </button>
@@ -179,7 +179,7 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
           onClick={toggleDark}
           aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
           title={dark ? "Switch to light mode" : "Switch to dark mode"}
-          className="border-border-strong text-fg shadow-offset hover:shadow-offset-hover active:shadow-offset-active hover:bg-bg-hover inline-flex cursor-pointer items-center justify-center border bg-transparent px-1.5 py-0.5 transition-shadow duration-100"
+          className="border-border-strong text-fg shadow-offset-action hover:shadow-offset-action-hover hover:bg-bg-hover inline-flex cursor-pointer items-center justify-center border bg-transparent px-1.5 py-0.5 transition-[box-shadow,translate] duration-100 active:translate-x-px active:translate-y-px active:shadow-none"
         >
           {dark ? <SunIcon /> : <MoonIcon />}
         </button>

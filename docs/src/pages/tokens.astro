@@ -18,7 +18,7 @@ const backgrounds = [
   { name: "--color-bg-hover", usage: "Hover surface" },
   { name: "--color-bg-active", usage: "Active / selected surface" },
   { name: "--color-bg-disabled", usage: "Disabled surface" },
-  { name: "--color-bg-emphasis", usage: "Primary buttons, checked, tooltips, active nav" },
+  { name: "--color-bg-emphasis", usage: "Primary buttons, checked, tooltips, pagination current" },
   { name: "--color-bg-emphasis-hover", usage: "Emphasis surface, hovered (accent-warmed)" },
   { name: "--color-bg-emphasis-active", usage: "Emphasis surface, pressed (accent-warmed)" },
 ].map(t => ({ ...t, value: val(t.name) }));
@@ -47,12 +47,11 @@ const roleSlots = [
   { name: "--color-{role}-fg", key: "--color-danger-fg", usage: "Role-colored text on the page" },
   { name: "--color-{role}-bg", key: "--color-danger-bg", usage: "Tinted background" },
   { name: "--color-{role}-border", key: "--color-danger-border", usage: "Border on tinted background" },
+  { name: "--color-accent-bg-subtle", key: "--color-accent-bg-subtle", usage: "Accent only — faintest wash (the navigation lens fill)" },
 ].map(t => ({ name: t.name, usage: t.usage, value: val(t.key) }));
 
 const shadows = [
   { name: "--shadow-offset", usage: "Surfaces (cards, panels)" },
-  { name: "--shadow-offset-hover", usage: "Legacy grey ladder (navigation only)" },
-  { name: "--shadow-offset-active", usage: "Legacy grey ladder (navigation only)" },
   { name: "--shadow-offset-overlay", usage: "Overlays" },
   { name: "--shadow-offset-action", usage: "Pressables — the accent edge" },
   { name: "--shadow-offset-action-hover", usage: "Pressable hover — edge grows" },
@@ -73,7 +72,7 @@ const palette = [
 
 <h1>Design Tokens</h1>
 
-<p>Two layers. A theme authors <strong>32 palette values</strong> by hand and nothing else; the <strong>69 semantic names</strong> components actually use are written once and shared by every theme. The <code>init</code> command adds both to your CSS file — after that you own them. Values shown are Solace (default). See <a href="/ui/themes">Themes</a> for other presets.</p>
+<p>Two layers. A theme authors <strong>32 palette values</strong> by hand and nothing else; the <strong>68 semantic names</strong> components actually use are written once and shared by every theme. The <code>init</code> command adds both to your CSS file — after that you own them. Values shown are Solace (default). See <a href="/ui/themes">Themes</a> for other presets.</p>
 
 <h2>Background</h2>
 
@@ -95,7 +94,7 @@ const palette = [
 
 <h2>Roles</h2>
 
-<p>Six roles — <code>danger</code>, <code>success</code>, <code>warning</code>, <code>info</code>, <code>info-alt</code>, <code>accent</code> — each with seven slots. Values below show the <code>danger</code> role.</p>
+<p>Six roles — <code>danger</code>, <code>success</code>, <code>warning</code>, <code>info</code>, <code>info-alt</code>, <code>accent</code> — each with seven slots. Values below show the <code>danger</code> role. The accent role alone carries one extra slot, <code>-bg-subtle</code>.</p>
 
 <TokenTable tokens={roleSlots} />
 
