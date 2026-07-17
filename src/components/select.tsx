@@ -32,8 +32,18 @@ function SelectTrigger({ className, size = "default", children, ...props }: Sele
       className={cn(
         "flex w-full items-center justify-between gap-2",
         "border-border-strong bg-bg-input text-fg border px-3 py-2 text-sm",
+        // Held open: the trigger is a pressable that opens a menu, so it takes
+        // the same accent-edge grammar as a Button — a thin edge at rest, grown
+        // on hover, held grown while the menu is open (data-[state=open] lands
+        // natively on the Radix trigger), dropped onto the edge on press, gone
+        // when disabled. Keyboard focus keeps the ring; invalid recolors border
+        // + ring to danger while the pressable edge stays accent (role-agnostic,
+        // exactly as on a destructive Button).
+        "shadow-offset-action hover:shadow-offset-action-hover data-[state=open]:shadow-offset-action-hover",
+        "active:translate-x-px active:translate-y-px active:shadow-none",
+        "transition-[box-shadow,translate] duration-100",
         "focus-visible:outline-border-focus focus-visible:outline-2 focus-visible:outline-offset-2",
-        "disabled:bg-bg-disabled disabled:text-fg-disabled disabled:border-border-muted disabled:cursor-not-allowed disabled:border-dashed",
+        "disabled:bg-bg-disabled disabled:text-fg-disabled disabled:border-border-muted disabled:cursor-not-allowed disabled:border-dashed disabled:shadow-none",
         "aria-[invalid=true]:border-danger-solid aria-[invalid=true]:focus-visible:outline-danger-solid",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0",
         className,
@@ -59,7 +69,7 @@ function SelectContent({
       <SelectPrimitive.Content
         data-slot="select-content"
         className={cn(
-          "shadow-offset border-border-strong bg-bg-overlay relative z-50 max-h-96 min-w-[8rem] overflow-hidden border",
+          "shadow-offset-overlay border-border-strong bg-bg-overlay relative z-50 max-h-96 min-w-[8rem] overflow-hidden border",
           "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
           className,
         )}
@@ -98,8 +108,11 @@ function SelectItem({
       className={cn(
         "relative flex w-full cursor-default items-center gap-2 select-none",
         "text-fg py-1.5 pr-8 pl-2 text-sm outline-none",
-        "focus:bg-bg-emphasis focus:text-fg-on-emphasis",
-        "data-[highlighted]:bg-bg-emphasis data-[highlighted]:text-fg-on-emphasis",
+        // Accent marks the row you'd activate — an accent-bg wash + a 2px accent
+        // left-rule (the engaged-edge weight) — with the ink of the words left
+        // full, not an ink stamp. Radix Select drives the active row via
+        // data-highlighted (not roving focus), so the mark keys off that.
+        "data-[highlighted]:bg-accent-bg data-[highlighted]:shadow-[inset_2px_0_0_0_var(--color-accent-solid)]",
         "data-[disabled]:text-fg-disabled data-[disabled]:pointer-events-none",
         className,
       )}
