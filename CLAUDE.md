@@ -17,11 +17,11 @@ The editor (`@beaket/paper`) is **exempt from the component checklist** — no r
 
 - **Self-contained**: Each component includes its own `cn` utility. No shared imports.
 - **Dependencies in registry**: List npm packages in `registry/registry.json`.
-- **CSS tokens, two layers**: `src/themes/semantic.css` holds the 64 semantic names components use (authored once, shared by every theme). Each theme (`solace`, `porcelain`, `tobacco`, `marigold`, `eucalyptus`) authors only its 32-value palette (`--surface-*`, `--tone-0…11`, `--signal-*`, `--signal-*-on`, `--shadow-*`) in `src/themes/<theme>.css`. Storybook imports `semantic.css` + `solace.css` via `src/styles.css`; CLI injects semantic + chosen palette at `init`.
+- **CSS tokens, two layers**: `src/themes/semantic.css` holds the 66 semantic names components use (authored once, shared by every theme). Each theme (`solace`, `porcelain`, `tobacco`, `marigold`, `eucalyptus`) authors only its 32-value palette (`--surface-*`, `--tone-0…11`, `--signal-*`, `--signal-*-on`, `--shadow-*`) in `src/themes/<theme>.css`. Storybook imports `semantic.css` + `solace.css` via `src/styles.css`; CLI injects semantic + chosen palette at `init`.
 
 ## Design Rules
 
-Brutalist design system. No gradients, no border-radius (except Radio), no blur shadows, no opacity for styling. Components use **only the 64 semantic tokens** from `src/themes/semantic.css` — never theme palette values (`--tone-*`, `--surface-*`, `--signal-*`) and never raw colors.
+Brutalist design system. No gradients, no border-radius (except Radio), no blur shadows, no opacity for styling. Components use **only the 66 semantic tokens** from `src/themes/semantic.css` — never theme palette values (`--tone-*`, `--surface-*`, `--signal-*`) and never raw colors.
 
 | Do                                                                                                       | Don't                                         |
 | -------------------------------------------------------------------------------------------------------- | --------------------------------------------- |

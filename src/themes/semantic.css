@@ -1,6 +1,6 @@
 /*
  * Beaket UI Design System — Semantic tokens
- * The 64 names components use. Authored once — every theme shares these
+ * The 66 names components use (62 color + 4 shadow). Authored once — every theme shares these
  * definitions verbatim. A theme never touches this layer; it only supplies
  * the 32-value palette (surface / tone / signal / knockout / shadow) that
  * these definitions point at. Palettes live in src/themes/<theme>.css.
@@ -16,6 +16,8 @@
   --color-bg-active: var(--tone-2);
   --color-bg-disabled: var(--tone-1);
   --color-bg-emphasis: var(--tone-11);
+  --color-bg-emphasis-hover: color-mix(in oklab, var(--signal-accent) 24%, var(--tone-11));
+  --color-bg-emphasis-active: color-mix(in oklab, var(--signal-accent) 14%, var(--tone-11));
 
   /* Foreground */
   --color-fg: var(--tone-11);
@@ -23,13 +25,13 @@
   --color-fg-subtle: var(--tone-6);
   --color-fg-disabled: var(--tone-5);
   --color-fg-on-emphasis: var(--tone-0);
-  --color-fg-link: var(--signal-info);
+  --color-fg-link: var(--signal-accent);
 
   /* Border */
   --color-border: var(--tone-4);
   --color-border-muted: var(--tone-3);
   --color-border-strong: var(--tone-11);
-  --color-border-focus: var(--signal-info);
+  --color-border-focus: var(--signal-accent);
 
   /* Role — danger */
   --color-danger-solid: var(--signal-danger);

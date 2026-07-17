@@ -1,7 +1,7 @@
 /*
  * Beaket UI Design System — Porcelain palette
  * Near-white paper, cool graphite ink — balanced signals; the neutral default.
- * 32 values; semantic.css turns them into the 64 names components use.
+ * 32 values; semantic.css turns them into the 66 names components use.
  */
 
 :root {
@@ -79,7 +79,7 @@
     --signal-success: #10a66e;
     --signal-info: #1a8ed8;
     --signal-info-alt: #1aa0b8;
-    --signal-accent: #7e3ec4;
+    --signal-accent: #a06ae0;
 
     /* Knockout */
     --signal-danger-on: var(--tone-0);

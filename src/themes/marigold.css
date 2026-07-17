@@ -1,7 +1,7 @@
 /*
  * Beaket UI Design System — Marigold palette
  * Pure-grey paper and ink — the loudest signals, kept bright by design.
- * 32 values; semantic.css turns them into the 64 names components use.
+ * 32 values; semantic.css turns them into the 66 names components use.
  */
 
 :root {
@@ -31,7 +31,7 @@
   --signal-success: #00cc81;
   --signal-info: #0055ff;
   --signal-info-alt: #00bcd4;
-  --signal-accent: #a259ff;
+  --signal-accent: #8330d8;
 
   /* Knockout — which end of the ramp carries type on each solid */
   --signal-danger-on: var(--tone-11);
