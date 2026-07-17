@@ -4,7 +4,7 @@
  * "Every mark is an ink of equal weight, hue carries meaning but never
  * emphasis, and the one vivid voice belongs solely to what you can act on."
  * Light-only by declaration. 32 values; semantic.css turns them into the
- * 66 names components use.
+ * 68 names components use.
  */
 
 :root {
@@ -44,8 +44,8 @@
   --signal-info-alt-on: var(--tone-11);
   --signal-accent-on: var(--tone-0);
 
-  /* Shadow — elevation is drawn, not lit */
-  --shadow-size: 2px;
+  /* Shadow — elevation is drawn, not lit; a 1px edge, thin and sharp */
+  --shadow-size: 1px;
   --shadow-size-active: 1px;
   --shadow-color: #c0c4ca;
   --shadow-color-overlay: #a0a3a7;

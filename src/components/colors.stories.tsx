@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 /**
  * Two layers:
  * - A theme authors 32 palette values (surface / tone / signal / knockout / shadow).
- * - The 66 semantic names below are authored once and shared by every theme —
+ * - The 68 semantic names below are authored once and shared by every theme —
  *   components only ever use these.
  * Swatches render from the live CSS variables, so this page always shows the
  * active theme.
@@ -95,7 +95,7 @@ function Colors() {
         <div className="border-border mb-8 border-b pb-4">
           <h1 className="text-fg text-2xl font-bold">Color Tokens</h1>
           <p className="text-fg-muted mt-1 text-sm">
-            Two layers. A theme authors 32 palette values and nothing else; the 66 semantic names
+            Two layers. A theme authors 32 palette values and nothing else; the 68 semantic names
             components actually use are written once and shared by every theme.
           </p>
         </div>
@@ -287,7 +287,7 @@ const meta: Meta<typeof Colors> = {
     docs: {
       description: {
         component:
-          "Two-layer brutalist color system: 32 theme-authored palette values, 66 shared semantic names. Components only use the semantic layer. No gradients, no blur shadows, no opacity effects.",
+          "Two-layer brutalist color system: 32 theme-authored palette values, 68 shared semantic names. Components only use the semantic layer. No gradients, no blur shadows, no opacity effects.",
       },
     },
   },
