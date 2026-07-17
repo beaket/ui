@@ -19,6 +19,8 @@ const backgrounds = [
   { name: "--color-bg-active", usage: "Active / selected surface" },
   { name: "--color-bg-disabled", usage: "Disabled surface" },
   { name: "--color-bg-emphasis", usage: "Primary buttons, checked, tooltips, active nav" },
+  { name: "--color-bg-emphasis-hover", usage: "Emphasis surface, hovered (accent-warmed)" },
+  { name: "--color-bg-emphasis-active", usage: "Emphasis surface, pressed (accent-warmed)" },
 ].map(t => ({ ...t, value: val(t.name) }));
 
 const foregrounds = [
@@ -68,7 +70,7 @@ const palette = [
 
 <h1>Design Tokens</h1>
 
-<p>Two layers. A theme authors <strong>32 palette values</strong> by hand and nothing else; the <strong>64 semantic names</strong> components actually use are written once and shared by every theme. The <code>init</code> command adds both to your CSS file — after that you own them. Values shown are Solace (default). See <a href="/ui/themes">Themes</a> for other presets.</p>
+<p>Two layers. A theme authors <strong>32 palette values</strong> by hand and nothing else; the <strong>66 semantic names</strong> components actually use are written once and shared by every theme. The <code>init</code> command adds both to your CSS file — after that you own them. Values shown are Solace (default). See <a href="/ui/themes">Themes</a> for other presets.</p>
 
 <h2>Background</h2>
 

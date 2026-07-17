@@ -1,7 +1,7 @@
 /*
  * Beaket UI Design System — Tobacco palette
  * Warm earthen paper, warm-grey ink — quiet, low-chroma signals.
- * 32 values; semantic.css turns them into the 64 names components use.
+ * 32 values; semantic.css turns them into the 66 names components use.
  */
 
 :root {
@@ -79,7 +79,7 @@
     --signal-success: #48a850;
     --signal-info: #4a61b8;
     --signal-info-alt: #28a890;
-    --signal-accent: #9a4a82;
+    --signal-accent: #b866a0;
 
     /* Knockout */
     --signal-danger-on: var(--tone-0);

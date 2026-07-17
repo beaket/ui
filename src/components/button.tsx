@@ -82,12 +82,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-bg-emphasis text-fg-on-emphasis border border-border-strong disabled:text-fg-disabled no-underline",
+          "bg-bg-emphasis text-fg-on-emphasis border border-accent-solid hover:bg-bg-emphasis-hover active:bg-bg-emphasis-active disabled:text-fg-disabled no-underline",
         destructive:
           "bg-danger-solid text-danger-fg-on-solid border border-danger-solid hover:bg-danger-solid-hover hover:border-danger-solid-hover active:bg-danger-solid-active disabled:text-fg-disabled no-underline",
         outline:
           "border border-border bg-transparent text-fg hover:bg-bg-hover active:bg-bg-active",
-        secondary: "bg-bg-hover text-fg border border-border hover:bg-bg-active",
+        secondary:
+          "bg-accent-bg text-accent-fg border border-accent-border hover:border-accent-solid",
         ghost:
           "text-fg hover:bg-bg-hover active:bg-bg-active shadow-none hover:shadow-none active:shadow-none",
         link: "text-fg-link underline-offset-4 hover:underline shadow-none hover:shadow-none active:shadow-none",
