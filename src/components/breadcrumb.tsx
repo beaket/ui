@@ -34,12 +34,18 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   );
 }
 
+// A breadcrumb is a trail, not a switcher — a sentence read left to right, not
+// the lens (that belongs to navigation and tabs). It stays in one ink: ancestors
+// in muted ink, the current page in full ink. No standing blue — the trail is
+// quiet at rest; pointing at a step darkens it from muted to full ink, and the
+// one accent mark is the keyboard focus ring (the vivid voice kept for where you
+// act). No pressable edge: a link is not a key.
 function BreadcrumbLink({ className, ...props }: React.ComponentProps<"a">) {
   return (
     <a
       data-slot="breadcrumb-link"
       className={cn(
-        "text-fg-link hover:text-fg underline",
+        "text-fg-muted hover:text-fg no-underline transition-colors duration-100",
         "focus-visible:outline-border-focus focus-visible:outline-2 focus-visible:outline-offset-2",
         "relative before:absolute before:inset-[-8px] before:content-['']",
         className,
