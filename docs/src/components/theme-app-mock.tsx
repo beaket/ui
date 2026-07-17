@@ -246,16 +246,20 @@ export function ThemeAppMock() {
             </div>
           </div>
 
-          {/* Tabs section */}
+          {/* Tabs section — lens grammar: fused hairline strip, glass plate on current */}
           <div className="mt-3">
-            <div className="border-border flex border-b">
-              <span className="bg-bg-emphasis text-fg-on-emphasis border-border border-t border-r border-l px-3 py-1 text-xs font-semibold">
+            <div className="shadow-offset-action inline-flex">
+              <span className="border-border-muted text-fg after:border-t-border-muted after:border-l-border-muted after:border-r-border-strong after:border-b-border-strong after:bg-accent-bg-subtle relative isolate border px-3 py-1 text-xs font-medium after:absolute after:inset-1 after:-z-[1] after:border after:content-['']">
                 Activity
               </span>
-              <span className="text-fg px-3 py-1 text-xs">Logs</span>
-              <span className="text-fg px-3 py-1 text-xs">Webhooks</span>
+              <span className="border-border-muted text-fg -ml-px border px-3 py-1 text-xs font-medium">
+                Logs
+              </span>
+              <span className="border-border-muted text-fg -ml-px border px-3 py-1 text-xs font-medium">
+                Webhooks
+              </span>
             </div>
-            <div className="border-border bg-bg border-r border-b border-l p-3">
+            <div className="border-border bg-bg mt-2 border p-3">
               <div className="flex flex-col gap-1.5">
                 {[
                   { time: "2m ago", text: "User alice@acme.co logged in", type: "info" },
