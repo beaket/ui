@@ -5,8 +5,11 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
+// Instrument grammar: the track floats on a static accent edge; pressing
+// travels the thumb (the key) 1px instead of dropping the chassis. Checked
+// fills with ink — state is carried by thumb position + ink, not a signal role.
 const switchVariants = cva(
-  "group peer inline-flex shrink-0 cursor-pointer items-center p-0.5 transition-colors outline-none data-[state=checked]:bg-success-solid data-[state=unchecked]:bg-border-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus disabled:cursor-not-allowed disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:data-[state=checked]:bg-bg-disabled border border-border-strong relative before:absolute before:inset-[-14px] before:content-['']",
+  "group peer inline-flex shrink-0 cursor-pointer items-center p-0.5 transition-colors duration-100 outline-none shadow-offset-action data-[state=checked]:bg-bg-emphasis enabled:data-[state=checked]:hover:bg-bg-emphasis-hover data-[state=unchecked]:bg-border-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus disabled:shadow-none disabled:cursor-not-allowed disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:data-[state=checked]:bg-bg-disabled border border-border-strong relative before:absolute before:inset-[-14px] before:content-['']",
   {
     variants: {
       size: {
@@ -22,13 +25,13 @@ const switchVariants = cva(
 );
 
 const switchThumbVariants = cva(
-  "pointer-events-none block bg-bg-input group-disabled:bg-border-muted ring-0 transition-transform data-[state=unchecked]:translate-x-0",
+  "pointer-events-none block bg-bg-input group-disabled:bg-border-muted ring-0 transition-transform data-[state=unchecked]:translate-x-0 group-active:translate-y-px group-active:data-[state=unchecked]:translate-x-px",
   {
     variants: {
       size: {
-        sm: "size-2 data-[state=checked]:translate-x-4",
-        md: "size-2.5 data-[state=checked]:translate-x-5",
-        lg: "size-3.5 data-[state=checked]:translate-x-6",
+        sm: "size-2 data-[state=checked]:translate-x-4 group-active:data-[state=checked]:translate-x-[17px]",
+        md: "size-2.5 data-[state=checked]:translate-x-5 group-active:data-[state=checked]:translate-x-[21px]",
+        lg: "size-3.5 data-[state=checked]:translate-x-6 group-active:data-[state=checked]:translate-x-[25px]",
       },
     },
     defaultVariants: {
