@@ -329,6 +329,35 @@ export const AllStates = () => (
   </div>
 );
 
+// The trigger holds its hover state while the menu is open: the accent edge
+// stays grown (still pressable, now the active owner of the menu). Left is at
+// rest, right is held open — compare the edge.
+export const TriggerOpenState = () => (
+  <div className="flex items-start gap-16">
+    <DropdownMenu>
+      <DropdownMenu.Trigger asChild>
+        <Button variant="outline">At rest</Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        <DropdownMenu.Item>Profile</DropdownMenu.Item>
+        <DropdownMenu.Item>Settings</DropdownMenu.Item>
+        <DropdownMenu.Item>Log out</DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu>
+
+    <DropdownMenu defaultOpen>
+      <DropdownMenu.Trigger asChild>
+        <Button variant="outline">Held open</Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        <DropdownMenu.Item>Profile</DropdownMenu.Item>
+        <DropdownMenu.Item>Settings</DropdownMenu.Item>
+        <DropdownMenu.Item>Log out</DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu>
+  </div>
+);
+
 // Interaction Tests
 export const OpenCloseTest: Story = {
   render: () => (
