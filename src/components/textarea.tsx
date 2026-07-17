@@ -84,10 +84,14 @@ export function Textarea({
       className={cn(
         "border-border-strong bg-bg-input text-fg w-full border px-3 py-2 text-sm",
         "placeholder:text-fg-subtle",
-        "focus-visible:outline-border-focus focus-visible:outline-2 focus-visible:outline-offset-2",
+        "caret-accent-solid selection:bg-accent-bg",
+        // Cap-off: same field grammar as Input — quiet at rest, static action
+        // edge while engaged, grey surface shade when read-only is focused.
+        "not-read-only:focus:shadow-offset-action focus:outline-hidden",
+        "enabled:read-only:focus:shadow-offset",
+        "enabled:read-only:border-border-muted enabled:read-only:cursor-default",
         "disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:cursor-not-allowed disabled:border-dashed",
-        "read-only:bg-bg-disabled read-only:cursor-default",
-        "aria-[invalid=true]:border-danger-solid aria-[invalid=true]:focus-visible:outline-danger-solid",
+        "aria-[invalid=true]:border-danger-solid aria-[invalid=true]:not-read-only:focus:shadow-offset-action-danger",
         autoResize && !resizable && "resize-none overflow-hidden",
         autoResize && resizable && "resize-y overflow-hidden",
         !autoResize && resizable && "resize-y",

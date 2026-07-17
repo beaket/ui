@@ -54,6 +54,9 @@ const shadows = [
   { name: "--shadow-offset-hover", usage: "Hover" },
   { name: "--shadow-offset-active", usage: "Active/pressed" },
   { name: "--shadow-offset-overlay", usage: "Overlays" },
+  { name: "--shadow-offset-action", usage: "Pressables — the accent edge" },
+  { name: "--shadow-offset-action-hover", usage: "Pressable hover — edge grows" },
+  { name: "--shadow-offset-action-danger", usage: "Invalid writing field, focused" },
 ].map(t => ({ ...t, value: val(t.name) }));
 
 const palette = [
@@ -70,7 +73,7 @@ const palette = [
 
 <h1>Design Tokens</h1>
 
-<p>Two layers. A theme authors <strong>32 palette values</strong> by hand and nothing else; the <strong>68 semantic names</strong> components actually use are written once and shared by every theme. The <code>init</code> command adds both to your CSS file — after that you own them. Values shown are Solace (default). See <a href="/ui/themes">Themes</a> for other presets.</p>
+<p>Two layers. A theme authors <strong>32 palette values</strong> by hand and nothing else; the <strong>69 semantic names</strong> components actually use are written once and shared by every theme. The <code>init</code> command adds both to your CSS file — after that you own them. Values shown are Solace (default). See <a href="/ui/themes">Themes</a> for other presets.</p>
 
 <h2>Background</h2>
 
@@ -102,7 +105,7 @@ const palette = [
 
 <TokenTable tokens={shadows} showSwatch={false} />
 
-<p>Use as <code>shadow-offset</code>, <code>hover:shadow-offset-hover</code>, <code>active:shadow-offset-active</code>, <code>shadow-offset-overlay</code>. Size and color vary by theme.</p>
+<p>Use as <code>shadow-offset</code>, <code>hover:shadow-offset-hover</code>, <code>active:shadow-offset-active</code>, <code>shadow-offset-overlay</code>. Pressables carry <code>shadow-offset-action</code> (+ <code>hover:shadow-offset-action-hover</code>); writing fields engage it only on focus, swapping to <code>shadow-offset-action-danger</code> when invalid. Size and color vary by theme.</p>
 
 <h2>Palette — authored by the theme</h2>
 
