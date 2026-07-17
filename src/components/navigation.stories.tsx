@@ -78,7 +78,7 @@ export const ManyItems: Story = {
 export const VerticalLayout: Story = {
   render: () => (
     <Navigation>
-      <Navigation.List className="flex-col">
+      <Navigation.List className="w-48 flex-col [&>li+li]:-mt-px [&>li+li]:ml-0">
         <Navigation.Item>
           <Navigation.Link href="/" active className="w-full">
             Dashboard
@@ -123,7 +123,7 @@ export const AllVariants = () => (
     <div>
       <p className="text-fg-muted mb-2 text-xs">Vertical navigation</p>
       <Navigation>
-        <Navigation.List className="w-48 flex-col">
+        <Navigation.List className="w-48 flex-col [&>li+li]:-mt-px [&>li+li]:ml-0">
           <Navigation.Item>
             <Navigation.Link href="/" active className="w-full">
               Dashboard

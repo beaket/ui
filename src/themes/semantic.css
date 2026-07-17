@@ -1,6 +1,6 @@
 /*
  * Beaket UI Design System — Semantic tokens
- * The 69 names components use (62 color + 7 shadow). Authored once — every theme shares these
+ * The 68 names components use (63 color + 5 shadow). Authored once — every theme shares these
  * definitions verbatim. A theme never touches this layer; it only supplies
  * the 32-value palette (surface / tone / signal / knockout / shadow) that
  * these definitions point at. Palettes live in src/themes/<theme>.css.
@@ -86,13 +86,11 @@
   --color-accent-fg: color-mix(in oklab, var(--signal-accent) 60%, var(--tone-11));
   --color-accent-bg: color-mix(in oklab, var(--signal-accent) 17%, var(--tone-0));
   --color-accent-border: color-mix(in oklab, var(--signal-accent) 60%, var(--tone-0));
+  /* Accent only — the faintest wash. Fills the navigation lens plate. */
+  --color-accent-bg-subtle: color-mix(in oklab, var(--signal-accent) 8%, var(--tone-0));
 
   /* Shadow — elevation is drawn, not lit */
   --shadow-offset: var(--shadow-size) var(--shadow-size) 0 0 var(--shadow-color);
-  --shadow-offset-hover: calc(var(--shadow-size) + 1px) calc(var(--shadow-size) + 1px) 0 0
-    var(--shadow-color);
-  --shadow-offset-active: var(--shadow-size-active) var(--shadow-size-active) 0 0
-    var(--shadow-color);
   --shadow-offset-overlay: var(--shadow-size) var(--shadow-size) 0 0 var(--shadow-color-overlay);
 
   /* Action shadow — the accent edge under what you can press. Surfaces keep
