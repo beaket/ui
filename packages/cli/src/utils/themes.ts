@@ -5,7 +5,7 @@ import CSS_SEMANTIC from "../../../../src/themes/semantic.css";
 import CSS_SOLACE from "../../../../src/themes/solace.css";
 import CSS_TOBACCO from "../../../../src/themes/tobacco.css";
 
-// The semantic layer (68 shared names) is authored once; each injected theme
+// The semantic layer is authored once; each injected theme
 // block bundles it with that theme's 32-value palette so a consumer's CSS is
 // self-sufficient.
 const withSemantic = (palette: string): string => `${CSS_SEMANTIC}\n${palette}`;

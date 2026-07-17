@@ -25,38 +25,9 @@ textarea · tooltip
 
 Each `.tsx` file is copied verbatim into the consumer's project by the CLI — there is no runtime dependency on this repo after the copy.
 
-### Load-bearing invariants — never break
+### Invariants, template, checklist
 
-1. **No shared imports.** Each component inlines its own `cn` (clsx + tailwind-merge). No cross-component or shared-util imports. The file must compile standalone after it is pasted.
-2. **Semantic tokens only.** Components use only the 68 shared semantic names from `src/themes/semantic.css`: `bg-bg`, `text-fg`, `border-border`, `shadow-offset`, `bg-bg-emphasis`, `bg-danger-solid`, etc. Never use `bg-white`, `rounded-lg` (except Radio), `shadow-md`/`shadow-lg` (blur), `opacity-*`, raw color values, or theme palette values (`--tone-*`, `--surface-*`, `--signal-*`).
-3. **`data-slot` on every root element.** Required for stable consumer CSS targeting.
-4. **`cn` + `className` spread on every exported component.** Enables override via prop.
-5. **Consistent disabled / focus patterns.** Disabled: `disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled`. Focus: `focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2`.
-6. **Touch targets ≥ 44 px on small controls.** Via `before:absolute before:inset-[-14px] before:content-['']`.
-
-### Component template
-
-```tsx
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
-
-export function ComponentName({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="component-name" className={cn("base-styles", className)} {...props} />;
-}
-```
-
-Compound sub-components (`Dialog.Title`, `Dialog.Footer`) use dot-notation, not individual named exports. Controlled/uncontrolled dual support via `open`/`onOpenChange` where applicable.
-
-### Required checklist (every new component)
-
-- `src/components/[name].tsx` — the component
-- `src/components/[name].stories.tsx` — Storybook with `tags: ["autodocs"]` + interaction tests via `play`
-- `registry/registry.json` — entry with `dependencies`, `registryDependencies`, `files`, and `docs` fields
-- `.changeset/*.md` — package `@beaket/ui`, `minor` for new/feature, `patch` for fix. **Never `major`** — see `docs/git-rules.md`
-
-**Testing portals:** use `screen` (not `canvasElement`) for Dialog, Popover, etc.
+Owned by `CLAUDE.md` (Design Rules · Component Template · Required Checklist) — read them there. Not duplicated here: the copies drifted from the source twice (token count, theme count) before being removed.
 
 ## `registry/registry.json`
 
@@ -109,11 +80,11 @@ Key utils:
 - `utils/registry.ts` — fetch from `https://raw.githubusercontent.com/beaket/ui/main`
 - `utils/files.ts` — write component files, detect package manager (npm/pnpm/yarn/bun)
 - `utils/theme.ts` — CSS token injection and replacement logic
-- `utils/themes.ts` — bundled theme CSS strings (the four built-in themes)
+- `utils/themes.ts` — bundled theme CSS strings for the built-in themes
 
 ## CSS themes (`src/themes/`)
 
-Four themes ship with the design system: `porcelain`, `tobacco`, `marigold`, `eucalyptus`. Storybook imports `porcelain.css` via `src/styles.css`. The CLI injects the chosen theme at `init` and updates it with `theme`.
+See `CLAUDE.md` § CSS tokens — the two-layer system (shared semantic layer + per-theme palettes) and the current theme list live there. The CLI injects the chosen theme at `init` and updates it with `theme`.
 
 ## Where to make changes
 

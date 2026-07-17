@@ -25,7 +25,7 @@ export function ComponentShowcase({ components, version }: ComponentShowcaseProp
       <a
         href="/ui/installation"
         data-slot="branding-card"
-        className="shadow-offset hover:shadow-offset-hover active:shadow-offset-active border-border-strong bg-bg-emphasis flex flex-col justify-between border-2 p-4 no-underline transition-shadow outline-none"
+        className="shadow-offset-action hover:shadow-offset-action-hover border-border-strong bg-bg-emphasis flex flex-col justify-between border-2 p-4 no-underline transition-[box-shadow,translate] duration-100 outline-none active:translate-x-px active:translate-y-px active:shadow-none"
       >
         <div>
           <div>
@@ -35,7 +35,7 @@ export function ComponentShowcase({ components, version }: ComponentShowcaseProp
             <span className="text-fg-on-emphasis/60 ml-1.5 text-[10px]">v{version}</span>
           </div>
           <p className="text-fg-on-emphasis/80 m-0 mt-3 text-sm leading-relaxed">
-            Brutalist React components.
+            A printed page you can press.
             <br />
             Copy-paste into your project.
           </p>

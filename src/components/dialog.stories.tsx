@@ -3,6 +3,7 @@ import { useState } from "react";
 import { expect, screen, userEvent, within } from "storybook/test";
 import { Button } from "./button";
 import { Dialog } from "./dialog";
+import { Input } from "./input";
 
 const meta: Meta<typeof Dialog> = {
   title: "UI/Dialog",
@@ -115,22 +116,13 @@ export const WithForm: Story = {
             <label htmlFor="name" className="text-fg text-sm font-medium">
               Name
             </label>
-            <input
-              id="name"
-              defaultValue="John Doe"
-              className="border-border bg-bg text-fg placeholder:text-fg-subtle focus:ring-border-focus h-9 border px-3 text-sm focus:ring-2 focus:outline-none"
-            />
+            <Input id="name" defaultValue="John Doe" />
           </div>
           <div className="grid gap-2">
             <label htmlFor="email" className="text-fg text-sm font-medium">
               Email
             </label>
-            <input
-              id="email"
-              type="email"
-              defaultValue="john@example.com"
-              className="border-border bg-bg text-fg placeholder:text-fg-subtle focus:ring-border-focus h-9 border px-3 text-sm focus:ring-2 focus:outline-none"
-            />
+            <Input id="email" type="email" defaultValue="john@example.com" />
           </div>
         </div>
         <Dialog.Footer>

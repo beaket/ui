@@ -5,7 +5,7 @@
  *  - docs/public/theme-init.js — self-contained head script (no imports
  *    allowed there) that applies the stored theme before first paint.
  *
- * Source of truth: src/themes/semantic.css (the 68 shared semantic names)
+ * Source of truth: src/themes/semantic.css (the shared semantic names)
  * + src/themes/<theme>.css (32-value palettes, light `:root` block plus an
  * optional dark twin in a prefers-color-scheme media query).
  * Code-highlight tokens (--astro-code-*) are docs-specific and defined here.

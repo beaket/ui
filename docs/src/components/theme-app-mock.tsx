@@ -49,7 +49,7 @@ export function ThemeAppMock() {
             <div className="flex items-center justify-between">
               <span className="text-fg-muted text-xs">API</span>
               <span
-                className="bg-success-solid text-fg-on-emphasis text-xs"
+                className="bg-success-solid text-success-fg-on-solid text-xs"
                 style={{ padding: "1px 6px", fontWeight: 700 }}
               >
                 OK

@@ -21,7 +21,7 @@ The editor (`@beaket/paper`) is **exempt from the component checklist** — no r
 
 ## Design Rules
 
-Brutalist design system. No gradients, no border-radius (except Radio), no blur shadows, no opacity for styling. Components use **only the 69 semantic tokens** from `src/themes/semantic.css` — never theme palette values (`--tone-*`, `--surface-*`, `--signal-*`) and never raw colors.
+Ink & Instrument design system. No gradients, no border-radius (except Radio), no blur shadows, no opacity for styling. Components use **only the 69 semantic tokens** from `src/themes/semantic.css` — never theme palette values (`--tone-*`, `--surface-*`, `--signal-*`) and never raw colors.
 
 | Do                                                                                                                                               | Don't                                                                             |
 | ------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |

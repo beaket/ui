@@ -6,7 +6,7 @@ import Layout from '../layouts/doc.astro';
 
 <h1>Design Rules</h1>
 
-<p>Beaket UI is a brutalist design system. These rules explain why things look the way they do — and what to preserve when you customize.</p>
+<p>Beaket UI is an Ink & Instrument design system — a printed page you can press. These rules explain why things look the way they do — and what to preserve when you customize.</p>
 
 <h2>No decoration</h2>
 
@@ -14,11 +14,11 @@ import Layout from '../layouts/doc.astro';
 
 <h2>Shadows signal state</h2>
 
-<p>Offset shadows are not decoration — they communicate interactivity. Default is present, hover grows, active shrinks, disabled removes. This is the system's primary state language.</p>
+<p>Offset shadows are not decoration — they speak. Pressables carry a thin accent edge: hover grows it, pressing drops the control onto it, disabled removes it. Instruments (small controls, fused strips) hold the edge static while the inner key travels under the press. Writing fields draw it only while focused (cap-off). Surfaces keep a quiet grey shade. This is the system's primary state language.</p>
 
 <h2>One pattern, everywhere</h2>
 
-<p>Same focus ring on every component: <code>outline-2 outline-border-focus outline-offset-2</code>. Same disabled style everywhere: <code>border-dashed border-border-muted bg-bg-disabled text-fg-disabled</code>. Users learn the system once and trust it completely.</p>
+<p>Same keyboard focus outline on every pressable: <code>outline-2 outline-border-focus outline-offset-2</code> — writing fields signal focus with the accent edge instead (cap-off). Same disabled style everywhere: <code>border-dashed border-border-muted bg-bg-disabled text-fg-disabled</code>. Users learn the system once and trust it completely.</p>
 
 <h2>Own it, keep it right</h2>
 
