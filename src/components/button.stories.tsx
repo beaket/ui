@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { ReactNode } from "react";
 import { expect, fn, userEvent, within } from "storybook/test";
 import { Button } from "./button";
 
@@ -17,7 +18,6 @@ const meta: Meta<typeof Button> = {
         "ghost",
         "link",
         "success",
-        "stark",
         "warning",
       ],
     },
@@ -31,111 +31,18 @@ const meta: Meta<typeof Button> = {
     disabled: {
       control: "boolean",
     },
-    mono: {
-      control: "boolean",
-    },
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof Button>;
 
-export const Primary: Story = {
+// The interactive playground — pick any variant/size/state via Controls.
+// Per-variant/size/state examples live in the AllVariants/AllSizes/AllStates
+// compositions below (also what the docs site renders).
+export const Default: Story = {
   args: {
     children: "Button",
-    variant: "primary",
-  },
-};
-
-export const Destructive: Story = {
-  args: {
-    children: "Delete",
-    variant: "destructive",
-  },
-};
-
-export const Outline: Story = {
-  args: {
-    children: "Button",
-    variant: "outline",
-  },
-};
-
-export const Secondary: Story = {
-  args: {
-    children: "Button",
-    variant: "secondary",
-  },
-};
-
-export const Ghost: Story = {
-  args: {
-    children: "Button",
-    variant: "ghost",
-  },
-};
-
-export const Link: Story = {
-  args: {
-    children: "Link",
-    variant: "link",
-  },
-};
-
-export const Success: Story = {
-  args: {
-    children: "Save",
-    variant: "success",
-  },
-};
-
-export const Stark: Story = {
-  args: {
-    children: "Button",
-    variant: "stark",
-  },
-};
-
-export const Warning: Story = {
-  args: {
-    children: "Warning",
-    variant: "warning",
-  },
-};
-
-export const Mono: Story = {
-  args: {
-    children: "SUBMIT",
-    variant: "success",
-    mono: true,
-  },
-};
-
-export const Loading: Story = {
-  args: {
-    children: "Loading",
-    loading: true,
-  },
-};
-
-export const Disabled: Story = {
-  args: {
-    children: "Disabled",
-    disabled: true,
-  },
-};
-
-export const Small: Story = {
-  args: {
-    children: "Small",
-    size: "sm",
-  },
-};
-
-export const Large: Story = {
-  args: {
-    children: "Large",
-    size: "lg",
   },
 };
 
@@ -149,25 +56,7 @@ export const AllVariants = () => (
     <Button variant="ghost">Ghost</Button>
     <Button variant="link">Link</Button>
     <Button variant="success">Success</Button>
-    <Button variant="stark">Stark</Button>
     <Button variant="warning">Warning</Button>
-  </div>
-);
-
-export const MonoVariants = () => (
-  <div className="flex flex-wrap gap-2">
-    <Button variant="primary" mono>
-      SIGN IN
-    </Button>
-    <Button variant="success" mono>
-      SUBMIT
-    </Button>
-    <Button variant="destructive" mono>
-      DELETE
-    </Button>
-    <Button variant="warning" mono>
-      CONFIRM
-    </Button>
   </div>
 );
 
@@ -180,10 +69,66 @@ export const AllSizes = () => (
   </div>
 );
 
+// Interaction states across the edge grammar the system is built on — what a
+// static "disabled + loading" row can't show. Two variants, because the grammar
+// differs on engage: primary sheds its rim and darkens its ink fill; outline
+// stays airy, growing only its edge, with a faint grey settle on press.
+//   Hover / Held-open: forced with data-state="open" — real styles, since the
+//     component's data-[state=open]: rules mirror its hover: rules by design.
+//   Pressed: the active declarations reconstructed with the component's own
+//     tokens; box-shadow and transform go inline, as :active can't hold statically.
+const StateCell = ({ label, children }: { label: string; children: ReactNode }) => (
+  <div className="flex flex-col items-center gap-2">
+    {children}
+    <span className="text-fg-subtle text-xs">{label}</span>
+  </div>
+);
+
+const StateRow = ({
+  variant,
+  pressedClassName,
+}: {
+  variant: "primary" | "outline";
+  pressedClassName: string;
+}) => (
+  <div className="flex flex-col gap-3">
+    <span className="text-fg-muted text-sm font-medium">{variant}</span>
+    <div className="flex flex-wrap items-start gap-6">
+      <StateCell label="Rest">
+        <Button variant={variant}>Button</Button>
+      </StateCell>
+      <StateCell label="Hover / Held-open">
+        <Button variant={variant} data-state="open">
+          Button
+        </Button>
+      </StateCell>
+      <StateCell label="Pressed">
+        <Button
+          variant={variant}
+          className={pressedClassName}
+          style={{ boxShadow: "none", transform: "translate(1px, 1px)" }}
+        >
+          Button
+        </Button>
+      </StateCell>
+      <StateCell label="Disabled">
+        <Button variant={variant} disabled>
+          Button
+        </Button>
+      </StateCell>
+      <StateCell label="Loading">
+        <Button variant={variant} loading>
+          Button
+        </Button>
+      </StateCell>
+    </div>
+  </div>
+);
+
 export const AllStates = () => (
-  <div className="flex gap-2">
-    <Button disabled>Disabled</Button>
-    <Button loading>Loading</Button>
+  <div className="flex flex-col gap-8">
+    <StateRow variant="primary" pressedClassName="border-transparent bg-bg-emphasis-active" />
+    <StateRow variant="outline" pressedClassName="bg-bg-active" />
   </div>
 );
 
