@@ -136,29 +136,6 @@ export const WithForm: Story = {
   },
 };
 
-export const Destructive: Story = {
-  args: {
-    trigger: <Button variant="destructive">Delete Account</Button>,
-    children: (
-      <>
-        <Dialog.Header>
-          <Dialog.Title>Are you sure?</Dialog.Title>
-          <Dialog.Description>
-            This action cannot be undone. This will permanently delete your account and remove your
-            data from our servers.
-          </Dialog.Description>
-        </Dialog.Header>
-        <Dialog.Footer>
-          <Dialog.Close>
-            <Button variant="outline">Cancel</Button>
-          </Dialog.Close>
-          <Button variant="destructive">Delete Account</Button>
-        </Dialog.Footer>
-      </>
-    ),
-  },
-};
-
 function ControlledDialogExample() {
   const [open, setOpen] = useState(false);
 
@@ -263,154 +240,81 @@ export const AllStates = () => (
   </div>
 );
 
-// Interaction Tests
-export const OpenCloseTest: Story = {
-  args: {
-    trigger: <Button>Open Dialog</Button>,
-    children: (
-      <>
+// One consolidated test folding the four former per-behavior tests across
+// three instances: the default dialog (closes via the X button and via an
+// action button), preventClose (Escape is a no-op, action still closes), and
+// hideCloseButton (no X button, action still closes).
+export const InteractionTest: Story = {
+  tags: ["!autodocs"],
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+  render: () => (
+    <div className="flex gap-2">
+      <Dialog trigger={<Button>Open default</Button>}>
         <Dialog.Header>
-          <Dialog.Title>Test Dialog</Dialog.Title>
+          <Dialog.Title>Default</Dialog.Title>
         </Dialog.Header>
         <Dialog.Footer>
           <Dialog.Close>
             <Button variant="outline">Close</Button>
           </Dialog.Close>
         </Dialog.Footer>
-      </>
-    ),
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
+      </Dialog>
 
-    // Open dialog
-    const trigger = canvas.getByRole("button", { name: "Open Dialog" });
-    await userEvent.click(trigger);
-
-    // Wait for dialog to be visible
-    const dialogElement = await screen.findByRole("dialog");
-    await expect(dialogElement).toBeInTheDocument();
-
-    // Close dialog via close button
-    const closeButton = within(dialogElement).getByRole("button", { name: "Close" });
-    await userEvent.click(closeButton);
-
-    // Verify dialog is closed
-    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-  },
-};
-
-export const CloseViaXButtonTest: Story = {
-  args: {
-    trigger: <Button>Open Dialog</Button>,
-    children: (
-      <>
+      <Dialog preventClose trigger={<Button>Open prevent-close</Button>}>
         <Dialog.Header>
-          <Dialog.Title>Test Dialog</Dialog.Title>
-        </Dialog.Header>
-      </>
-    ),
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Open dialog
-    const trigger = canvas.getByRole("button", { name: "Open Dialog" });
-    await userEvent.click(trigger);
-
-    // Wait for dialog to be visible
-    const dialogElement = await screen.findByRole("dialog");
-    await expect(dialogElement).toBeInTheDocument();
-
-    // Close via X button
-    const xButton = within(dialogElement).getByRole("button", { name: "Close dialog" });
-    await userEvent.click(xButton);
-
-    // Verify dialog is closed
-    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-  },
-};
-
-export const PreventCloseTest: Story = {
-  args: {
-    preventClose: true,
-    trigger: <Button>Open Dialog</Button>,
-    children: (
-      <>
-        <Dialog.Header>
-          <Dialog.Title>Cannot dismiss by escape</Dialog.Title>
+          <Dialog.Title>Prevent close</Dialog.Title>
         </Dialog.Header>
         <Dialog.Footer>
           <Dialog.Close>
             <Button>Close via button</Button>
           </Dialog.Close>
         </Dialog.Footer>
-      </>
-    ),
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
+      </Dialog>
 
-    // Open dialog
-    const trigger = canvas.getByRole("button", { name: "Open Dialog" });
-    await userEvent.click(trigger);
-
-    // Wait for dialog to be visible
-    const dialogElement = await screen.findByRole("dialog");
-    await expect(dialogElement).toBeInTheDocument();
-
-    // Try to close with Escape - should not close due to preventClose
-    await userEvent.keyboard("{Escape}");
-
-    // Dialog should still be visible
-    await expect(screen.queryByRole("dialog")).toBeInTheDocument();
-
-    // Close via button - should work
-    const closeButton = within(dialogElement).getByRole("button", { name: "Close via button" });
-    await userEvent.click(closeButton);
-
-    // Verify dialog is closed
-    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-  },
-};
-
-export const HideCloseButtonTest: Story = {
-  args: {
-    hideCloseButton: true,
-    trigger: <Button>Open Dialog</Button>,
-    children: (
-      <>
+      <Dialog hideCloseButton trigger={<Button>Open no-X</Button>}>
         <Dialog.Header>
-          <Dialog.Title>No X Button</Dialog.Title>
+          <Dialog.Title>No X button</Dialog.Title>
         </Dialog.Header>
         <Dialog.Footer>
           <Dialog.Close>
-            <Button>Close</Button>
+            <Button variant="outline">Close</Button>
           </Dialog.Close>
         </Dialog.Footer>
-      </>
-    ),
-  },
+      </Dialog>
+    </div>
+  ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    // Open dialog
-    const trigger = canvas.getByRole("button", { name: "Open Dialog" });
-    await userEvent.click(trigger);
+    // Default dialog: opens on trigger, closes via its X button
+    await userEvent.click(canvas.getByRole("button", { name: "Open default" }));
+    let dialog = await screen.findByRole("dialog");
+    await userEvent.click(within(dialog).getByRole("button", { name: "Close dialog" }));
+    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
-    // Wait for dialog to be visible
-    const dialogElement = await screen.findByRole("dialog");
-    await expect(dialogElement).toBeInTheDocument();
+    // ...and via an action button
+    await userEvent.click(canvas.getByRole("button", { name: "Open default" }));
+    dialog = await screen.findByRole("dialog");
+    await userEvent.click(within(dialog).getByRole("button", { name: "Close" }));
+    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
-    // Verify X button does not exist
-    const xButton = within(dialogElement).queryByRole("button", { name: "Close dialog" });
-    await expect(xButton).not.toBeInTheDocument();
+    // preventClose: Escape is a no-op; the action button still closes
+    await userEvent.click(canvas.getByRole("button", { name: "Open prevent-close" }));
+    dialog = await screen.findByRole("dialog");
+    await userEvent.keyboard("{Escape}");
+    await expect(screen.getByRole("dialog")).toBeInTheDocument();
+    await userEvent.click(within(dialog).getByRole("button", { name: "Close via button" }));
+    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
-    // Close via action button - should work
-    const closeButton = within(dialogElement).getByRole("button", { name: "Close" });
-    await userEvent.click(closeButton);
-
-    // Verify dialog is closed
+    // hideCloseButton: no X button; the action button closes
+    await userEvent.click(canvas.getByRole("button", { name: "Open no-X" }));
+    dialog = await screen.findByRole("dialog");
+    await expect(
+      within(dialog).queryByRole("button", { name: "Close dialog" }),
+    ).not.toBeInTheDocument();
+    await userEvent.click(within(dialog).getByRole("button", { name: "Close" }));
     await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   },
 };
