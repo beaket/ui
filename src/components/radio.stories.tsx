@@ -20,6 +20,8 @@ const meta: Meta<typeof RadioGroup> = {
 export default meta;
 type Story = StoryObj<typeof RadioGroup>;
 
+// The interactive playground — toggle disabled/orientation via Controls.
+// Orientation and disabled variants are shown together in AllStates (docs preview).
 export const Default: Story = {
   render: (args) => (
     <RadioGroup {...args} aria-label="Options">
@@ -30,46 +32,7 @@ export const Default: Story = {
   ),
 };
 
-export const WithDefaultValue: Story = {
-  render: (args) => (
-    <RadioGroup {...args} defaultValue="option2" aria-label="Options">
-      <RadioItem value="option1" aria-label="Option 1" />
-      <RadioItem value="option2" aria-label="Option 2" />
-      <RadioItem value="option3" aria-label="Option 3" />
-    </RadioGroup>
-  ),
-};
-
-export const Vertical: Story = {
-  render: (args) => (
-    <RadioGroup {...args} orientation="vertical" className="flex-col" aria-label="Options">
-      <RadioItem value="option1" aria-label="Option 1" />
-      <RadioItem value="option2" aria-label="Option 2" />
-      <RadioItem value="option3" aria-label="Option 3" />
-    </RadioGroup>
-  ),
-};
-
-export const Disabled: Story = {
-  render: (args) => (
-    <RadioGroup {...args} disabled aria-label="Options">
-      <RadioItem value="option1" aria-label="Option 1" />
-      <RadioItem value="option2" aria-label="Option 2" />
-      <RadioItem value="option3" aria-label="Option 3" />
-    </RadioGroup>
-  ),
-};
-
-export const DisabledWithValue: Story = {
-  render: (args) => (
-    <RadioGroup {...args} disabled defaultValue="option2" aria-label="Options">
-      <RadioItem value="option1" aria-label="Option 1" />
-      <RadioItem value="option2" aria-label="Option 2" />
-      <RadioItem value="option3" aria-label="Option 3" />
-    </RadioGroup>
-  ),
-};
-
+// Compositions for docs
 export const AllStates = () => (
   <div className="flex flex-col gap-6">
     <div className="flex flex-col gap-2">
@@ -143,49 +106,46 @@ export const AllStates = () => (
   </div>
 );
 
-// Interaction Tests
-export const ClickTest: Story = {
-  args: {
-    onValueChange: fn(),
+// One consolidated test — folds selection across items and the disabled no-op.
+export const InteractionTest: Story = {
+  tags: ["!autodocs"],
+  parameters: {
+    chromatic: { disableSnapshot: true },
   },
+  args: { onValueChange: fn() },
   render: (args) => (
-    <RadioGroup {...args} aria-label="Options">
-      <RadioItem value="option1" aria-label="Option 1" />
-      <RadioItem value="option2" aria-label="Option 2" />
-      <RadioItem value="option3" aria-label="Option 3" />
-    </RadioGroup>
+    <div className="flex flex-col gap-6">
+      <div data-testid="enabled-group">
+        <RadioGroup aria-label="Enabled options" onValueChange={args.onValueChange}>
+          <RadioItem value="option1" aria-label="Option 1" />
+          <RadioItem value="option2" aria-label="Option 2" />
+          <RadioItem value="option3" aria-label="Option 3" />
+        </RadioGroup>
+      </div>
+      <div data-testid="disabled-group">
+        <RadioGroup aria-label="Disabled options" disabled onValueChange={args.onValueChange}>
+          <RadioItem value="option1" aria-label="Option A" />
+          <RadioItem value="option2" aria-label="Option B" />
+        </RadioGroup>
+      </div>
+    </div>
   ),
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
-    const radios = canvas.getAllByRole("radio");
 
+    // Selecting each item fires onValueChange with its value
+    const enabled = within(canvas.getByTestId("enabled-group"));
+    const radios = enabled.getAllByRole("radio");
     await userEvent.click(radios[0]);
     await expect(args.onValueChange).toHaveBeenCalledWith("option1");
-
     await userEvent.click(radios[1]);
     await expect(args.onValueChange).toHaveBeenCalledWith("option2");
-
     await userEvent.click(radios[2]);
     await expect(args.onValueChange).toHaveBeenCalledWith("option3");
-  },
-};
 
-export const DisabledClickTest: Story = {
-  args: {
-    disabled: true,
-    onValueChange: fn(),
-  },
-  render: (args) => (
-    <RadioGroup {...args} aria-label="Options">
-      <RadioItem value="option1" aria-label="Option 1" />
-      <RadioItem value="option2" aria-label="Option 2" />
-    </RadioGroup>
-  ),
-  play: async ({ args, canvasElement }) => {
-    const canvas = within(canvasElement);
-    const radios = canvas.getAllByRole("radio");
-
-    await userEvent.click(radios[0]);
-    await expect(args.onValueChange).not.toHaveBeenCalled();
+    // Disabled group is a no-op — still only the three calls above
+    const disabled = within(canvas.getByTestId("disabled-group"));
+    await userEvent.click(disabled.getAllByRole("radio")[0]);
+    await expect(args.onValueChange).toHaveBeenCalledTimes(3);
   },
 };
