@@ -5,6 +5,11 @@
     {
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
+    },
+    {
+      "description": "Hold TypeScript on v6 until the ecosystem supports the native (Go) compiler's JS API. TS 7's `typescript` module ships only `version`/`versionMajorMinor`, so tools that consume the programmatic compiler API break: tsup/rollup-plugin-dts (@beaket/paper d.ts build), react-docgen-typescript (docs prop tables + Storybook docgen), and @volar/kit/astro-check (docs typecheck). No TS-7-compatible releases of these are published yet.",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<7"
     }
   ],
   "vulnerabilityAlerts": {
