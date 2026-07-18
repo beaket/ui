@@ -31,7 +31,7 @@
   --signal-success: #0d7b64;
   --signal-info: #1564c2;
   --signal-info-alt: #058491;
-  --signal-accent: #6a1b9a;
+  --signal-accent: #1e40af;
 
   /* Knockout — which end of the ramp carries type on each solid */
   --signal-danger-on: var(--tone-0);
@@ -79,7 +79,7 @@
     --signal-success: #10a66e;
     --signal-info: #1a8ed8;
     --signal-info-alt: #1aa0b8;
-    --signal-accent: #a06ae0;
+    --signal-accent: #7fa0f0;
 
     /* Knockout */
     --signal-danger-on: var(--tone-0);
