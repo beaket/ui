@@ -22,33 +22,11 @@ const meta: Meta<typeof Checkbox> = {
 export default meta;
 type Story = StoryObj<typeof Checkbox>;
 
+// The interactive playground — toggle checked/disabled via Controls. Every
+// state is shown together in the AllStates composition below (docs preview).
 export const Default: Story = {};
 
-export const Checked: Story = {
-  args: {
-    defaultChecked: true,
-  },
-};
-
-export const Disabled: Story = {
-  args: {
-    disabled: true,
-  },
-};
-
-export const DisabledChecked: Story = {
-  args: {
-    disabled: true,
-    defaultChecked: true,
-  },
-};
-
-export const Invalid: Story = {
-  args: {
-    "aria-invalid": true,
-  },
-};
-
+// Compositions for docs
 export const AllStates = () => (
   <div className="flex flex-col gap-4">
     <div className="flex items-center gap-2">
@@ -84,33 +62,41 @@ export const AllStates = () => (
   </div>
 );
 
-// Interaction Tests
-export const ClickTest: Story = {
-  args: {
-    onCheckedChange: fn(),
+// One consolidated test — folds the toggle path and the disabled no-op.
+export const InteractionTest: Story = {
+  tags: ["!autodocs"],
+  parameters: {
+    chromatic: { disableSnapshot: true },
   },
+  args: { onCheckedChange: fn() },
+  render: (args) => (
+    <div className="flex flex-col gap-4">
+      <Checkbox
+        data-testid="enabled-checkbox"
+        aria-label="Toggle me"
+        onCheckedChange={args.onCheckedChange}
+      />
+      <Checkbox
+        data-testid="disabled-checkbox"
+        aria-label="Disabled"
+        disabled
+        onCheckedChange={args.onCheckedChange}
+      />
+    </div>
+  ),
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
-    const checkbox = canvas.getByRole("checkbox");
 
-    await userEvent.click(checkbox);
+    // Toggle on, then off
+    const enabled = canvas.getByTestId("enabled-checkbox");
+    await userEvent.click(enabled);
     await expect(args.onCheckedChange).toHaveBeenCalledWith(true);
-
-    await userEvent.click(checkbox);
+    await userEvent.click(enabled);
     await expect(args.onCheckedChange).toHaveBeenCalledWith(false);
-  },
-};
 
-export const DisabledClickTest: Story = {
-  args: {
-    disabled: true,
-    onCheckedChange: fn(),
-  },
-  play: async ({ args, canvasElement }) => {
-    const canvas = within(canvasElement);
-    const checkbox = canvas.getByRole("checkbox");
-
-    await userEvent.click(checkbox);
-    await expect(args.onCheckedChange).not.toHaveBeenCalled();
+    // Disabled is a no-op — still only the two calls above
+    const disabled = canvas.getByTestId("disabled-checkbox");
+    await userEvent.click(disabled);
+    await expect(args.onCheckedChange).toHaveBeenCalledTimes(2);
   },
 };

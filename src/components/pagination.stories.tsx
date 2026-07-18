@@ -36,6 +36,9 @@ type Story = StoryObj<typeof Pagination>;
 
 const buildPageUrl = (page: number) => `?page=${page}`;
 
+// The interactive playground — set page/totalPages/maxPageButtons via Controls.
+// Every position (first/middle/last, few/many, single, button mode) is shown
+// together in AllStates below; ButtonMode is the interactive client-side demo.
 export const Default: Story = {
   args: {
     page: 1,
@@ -44,46 +47,7 @@ export const Default: Story = {
   },
 };
 
-export const MiddlePage: Story = {
-  args: {
-    page: 5,
-    totalPages: 10,
-    buildPageUrl,
-  },
-};
-
-export const LastPage: Story = {
-  args: {
-    page: 10,
-    totalPages: 10,
-    buildPageUrl,
-  },
-};
-
-export const FewPages: Story = {
-  args: {
-    page: 2,
-    totalPages: 3,
-    buildPageUrl,
-  },
-};
-
-export const ManyPages: Story = {
-  args: {
-    page: 15,
-    totalPages: 100,
-    buildPageUrl,
-  },
-};
-
-export const SinglePage: Story = {
-  args: {
-    page: 1,
-    totalPages: 1,
-    buildPageUrl,
-  },
-};
-
+// Compositions for docs
 export const AllStates = () => (
   <div className="space-y-8">
     <div>
@@ -134,81 +98,6 @@ export const AllStates = () => (
   </div>
 );
 
-export const InteractionTest: Story = {
-  args: {
-    page: 5,
-    totalPages: 10,
-    buildPageUrl,
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Check navigation exists
-    const nav = canvas.getByRole("navigation", { name: "Pagination" });
-    await expect(nav).toBeInTheDocument();
-
-    // Check current page is marked
-    const currentPage = canvas.getByRole("link", { name: "5" });
-    await expect(currentPage).toHaveAttribute("aria-current", "page");
-
-    // Check prev/next links exist and have correct hrefs
-    const prevLink = canvas.getByRole("link", { name: "Previous page" });
-    await expect(prevLink).toHaveAttribute("href", "?page=4");
-
-    const nextLink = canvas.getByRole("link", { name: "Next page" });
-    await expect(nextLink).toHaveAttribute("href", "?page=6");
-
-    // Check page links
-    const page1 = canvas.getByRole("link", { name: "1" });
-    await expect(page1).toHaveAttribute("href", "?page=1");
-
-    const page10 = canvas.getByRole("link", { name: "10" });
-    await expect(page10).toHaveAttribute("href", "?page=10");
-  },
-};
-
-export const FirstPageTest: Story = {
-  args: {
-    page: 1,
-    totalPages: 10,
-    buildPageUrl,
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Previous button should be disabled (span, not link)
-    const prevSpan = canvas.getByLabelText("Previous page");
-    await expect(prevSpan.tagName).toBe("SPAN");
-    await expect(prevSpan).toHaveAttribute("aria-disabled", "true");
-
-    // Next link should be active
-    const nextLink = canvas.getByRole("link", { name: "Next page" });
-    await expect(nextLink).toHaveAttribute("href", "?page=2");
-  },
-};
-
-export const LastPageTest: Story = {
-  args: {
-    page: 10,
-    totalPages: 10,
-    buildPageUrl,
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Next button should be disabled (span, not link)
-    const nextSpan = canvas.getByLabelText("Next page");
-    await expect(nextSpan.tagName).toBe("SPAN");
-    await expect(nextSpan).toHaveAttribute("aria-disabled", "true");
-
-    // Previous link should be active
-    const prevLink = canvas.getByRole("link", { name: "Previous page" });
-    await expect(prevLink).toHaveAttribute("href", "?page=9");
-  },
-};
-
-// --- Button mode stories ---
-
 const ButtonModeWrapper = ({ initialPage = 1, totalPages = 10 }) => {
   const [page, setPage] = useState(initialPage);
   return (
@@ -221,77 +110,90 @@ const ButtonModeWrapper = ({ initialPage = 1, totalPages = 10 }) => {
   );
 };
 
+// Button mode — client-side pagination you can click through.
 export const ButtonMode = {
   render: () => <ButtonModeWrapper initialPage={3} totalPages={10} />,
 };
 
-export const ButtonModeTest: StoryObj = {
-  render: () => <ButtonModeWrapper initialPage={1} totalPages={5} />,
+// One consolidated test — folds the link-mode edges (first/middle/last: current
+// marker, prev/next hrefs, disabled-as-span) and the button-mode click-through
+// (first/last disabled edges, current marker, live page changes).
+export const InteractionTest: Story = {
+  tags: ["!autodocs"],
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+  render: () => (
+    <div className="space-y-8">
+      <div data-testid="link-first">
+        <Pagination page={1} totalPages={10} buildPageUrl={buildPageUrl} />
+      </div>
+      <div data-testid="link-middle">
+        <Pagination page={5} totalPages={10} buildPageUrl={buildPageUrl} />
+      </div>
+      <div data-testid="link-last">
+        <Pagination page={10} totalPages={10} buildPageUrl={buildPageUrl} />
+      </div>
+      <div data-testid="button-mode">
+        <ButtonModeWrapper initialPage={1} totalPages={5} />
+      </div>
+    </div>
+  ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    // Previous button should be disabled on first page
-    const prevButton = canvas.getByRole("button", { name: "Previous page" });
-    await expect(prevButton).toBeDisabled();
+    // Link mode — middle page: nav landmark, current marker, prev/next + edge hrefs
+    const middle = within(canvas.getByTestId("link-middle"));
+    await expect(middle.getByRole("navigation", { name: "Pagination" })).toBeInTheDocument();
+    await expect(middle.getByRole("link", { name: "5" })).toHaveAttribute("aria-current", "page");
+    await expect(middle.getByRole("link", { name: "Previous page" })).toHaveAttribute(
+      "href",
+      "?page=4",
+    );
+    await expect(middle.getByRole("link", { name: "Next page" })).toHaveAttribute(
+      "href",
+      "?page=6",
+    );
+    await expect(middle.getByRole("link", { name: "1" })).toHaveAttribute("href", "?page=1");
+    await expect(middle.getByRole("link", { name: "10" })).toHaveAttribute("href", "?page=10");
 
-    // Next button should be enabled
-    const nextButton = canvas.getByRole("button", { name: "Next page" });
-    await expect(nextButton).toBeEnabled();
+    // Link mode — first page: prev collapses to a disabled span, next stays active
+    const first = within(canvas.getByTestId("link-first"));
+    const prevSpan = first.getByLabelText("Previous page");
+    await expect(prevSpan.tagName).toBe("SPAN");
+    await expect(prevSpan).toHaveAttribute("aria-disabled", "true");
+    await expect(first.getByRole("link", { name: "Next page" })).toHaveAttribute("href", "?page=2");
 
-    // Click next page
-    await userEvent.click(nextButton);
+    // Link mode — last page: next collapses to a disabled span, prev stays active
+    const last = within(canvas.getByTestId("link-last"));
+    const nextSpan = last.getByLabelText("Next page");
+    await expect(nextSpan.tagName).toBe("SPAN");
+    await expect(nextSpan).toHaveAttribute("aria-disabled", "true");
+    await expect(last.getByRole("link", { name: "Previous page" })).toHaveAttribute(
+      "href",
+      "?page=9",
+    );
 
-    // Verify we moved to page 2
-    const pageInfo = canvas.getByTestId("page-info");
+    // Button mode — click-through with live page changes
+    const btn = within(canvas.getByTestId("button-mode"));
+    const pageInfo = btn.getByTestId("page-info");
+    // First page: prev disabled, page 1 current
+    await expect(btn.getByRole("button", { name: "Previous page" })).toBeDisabled();
+    await expect(btn.getByRole("button", { name: "1" })).toHaveAttribute("aria-current", "page");
+    // Next → page 2, prev becomes enabled
+    await userEvent.click(btn.getByRole("button", { name: "Next page" }));
     await expect(pageInfo).toHaveTextContent("Page 2 of 5");
-
-    // Previous button should now be enabled
-    await expect(canvas.getByRole("button", { name: "Previous page" })).toBeEnabled();
-
-    // Click page 4 directly
-    await userEvent.click(canvas.getByRole("button", { name: "4" }));
+    await expect(btn.getByRole("button", { name: "Previous page" })).toBeEnabled();
+    // Jump to page 4
+    await userEvent.click(btn.getByRole("button", { name: "4" }));
     await expect(pageInfo).toHaveTextContent("Page 4 of 5");
-
-    // Click previous
-    await userEvent.click(canvas.getByRole("button", { name: "Previous page" }));
-    await expect(pageInfo).toHaveTextContent("Page 3 of 5");
-  },
-};
-
-export const ButtonModeFirstPageTest: StoryObj = {
-  render: () => <ButtonModeWrapper initialPage={1} totalPages={10} />,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Previous button should be disabled (button, not span)
-    const prevButton = canvas.getByRole("button", { name: "Previous page" });
-    await expect(prevButton).toBeDisabled();
-
-    // Next button should be enabled
-    const nextButton = canvas.getByRole("button", { name: "Next page" });
-    await expect(nextButton).toBeEnabled();
-
-    // Page 1 should be marked as current
-    const page1 = canvas.getByRole("button", { name: "1" });
-    await expect(page1).toHaveAttribute("aria-current", "page");
-  },
-};
-
-export const ButtonModeLastPageTest: StoryObj = {
-  render: () => <ButtonModeWrapper initialPage={10} totalPages={10} />,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Next button should be disabled
-    const nextButton = canvas.getByRole("button", { name: "Next page" });
-    await expect(nextButton).toBeDisabled();
-
-    // Previous button should be enabled
-    const prevButton = canvas.getByRole("button", { name: "Previous page" });
-    await expect(prevButton).toBeEnabled();
-
-    // Page 10 should be marked as current
-    const page10 = canvas.getByRole("button", { name: "10" });
-    await expect(page10).toHaveAttribute("aria-current", "page");
+    // Next → page 5 (last): next disabled, page 5 current
+    await userEvent.click(btn.getByRole("button", { name: "Next page" }));
+    await expect(pageInfo).toHaveTextContent("Page 5 of 5");
+    await expect(btn.getByRole("button", { name: "Next page" })).toBeDisabled();
+    await expect(btn.getByRole("button", { name: "5" })).toHaveAttribute("aria-current", "page");
+    // Prev → page 4
+    await userEvent.click(btn.getByRole("button", { name: "Previous page" }));
+    await expect(pageInfo).toHaveTextContent("Page 4 of 5");
   },
 };

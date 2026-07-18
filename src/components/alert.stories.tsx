@@ -30,55 +30,15 @@ const meta: Meta<typeof Alert> = {
 export default meta;
 type Story = StoryObj<typeof Alert>;
 
+// The interactive playground — pick any variant and a custom title via Controls.
+// Every variant lives in AllVariants; custom titles and rich content in AllStates.
 export const Default: Story = {
   args: {
     children: "This is a note providing additional information.",
   },
 };
 
-export const Note: Story = {
-  args: {
-    variant: "note",
-    children: "This is informational content that might be helpful to know.",
-  },
-};
-
-export const Tip: Story = {
-  args: {
-    variant: "tip",
-    children: "Here's a helpful tip to improve your workflow.",
-  },
-};
-
-export const Important: Story = {
-  args: {
-    variant: "important",
-    children: "This is important information that you should be aware of.",
-  },
-};
-
-export const Warning: Story = {
-  args: {
-    variant: "warning",
-    children: "Be careful! This action may have unintended consequences.",
-  },
-};
-
-export const Caution: Story = {
-  args: {
-    variant: "caution",
-    children: "This action is potentially dangerous and cannot be undone.",
-  },
-};
-
-export const CustomTitle: Story = {
-  args: {
-    variant: "note",
-    title: "Custom Title",
-    children: "You can provide a custom title instead of using the default variant name.",
-  },
-};
-
+// Compositions for docs
 export const AllVariants = () => (
   <div className="max-w-lg space-y-4">
     <Alert variant="note">
@@ -139,6 +99,10 @@ export const AllStates = () => (
 );
 
 export const InteractionTest: Story = {
+  tags: ["!autodocs"],
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
   args: {
     variant: "warning",
     title: "Test Warning",

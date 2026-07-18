@@ -17,59 +17,12 @@ const meta: Meta<typeof Badge> = {
 export default meta;
 type Story = StoryObj<typeof Badge>;
 
+// The interactive playground — pick any variant via Controls. Every variant is
+// shown together in the AllVariants composition below (also the docs preview).
 export const Default: Story = {
   args: {
     children: "Badge",
     variant: "default",
-  },
-};
-
-export const Secondary: Story = {
-  args: {
-    children: "Secondary",
-    variant: "secondary",
-  },
-};
-
-export const Success: Story = {
-  args: {
-    children: "Success",
-    variant: "success",
-  },
-};
-
-export const Error: Story = {
-  args: {
-    children: "Error",
-    variant: "error",
-  },
-};
-
-export const Info: Story = {
-  args: {
-    children: "Info",
-    variant: "info",
-  },
-};
-
-export const Outline: Story = {
-  args: {
-    children: "Outline",
-    variant: "outline",
-  },
-};
-
-export const Warning: Story = {
-  args: {
-    children: "Warning",
-    variant: "warning",
-  },
-};
-
-export const Code: Story = {
-  args: {
-    children: "SPEC-001",
-    variant: "code",
   },
 };
 
@@ -87,20 +40,12 @@ export const AllVariants = () => (
   </div>
 );
 
-// Interaction Tests
-export const RenderTest: Story = {
-  args: {
-    children: "Test Badge",
+// One consolidated test — folds render + the role/label accessibility path.
+export const InteractionTest: Story = {
+  tags: ["!autodocs"],
+  parameters: {
+    chromatic: { disableSnapshot: true },
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const badge = canvas.getByText("Test Badge");
-
-    await expect(badge).toBeInTheDocument();
-  },
-};
-
-export const AccessibilityTest: Story = {
   args: {
     children: "Status",
     role: "status",

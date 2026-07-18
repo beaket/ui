@@ -110,27 +110,6 @@ export const WithLabel: Story = {
   },
 };
 
-export const Controlled: Story = {
-  render: () => {
-    const ControlledExample = () => {
-      const [enabled, setEnabled] = useState(false);
-      return (
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-3">
-            <Switch
-              checked={enabled}
-              onCheckedChange={setEnabled}
-              aria-label="Notifications toggle"
-            />
-            <span className="text-sm">Notifications are {enabled ? "enabled" : "disabled"}</span>
-          </div>
-        </div>
-      );
-    };
-    return <ControlledExample />;
-  },
-};
-
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
   parameters: {

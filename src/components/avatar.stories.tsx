@@ -11,35 +11,11 @@ const meta: Meta<typeof Avatar> = {
 export default meta;
 type Story = StoryObj<typeof Avatar>;
 
+// The default — an image with a fallback. The image, fallback, single-letter,
+// and shadow variants are shown together in AllStates; sizing in CustomSizes.
 export const Default: Story = {
   render: () => (
     <Avatar>
-      <Avatar.Image src="https://github.com/beaket.png" alt="@beaket" />
-      <Avatar.Fallback>BK</Avatar.Fallback>
-    </Avatar>
-  ),
-};
-
-export const WithFallback: Story = {
-  render: () => (
-    <Avatar>
-      <Avatar.Image src="/broken-image.jpg" alt="User" />
-      <Avatar.Fallback>JD</Avatar.Fallback>
-    </Avatar>
-  ),
-};
-
-export const FallbackOnly: Story = {
-  render: () => (
-    <Avatar>
-      <Avatar.Fallback>AB</Avatar.Fallback>
-    </Avatar>
-  ),
-};
-
-export const WithShadow: Story = {
-  render: () => (
-    <Avatar shadow>
       <Avatar.Image src="https://github.com/beaket.png" alt="@beaket" />
       <Avatar.Fallback>BK</Avatar.Fallback>
     </Avatar>
@@ -129,21 +105,71 @@ export const AvatarGroup = () => (
   </div>
 );
 
+// One consolidated test — folds the deterministic paths: fallback renders,
+// a broken image falls back, and the shadow prop + data-slot land on the root.
+export const InteractionTest: Story = {
+  tags: ["!autodocs"],
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+  render: () => (
+    <div className="flex gap-4">
+      <div data-testid="fallback-avatar">
+        <Avatar>
+          <Avatar.Fallback>FB</Avatar.Fallback>
+        </Avatar>
+      </div>
+      <div data-testid="broken-avatar">
+        <Avatar>
+          <Avatar.Image src="/broken-image.jpg" alt="User" />
+          <Avatar.Fallback>BR</Avatar.Fallback>
+        </Avatar>
+      </div>
+      <div data-testid="shadow-avatar">
+        <Avatar shadow>
+          <Avatar.Fallback>SH</Avatar.Fallback>
+        </Avatar>
+      </div>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Fallback renders
+    await expect(within(canvas.getByTestId("fallback-avatar")).getByText("FB")).toBeInTheDocument();
+
+    // A broken image falls back to the initials
+    await expect(within(canvas.getByTestId("broken-avatar")).getByText("BR")).toBeInTheDocument();
+
+    // Shadow prop + data-slot land on the avatar root
+    const shadowAvatar = canvas.getByTestId("shadow-avatar").querySelector("[data-slot='avatar']");
+    await expect(shadowAvatar).toBeInTheDocument();
+    await expect(shadowAvatar).toHaveAttribute("data-slot", "avatar");
+    await expect(shadowAvatar).toHaveClass("shadow-offset");
+  },
+};
+
+// Kept separate — a distinct async concern: Avatar.Image defers rendering until
+// after mount (hydration guard), so the image element only appears once mounted
+// and loaded. Uses an inline data: image (not a network URL) so the load is
+// deterministic — no race between the fetch and the assertion.
+const INLINE_PNG =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+
 export const HydrationGuardTest: Story = {
+  tags: ["!autodocs"],
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
   render: () => (
     <Avatar>
-      <Avatar.Image src="https://github.com/beaket.png" alt="@beaket" />
+      <Avatar.Image src={INLINE_PNG} alt="@beaket" />
       <Avatar.Fallback>HG</Avatar.Fallback>
     </Avatar>
   ),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    // Avatar.Image defers rendering until after mount (hydration guard),
-    // so fallback should be visible initially, then image loads.
-    const fallback = canvas.getByText("HG");
-    await expect(fallback).toBeInTheDocument();
-
-    // Verify the image eventually renders after the hydration guard clears
+    // The image element only exists after the hydration guard clears (it renders
+    // client-side, post-mount) and the inline image loads.
     await waitFor(
       () => {
         const img = canvasElement.querySelector("[data-slot='avatar-image']");
@@ -151,66 +177,5 @@ export const HydrationGuardTest: Story = {
       },
       { timeout: 3000 },
     );
-  },
-};
-
-// Interaction Tests
-export const RenderTest: Story = {
-  render: () => (
-    <Avatar>
-      <Avatar.Fallback>TT</Avatar.Fallback>
-    </Avatar>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const fallback = canvas.getByText("TT");
-
-    await expect(fallback).toBeInTheDocument();
-  },
-};
-
-export const FallbackTest: Story = {
-  render: () => (
-    <Avatar>
-      <Avatar.Image src="/broken-image.jpg" alt="User" />
-      <Avatar.Fallback>FB</Avatar.Fallback>
-    </Avatar>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    // When image fails to load, fallback should be visible
-    const fallback = canvas.getByText("FB");
-
-    await expect(fallback).toBeInTheDocument();
-  },
-};
-
-export const ShadowTest: Story = {
-  render: () => (
-    <Avatar shadow>
-      <Avatar.Fallback>SH</Avatar.Fallback>
-    </Avatar>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const avatar = canvas.getByText("SH").closest("[data-slot='avatar']");
-
-    await expect(avatar).toBeInTheDocument();
-    await expect(avatar).toHaveClass("shadow-offset");
-  },
-};
-
-export const DataSlotTest: Story = {
-  render: () => (
-    <Avatar>
-      <Avatar.Fallback>DS</Avatar.Fallback>
-    </Avatar>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const avatar = canvas.getByText("DS").closest("[data-slot='avatar']");
-
-    await expect(avatar).toBeInTheDocument();
-    await expect(avatar).toHaveAttribute("data-slot", "avatar");
   },
 };
