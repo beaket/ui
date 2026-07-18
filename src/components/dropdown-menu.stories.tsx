@@ -298,7 +298,7 @@ export const AllStates = () => (
 
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>
-        <Button variant="stark">With Shortcuts</Button>
+        <Button variant="outline">With Shortcuts</Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
         <DropdownMenu.Item>

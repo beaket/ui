@@ -222,7 +222,7 @@ export const AllStates = () => (
       </Dialog.Footer>
     </Dialog>
 
-    <Dialog preventClose trigger={<Button variant="stark">Prevent Close</Button>}>
+    <Dialog preventClose trigger={<Button variant="outline">Prevent Close</Button>}>
       <Dialog.Header>
         <Dialog.Title>Cannot Dismiss</Dialog.Title>
         <Dialog.Description>Must use buttons to close.</Dialog.Description>

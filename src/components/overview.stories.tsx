@@ -138,7 +138,6 @@ export const AllComponents: StoryObj = {
           <Button variant="destructive">Destructive</Button>
           <Button variant="success">Success</Button>
           <Button variant="warning">Warning</Button>
-          <Button variant="stark">Stark</Button>
           <Button variant="link">Link</Button>
           <Button disabled>Disabled</Button>
           <Button size="sm">Small</Button>

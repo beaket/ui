@@ -242,7 +242,7 @@ export const AllStates = () => (
       </Sheet.Footer>
     </Sheet>
 
-    <Sheet preventClose trigger={<Button variant="stark">Prevent Close</Button>}>
+    <Sheet preventClose trigger={<Button variant="outline">Prevent Close</Button>}>
       <Sheet.Header>
         <Sheet.Title>Cannot Dismiss</Sheet.Title>
         <Sheet.Description>Must use buttons to close.</Sheet.Description>
