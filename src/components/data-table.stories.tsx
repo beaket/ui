@@ -112,16 +112,6 @@ export const WithSelection: Story = {
   },
 };
 
-export const WithRowClick: Story = {
-  args: {
-    columns,
-    data: users,
-    onRowClick: fn((row: User) => {
-      console.log("Row clicked:", row);
-    }),
-  },
-};
-
 export const Compact: Story = {
   args: {
     columns,
@@ -186,133 +176,69 @@ export const AllFeatures = () => (
   </div>
 );
 
-// Interaction tests
-export const SearchTest: Story = {
+// One consolidated test folding the five former per-behavior tests. Every
+// feature is on one table, exercised in an order chosen to avoid coupling:
+// pagination, then sorting (returns to unsorted), then selection, then search
+// (auto-resets to page 1 and clears), then row click.
+const interactionUsers: User[] = [
+  ...users,
+  { id: "6", name: "Frank Moore", email: "frank@example.com", role: "Viewer", status: "inactive" },
+];
+
+export const InteractionTest: Story = {
+  tags: ["!autodocs"],
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
   args: {
     columns,
-    data: users,
+    data: interactionUsers,
     searchable: true,
     searchPlaceholder: "Search users...",
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Verify search input is present
-    const searchInput = canvas.getByPlaceholderText("Search users...");
-    await expect(searchInput).toBeInTheDocument();
-
-    // Type in search input
-    await userEvent.type(searchInput, "Alice");
-
-    // Verify filtered result (only Alice should be visible)
-    const aliceRow = canvas.getByText("Alice Johnson");
-    await expect(aliceRow).toBeInTheDocument();
-
-    // Clear search
-    await userEvent.clear(searchInput);
-  },
-};
-
-export const SortingTest: Story = {
-  args: {
-    columns,
-    data: users,
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Find and click the Name header to sort
-    const nameHeader = canvas.getByText("Name");
-    await userEvent.click(nameHeader);
-
-    // Click again for descending sort
-    await userEvent.click(nameHeader);
-
-    // Click again to clear sort
-    await userEvent.click(nameHeader);
-  },
-};
-
-export const SelectionTest: Story = {
-  args: {
-    columns,
-    data: users.slice(0, 3),
-    selectable: true,
-    onSelectionChange: fn(),
-  },
-  play: async ({ args, canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Get all checkboxes
-    const checkboxes = canvas.getAllByRole("checkbox");
-    await expect(checkboxes.length).toBe(4); // 1 select-all + 3 rows
-
-    // Click first row checkbox (not select-all)
-    await userEvent.click(checkboxes[1]);
-
-    // Verify onSelectionChange was called
-    await expect(args.onSelectionChange).toHaveBeenCalled();
-
-    // Click select-all checkbox
-    await userEvent.click(checkboxes[0]);
-  },
-};
-
-export const PaginationTest: Story = {
-  args: {
-    columns,
-    data: [
-      ...users,
-      ...users.map((u, i) => ({ ...u, id: `${u.id}-copy-${i}`, email: `copy.${i}@example.com` })),
-    ],
     paginated: true,
     pageSize: 3,
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Verify pagination info is shown
-    const paginationInfo = canvas.getByText(/Showing 1 to 3 of/);
-    await expect(paginationInfo).toBeInTheDocument();
-
-    // Find and click next page button
-    const nextButton = canvas.getByRole("button", { name: "Next page" });
-    await expect(nextButton).toBeEnabled();
-    await userEvent.click(nextButton);
-
-    // Verify we're on page 2
-    const page2Info = canvas.getByText(/Showing 4 to 6 of/);
-    await expect(page2Info).toBeInTheDocument();
-
-    // Page 2 button should be active
-    const page2Button = canvas.getByRole("button", { name: "2" });
-    await expect(page2Button).toHaveAttribute("aria-current", "page");
-
-    // Go back to first page
-    const page1Button = canvas.getByRole("button", { name: "1" });
-    await userEvent.click(page1Button);
-
-    // Verify we're back on page 1
-    const page1Info = canvas.getByText(/Showing 1 to 3 of/);
-    await expect(page1Info).toBeInTheDocument();
-  },
-};
-
-export const RowClickTest: Story = {
-  args: {
-    columns,
-    data: users.slice(0, 2),
+    selectable: true,
+    onSelectionChange: fn(),
     onRowClick: fn(),
   },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
 
-    // Find a row and click it
-    const firstRow = canvas.getByText("Alice Johnson").closest("tr");
-    if (firstRow) {
-      await userEvent.click(firstRow);
-      await expect(args.onRowClick).toHaveBeenCalledTimes(1);
-    }
+    // Pagination — six rows across two pages of three
+    await expect(canvas.getByText(/Showing 1 to 3 of 6/)).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole("button", { name: "Next page" }));
+    await expect(canvas.getByText(/Showing 4 to 6 of 6/)).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "2" })).toHaveAttribute("aria-current", "page");
+    await userEvent.click(canvas.getByRole("button", { name: "1" }));
+    await expect(canvas.getByText(/Showing 1 to 3 of 6/)).toBeInTheDocument();
+
+    // Sorting — the Name header cycles ascending → descending → unsorted
+    const nameHeader = canvas.getByRole("columnheader", { name: "Name" });
+    await userEvent.click(nameHeader);
+    await expect(nameHeader).toHaveAttribute("aria-sort", "ascending");
+    await userEvent.click(nameHeader);
+    await expect(nameHeader).toHaveAttribute("aria-sort", "descending");
+    await userEvent.click(nameHeader);
+    await expect(nameHeader).toHaveAttribute("aria-sort", "none");
+
+    // Selection — select-all checks the page's rows and fires the callback
+    const checkboxes = canvas.getAllByRole("checkbox");
+    await expect(checkboxes).toHaveLength(4); // select-all + three visible rows
+    await userEvent.click(checkboxes[0]);
+    await expect(args.onSelectionChange).toHaveBeenCalled();
+    await expect(canvas.getAllByRole("checkbox")[1]).toBeChecked();
+
+    // Search — filtering narrows to the matching row, then clears
+    const search = canvas.getByPlaceholderText("Search users...");
+    await userEvent.type(search, "Alice");
+    await expect(canvas.getByText("Alice Johnson")).toBeInTheDocument();
+    await expect(canvas.queryByText("Bob Smith")).not.toBeInTheDocument();
+    await userEvent.clear(search);
+
+    // Row click — clicking a data row (not its checkbox) fires onRowClick
+    const row = canvas.getByText("Alice Johnson").closest("tr")!;
+    await userEvent.click(row);
+    await expect(args.onRowClick).toHaveBeenCalled();
   },
 };
 

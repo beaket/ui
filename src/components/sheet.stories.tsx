@@ -57,54 +57,6 @@ export const Default: Story = {
   },
 };
 
-export const LeftSide: Story = {
-  args: {
-    side: "left",
-    trigger: <Button>Open Left</Button>,
-    children: (
-      <>
-        <Sheet.Header>
-          <Sheet.Title>Left Sheet</Sheet.Title>
-          <Sheet.Description>This sheet slides in from the left.</Sheet.Description>
-        </Sheet.Header>
-        <div className="py-4">
-          <p className="text-fg-muted text-sm">Navigation menu or sidebar content.</p>
-        </div>
-      </>
-    ),
-  },
-};
-
-export const TopSide: Story = {
-  args: {
-    side: "top",
-    trigger: <Button>Open Top</Button>,
-    children: (
-      <>
-        <Sheet.Header>
-          <Sheet.Title>Top Sheet</Sheet.Title>
-          <Sheet.Description>This sheet slides in from the top.</Sheet.Description>
-        </Sheet.Header>
-      </>
-    ),
-  },
-};
-
-export const BottomSide: Story = {
-  args: {
-    side: "bottom",
-    trigger: <Button>Open Bottom</Button>,
-    children: (
-      <>
-        <Sheet.Header>
-          <Sheet.Title>Bottom Sheet</Sheet.Title>
-          <Sheet.Description>This sheet slides in from the bottom.</Sheet.Description>
-        </Sheet.Header>
-      </>
-    ),
-  },
-};
-
 export const PreventClose: Story = {
   args: {
     preventClose: true,
@@ -268,112 +220,60 @@ export const AllStates = () => (
   </div>
 );
 
-export const OpenCloseTest: Story = {
-  args: {
-    trigger: <Button>Open Sheet</Button>,
-    children: (
-      <>
+// One consolidated test folding the three former per-behavior tests across two
+// instances: the default sheet (closes via the X button and via an action
+// button) and preventClose (Escape is a no-op, the action button still closes).
+export const InteractionTest: Story = {
+  tags: ["!autodocs"],
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+  render: () => (
+    <div className="flex gap-2">
+      <Sheet trigger={<Button>Open default</Button>}>
         <Sheet.Header>
-          <Sheet.Title>Test Sheet</Sheet.Title>
+          <Sheet.Title>Default</Sheet.Title>
         </Sheet.Header>
         <Sheet.Footer>
           <Sheet.Close>
             <Button variant="outline">Close</Button>
           </Sheet.Close>
         </Sheet.Footer>
-      </>
-    ),
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
+      </Sheet>
 
-    // Open sheet
-    const trigger = canvas.getByRole("button", { name: "Open Sheet" });
-    await userEvent.click(trigger);
-
-    // Wait for sheet to be visible
-    const sheetElement = await screen.findByRole("dialog");
-    await expect(sheetElement).toBeInTheDocument();
-
-    // Close sheet via close button
-    const closeButton = within(sheetElement).getByRole("button", { name: "Close" });
-    await userEvent.click(closeButton);
-
-    // Verify sheet is closed
-    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-  },
-};
-
-export const CloseViaXButtonTest: Story = {
-  args: {
-    trigger: <Button>Open Sheet</Button>,
-    children: (
-      <>
+      <Sheet preventClose trigger={<Button>Open prevent-close</Button>}>
         <Sheet.Header>
-          <Sheet.Title>Test Sheet</Sheet.Title>
-        </Sheet.Header>
-      </>
-    ),
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Open sheet
-    const trigger = canvas.getByRole("button", { name: "Open Sheet" });
-    await userEvent.click(trigger);
-
-    // Wait for sheet to be visible
-    const sheetElement = await screen.findByRole("dialog");
-    await expect(sheetElement).toBeInTheDocument();
-
-    // Close via X button
-    const xButton = within(sheetElement).getByRole("button", { name: "Close sheet" });
-    await userEvent.click(xButton);
-
-    // Verify sheet is closed
-    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-  },
-};
-
-export const PreventCloseTest: Story = {
-  args: {
-    preventClose: true,
-    trigger: <Button>Open Sheet</Button>,
-    children: (
-      <>
-        <Sheet.Header>
-          <Sheet.Title>Cannot dismiss by escape</Sheet.Title>
+          <Sheet.Title>Prevent close</Sheet.Title>
         </Sheet.Header>
         <Sheet.Footer>
           <Sheet.Close>
             <Button>Close via button</Button>
           </Sheet.Close>
         </Sheet.Footer>
-      </>
-    ),
-  },
+      </Sheet>
+    </div>
+  ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    // Open sheet
-    const trigger = canvas.getByRole("button", { name: "Open Sheet" });
-    await userEvent.click(trigger);
+    // Default sheet: opens on trigger, closes via its X button
+    await userEvent.click(canvas.getByRole("button", { name: "Open default" }));
+    let sheet = await screen.findByRole("dialog");
+    await userEvent.click(within(sheet).getByRole("button", { name: "Close sheet" }));
+    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
-    // Wait for sheet to be visible
-    const sheetElement = await screen.findByRole("dialog");
-    await expect(sheetElement).toBeInTheDocument();
+    // ...and via an action button
+    await userEvent.click(canvas.getByRole("button", { name: "Open default" }));
+    sheet = await screen.findByRole("dialog");
+    await userEvent.click(within(sheet).getByRole("button", { name: "Close" }));
+    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
-    // Try to close with Escape - should not close due to preventClose
+    // preventClose: Escape is a no-op; the action button still closes
+    await userEvent.click(canvas.getByRole("button", { name: "Open prevent-close" }));
+    sheet = await screen.findByRole("dialog");
     await userEvent.keyboard("{Escape}");
-
-    // Sheet should still be visible
-    await expect(screen.queryByRole("dialog")).toBeInTheDocument();
-
-    // Close via button - should work
-    const closeButton = within(sheetElement).getByRole("button", { name: "Close via button" });
-    await userEvent.click(closeButton);
-
-    // Verify sheet is closed
+    await expect(screen.getByRole("dialog")).toBeInTheDocument();
+    await userEvent.click(within(sheet).getByRole("button", { name: "Close via button" }));
     await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   },
 };

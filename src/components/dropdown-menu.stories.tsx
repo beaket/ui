@@ -16,7 +16,7 @@ import {
   Users,
 } from "lucide-react";
 import { useState } from "react";
-import { expect, screen, userEvent, within } from "storybook/test";
+import { expect, screen, userEvent, waitFor, within } from "storybook/test";
 import { Button } from "./button";
 import { DropdownMenu } from "./dropdown-menu";
 
@@ -29,6 +29,9 @@ const meta: Meta<typeof DropdownMenu> = {
 export default meta;
 type Story = StoryObj<typeof DropdownMenu>;
 
+// The interactive playground — icons, labels, separators, and shortcuts. Every
+// item variant (destructive, disabled, shortcuts) lives in the AllStates
+// composition below.
 export const Default: Story = {
   render: () => (
     <DropdownMenu>
@@ -69,6 +72,7 @@ export const Default: Story = {
   ),
 };
 
+// Nested submenus, grouped items, and a disabled item together.
 export const WithSubmenus: Story = {
   render: () => (
     <DropdownMenu>
@@ -203,39 +207,8 @@ export const WithRadioItems: Story = {
   render: () => <RadioItemsExample />,
 };
 
-export const DestructiveItem: Story = {
-  render: () => (
-    <DropdownMenu>
-      <DropdownMenu.Trigger asChild>
-        <Button variant="outline">Actions</Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <DropdownMenu.Item>Edit</DropdownMenu.Item>
-        <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
-        <DropdownMenu.Separator />
-        <DropdownMenu.Item variant="destructive">Delete</DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu>
-  ),
-};
-
-export const WithDisabledItems: Story = {
-  render: () => (
-    <DropdownMenu>
-      <DropdownMenu.Trigger asChild>
-        <Button variant="outline">Open Menu</Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <DropdownMenu.Item>Edit</DropdownMenu.Item>
-        <DropdownMenu.Item disabled>Copy (Disabled)</DropdownMenu.Item>
-        <DropdownMenu.Item>Paste</DropdownMenu.Item>
-        <DropdownMenu.Separator />
-        <DropdownMenu.Item disabled>Delete (Disabled)</DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu>
-  ),
-};
-
+// Inset items and labels align their text to the icon column even without an
+// icon, so a mixed menu stays on one left edge.
 export const InsetItems: Story = {
   render: () => (
     <DropdownMenu>
@@ -260,6 +233,8 @@ export const InsetItems: Story = {
   ),
 };
 
+// Composition for docs — item variants side by side: plain, icons + a
+// destructive row, shortcuts, and disabled items.
 export const AllStates = () => (
   <div className="flex flex-wrap gap-4">
     <DropdownMenu>
@@ -358,144 +333,12 @@ export const TriggerOpenState = () => (
   </div>
 );
 
-// Interaction Tests
-export const OpenCloseTest: Story = {
-  render: () => (
-    <DropdownMenu>
-      <DropdownMenu.Trigger asChild>
-        <Button>Open Menu</Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <DropdownMenu.Item>Profile</DropdownMenu.Item>
-        <DropdownMenu.Item>Settings</DropdownMenu.Item>
-        <DropdownMenu.Item>Log out</DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Open dropdown
-    const trigger = canvas.getByRole("button", { name: "Open Menu" });
-    await userEvent.click(trigger);
-
-    // Wait for menu to be visible
-    const menu = await screen.findByRole("menu");
-    await expect(menu).toBeInTheDocument();
-
-    // Verify menu items are present
-    await expect(within(menu).getByRole("menuitem", { name: "Profile" })).toBeInTheDocument();
-    await expect(within(menu).getByRole("menuitem", { name: "Settings" })).toBeInTheDocument();
-
-    // Close with Escape key
-    await userEvent.keyboard("{Escape}");
-
-    // Verify menu is closed
-    await expect(screen.queryByRole("menu")).not.toBeInTheDocument();
-  },
-};
-
-export const ItemSelectionTest: Story = {
-  render: () => (
-    <DropdownMenu>
-      <DropdownMenu.Trigger asChild>
-        <Button>Open Menu</Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <DropdownMenu.Item>Profile</DropdownMenu.Item>
-        <DropdownMenu.Item>Settings</DropdownMenu.Item>
-        <DropdownMenu.Item>Log out</DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Open dropdown
-    const trigger = canvas.getByRole("button", { name: "Open Menu" });
-    await userEvent.click(trigger);
-
-    // Wait for menu to be visible
-    const menu = await screen.findByRole("menu");
-    await expect(menu).toBeInTheDocument();
-
-    // Click on an item
-    const profileItem = within(menu).getByRole("menuitem", { name: "Profile" });
-    await userEvent.click(profileItem);
-
-    // Menu should close after selection
-    await expect(screen.queryByRole("menu")).not.toBeInTheDocument();
-  },
-};
-
-export const KeyboardNavigationTest: Story = {
-  render: () => (
-    <DropdownMenu>
-      <DropdownMenu.Trigger asChild>
-        <Button>Open Menu</Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <DropdownMenu.Item>First</DropdownMenu.Item>
-        <DropdownMenu.Item>Second</DropdownMenu.Item>
-        <DropdownMenu.Item>Third</DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Focus trigger and open with Enter
-    const trigger = canvas.getByRole("button", { name: "Open Menu" });
-    trigger.focus();
-    await userEvent.keyboard("{Enter}");
-
-    // Wait for menu to be visible
-    const menu = await screen.findByRole("menu");
-    await expect(menu).toBeInTheDocument();
-
-    // Navigate with arrow keys
-    await userEvent.keyboard("{ArrowDown}");
-    await userEvent.keyboard("{ArrowDown}");
-
-    // Close with Escape
-    await userEvent.keyboard("{Escape}");
-
-    // Verify menu is closed
-    await expect(screen.queryByRole("menu")).not.toBeInTheDocument();
-  },
-};
-
-export const DisabledItemTest: Story = {
-  render: () => (
-    <DropdownMenu>
-      <DropdownMenu.Trigger asChild>
-        <Button>Open Menu</Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <DropdownMenu.Item>Enabled</DropdownMenu.Item>
-        <DropdownMenu.Item disabled>Disabled</DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Open dropdown
-    const trigger = canvas.getByRole("button", { name: "Open Menu" });
-    await userEvent.click(trigger);
-
-    // Wait for menu to be visible
-    const menu = await screen.findByRole("menu");
-    await expect(menu).toBeInTheDocument();
-
-    // Verify disabled item has correct attribute
-    const disabledItem = within(menu).getByRole("menuitem", { name: "Disabled" });
-    await expect(disabledItem).toHaveAttribute("data-disabled");
-  },
-};
-
-function CheckboxTestExample() {
+// One consolidated test folding the six former per-behavior tests: keyboard
+// open, item render, disabled marking, plain-item selection closes, arrow-key
+// highlight, Escape closes, and checkbox/radio state persisting across reopen.
+function InteractionExample() {
   const [checked, setChecked] = useState(false);
+  const [position, setPosition] = useState("one");
 
   return (
     <DropdownMenu>
@@ -503,52 +346,14 @@ function CheckboxTestExample() {
         <Button>Open Menu</Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
+        <DropdownMenu.Item>Profile</DropdownMenu.Item>
+        <DropdownMenu.Item disabled>Disabled</DropdownMenu.Item>
+        <DropdownMenu.Separator />
         <DropdownMenu.CheckboxItem checked={checked} onCheckedChange={setChecked}>
           Toggle Option
         </DropdownMenu.CheckboxItem>
-      </DropdownMenu.Content>
-    </DropdownMenu>
-  );
-}
-
-export const CheckboxItemTest: Story = {
-  render: () => <CheckboxTestExample />,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Open dropdown
-    const trigger = canvas.getByRole("button", { name: "Open Menu" });
-    await userEvent.click(trigger);
-
-    // Wait for menu to be visible
-    const menu = await screen.findByRole("menu");
-    await expect(menu).toBeInTheDocument();
-
-    // Find and click checkbox item
-    const checkboxItem = within(menu).getByRole("menuitemcheckbox", { name: "Toggle Option" });
-    await expect(checkboxItem).toHaveAttribute("aria-checked", "false");
-    await userEvent.click(checkboxItem);
-
-    // Re-open menu to verify state
-    await userEvent.click(trigger);
-    const menuAfter = await screen.findByRole("menu");
-    const checkboxItemAfter = within(menuAfter).getByRole("menuitemcheckbox", {
-      name: "Toggle Option",
-    });
-    await expect(checkboxItemAfter).toHaveAttribute("aria-checked", "true");
-  },
-};
-
-function RadioTestExample() {
-  const [value, setValue] = useState("one");
-
-  return (
-    <DropdownMenu>
-      <DropdownMenu.Trigger asChild>
-        <Button>Open Menu</Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <DropdownMenu.RadioGroup value={value} onValueChange={setValue}>
+        <DropdownMenu.Separator />
+        <DropdownMenu.RadioGroup value={position} onValueChange={setPosition}>
           <DropdownMenu.RadioItem value="one">Option One</DropdownMenu.RadioItem>
           <DropdownMenu.RadioItem value="two">Option Two</DropdownMenu.RadioItem>
         </DropdownMenu.RadioGroup>
@@ -557,34 +362,68 @@ function RadioTestExample() {
   );
 }
 
-export const RadioItemTest: Story = {
-  render: () => <RadioTestExample />,
+export const InteractionTest: Story = {
+  tags: ["!autodocs"],
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+  render: () => <InteractionExample />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-
-    // Open dropdown
     const trigger = canvas.getByRole("button", { name: "Open Menu" });
+
+    // Opens on Enter; the first item takes the highlight and the disabled item is marked
+    trigger.focus();
+    await userEvent.keyboard("{Enter}");
+    let menu = await screen.findByRole("menu");
+    await waitFor(() =>
+      expect(within(menu).getByRole("menuitem", { name: "Profile" })).toHaveAttribute(
+        "data-highlighted",
+      ),
+    );
+    await expect(within(menu).getByRole("menuitem", { name: "Disabled" })).toHaveAttribute(
+      "data-disabled",
+    );
+
+    // Arrow keys move the highlight through the menu
+    await userEvent.keyboard("{ArrowDown}");
+
+    // Escape closes
+    await userEvent.keyboard("{Escape}");
+    await expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+
+    // Selecting a plain item closes the menu
     await userEvent.click(trigger);
+    menu = await screen.findByRole("menu");
+    await userEvent.click(within(menu).getByRole("menuitem", { name: "Profile" }));
+    await expect(screen.queryByRole("menu")).not.toBeInTheDocument();
 
-    // Wait for menu to be visible
-    const menu = await screen.findByRole("menu");
-    await expect(menu).toBeInTheDocument();
+    // Checkbox item toggles and persists across a reopen
+    await userEvent.click(trigger);
+    menu = await screen.findByRole("menu");
+    const checkbox = within(menu).getByRole("menuitemcheckbox", { name: "Toggle Option" });
+    await expect(checkbox).toHaveAttribute("aria-checked", "false");
+    await userEvent.click(checkbox);
+    await expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+    await userEvent.click(trigger);
+    menu = await screen.findByRole("menu");
+    await expect(
+      within(menu).getByRole("menuitemcheckbox", { name: "Toggle Option" }),
+    ).toHaveAttribute("aria-checked", "true");
 
-    // Verify initial selection
-    const optionOne = within(menu).getByRole("menuitemradio", { name: "Option One" });
+    // Radio item selects one of the group and persists across a reopen
     const optionTwo = within(menu).getByRole("menuitemradio", { name: "Option Two" });
-    await expect(optionOne).toHaveAttribute("aria-checked", "true");
     await expect(optionTwo).toHaveAttribute("aria-checked", "false");
-
-    // Select option two
     await userEvent.click(optionTwo);
-
-    // Re-open menu to verify state
     await userEvent.click(trigger);
-    const menuAfter = await screen.findByRole("menu");
-    const optionOneAfter = within(menuAfter).getByRole("menuitemradio", { name: "Option One" });
-    const optionTwoAfter = within(menuAfter).getByRole("menuitemradio", { name: "Option Two" });
-    await expect(optionOneAfter).toHaveAttribute("aria-checked", "false");
-    await expect(optionTwoAfter).toHaveAttribute("aria-checked", "true");
+    menu = await screen.findByRole("menu");
+    await expect(within(menu).getByRole("menuitemradio", { name: "Option One" })).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+    await expect(within(menu).getByRole("menuitemradio", { name: "Option Two" })).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
   },
 };
