@@ -68,6 +68,10 @@ export const AllStates: Story = {
         <Switch disabled defaultChecked={true} aria-label="Disabled checked switch" />
         <span className="text-sm">Disabled (checked)</span>
       </div>
+      <div className="flex items-center gap-3">
+        <Switch aria-invalid aria-label="Invalid switch" />
+        <span className="text-sm">Invalid</span>
+      </div>
     </div>
   ),
 };
