@@ -32,16 +32,15 @@ function SelectTrigger({ className, size = "default", children, ...props }: Sele
       className={cn(
         "flex w-full items-center justify-between gap-2",
         "border-border-strong bg-bg-input text-fg border px-3 py-2 text-sm",
-        // Held open: the trigger is a pressable that opens a menu, so it takes
-        // the same accent-edge grammar as a Button — a thin edge at rest, grown
-        // on hover, held grown while the menu is open (data-[state=open] lands
-        // natively on the Radix trigger), dropped onto the edge on press, gone
-        // when disabled. Keyboard focus keeps the ring; invalid recolors border
-        // + ring to danger while the pressable edge stays accent (role-agnostic,
-        // exactly as on a destructive Button).
-        "shadow-offset-action hover:shadow-offset-action-hover data-[state=open]:shadow-offset-action-hover",
-        "active:translate-x-px active:translate-y-px active:shadow-none",
-        "transition-[box-shadow,translate] duration-100",
+        // Field that opens: the trigger opens a menu (a pressable — it keeps the
+        // keyboard ring) but it's field-surfaced, not a Button, so it stays quiet
+        // at rest like its field neighbors (no standing edge, no hover growth) and
+        // lifts the grown edge only while its menu is open (data-[state=open] lands
+        // natively on the Radix trigger; the rest-edge and hover-growth were
+        // Button-incidental). Invalid recolors border + ring to danger while the
+        // open edge stays accent (role-agnostic — danger rides the focus indicator,
+        // which on a pressable is the ring).
+        "data-[state=open]:shadow-offset-action-hover transition-[box-shadow] duration-100",
         "focus-visible:outline-border-focus focus-visible:outline-2 focus-visible:outline-offset-2",
         "disabled:bg-bg-disabled disabled:text-fg-disabled disabled:border-border-muted disabled:cursor-not-allowed disabled:border-dashed disabled:shadow-none",
         "aria-[invalid=true]:border-danger-solid aria-[invalid=true]:focus-visible:outline-danger-solid",
