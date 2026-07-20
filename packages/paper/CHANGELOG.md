@@ -1,5 +1,90 @@
 # @beaket/paper
 
+## 0.9.0
+
+### Minor Changes
+
+- [#616](https://github.com/beaket/ui/pull/616) [`fd2cfc8`](https://github.com/beaket/ui/commit/fd2cfc8509c4ee99de81828bd4b99e3763e287a6) Thanks [@jihnma](https://github.com/jihnma)! - fix(react): `PaperHandle.getView()` returns `undefined` before mount instead of throwing
+
+  Root cause: the `EditorView` is created in a passive `useEffect`, which runs after the commit
+  phase, while React `ref` callbacks (and `useImperativeHandle`) fire during commit. A consumer using
+  the documented `getView()` escape hatch from a ref callback therefore hit `viewRef.current === null`
+  and the handle threw `Paper: view is not mounted yet`, crashing the React tree on first render.
+
+  Fix: `getView()` now returns `EditorView | undefined`, yielding `undefined` until the view mounts.
+  The idiomatic `const v = h.getView(); if (!v) return;` now works, bringing the hatch in line with its
+  curated siblings — `getSelection()` returns `null`, `getValue()` returns `""` — instead of being the
+  one handle that throws.
+
+  This changes the return type from `EditorView` to `EditorView | undefined` (a semver-legal breaking
+  type change on `0.x`). See ADR-0013's 2026-07-11 amendment; the `onReady` callback and raw
+  `extensions[]` slot from the issue were deliberately not added (ADR-0015).
+
+### Patch Changes
+
+- [#617](https://github.com/beaket/ui/pull/617) [`78d1b49`](https://github.com/beaket/ui/commit/78d1b49d4501abdecbcacf88d9a79ae6138970af) Thanks [@jihnma](https://github.com/jihnma)! - docs(paper): adjudicate the DECISIONS.md "Deferred (not bugs)" list for the 1.0 gate
+
+  Root cause: the 1.0 exit criterion ([#481](https://github.com/beaket/ui/issues/481)) requires every `DECISIONS.md` Deferred item to be resolved
+  or consciously accepted with written rationale, but the three items were still recorded as open
+  deferrals. Verified all three against current code — accurate, not stale — and adjudicated each without
+  any behavior change:
+
+  - **Physical-key Korean IME spot-check** — redirected, not a [#481](https://github.com/beaket/ui/issues/481) code deferral: it is the deliberate
+    jsdom-strategy boundary (ADR-0005) and is owned by the CJK/IME real-device verification gate ([#483](https://github.com/beaket/ui/issues/483),
+    blocked by [#479](https://github.com/beaket/ui/issues/479)). The specific guarded paths (`setValue`, highlight-deferral hold, coalesced
+    `onSelect`/active flush) are recorded as the matrix [#483](https://github.com/beaket/ui/issues/483) inherits; IME stays delegated, not verified.
+  - **Orphan re-emit on in-session delete; prefix/suffix context anchors** — accepted for 1.0 with the
+    bounded consequence named (a stale `exact`/`approximate` status until the next `setHighlights`/reload;
+    the decoration itself is dropped on map — empty mark decorations are removed) and the ADR-0014
+    resumption trigger kept.
+    The `Anchor` slots and `onHighlightStatusChange` map are additive-only, so the 1.0 interface freeze is
+    not blocked.
+  - **`.cm-selectionBackground` dormant** — accepted for 1.0 (browser-native selection); `drawSelection()`
+    declined for IME/composing-guard risk and lightness. The dead rule is kept as the wired token path and
+    annotated dormant at the call site in `theme.ts` so the decision is self-documenting and reversible.
+
+- [#614](https://github.com/beaket/ui/pull/614) [`a32a35d`](https://github.com/beaket/ui/commit/a32a35dccf30bd26f535903828a6d582c40fe86a) Thanks [@jihnma](https://github.com/jihnma)! - refactor(paper): extract the duplicated `selectionTouches` helper into `editor/extensions/selection-utils.ts`
+
+  Root cause: the Live-Preview reveal-on-cursor predicate `selectionTouches(state, from, to)` was
+  copy-pasted verbatim into three extensions (`code-block-render.ts`, `footnote-render.ts`,
+  `inline-syntax-hiding.ts`). A future correction to its boundary handling — e.g. a collapsed caret
+  sitting exactly at `from`/`to` — would have to land in all three, with the risk that only one copy
+  gets updated.
+
+  Fix: a single exported `selectionTouches` now lives in `editor/extensions/selection-utils.ts`; the
+  three extensions import it. The logic is byte-identical (inclusive on both ends), so behavior is
+  unchanged. A `selection-utils.test.ts` pins the contract with the four boundary cases (collapsed
+  caret at `from`, at `to`, strictly inside, strictly outside) plus a non-collapsed overlap.
+
+- [#575](https://github.com/beaket/ui/pull/575) [`4dfa3a8`](https://github.com/beaket/ui/commit/4dfa3a893298d02ae70b6df47393c5dfc04ef752) Thanks [@jihnma](https://github.com/jihnma)! - perf(table-widget): prune buildTableDecorations syntax-tree descent to block containers only
+
+  Root cause: `syntaxTree(state).iterate({ enter })` returned `undefined` (not `false`) for every
+  non-`Table` node, so it descended into the inline children of every `Paragraph`, `Heading`, etc.
+  on each `docChanged`. Cost scaled linearly with document size per keystroke even though tables are
+  block-level structures.
+
+  Fix: return `false` immediately for nodes that are not `Table` and not in the block-container set
+  (`Document`, `Blockquote`, `BulletList`, `OrderedList`, `ListItem`). The produced `DecorationSet`
+  is identical to before — GFM tables do nest inside blockquotes and list items, and the container
+  set covers all paths. `FootnoteDefinition` is single-line only in this package's v1 implementation
+  and can never contain a multi-line table.
+
+- [#615](https://github.com/beaket/ui/pull/615) [`c5bfbc4`](https://github.com/beaket/ui/commit/c5bfbc4dfa3257a5eafded6a260f7ce5ffddffc9) Thanks [@jihnma](https://github.com/jihnma)! - refactor(table): extract the pure parse/serialize model into `table-model.ts`
+
+  Root cause: `extensions/table-widget.ts` had grown to ~1,600 lines covering four distinct concerns
+  (pure model, widget DOM/grid rendering, cell subview sync, keymap handlers) in one file, so a change
+  to any one concern required reading the whole file for context and risked touching the others.
+
+  This is the first, lowest-risk split: the pure model layer — `parseAligns`, `parseRowCells`,
+  `parseTable`, `serializeRow`, `serializeDelimiter`, and the `TableAlign` / `CellRange` / `TableData`
+  types — moves to a new `extensions/table-model.ts` (no view/DOM dependency; state-only). It already
+  had its own `table-model.test.ts`, now pointed at the new module. `table-widget.ts` imports what it
+  needs from there. Behavior is unchanged (move only); the full suite stays green.
+
+  Also documents the previously-undocumented table keymap invariants (in-cell Tab/Enter/Shift-Enter/
+  arrow-escape, the two-step Backspace select-then-delete, and the boundary-newline guard) in
+  `packages/paper/docs/DECISIONS.md`.
+
 ## 0.8.1
 
 ### Patch Changes

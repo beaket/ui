@@ -1,5 +1,236 @@
 # @beaket/ui
 
+## 2.4.0
+
+### Minor Changes
+
+- [#635](https://github.com/beaket/ui/pull/635) [`cff40cf`](https://github.com/beaket/ui/commit/cff40cf346d23912791d3c0c0d4a4f2ae29b6120) Thanks [@jihnma](https://github.com/jihnma)! - Accent becomes the interaction voice.
+
+  The `accent` signal — the one vivid ink each theme reserves for "what you can act on" — now actually carries interaction across the system, resolving the long-standing "two blues" (accent vs. `signal-info`) in Solace:
+
+  - **Primary button**: the ink fill gains a 1px `accent-solid` edge, with `accent`-warmed hover/active surfaces (previously a plain `border-strong` with no hover shift).
+  - **Secondary button**: now an `accent` tint (`accent-bg` + `accent-fg` + `accent-border`) that deepens its border on hover, instead of a neutral grey surface.
+  - **Links & focus rings** (`--color-fg-link`, `--color-border-focus`): repointed from `signal-info` to `signal-accent`, so `signal-info` returns to meaning only "info". Solace's primary focus is now a single blue (edge + ring) rather than two.
+
+  Two new semantic tokens back the primary hover/active states — `--color-bg-emphasis-hover` and `--color-bg-emphasis-active` (`accent`-warmed mixes of `bg-emphasis`) — bringing the semantic layer to 66 names.
+
+  Accessibility: because `accent` is now link/focus text (which needs 4.5:1 against the page), three palette accents were re-cut to clear that floor — Marigold (light), Porcelain (dark), and Tobacco (dark). The other themes already passed.
+
+- [#636](https://github.com/beaket/ui/pull/636) [`fede846`](https://github.com/beaket/ui/commit/fede846a1bf6d23c1b81c11d81bd11a4bb31c200) Thanks [@jihnma](https://github.com/jihnma)! - feat(theme): action shadow — a thin accent edge under what you can press
+
+  The offset shadow splits into two voices. Surfaces (cards, overlays) keep the
+  grey shade; pressables now carry the one vivid voice as a thin sharp edge.
+
+  - New semantic tokens `--shadow-offset-action` / `--shadow-offset-action-hover`
+    (68 shared names now: 62 color + 6 shadow) — drawn with `--signal-accent`
+  - Button: rest = 1px accent edge → hover grows to 2px → active drops the button
+    onto the edge (`translate(1px,1px)`, shadow collapses); ghost/link/disabled
+    stay flat, disabled keeps its dashed border
+  - Solace palette thins `--shadow-size` 2px → 1px — softness of the paper,
+    sharpness of the edge
+
+- [#647](https://github.com/beaket/ui/pull/647) [`8729283`](https://github.com/beaket/ui/commit/87292830bcec14dc48cbb14df670e7a0a01c3184) Thanks [@jihnma](https://github.com/jihnma)! - feat(breadcrumb): a quiet trail in one ink, not a switcher
+
+  A breadcrumb is a trail — a sentence read left to right — not the lens that navigation and tabs are, so it doesn't join the fused-strip/glass-plate grammar. It stays in one ink: ancestor links now sit in muted ink (`text-fg-muted`) instead of standing accent, and the current page keeps full ink (`text-fg font-medium`). Pointing at a step darkens it from muted to full ink (`hover:text-fg`) rather than dropping the accent to ink as before, and the always-on underline is retired (`no-underline`) — the darkening is the affordance. The one accent mark is the keyboard focus ring; the vivid voice is kept for where you act, not spent on a standing row of links. No pressable edge (a link is not a key), no new tokens.
+
+- [#649](https://github.com/beaket/ui/pull/649) [`3d36f73`](https://github.com/beaket/ui/commit/3d36f73ea0fb9054df9a1f565bbfbd099c4ebf44) Thanks [@jihnma](https://github.com/jihnma)! - feat(button): primary wears a light rim that sheds on engage
+
+  The primary button's rest edge no longer doubles. Its border was the full accent
+  (`border-accent-solid`) sitting directly over the full accent shadow — the same
+  blue on both, so the two 1px lines merged into one thick 2px band on the bottom
+  and right. The border now takes the lighter accent tone (`border-accent-border`),
+  so at rest the light rim and the full-accent shadow read as two tones — depth,
+  not a doubled line — with the strong voice living in the shadow where it grows
+  and drops.
+
+  On engage the rim sheds: `hover:border-transparent` (and `data-[state=open]`
+  mirrors it) drops the rim into the ink fill so the accent consolidates into the
+  one growing shadow rather than piling into a thick accent band. The border is
+  added to the shared transition (`transition-[box-shadow,translate,border-color]`)
+  so the rim fades with the shadow instead of snapping — which also smooths the
+  hover border-color change on the other bordered variants. No new tokens; other
+  variants and the rest/hover/press/held-open shadow grammar are unchanged.
+
+- [#649](https://github.com/beaket/ui/pull/649) [`3d36f73`](https://github.com/beaket/ui/commit/3d36f73ea0fb9054df9a1f565bbfbd099c4ebf44) Thanks [@jihnma](https://github.com/jihnma)! - feat(button): remove the `mono` prop
+
+  The `mono` prop (monospace + wide tracking for CTA-style text) had no documented
+  role in the Ink & Instrument vocabulary, was demonstrated only by an orphan
+  `MonoVariants` composition the docs never rendered (plus a redundant single
+  story), and was a Button-only flourish. Monospace lives on where it means
+  something — code badges, numeric table cells — not as a per-button toggle.
+
+  The `mono` prop is dropped from `Button` along with its `Mono` and `MonoVariants`
+  stories. Consumers who want monospace CTA text can pass `className="font-mono
+tracking-wide"`. Since components are copy-paste, existing copies are unaffected.
+
+- [#649](https://github.com/beaket/ui/pull/649) [`3d36f73`](https://github.com/beaket/ui/commit/3d36f73ea0fb9054df9a1f565bbfbd099c4ebf44) Thanks [@jihnma](https://github.com/jihnma)! - feat(button): remove the `stark` variant
+
+  `stark` (a strong-bordered button that inverted to solid ink on hover) had no
+  documented role in the Ink & Instrument vocabulary — it appeared nowhere in the
+  design docs, was used only as a demo trigger in stories, and overlapped with
+  `outline` (bordered neutral) and `primary` (solid ink). In a system where every
+  mark is meant to be deliberate, an unarticulated variant is a cut, not a keeper.
+
+  The `variant` union drops `"stark"`; the demo triggers that used it (dialog,
+  sheet, dropdown-menu stories) move to `outline`. Since components are copy-paste,
+  existing consumer copies are unaffected; new copies simply won't include it.
+
+- [#645](https://github.com/beaket/ui/pull/645) [`fc298f9`](https://github.com/beaket/ui/commit/fc298f9a8165efd73f4985e33294763e6eddb8b1) Thanks [@jihnma](https://github.com/jihnma)! - feat(button): held-open triggers sustain the grown edge
+
+  A Button acting as an overlay trigger (dropdown menu, popover) now holds its
+  hover state while the overlay is open — the accent edge stays grown instead of
+  springing back to rest. The trigger reads as the active owner of the menu it
+  opened while remaining pressable: a lifted state, not a drop.
+
+  The rule is variant-aware: `data-[state=open]:` mirrors each variant's `hover:`,
+  so edge-bearing variants grow and hold their edge, and `ghost`/`link` keep their
+  surface tint / underline with no edge and no press-travel. Radix sets
+  `data-[state=open]` only on `asChild` triggers, so the styles are inert on
+  ordinary buttons; modal (dialog/sheet) triggers sit behind the scrim, so the
+  held edge is effectively visible only for non-modal triggers like DropdownMenu.
+
+- [#645](https://github.com/beaket/ui/pull/645) [`fc298f9`](https://github.com/beaket/ui/commit/fc298f9a8165efd73f4985e33294763e6eddb8b1) Thanks [@jihnma](https://github.com/jihnma)! - feat(dropdown-menu): accent marks the highlighted row
+
+  The highlighted/active menu row is no longer an ink stamp (full `bg-emphasis`
+  slab). Instead the system's one vivid voice — the accent — marks the row you'd
+  activate: a faint `accent-bg` wash plus a 2px accent left-rule (the engaged-edge
+  weight, matching a hovered button's grown edge), with the ink text left at full
+  density and the shortcut in `accent-fg`. Checkbox, radio, and sub-trigger rows
+  adopt the same mark; the sub-trigger holds it while its submenu is open.
+  Destructive rows swap accent → danger (`danger-bg` wash + danger rule).
+
+  The menu panel and sub-menu panel now float on `shadow-offset-overlay` (the
+  darker overlay shade) instead of the surface `shadow-offset` — a menu sits above
+  cards, not among them.
+
+- [#641](https://github.com/beaket/ui/pull/641) [`a13b651`](https://github.com/beaket/ui/commit/a13b65161ecfb3e736790c69d36c9f901ce5f8d6) Thanks [@jihnma](https://github.com/jihnma)! - feat(input, textarea): cap-off focus — retire the ring, the field engages the action edge
+
+  Writing fields are quiet at rest; focusing one is "cap-off": the glowing focus ring is retired and a static accent edge (`shadow-offset-action`) appears under the field while engaged — no hover growth, no active drop, no transition. Invalid fields swap the edge to the new `--shadow-offset-action-danger` token (semantic tokens 68 → 69). The caret becomes the pen (`caret-accent-solid`) and selection uses the accent tint (`selection:bg-accent-bg`). Read-only fields gain dignity: the frame retreats to `border-border-muted` while the value stays full-ink, and focusing one shows the grey surface `shadow-offset` instead of the action edge — readable, not writable. Keyboard-nav rings on pressables (buttons, checkboxes, …) are unchanged.
+
+- [#643](https://github.com/beaket/ui/pull/643) [`3dc0a0b`](https://github.com/beaket/ui/commit/3dc0a0b80c279a0f75ea11e701ad3cea4c208b5d) Thanks [@jihnma](https://github.com/jihnma)! - feat(navigation): the lens — navigation joins the instrument family
+
+  Navigation was the last component on the legacy grey shadow ladder. It is now a fused hairline strip (cells share `border-border-muted` borders) carrying one static accent edge, and the current page is no longer stamped in ink — it sits under a glass lens plate: hairline top/left rim, ink bottom/right rim (ink gathers where every shadow in the system falls), filled with the faintest accent wash. The plate lies beneath the type, so the current label keeps full ink density. Pressing any other link travels its label 1px like an instrument key.
+
+  Token changes (68 semantic names, was 69):
+
+  - New: `--color-accent-bg-subtle` — accent-only faintest wash (8%), the lens fill
+  - Removed: `--shadow-offset-hover` and `--shadow-offset-active` — the grey ladder had no users left; surfaces keep `shadow-offset`/`-overlay`, pressables keep the action edge
+
+  Vertical layouts swap the fusion axis: `flex-col [&>li+li]:ml-0 [&>li+li]:-mt-px` on `Navigation.List`.
+
+- [#637](https://github.com/beaket/ui/pull/637) [`e86c410`](https://github.com/beaket/ui/commit/e86c4104b6b0758c064942332315aac899526188) Thanks [@jihnma](https://github.com/jihnma)! - feat(pagination): one instrument — fused strip with a single accent edge
+
+  Pagination adopts the action shadow, but as one machine rather than a row of
+  buttons: cells fuse into a single strip (shared borders, no gaps) carrying one
+  static 1px accent edge.
+
+  - Strip: new `pagination-strip` slot wraps all cells with `shadow-offset-action`
+  - Press: the chassis stays still — the pressed key's label travels 1px inside
+    the frame while the cell darkens (`active:bg-bg-active`)
+  - Current page: an ink-solid cell whose label stays held down 1px — the key
+    locked at its landing point
+  - Ellipsis becomes a bordered blank key; focus outline lifts above neighboring
+    cell borders
+
+- [#658](https://github.com/beaket/ui/pull/658) [`5b20afc`](https://github.com/beaket/ui/commit/5b20afc02043b2ce663bd3ca561f7faf64da1313) Thanks [@jihnma](https://github.com/jihnma)! - Select trigger becomes a field that opens.
+
+  The select trigger is surfaced like a form field (input's paper, input's border) but [#646](https://github.com/beaket/ui/issues/646) gave it the full Button edge grammar — a standing accent edge, a hover that grows — so in a real form it was the one control that behaved like a button. But the dropdown "trigger" is loud at rest only because it's literally a `<Button>`; that rest-edge is Button-incidental, not trigger-essential.
+
+  Select now stays **quiet at rest** among its field neighbors (no standing edge, no hover growth) and lifts the grown edge **only while its menu is open** — keeping the trigger-essence (`data-[state=open]:shadow-offset-action-hover`) and the keyboard focus ring. It's the one pressable that carries a ring but no rest edge. Invalid and disabled are unchanged; the resting form now reads as one quiet material.
+
+- [#646](https://github.com/beaket/ui/pull/646) [`4fee10c`](https://github.com/beaket/ui/commit/4fee10c8ab74aaa17cab7f5fd5268dc7862d11c0) Thanks [@jihnma](https://github.com/jihnma)! - feat(select): held-open trigger + accent marks the highlighted row
+
+  The Select trigger is the first form control that is also an overlay trigger — press it and a menu opens, exactly like a Dropdown. It now takes the same held-open pressable grammar as a Button rather than a writing field's cap-off: a thin accent edge (`shadow-offset-action`) at rest, grown on hover (`shadow-offset-action-hover`), held grown while the menu is open (`data-[state=open]:` — which Radix sets natively on `SelectPrimitive.Trigger`), dropped onto the edge on press (`active:` translate), and gone when disabled (`disabled:shadow-none`). Keyboard focus keeps the ring; invalid recolors the border and ring to danger while the pressable edge stays accent — role-agnostic, exactly as on a destructive Button. No new tokens.
+
+  Select's own menu joins the system too: highlighted rows drop the ink stamp (`bg-emphasis` slab) for the accent mark introduced on DropdownMenu in [#645](https://github.com/beaket/ui/issues/645) — an `accent-bg` wash + a 2px accent left-rule (`data-[highlighted]:shadow-[inset_2px_0_0_0_var(--color-accent-solid)]`), ink text left at full density. The list panel now floats on `shadow-offset-overlay` (the darker overlay shade) instead of the surface `shadow-offset`.
+
+- [#638](https://github.com/beaket/ui/pull/638) [`372c55f`](https://github.com/beaket/ui/commit/372c55fa814d1cb62efa7d68617fa737d85d3bf4) Thanks [@jihnma](https://github.com/jihnma)! - feat(checkbox, switch, radio): instrument grammar — static accent edge on small controls
+
+  Small controls adopt the action shadow as instruments: the chassis floats on a
+  static 1px accent edge (`shadow-offset-action`, no hover growth, no drop), and
+  press physics belong to the inner key instead — the checkbox indicator and the
+  switch thumb travel 1px under the press. Hover feedback is a surface tint
+  (`bg-bg-hover` unchecked, `bg-bg-emphasis-hover` checked); a checked radio gets
+  no press affordance since it cannot be unchecked. Disabled removes the edge.
+
+  Switch checked also moves from `bg-success-solid` to ink (`bg-bg-emphasis`),
+  matching checkbox/radio — state is carried by thumb position + ink, and the
+  success role returns to meaning outcomes, not "on".
+
+- [#630](https://github.com/beaket/ui/pull/630) [`fce6614`](https://github.com/beaket/ui/commit/fce66142abfe1c110732777ab9de40f4d0b925c0) Thanks [@jihnma](https://github.com/jihnma)! - New two-layer color token system + Solace theme.
+
+  - **Semantic layer** (`themes/semantic.css`, new): the 64 names components use — `--color-bg/-raised/-overlay/-input/-hover/-active/-disabled/-emphasis`, `--color-fg/-muted/-subtle/-disabled/-on-emphasis/-link`, `--color-border/-muted/-strong/-focus`, six roles (`danger`, `success`, `warning`, `info`, `info-alt`, `accent`) × seven slots (`-solid`, `-fg-on-solid`, `-solid-hover`, `-solid-active`, `-fg`, `-bg`, `-border`), and `--shadow-offset/-hover/-active/-overlay`. Authored once, shared verbatim by every theme.
+  - **Palette layer**: each theme now authors only 32 values — `--surface-0..2`, `--surface-brand`, `--tone-0..11`, six `--signal-*` inks, six `--signal-*-on` knockouts, and shadow size/color. Porcelain, Tobacco, Marigold, and Eucalyptus are re-cut to the new contract (signal hue/chroma kept; lightness moved only as far as the 4.5:1 knockout and 3:1 page floors require).
+  - **New theme: Solace** (light-only, now the default) — warm paper, cool ink, equal-weight signals, one vivid blue reserved for action.
+  - All components migrated to the semantic names; the old material names (`paper`, `ink`, `chrome`, `steel`, `frost`, `branch`, `signal-*`, `surface-N`, `shadow-offset-dark`) are removed. The new `--color-{role}-fg-on-solid` knockouts close the amber-on-button legibility gap.
+  - `init`/`theme` now inject `semantic.css` + the chosen palette together; `--theme solace` supported and default.
+  - The `prefers-contrast: more` override was removed: `--color-fg` is now the ramp's deepest ink, so maximum-contrast text is the default.
+
+  Migration for consumers who customized tokens: re-run `npx @beaket/ui theme` to re-inject, then re-apply customizations against the 32 palette values (the semantic layer follows automatically). Class mapping highlights: `bg-paper`→`bg-bg`/`bg-bg-raised`/`bg-bg-overlay`/`bg-bg-input` by surface role, `text-ink`→`text-fg`, `text-steel`→`text-fg-muted`, `border-chrome`→`border-border`, `bg-branch`/`bg-ink`→`bg-bg-emphasis` (+`text-fg-on-emphasis`), `outline-signal-blue`→`outline-border-focus`, `bg-signal-red`→`bg-danger-solid` (+`text-danger-fg-on-solid`), `shadow-offset-dark`→`shadow-offset-overlay`.
+
+- [#644](https://github.com/beaket/ui/pull/644) [`6adaf80`](https://github.com/beaket/ui/commit/6adaf80ecc65c37bf2eb0c1caae1bf2317660198) Thanks [@jihnma](https://github.com/jihnma)! - feat(tabs): the lens — tabs join the navigation layer's glass
+
+  The tray retires. Tabs.List is now a fused hairline strip under one static accent edge (`shadow-offset-action`), and the selected tab sits under a glass lens plate instead of an ink stamp — hairline top/left rim, ink bottom/right rim, the faintest accent wash, plate beneath the type so the label keeps full ink density. Hover is a quiet surface tint; the switch itself is snappy (Radix activates a tab on press, so selecting it is instant by design). The unused `shadow` prop on Tabs.List is removed.
+
+- [#650](https://github.com/beaket/ui/pull/650) [`49dfdcb`](https://github.com/beaket/ui/commit/49dfdcba2b9b59d85336a0f1bc3c6fcfd5f75db6) Thanks [@jihnma](https://github.com/jihnma)! - Each theme's accent gets its own taste — no longer five shades of the same purple.
+
+  The `accent` is a theme's one vivid voice: it carries the secondary tint, links, focus ring, pressable edge, nav lens, and menu rule. Yet four of five palettes shipped the same default purple `--signal-accent`, so every theme but Solace read identically in its most characteristic moment. Each theme now answers in a hue drawn from its own world — light and dark both re-cut:
+
+  - **Porcelain** → cobalt, the blue-and-white of 청화백자: `#1e40af` / `#7fa0f0`.
+  - **Tobacco** → a warm taupe from its cigar-box world, in place of purple: `#6c5240` / `#bda488`.
+  - **Eucalyptus** → a teal-blue — the trust of blue, kept a leaf's-width green so it stays clear of the pure-blue themes and its own cyan `info-alt`: `#175a84` / `#4fb0d6`.
+  - **Solace** (electric blue) and **Marigold** (violet) are unchanged — Marigold is now the family's _one_ violet, not one of four.
+
+  Accessibility: because `accent` is link/focus text (`--color-fg-link`), which needs 4.5:1 against the page, every new value was gated against its theme's `tone-0` in both light and dark before selection. A pale celadon and Marigold's namesake gold were both rejected for failing that floor on light paper. Regenerated `docs/src/data/theme-tokens.json` and `docs/public/theme-init.js`.
+
+### Patch Changes
+
+- [#649](https://github.com/beaket/ui/pull/649) [`3d36f73`](https://github.com/beaket/ui/commit/3d36f73ea0fb9054df9a1f565bbfbd099c4ebf44) Thanks [@jihnma](https://github.com/jihnma)! - fix(button): ghost and link no longer leak the accent edge
+
+  Ghost and link were meant to have no accent edge, but the base applied
+  `shadow-offset-action` to every variant and their `shadow-none` override never
+  won — twMerge can't dedupe a custom shadow utility against `shadow-none`, so both
+  classes survived and the custom edge won the cascade. Ghost showed a blue 1px
+  edge at rest (and grew it on hover); link wore a button edge instead of reading
+  as a link.
+
+  The accent edge now lives on the variants that carry it (via a shared `edge`
+  string appended to primary/destructive/outline/secondary/success/stark/warning)
+  rather than on the base, so ghost and link simply omit it — kept out, not
+  overridden. Ghost is now fully quiet (ink text, grey hover fill, no edge); link
+  reads as a link (accent text, hover underline, no edge). Edged variants are
+  unchanged. No token or palette change.
+
+- [#649](https://github.com/beaket/ui/pull/649) [`3d36f73`](https://github.com/beaket/ui/commit/3d36f73ea0fb9054df9a1f565bbfbd099c4ebf44) Thanks [@jihnma](https://github.com/jihnma)! - fix(button): outline hovers on the accent edge, not a grey fill
+
+  The outline button was airy at rest but filled with a grey wash on hover
+  (`hover:bg-bg-hover`) on top of its accent edge growing — two signals at once,
+  and the fill read as muddy against the paper. Outline now drops the grey fill on
+  hover and held-open and leans on the accent edge it already grows (from the base
+  grammar); the press keeps a faint grey settle (`active:bg-bg-active`) to confirm
+  the drop. Ghost is unchanged: with no edge, its grey fill is its only hover
+  signal. No token or palette change — `bg-hover` is a shared, already-light token;
+  this was a grammar fix, not a color one.
+
+- [#613](https://github.com/beaket/ui/pull/613) [`3287d19`](https://github.com/beaket/ui/commit/3287d19d6197c71db538353ddcad351028c3fda2) Thanks [@jihnma](https://github.com/jihnma)! - fix(cli): add a 10s timeout to registry fetches and preserve the original error
+
+  `fetchRegistry` and `fetchComponent` called `fetch()` with no `AbortController`, so a slow or
+  unreachable GitHub raw CDN hung the CLI until the OS-level TCP timeout fired (potentially minutes).
+  Both catch blocks also discarded the underlying error, collapsing ENOTFOUND / ECONNREFUSED / proxy
+  failures into the generic "Make sure the repository is public." message.
+
+  Each request now aborts after 10s and the thrown message includes the real cause (or
+  "request timed out after 10s" when the timeout fires), so `npx @beaket/ui add button` against a
+  degraded network fails fast with an actionable reason.
+
+- [#656](https://github.com/beaket/ui/pull/656) [`a98d75b`](https://github.com/beaket/ui/commit/a98d75b9bb81c7567c4a84cc84762822a3f027bf) Thanks [@jihnma](https://github.com/jihnma)! - Switch now renders an invalid state.
+
+  Switch was the only form control with no `aria-invalid` styling — a required switch marked invalid (e.g. an unaccepted terms toggle) showed no visual change, while its instrument siblings Checkbox and Radio both recolor. It now follows the same instrument grammar: `aria-invalid` recolors the border and focus ring to danger while the accent edge stays (role-agnostic, exactly as on Checkbox/Radio and the Select trigger).
+
+- [#659](https://github.com/beaket/ui/pull/659) [`d4cfb2c`](https://github.com/beaket/ui/commit/d4cfb2c77f0fe5c194f102923fb4da24ee7b146f) Thanks [@jihnma](https://github.com/jihnma)! - Switch off-state now responds to hover.
+
+  The switch was the one instrument with no hover feedback when off — its checked track warms on hover and its siblings Checkbox and Radio tint their surface, but the off-channel sat inert. It now darkens one token step on hover (`border-muted` → `border`), completing the instrument grammar: hover tints the surface, press travels the key (the switch already travels its thumb, so no active tint is added).
+
 ## 2.3.1
 
 ### Patch Changes
