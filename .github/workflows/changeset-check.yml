@@ -21,7 +21,7 @@ jobs:
         if: startsWith(github.head_ref, 'changeset-release/') || startsWith(github.head_ref, 'renovate/')
         run: echo "Skipping changeset check for automated branch"
 
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@v7.0.1
         if: ${{ !startsWith(github.head_ref, 'changeset-release/') && !startsWith(github.head_ref, 'renovate/') }}
         with:
           fetch-depth: 0
