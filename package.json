@@ -48,7 +48,7 @@
     "prettier-plugin-organize-imports": "4.3.0",
     "prettier-plugin-tailwindcss": "0.8.1",
     "react": "19.2.8",
-    "react-dom": "19.2.7",
+    "react-dom": "19.2.8",
     "storybook": "10.5.3",
     "tailwindcss": "4.3.3",
     "turbo": "^2.9.18",
