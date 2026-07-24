@@ -213,14 +213,19 @@
     },
     {
       "name": "card",
-      "description": "Container component for grouping related content and actions",
-      "dependencies": ["clsx", "tailwind-merge"],
+      "description": "A quiet, content-free surface — identity in the material, flexibility in the children",
+      "dependencies": [
+        "@radix-ui/react-slot",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge"
+      ],
       "registryDependencies": [],
       "files": ["components/card.tsx"],
       "docs": {
         "title": "Card",
-        "tagline": "A versatile container for grouping related content and actions.",
-        "sections": ["AllStates"],
+        "tagline": "A surface, not a template — pour any content into a quiet, drawn frame.",
+        "sections": ["Elevation", "Interactive", "AnyContent"],
         "previewStory": "Default"
       }
     },
