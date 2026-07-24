@@ -11,14 +11,14 @@ export function toLocalRelativePath(registryFilePath: string): string {
 }
 
 /**
- * Compare content by meaning, not bytes: a CRLF checkout, trailing whitespace,
- * or a final-newline difference is not a style change and shouldn't read as one.
+ * Compare content by meaning, not bytes — but only for differences that are
+ * never real content: a CRLF checkout (git autocrlf) or a trailing final
+ * newline. Per-line trailing whitespace is left intact: it can be significant
+ * inside a template literal, and for an update tool a false "up to date" (a real
+ * change hidden) is worse than a false "differs".
  */
 export function normalize(content: string): string {
-  return content
-    .replace(/\r\n/g, "\n")
-    .replace(/[ \t]+$/gm, "")
-    .trimEnd();
+  return content.replace(/\r\n/g, "\n").replace(/\n+$/, "");
 }
 
 export type FileStatus = "same" | "different" | "missing";
@@ -41,7 +41,10 @@ export interface ComponentComparison {
 /**
  * Overall status from the per-file results. A component whose files are all
  * absent isn't installed; any local file differing from (or missing against) an
- * installed component means the copy is behind upstream.
+ * installed component means the copy differs from the current registry. Without
+ * installed-version tracking we can't tell an upstream restyle apart from a
+ * local customization — both surface as "outdated", so callers must frame it as
+ * a difference, not a proven update, and never overwrite blindly.
  */
 export function deriveComponentStatus(files: FileComparison[]): ComponentStatus {
   if (files.length === 0 || files.every((f) => f.status === "missing")) {

@@ -91,7 +91,7 @@ export async function diff(componentName: string | undefined) {
     return;
   }
 
-  // Overview: check every installed component against upstream.
+  // Overview: check every installed component against the registry.
   const installed: typeof registry.components = [];
   for (const def of registry.components) {
     if (await isComponentInstalled(def, componentsDir)) installed.push(def);
@@ -118,17 +118,22 @@ export async function diff(componentName: string | undefined) {
   }
   outdated.forEach((r) => {
     const files = changedCount(r);
-    console.log(pc.yellow("⚠"), r.name, pc.dim(`${files} file(s) changed upstream`));
+    console.log(pc.yellow("⚠"), r.name, pc.dim(`${files} file(s) differ from the registry`));
   });
 
   console.log();
   if (outdated.length === 0) {
-    console.log(pc.green("All components are up to date."));
+    console.log(pc.green("All components match the registry."));
     console.log();
     return;
   }
 
-  console.log(pc.yellow(`${outdated.length} component(s) have upstream style updates.`));
+  console.log(pc.yellow(`${outdated.length} component(s) differ from the registry.`));
+  console.log(
+    pc.dim(
+      "  (a difference may be an upstream restyle or your own edits — review before updating)",
+    ),
+  );
   console.log("  Review one with", pc.cyan("npx @beaket/ui diff <component>"));
   console.log(
     "  Update with     ",

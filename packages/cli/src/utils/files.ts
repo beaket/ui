@@ -38,12 +38,12 @@ export async function writeComponentFiles(
       }
 
       if (!overwrite) {
-        // Distinguish a genuine upstream style update from a bare name clash, so
-        // the user knows their copy is behind — not just that a file is there.
+        // Distinguish a real content difference from a bare name clash, so the
+        // user knows their copy is out of sync — not just that a file is there.
         const { confirm } = await prompts({
           type: "confirm",
           name: "confirm",
-          message: `${path.basename(targetPath)} differs from the latest registry version — your copy may be an older style. Overwrite?`,
+          message: `${path.basename(targetPath)} differs from the registry version. Overwrite?`,
           initial: false,
         });
         if (!confirm) {

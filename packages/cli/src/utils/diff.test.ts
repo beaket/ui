@@ -16,6 +16,9 @@ import type { ComponentDefinition } from "./registry.ts";
 
 afterEach(() => {
   vi.restoreAllMocks();
+  // restoreAllMocks doesn't undo vi.stubGlobal — unstub so the fetch stub from
+  // the compareComponent tests doesn't leak into other tests.
+  vi.unstubAllGlobals();
 });
 
 describe("toLocalRelativePath", () => {
@@ -33,8 +36,12 @@ describe("normalize", () => {
     expect(normalize("a\r\nb")).toBe(normalize("a\nb"));
   });
 
-  it("ignores trailing whitespace and a final newline", () => {
-    expect(normalize("a  \nb\n")).toBe(normalize("a\nb"));
+  it("ignores a trailing final newline", () => {
+    expect(normalize("a\nb\n")).toBe(normalize("a\nb"));
+  });
+
+  it("preserves per-line trailing whitespace (can be significant in a template literal)", () => {
+    expect(normalize("a  \nb")).not.toBe(normalize("a\nb"));
   });
 
   it("keeps a real content difference", () => {
