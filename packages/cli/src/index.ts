@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import { add } from "./commands/add.ts";
+import { diff } from "./commands/diff.ts";
 import { init } from "./commands/init.ts";
 import { theme } from "./commands/theme.ts";
 
@@ -26,6 +27,12 @@ program
   .argument("<components...>", "Component names to add")
   .option("-o, --overwrite", "Overwrite existing files")
   .action(add);
+
+program
+  .command("diff")
+  .description("Check installed components for upstream style updates")
+  .argument("[component]", "Component to diff against the registry (omit to check all)")
+  .action((component?: string) => diff(component));
 
 program
   .command("theme")

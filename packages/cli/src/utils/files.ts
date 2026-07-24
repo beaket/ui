@@ -2,11 +2,14 @@ import { spawn } from "child_process";
 import fs from "fs-extra";
 import path from "path";
 import prompts from "prompts";
+import { normalize } from "./diff.ts";
 import type { ComponentFile } from "./registry.ts";
 
 export interface WriteResult {
   written: string[];
   skipped: string[];
+  /** Files already identical to upstream — left untouched, no prompt. */
+  unchanged: string[];
 }
 
 export async function writeComponentFiles(
@@ -16,6 +19,7 @@ export async function writeComponentFiles(
 ): Promise<WriteResult> {
   const written: string[] = [];
   const skipped: string[] = [];
+  const unchanged: string[] = [];
 
   for (const file of files) {
     // Transform file path: components/button.tsx -> button.tsx
@@ -24,11 +28,22 @@ export async function writeComponentFiles(
 
     // Check if file exists
     if (await fs.pathExists(targetPath)) {
+      const local = await fs.readFile(targetPath, "utf-8");
+      const differs = normalize(local) !== normalize(file.content);
+
+      // Already the latest — nothing to do, and no reason to nag the user.
+      if (!differs) {
+        unchanged.push(targetPath);
+        continue;
+      }
+
       if (!overwrite) {
+        // Distinguish a genuine upstream style update from a bare name clash, so
+        // the user knows their copy is behind — not just that a file is there.
         const { confirm } = await prompts({
           type: "confirm",
           name: "confirm",
-          message: `${path.basename(targetPath)} already exists. Overwrite?`,
+          message: `${path.basename(targetPath)} differs from the latest registry version — your copy may be an older style. Overwrite?`,
           initial: false,
         });
         if (!confirm) {
@@ -43,7 +58,7 @@ export async function writeComponentFiles(
     written.push(targetPath);
   }
 
-  return { written, skipped };
+  return { written, skipped, unchanged };
 }
 
 export async function installDependencies(deps: string[]): Promise<void> {
