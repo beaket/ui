@@ -63,22 +63,34 @@ export async function add(componentNames: string[], options: AddOptions) {
   const componentsDir = path.join(process.cwd(), config.components);
   const allWritten: string[] = [];
   const allSkipped: string[] = [];
+  const allUnchanged: string[] = [];
 
   for (const def of componentDefs) {
     if (!def) continue;
     const files = await fetchComponent(def);
-    const { written, skipped } = await writeComponentFiles(componentsDir, files, options.overwrite);
+    const { written, skipped, unchanged } = await writeComponentFiles(
+      componentsDir,
+      files,
+      options.overwrite,
+    );
     allWritten.push(...written);
     allSkipped.push(...skipped);
+    allUnchanged.push(...unchanged);
+  }
+
+  // Files already matching upstream — reassure rather than warn.
+  if (allUnchanged.length > 0) {
+    console.log(pc.green("✔"), `${allUnchanged.length} file(s) already up to date.`);
   }
 
   // Show skipped files
   if (allSkipped.length > 0) {
     console.log(
       pc.yellow("ℹ"),
-      `Skipped ${allSkipped.length} file(s): (use --overwrite to overwrite)`,
+      `Skipped ${allSkipped.length} file(s): (use --overwrite to take the latest)`,
     );
     allSkipped.forEach((f) => console.log(`  - ${f}`));
+    console.log(pc.dim("  See what changed with"), pc.cyan("npx @beaket/ui diff <component>"));
   }
 
   if (allWritten.length === 0) {
