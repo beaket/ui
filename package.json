@@ -28,7 +28,7 @@
   ],
   "author": "",
   "license": "MIT",
-  "packageManager": "pnpm@11.23.0",
+  "packageManager": "pnpm@11.24.0",
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.0",
     "@changesets/cli": "^2.30.0",
