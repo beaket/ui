@@ -1,15 +1,28 @@
 import {
+  columnFilteringFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFns,
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-  type ColumnDef,
+  globalFilteringFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+  useTable,
+  type CellData,
   type ColumnFiltersState,
+  type ColumnVisibilityState,
+  type RowData,
   type RowSelectionState,
   type SortingState,
-  type VisibilityState,
+  type Cell as TanStackCell,
+  type ColumnDef as TanStackColumnDef,
+  type Row as TanStackRow,
 } from "@tanstack/react-table";
 import { clsx, type ClassValue } from "clsx";
 import { ArrowDown, ArrowUp, ArrowUpDown, Search } from "lucide-react";
@@ -22,9 +35,38 @@ import { Table } from "./table";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export interface DataTableProps<TData, TValue> {
+const dataTableFeatures = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  columnVisibilityFeature,
+  columnSizingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
+  sortFns,
+});
+
+export type ColumnDef<TData extends RowData, TValue extends CellData = unknown> = TanStackColumnDef<
+  typeof dataTableFeatures,
+  TData,
+  TValue
+>;
+
+export type Cell<TData extends RowData, TValue extends CellData = unknown> = TanStackCell<
+  typeof dataTableFeatures,
+  TData,
+  TValue
+>;
+
+export type Row<TData extends RowData> = TanStackRow<typeof dataTableFeatures, TData>;
+
+export interface DataTableProps<TData extends RowData, TValue extends CellData> {
   /** Column definitions using TanStack Table's ColumnDef — see https://tanstack.com/table/latest/docs/guide/column-defs */
-  columns: ColumnDef<TData, TValue>[];
+  columns: ColumnDef<TData>[];
   /** Array of data to display */
   data: TData[];
   /** Enable global search/filter functionality */
@@ -48,7 +90,7 @@ export interface DataTableProps<TData, TValue> {
   /** Enable column filtering (default: true) */
   enableFiltering?: boolean;
   /** Initial column visibility state */
-  initialColumnVisibility?: VisibilityState;
+  initialColumnVisibility?: ColumnVisibilityState;
   /** Show compact table styling */
   compact?: boolean;
   /** Enable row selection with checkboxes */
@@ -69,7 +111,7 @@ export interface DataTableProps<TData, TValue> {
  * A data table component built on TanStack Table.
  * Features sorting, filtering, pagination, and row selection.
  */
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends RowData, TValue extends CellData>({
   columns,
   data,
   searchable = false,
@@ -93,19 +135,21 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+  const [columnVisibility, setColumnVisibility] = useState<ColumnVisibilityState>(
     initialColumnVisibility || {},
   );
   const [globalFilter, setGlobalFilter] = useState("");
   const [rowSelection, setRowSelection] = useState<RowSelectionState>(initialRowSelection || {});
 
-  const table = useReactTable({
+  const table = useTable({
+    features: dataTableFeatures,
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: paginated ? getPaginationRowModel() : undefined,
-    getSortedRowModel: enableSorting ? getSortedRowModel() : undefined,
-    getFilteredRowModel: enableFiltering ? getFilteredRowModel() : undefined,
+    manualPagination: !paginated,
+    manualSorting: !enableSorting,
+    manualFiltering: !enableFiltering,
+    enableSorting,
+    enableFilters: enableFiltering,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
@@ -121,6 +165,7 @@ export function DataTable<TData, TValue>({
     },
     initialState: {
       pagination: {
+        pageIndex: 0,
         pageSize,
       },
     },
@@ -169,7 +214,9 @@ export function DataTable<TData, TValue>({
                     <Checkbox
                       checked={
                         table.getIsAllPageRowsSelected() ||
-                        (table.getIsSomePageRowsSelected() && "indeterminate")
+                        (table.getIsSomePageRowsSelected() &&
+                          !table.getIsAllPageRowsSelected() &&
+                          "indeterminate")
                       }
                       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                       aria-label="Select all"
@@ -301,11 +348,10 @@ export function DataTable<TData, TValue>({
             Showing{" "}
             {table.getFilteredRowModel().rows.length === 0
               ? 0
-              : table.getState().pagination.pageIndex * table.getState().pagination.pageSize +
-                1}{" "}
+              : table.state.pagination.pageIndex * table.state.pagination.pageSize + 1}{" "}
             to{" "}
             {Math.min(
-              (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
+              (table.state.pagination.pageIndex + 1) * table.state.pagination.pageSize,
               table.getFilteredRowModel().rows.length,
             )}{" "}
             of {table.getFilteredRowModel().rows.length} results
@@ -316,7 +362,7 @@ export function DataTable<TData, TValue>({
 
           <Pagination
             mode="button"
-            page={table.getState().pagination.pageIndex + 1}
+            page={table.state.pagination.pageIndex + 1}
             totalPages={table.getPageCount()}
             onPageChange={(p) => table.setPageIndex(p - 1)}
           />
@@ -325,5 +371,3 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
-
-export type { Cell, ColumnDef, Row } from "@tanstack/react-table";
