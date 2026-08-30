@@ -45,6 +45,40 @@ function variableReferences(value: string): string[] {
   return [...value.matchAll(/var\((--[\w-]+)\)/g)].map((match) => match[1]);
 }
 
+interface RgbColor {
+  red: number;
+  green: number;
+  blue: number;
+}
+
+function parseHex(value: string): RgbColor {
+  const match = /^#([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(value);
+  if (!match) throw new Error(`Expected a six-digit hex color, received ${value}`);
+
+  return {
+    red: Number.parseInt(match[1], 16),
+    green: Number.parseInt(match[2], 16),
+    blue: Number.parseInt(match[3], 16),
+  };
+}
+
+function linearize(channel: number): number {
+  const value = channel / 255;
+  return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+}
+
+function relativeLuminance(color: RgbColor): number {
+  return (
+    0.2126 * linearize(color.red) + 0.7152 * linearize(color.green) + 0.0722 * linearize(color.blue)
+  );
+}
+
+function contrastRatio(first: RgbColor, second: RgbColor): number {
+  const lighter = Math.max(relativeLuminance(first), relativeLuminance(second));
+  const darker = Math.min(relativeLuminance(first), relativeLuminance(second));
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
 describe("theme palette contract", () => {
   const semantic = declarations(fs.readFileSync(path.join(themesDir, "semantic.css"), "utf8"));
 
@@ -98,5 +132,22 @@ describe("theme palette contract", () => {
       expect(css).not.toContain("--surface-brand");
       expect(css).not.toContain("--shadow-size-active");
     }
+  });
+
+  it("keeps Solace light surfaces ordered and visibly separated", () => {
+    const palette = declarations(fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"));
+    const surfaces = ["--surface-0", "--surface-1", "--surface-2"].map((token) => {
+      const value = palette.get(token);
+      if (!value) throw new Error(`Solace does not define ${token}`);
+      return parseHex(value);
+    });
+    const lightness = surfaces.map(relativeLuminance);
+
+    expect(lightness[1]).toBeGreaterThan(lightness[0]);
+    expect(lightness[2]).toBeGreaterThan(lightness[1]);
+    expect(contrastRatio(surfaces[0], surfaces[1])).toBeGreaterThanOrEqual(1.05);
+    expect(contrastRatio(surfaces[1], surfaces[2])).toBeGreaterThanOrEqual(1.05);
+    expect(contrastRatio(surfaces[0], surfaces[2])).toBeGreaterThanOrEqual(1.1);
+    expect(palette.get("--tone-0")).toBe(palette.get("--surface-0"));
   });
 });

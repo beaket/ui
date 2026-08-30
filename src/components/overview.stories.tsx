@@ -46,6 +46,34 @@ const meta: Meta = {
 
 export default meta;
 
+export const SurfaceDepth: StoryObj = {
+  render: () => (
+    <div className="bg-bg text-fg min-h-screen p-8">
+      <div className="mx-auto max-w-3xl space-y-4">
+        <div>
+          <h1 className="text-xl font-semibold">Borderless surface depth</h1>
+          <p className="text-fg-muted mt-1 text-sm">
+            Page, raised, and overlay backgrounds shown without borders or shadows.
+          </p>
+        </div>
+        <div className="bg-bg-raised border-0 p-8 shadow-none">
+          <div className="text-fg-subtle mb-6 font-mono text-xs tracking-wide uppercase">
+            Raised surface
+          </div>
+          <div className="bg-bg-overlay border-0 p-8 shadow-none">
+            <div className="text-fg-subtle mb-2 font-mono text-xs tracking-wide uppercase">
+              Overlay surface
+            </div>
+            <p className="text-fg-muted text-sm">
+              Each nested sheet must remain legible through its background alone.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  ),
+};
+
 // --- layout helpers (local to this story) ---------------------------------
 
 function Cell({ label, span, children }: { label: string; span?: boolean; children: ReactNode }) {
