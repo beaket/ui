@@ -60,11 +60,11 @@ const shadows = [
 
 const palette = [
   { name: "--surface-0 … --surface-2", key: "--surface-0", usage: "The page and what sits on it" },
-  { name: "--surface-brand", key: "--surface-brand", usage: "Brand surface" },
-  { name: "--tone-0 … --tone-11", key: "--tone-7", usage: "Neutral ramp: 0 = paper end, 11 = deepest ink" },
+  { name: "--tone-0 … --tone-7, --tone-11", key: "--tone-7", usage: "Functional neutral ramp: paper through deepest ink" },
+  { name: "--tone-8 … --tone-10", key: "--tone-9", usage: "Reserved: 12-step ramp compatibility and future deep-ink roles" },
   { name: "--signal-{role}", key: "--signal-danger", usage: "One ink per meaning; only the accent is vivid" },
   { name: "--signal-{role}-on", key: "--signal-danger-on", usage: "Which ramp end carries type on each solid" },
-  { name: "--shadow-size / -active / -color / -color-overlay", key: "--shadow-color", usage: "Shadow geometry and ink" },
+  { name: "--shadow-size / -color / -color-overlay", key: "--shadow-color", usage: "Shadow geometry and ink" },
 ].map(t => ({ name: t.name, usage: t.usage, value: val(t.key) }));
 ---
 
@@ -72,7 +72,7 @@ const palette = [
 
 <h1>Design Tokens</h1>
 
-<p>Two layers. A theme authors <strong>32 palette values</strong> by hand and nothing else; the <strong>68 semantic names</strong> components actually use are written once and shared by every theme. The <code>init</code> command adds both to your CSS file — after that you own them. Values shown are Solace (default). See <a href="/ui/themes">Themes</a> for other presets.</p>
+<p>Two layers. A theme authors <strong>30 palette values</strong> by hand and nothing else; 27 feed the <strong>68 semantic names</strong> components actually use, while <code>--tone-8</code> through <code>--tone-10</code> are reserved to preserve the public 12-step neutral ramp and support future deep-ink roles. The <code>init</code> command adds both layers to your CSS file — after that you own them. Values shown are Solace (default). See <a href="/ui/themes">Themes</a> for other presets.</p>
 
 <h2>Background</h2>
 
@@ -120,6 +120,6 @@ const palette = [
 
 <h2>Customization</h2>
 
-<p>After <code>init</code>, these tokens are yours. To restyle an app, edit the 32 palette values — the semantic layer follows. The library will not update them automatically. Check the <a href="/ui/changelog">Changelog</a> when updating.</p>
+<p>After <code>init</code>, these tokens are yours. To restyle an app, edit the 30 palette values — the semantic layer follows. The library will not update them automatically. Check the <a href="/ui/changelog">Changelog</a> when updating.</p>
 
 </Layout>

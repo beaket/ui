@@ -1,7 +1,7 @@
 /*
  * Beaket UI Design System — Tobacco palette
  * Warm earthen paper, warm-grey ink — quiet, low-chroma signals.
- * 32 values; semantic.css turns them into the 68 names components use.
+ * 30 values: 27 feed the 68 semantic names; tone 8–10 are reserved.
  */
 
 :root {
@@ -9,9 +9,8 @@
   --surface-0: #e8e7e0;
   --surface-1: #f4f3ee;
   --surface-2: #faf9f5;
-  --surface-brand: #222120;
 
-  /* Tone — the neutral ramp: 0 is the paper end, 11 the deepest ink */
+  /* Tone — 0 is paper, 11 deepest ink; 8–10 are reserved ramp slots */
   --tone-0: #e8e7e0;
   --tone-1: #dfdfd8;
   --tone-2: #d6d5cf;
@@ -43,7 +42,6 @@
 
   /* Shadow — elevation is drawn, not lit */
   --shadow-size: 2px;
-  --shadow-size-active: 1px;
   --shadow-color: #312f2c;
   --shadow-color-overlay: #46443e;
 }
@@ -57,7 +55,6 @@
     --surface-0: #121110;
     --surface-1: #1a1918;
     --surface-2: #222120;
-    --surface-brand: #d4d0c6;
 
     /* Tone */
     --tone-0: #121110;
@@ -91,7 +88,6 @@
 
     /* Shadow */
     --shadow-size: 2px;
-    --shadow-size-active: 1px;
     --shadow-color: #c0bcb2;
     --shadow-color-overlay: #a8a49a;
   }

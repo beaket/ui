@@ -1,7 +1,7 @@
 /*
  * Beaket UI Design System — Eucalyptus palette
  * Cool-blue paper, blue-black ink — vivid, high-chroma signals.
- * 32 values; semantic.css turns them into the 68 names components use.
+ * 30 values: 27 feed the 68 semantic names; tone 8–10 are reserved.
  */
 
 :root {
@@ -9,9 +9,8 @@
   --surface-0: #e6ebf2;
   --surface-1: #f8f9fc;
   --surface-2: #ffffff;
-  --surface-brand: #1c2a42;
 
-  /* Tone — the neutral ramp: 0 is the paper end, 11 the deepest ink */
+  /* Tone — 0 is paper, 11 deepest ink; 8–10 are reserved ramp slots */
   --tone-0: #e6ebf2;
   --tone-1: #dde2ea;
   --tone-2: #d4dae2;
@@ -43,7 +42,6 @@
 
   /* Shadow — elevation is drawn, not lit */
   --shadow-size: 2px;
-  --shadow-size-active: 1px;
   --shadow-color: #c0cddb;
   --shadow-color-overlay: #8295ae;
 }
@@ -57,7 +55,6 @@
     --surface-0: #0a0e1a;
     --surface-1: #101422;
     --surface-2: #18202e;
-    --surface-brand: #c4cede;
 
     /* Tone */
     --tone-0: #0a0e1a;
@@ -91,7 +88,6 @@
 
     /* Shadow */
     --shadow-size: 2px;
-    --shadow-size-active: 1px;
     --shadow-color: #283444;
     --shadow-color-overlay: #3c4858;
   }

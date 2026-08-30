@@ -17,7 +17,7 @@ The editor (`@beaket/paper`) is **exempt from the component checklist** — no r
 
 - **Self-contained**: Each component includes its own `cn` utility. No shared imports.
 - **Dependencies in registry**: List npm packages in `registry/registry.json`.
-- **CSS tokens, two layers**: `src/themes/semantic.css` holds the 68 semantic names components use (authored once, shared by every theme). Each theme (`solace`, `porcelain`, `tobacco`, `marigold`, `eucalyptus`) authors only its 32-value palette (`--surface-*`, `--tone-0…11`, `--signal-*`, `--signal-*-on`, `--shadow-*`) in `src/themes/<theme>.css`. Storybook imports `semantic.css` + `solace.css` via `src/styles.css`; CLI injects semantic + chosen palette at `init`.
+- **CSS tokens, two layers**: `src/themes/semantic.css` holds the 68 semantic names components use (authored once, shared by every theme). Each theme (`solace`, `porcelain`, `tobacco`, `marigold`, `eucalyptus`) authors only its 30-value palette (`--surface-0…2`, `--tone-0…11`, `--signal-*`, `--signal-*-on`, `--shadow-size`, `--shadow-color`, `--shadow-color-overlay`) in `src/themes/<theme>.css`. Of those, 27 are functional dependencies of the semantic layer. `--tone-8…10` are reserved to preserve the public 12-step neutral-ramp contract and provide future deep-ink roles; components do not currently consume them. Storybook imports `semantic.css` + `solace.css` via `src/styles.css`; CLI injects semantic + chosen palette at `init`.
 
 ## Design Rules
 

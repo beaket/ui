@@ -1,8 +1,16 @@
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { describe, expect, it } from "vitest";
 import { extractThemeBlock, replaceThemeInCss, wrapThemeCss } from "./theme.ts";
 
 const THEME_START = "/* beaket:theme:start */";
 const THEME_END = "/* beaket:theme:end */";
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
+const currentTheme = ["semantic.css", "solace.css"]
+  .map((file) => fs.readFileSync(path.join(root, "src/themes", file), "utf8"))
+  .join("\n");
 
 // Realistic theme sample with @keyframes (legacy end detection depends on this)
 const sampleTheme = `/*
@@ -107,6 +115,14 @@ describe("wrapThemeCss", () => {
     expect(result.indexOf(THEME_START)).toBeLessThan(result.indexOf("@theme"));
     expect(result.indexOf("@theme")).toBeLessThan(result.indexOf(THEME_END));
   });
+
+  it("injects the current 30-value palette contract", () => {
+    const result = wrapThemeCss(currentTheme);
+
+    expect(result.match(/--surface-[0-2]\s*:/g)).toHaveLength(3);
+    expect(result).not.toContain("--surface-brand");
+    expect(result).not.toContain("--shadow-size-active");
+  });
 });
 
 describe("replaceThemeInCss", () => {
@@ -121,6 +137,18 @@ describe("replaceThemeInCss", () => {
     expect(css).toContain('@import "tailwindcss"');
     expect(css).toContain(THEME_START);
     expect(css).toContain(THEME_END);
+  });
+
+  it("replaces a legacy dead-token palette with the current contract", () => {
+    const legacy = `${sampleTheme}\n:root {\n  --surface-brand: hotpink;\n  --shadow-size-active: 9px;\n}\n`;
+    const existing = `@import "tailwindcss";\n\n${THEME_START}\n${legacy}${THEME_END}\n`;
+
+    const { css, replaced } = replaceThemeInCss(existing, currentTheme);
+
+    expect(replaced).toBe(true);
+    expect(css).toContain("--surface-0: #fcfcfa");
+    expect(css).not.toContain("--surface-brand");
+    expect(css).not.toContain("--shadow-size-active");
   });
 
   it("replaces legacy theme (no markers)", () => {

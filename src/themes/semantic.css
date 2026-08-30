@@ -2,8 +2,10 @@
  * Beaket UI Design System — Semantic tokens
  * The 68 names components use (63 color + 5 shadow). Authored once — every theme shares these
  * definitions verbatim. A theme never touches this layer; it only supplies
- * the 32-value palette (surface / tone / signal / knockout / shadow) that
- * these definitions point at. Palettes live in src/themes/<theme>.css.
+ * the 30-value palette (surface / tone / signal / knockout / shadow) that
+ * these definitions point at. 27 values are functional; tone 8–10 are reserved
+ * for 12-step ramp compatibility and future deep-ink roles. Palettes live in
+ * src/themes/<theme>.css.
  */
 
 @theme {
