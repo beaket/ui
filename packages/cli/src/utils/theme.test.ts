@@ -120,6 +120,10 @@ describe("wrapThemeCss", () => {
     const result = wrapThemeCss(currentTheme);
 
     expect(result.match(/--surface-[0-2]\s*:/g)).toHaveLength(3);
+    expect(result).toContain("--surface-0: #f3f3ef");
+    expect(result).toContain("--surface-1: #f9f9f5");
+    expect(result).toContain("--surface-2: #fffffb");
+    expect(result).toContain("--tone-0: #f3f3ef");
     expect(result).not.toContain("--surface-brand");
     expect(result).not.toContain("--shadow-size-active");
   });
@@ -146,7 +150,7 @@ describe("replaceThemeInCss", () => {
     const { css, replaced } = replaceThemeInCss(existing, currentTheme);
 
     expect(replaced).toBe(true);
-    expect(css).toContain("--surface-0: #fcfcfa");
+    expect(css).toContain("--surface-0: #f3f3ef");
     expect(css).not.toContain("--surface-brand");
     expect(css).not.toContain("--shadow-size-active");
   });
