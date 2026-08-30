@@ -14,6 +14,7 @@
     "format:check": "prettier --check .",
     "typecheck": "pnpm --filter @beaket/paper build && tsc --noEmit && pnpm -r typecheck",
     "test": "vitest",
+    "test:contrast": "vitest run --project contrast",
     "test:cli": "./scripts/test-cli.sh",
     "test:editor": "pnpm --filter @beaket/paper test",
     "check:adr": "node scripts/check-adr-refs.mjs",

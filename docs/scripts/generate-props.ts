@@ -284,7 +284,7 @@ function generateProps() {
   fs.mkdirSync(outputDir, { recursive: true });
 
   const outputPath = path.join(outputDir, "props.json");
-  fs.writeFileSync(outputPath, JSON.stringify(result, null, 2));
+  fs.writeFileSync(outputPath, `${JSON.stringify(result, null, 2)}\n`);
 
   console.log(`Props generated: ${outputPath}`);
   console.log(`Components: ${Object.keys(result).join(", ")}`);

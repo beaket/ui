@@ -92,6 +92,12 @@ const palette = [
 
 <p>Use as <code>border-border</code>, <code>divide-border-muted</code>, <code>outline-border-focus</code>, etc.</p>
 
+<h2>Contrast guarantees</h2>
+
+<p>Beaket tests supported semantic combinations in Chromium after CSS variables and <code>color-mix()</code> expressions resolve. Normal-sized primary, muted, subtle, link, emphasis, and role text combinations meet at least <strong>4.5:1</strong>. Default, strong, focus, and invalid interactive boundaries meet at least <strong>3:1</strong> against their supported surfaces.</p>
+
+<p>These are guarantees for the documented semantic pairings, not an all-against-all promise. Decorative surfaces are intentionally excluded. Disabled text and boundaries are measured and reported to theme authors, but they are not presented as WCAG failures because inactive controls are exempt from the corresponding WCAG contrast requirements. Run <code>pnpm test:contrast</code> from the repository root to audit every shipped light and dark palette.</p>
+
 <h2>Roles</h2>
 
 <p>Six roles — <code>danger</code>, <code>success</code>, <code>warning</code>, <code>info</code>, <code>info-alt</code>, <code>accent</code> — each with seven slots. Values below show the <code>danger</code> role. The accent role alone carries one extra slot, <code>-bg-subtle</code>.</p>

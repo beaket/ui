@@ -33,57 +33,161 @@
   --color-border-strong: var(--tone-11);
   --color-border-focus: var(--signal-accent);
 
+  /* Solid interaction states move away from their knockout color. This keeps
+     the authored foreground readable whether a palette chose its paper or ink
+     endpoint; contrast-color() supplies the opposite mixing pole. */
+
   /* Role — danger */
   --color-danger-solid: var(--signal-danger);
   --color-danger-fg-on-solid: var(--signal-danger-on);
-  --color-danger-solid-hover: color-mix(in oklab, var(--signal-danger) 90%, black);
-  --color-danger-solid-active: color-mix(in oklab, var(--signal-danger) 80%, black);
-  --color-danger-fg: color-mix(in oklab, var(--signal-danger) 60%, var(--tone-11));
+  --color-danger-solid-hover: color-mix(
+    in oklab,
+    var(--signal-danger) 90%,
+    var(--signal-danger-on)
+  );
+  --color-danger-solid-hover: color-mix(
+    in oklab,
+    var(--signal-danger) 90%,
+    contrast-color(var(--signal-danger-on))
+  );
+  --color-danger-solid-active: color-mix(
+    in oklab,
+    var(--signal-danger) 80%,
+    var(--signal-danger-on)
+  );
+  --color-danger-solid-active: color-mix(
+    in oklab,
+    var(--signal-danger) 80%,
+    contrast-color(var(--signal-danger-on))
+  );
+  --color-danger-fg: color-mix(in oklab, var(--signal-danger) 50%, var(--tone-11));
   --color-danger-bg: color-mix(in oklab, var(--signal-danger) 17%, var(--tone-0));
   --color-danger-border: color-mix(in oklab, var(--signal-danger) 60%, var(--tone-0));
 
   /* Role — success */
   --color-success-solid: var(--signal-success);
   --color-success-fg-on-solid: var(--signal-success-on);
-  --color-success-solid-hover: color-mix(in oklab, var(--signal-success) 90%, black);
-  --color-success-solid-active: color-mix(in oklab, var(--signal-success) 80%, black);
-  --color-success-fg: color-mix(in oklab, var(--signal-success) 60%, var(--tone-11));
+  --color-success-solid-hover: color-mix(
+    in oklab,
+    var(--signal-success) 90%,
+    var(--signal-success-on)
+  );
+  --color-success-solid-hover: color-mix(
+    in oklab,
+    var(--signal-success) 90%,
+    contrast-color(var(--signal-success-on))
+  );
+  --color-success-solid-active: color-mix(
+    in oklab,
+    var(--signal-success) 80%,
+    var(--signal-success-on)
+  );
+  --color-success-solid-active: color-mix(
+    in oklab,
+    var(--signal-success) 80%,
+    contrast-color(var(--signal-success-on))
+  );
+  --color-success-fg: color-mix(in oklab, var(--signal-success) 50%, var(--tone-11));
   --color-success-bg: color-mix(in oklab, var(--signal-success) 17%, var(--tone-0));
   --color-success-border: color-mix(in oklab, var(--signal-success) 60%, var(--tone-0));
 
   /* Role — warning */
   --color-warning-solid: var(--signal-warning);
   --color-warning-fg-on-solid: var(--signal-warning-on);
-  --color-warning-solid-hover: color-mix(in oklab, var(--signal-warning) 90%, black);
-  --color-warning-solid-active: color-mix(in oklab, var(--signal-warning) 80%, black);
-  --color-warning-fg: color-mix(in oklab, var(--signal-warning) 60%, var(--tone-11));
+  --color-warning-solid-hover: color-mix(
+    in oklab,
+    var(--signal-warning) 90%,
+    var(--signal-warning-on)
+  );
+  --color-warning-solid-hover: color-mix(
+    in oklab,
+    var(--signal-warning) 90%,
+    contrast-color(var(--signal-warning-on))
+  );
+  --color-warning-solid-active: color-mix(
+    in oklab,
+    var(--signal-warning) 80%,
+    var(--signal-warning-on)
+  );
+  --color-warning-solid-active: color-mix(
+    in oklab,
+    var(--signal-warning) 80%,
+    contrast-color(var(--signal-warning-on))
+  );
+  --color-warning-fg: color-mix(in oklab, var(--signal-warning) 50%, var(--tone-11));
   --color-warning-bg: color-mix(in oklab, var(--signal-warning) 17%, var(--tone-0));
   --color-warning-border: color-mix(in oklab, var(--signal-warning) 60%, var(--tone-0));
 
   /* Role — info */
   --color-info-solid: var(--signal-info);
   --color-info-fg-on-solid: var(--signal-info-on);
-  --color-info-solid-hover: color-mix(in oklab, var(--signal-info) 90%, black);
-  --color-info-solid-active: color-mix(in oklab, var(--signal-info) 80%, black);
-  --color-info-fg: color-mix(in oklab, var(--signal-info) 60%, var(--tone-11));
+  --color-info-solid-hover: color-mix(in oklab, var(--signal-info) 90%, var(--signal-info-on));
+  --color-info-solid-hover: color-mix(
+    in oklab,
+    var(--signal-info) 90%,
+    contrast-color(var(--signal-info-on))
+  );
+  --color-info-solid-active: color-mix(in oklab, var(--signal-info) 80%, var(--signal-info-on));
+  --color-info-solid-active: color-mix(
+    in oklab,
+    var(--signal-info) 80%,
+    contrast-color(var(--signal-info-on))
+  );
+  --color-info-fg: color-mix(in oklab, var(--signal-info) 50%, var(--tone-11));
   --color-info-bg: color-mix(in oklab, var(--signal-info) 17%, var(--tone-0));
   --color-info-border: color-mix(in oklab, var(--signal-info) 60%, var(--tone-0));
 
   /* Role — info-alt */
   --color-info-alt-solid: var(--signal-info-alt);
   --color-info-alt-fg-on-solid: var(--signal-info-alt-on);
-  --color-info-alt-solid-hover: color-mix(in oklab, var(--signal-info-alt) 90%, black);
-  --color-info-alt-solid-active: color-mix(in oklab, var(--signal-info-alt) 80%, black);
-  --color-info-alt-fg: color-mix(in oklab, var(--signal-info-alt) 60%, var(--tone-11));
+  --color-info-alt-solid-hover: color-mix(
+    in oklab,
+    var(--signal-info-alt) 90%,
+    var(--signal-info-alt-on)
+  );
+  --color-info-alt-solid-hover: color-mix(
+    in oklab,
+    var(--signal-info-alt) 90%,
+    contrast-color(var(--signal-info-alt-on))
+  );
+  --color-info-alt-solid-active: color-mix(
+    in oklab,
+    var(--signal-info-alt) 80%,
+    var(--signal-info-alt-on)
+  );
+  --color-info-alt-solid-active: color-mix(
+    in oklab,
+    var(--signal-info-alt) 80%,
+    contrast-color(var(--signal-info-alt-on))
+  );
+  --color-info-alt-fg: color-mix(in oklab, var(--signal-info-alt) 50%, var(--tone-11));
   --color-info-alt-bg: color-mix(in oklab, var(--signal-info-alt) 17%, var(--tone-0));
   --color-info-alt-border: color-mix(in oklab, var(--signal-info-alt) 60%, var(--tone-0));
 
   /* Role — accent */
   --color-accent-solid: var(--signal-accent);
   --color-accent-fg-on-solid: var(--signal-accent-on);
-  --color-accent-solid-hover: color-mix(in oklab, var(--signal-accent) 90%, black);
-  --color-accent-solid-active: color-mix(in oklab, var(--signal-accent) 80%, black);
-  --color-accent-fg: color-mix(in oklab, var(--signal-accent) 60%, var(--tone-11));
+  --color-accent-solid-hover: color-mix(
+    in oklab,
+    var(--signal-accent) 90%,
+    var(--signal-accent-on)
+  );
+  --color-accent-solid-hover: color-mix(
+    in oklab,
+    var(--signal-accent) 90%,
+    contrast-color(var(--signal-accent-on))
+  );
+  --color-accent-solid-active: color-mix(
+    in oklab,
+    var(--signal-accent) 80%,
+    var(--signal-accent-on)
+  );
+  --color-accent-solid-active: color-mix(
+    in oklab,
+    var(--signal-accent) 80%,
+    contrast-color(var(--signal-accent-on))
+  );
+  --color-accent-fg: color-mix(in oklab, var(--signal-accent) 50%, var(--tone-11));
   --color-accent-bg: color-mix(in oklab, var(--signal-accent) 17%, var(--tone-0));
   --color-accent-border: color-mix(in oklab, var(--signal-accent) 60%, var(--tone-0));
   /* Accent only — the faintest wash. Fills the lens plate (navigation, tabs). */
