@@ -1,0 +1,6 @@
+diff --git a/dist/getPublishPlan.mjs b/dist/getPublishPlan.mjs
+index bcf9e43..440cf6f 100644
+--- a/dist/getPublishPlan.mjs
++++ b/dist/getPublishPlan.mjs
+@@ -342,0 +343 @@ const publish$1 = async ({ pkg, release, tarballPath, interactive, otpCode }) => {
++		"--provenance",
