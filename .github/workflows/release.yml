@@ -8,6 +8,7 @@ on:
       - "src/**"
       - "packages/**"
       - ".changeset/**"
+      - ".github/workflows/release.yml"
       - "package.json"
       - "pnpm-lock.yaml"
 
@@ -39,7 +40,9 @@ jobs:
 
       - name: Create Release Pull Request or Publish
         id: changesets
-        uses: changesets/action@v2.1.1
+        # v2 requires @changesets/cli v3 and uses a different input contract.
+        # Keep the action on v1 while our patched CLI remains on v2.
+        uses: changesets/action@v1
         with:
           title: "Changes Included in the Next Release"
           commit: "chore: version packages"
