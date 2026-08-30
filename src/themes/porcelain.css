@@ -64,9 +64,9 @@
     --tone-1: #15171f;
     --tone-2: #1d1f27;
     --tone-3: #34363e;
-    --tone-4: #5c5f67;
-    --tone-5: #676b72;
-    --tone-6: #787c82;
+    --tone-4: #686b74;
+    --tone-5: #74777f;
+    --tone-6: #85888f;
     --tone-7: #999ca3;
     --tone-8: #b3b7bc;
     --tone-9: #c9cdd2;
@@ -87,7 +87,7 @@
     --signal-warning-on: var(--tone-0);
     --signal-info-on: var(--tone-0);
     --signal-info-alt-on: var(--tone-0);
-    --signal-accent-on: var(--tone-11);
+    --signal-accent-on: var(--tone-0);
 
     /* Shadow */
     --shadow-size: 1px;

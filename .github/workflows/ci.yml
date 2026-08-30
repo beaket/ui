@@ -33,6 +33,10 @@ jobs:
         run: pnpm format:check
       - name: Typecheck
         run: pnpm typecheck
+      - name: Install Chromium for browser-backed theme tests
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Test semantic theme contrast
+        run: pnpm test:contrast
       - name: Test CLI
         run: pnpm test:cli
       - name: Test Editor

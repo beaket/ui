@@ -26,7 +26,7 @@
   --tone-11: #0e0e0e;
 
   /* Signal — one ink per meaning; only the accent is vivid */
-  --signal-danger: #f24e1e;
+  --signal-danger: #f14d1d;
   --signal-warning: #ff9500;
   --signal-success: #00cc81;
   --signal-info: #0055ff;
@@ -39,7 +39,7 @@
   --signal-warning-on: var(--tone-11);
   --signal-info-on: var(--tone-0);
   --signal-info-alt-on: var(--tone-11);
-  --signal-accent-on: var(--tone-11);
+  --signal-accent-on: var(--tone-0);
 
   /* Shadow — elevation is drawn, not lit */
   --shadow-size: 3px;
@@ -64,9 +64,9 @@
     --tone-1: #1c1c1b;
     --tone-2: #242323;
     --tone-3: #393939;
-    --tone-4: #636262;
-    --tone-5: #6e6e6d;
-    --tone-6: #7e7e7e;
+    --tone-4: #707070;
+    --tone-5: #7a7a79;
+    --tone-6: #898989;
     --tone-7: #a0a0a0;
     --tone-8: #bbbaba;
     --tone-9: #d1d1d0;
