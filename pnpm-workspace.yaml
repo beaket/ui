@@ -22,4 +22,4 @@ allowBuilds:
   sharp: true
 
 patchedDependencies:
-  "@changesets/cli@2.31.0": patches/@changesets__cli@2.31.0.patch
+  "@changesets/cli@3.0.1": patches/@changesets__cli@3.0.1.patch
