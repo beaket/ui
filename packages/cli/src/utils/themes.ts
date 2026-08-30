@@ -6,8 +6,9 @@ import CSS_SOLACE from "../../../../src/themes/solace.css";
 import CSS_TOBACCO from "../../../../src/themes/tobacco.css";
 
 // The semantic layer is authored once; each injected theme
-// block bundles it with that theme's 32-value palette so a consumer's CSS is
-// self-sufficient.
+// block bundles it with that theme's 30-value palette so a consumer's CSS is
+// self-sufficient. 27 values feed the semantic layer; tone 8–10 are reserved
+// for neutral-ramp compatibility and future deep-ink roles.
 const withSemantic = (palette: string): string => `${CSS_SEMANTIC}\n${palette}`;
 
 export const THEME_CSS: Record<string, string> = {

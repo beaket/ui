@@ -2,7 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 /**
  * Two layers:
- * - A theme authors 32 palette values (surface / tone / signal / knockout / shadow).
+ * - A theme authors 30 palette values (surface / tone / signal / knockout / shadow).
+ *   Components consume 27; tone 8–10 preserve the 12-step ramp for future roles.
  * - The semantic names below are authored once and shared by every theme —
  *   components only ever use these.
  * Swatches render from the live CSS variables, so this page always shows the
@@ -55,7 +56,7 @@ const roleSlots = [
 ] as const;
 
 const paletteTones = Array.from({ length: 12 }, (_, i) => `--tone-${i}`);
-const paletteSurfaces = ["--surface-0", "--surface-1", "--surface-2", "--surface-brand"];
+const paletteSurfaces = ["--surface-0", "--surface-1", "--surface-2"];
 const paletteSignals = [
   "--signal-danger",
   "--signal-warning",
@@ -95,8 +96,8 @@ function Colors() {
         <div className="border-border mb-8 border-b pb-4">
           <h1 className="text-fg text-2xl font-bold">Color Tokens</h1>
           <p className="text-fg-muted mt-1 text-sm">
-            Two layers. A theme authors 32 palette values and nothing else; the semantic names
-            components actually use are written once and shared by every theme.
+            Two layers. A theme authors 30 palette values and nothing else; 27 feed the semantic
+            names components actually use. Tone 8–10 are reserved for ramp compatibility.
           </p>
         </div>
 
@@ -161,7 +162,8 @@ function Colors() {
         <section className="mb-8">
           <SectionTitle>Palette — authored by the theme</SectionTitle>
           <p className="text-fg-subtle mb-3 text-xs">
-            The 32 values a theme supplies. Components never use these directly.
+            The 30 values a theme supplies. Components never use these directly; tone 8–10 are
+            reserved for 12-step ramp compatibility and future deep-ink roles.
           </p>
           <div className="text-fg mb-1 text-xs font-semibold">Tone ramp</div>
           <div className="mb-3 flex gap-1">
@@ -278,7 +280,7 @@ const meta: Meta<typeof Colors> = {
     docs: {
       description: {
         component:
-          "Two-layer color system: a theme authors 32 palette values; the shared semantic names are authored once. Components only use the semantic layer.",
+          "Two-layer color system: a theme authors 30 palette values; 27 feed the shared semantic names, while tone 8–10 are reserved. Components only use the semantic layer.",
       },
     },
   },

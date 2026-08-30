@@ -1,7 +1,7 @@
 /*
  * Beaket UI Design System — Porcelain palette
  * Near-white paper, cool graphite ink — balanced signals; the neutral default.
- * 32 values; semantic.css turns them into the 68 names components use.
+ * 30 values: 27 feed the 68 semantic names; tone 8–10 are reserved.
  */
 
 :root {
@@ -9,9 +9,8 @@
   --surface-0: #eff0f1;
   --surface-1: #f8f8f9;
   --surface-2: #ffffff;
-  --surface-brand: #05070c;
 
-  /* Tone — the neutral ramp: 0 is the paper end, 11 the deepest ink */
+  /* Tone — 0 is paper, 11 deepest ink; 8–10 are reserved ramp slots */
   --tone-0: #eff0f1;
   --tone-1: #e6e7e9;
   --tone-2: #dddee0;
@@ -43,7 +42,6 @@
 
   /* Shadow — elevation is drawn, not lit */
   --shadow-size: 1px;
-  --shadow-size-active: 0px;
   --shadow-color: #c0c4ca;
   --shadow-color-overlay: #a0a3a7;
 }
@@ -57,7 +55,6 @@
     --surface-0: #0c0e15;
     --surface-1: #12141d;
     --surface-2: #1a1c27;
-    --surface-brand: #c8d0da;
 
     /* Tone */
     --tone-0: #0c0e15;
@@ -91,7 +88,6 @@
 
     /* Shadow */
     --shadow-size: 1px;
-    --shadow-size-active: 0px;
     --shadow-color: #2a303e;
     --shadow-color-overlay: #3e4454;
   }

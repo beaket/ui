@@ -3,8 +3,8 @@
  * Warm paper, cool ink — equal-weight signals, one vivid blue for action.
  * "Every mark is an ink of equal weight, hue carries meaning but never
  * emphasis, and the one vivid voice belongs solely to what you can act on."
- * Light-only by declaration. 32 values; semantic.css turns them into the
- * 68 names components use.
+ * Light-only by declaration. 30 values: 27 feed the 68 semantic names;
+ * tone 8–10 are reserved.
  */
 
 :root {
@@ -12,9 +12,8 @@
   --surface-0: #fcfcfa;
   --surface-1: #fdfdfb;
   --surface-2: #fefefc;
-  --surface-brand: #05070c;
 
-  /* Tone — the neutral ramp: 0 is the paper end, 11 the deepest ink */
+  /* Tone — 0 is paper, 11 deepest ink; 8–10 are reserved ramp slots */
   --tone-0: #fcfcfa;
   --tone-1: #f3f4f2;
   --tone-2: #e9e9e8;
@@ -46,7 +45,6 @@
 
   /* Shadow — elevation is drawn, not lit; a 1px edge, thin and sharp */
   --shadow-size: 1px;
-  --shadow-size-active: 1px;
   --shadow-color: #c0c4ca;
   --shadow-color-overlay: #a0a3a7;
 }
