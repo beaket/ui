@@ -84,7 +84,7 @@ Key utils:
 
 ## CSS themes (`src/themes/`)
 
-See `CLAUDE.md` § CSS tokens — the two-layer system (shared semantic layer + per-theme palettes) and the current theme list live there. The CLI injects the chosen theme at `init` and updates it with `theme`.
+See `CLAUDE.md` § CSS tokens — the two-layer system (68 shared semantic names + 30-value per-theme palettes) and the current theme list live there. Of the 30 authored values, 27 feed the semantic layer; `--tone-8…10` are explicitly reserved to preserve the public 12-step neutral ramp and allow future deep-ink roles. `--surface-brand` and `--shadow-size-active` were removed because no shipped component role consumed them. The CLI injects the chosen theme at `init` and updates it with `theme`.
 
 ## Where to make changes
 

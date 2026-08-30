@@ -1,0 +1,128 @@
+/// <reference types="vite/client" />
+
+import { afterEach, describe, expect, test } from "vitest";
+
+import "../styles.css";
+import {
+  auditContrast,
+  contrastRatio,
+  formatContrastFailures,
+  relativeLuminance,
+  type ContrastPolicyEntry,
+} from "./contrast";
+import eucalyptus from "./eucalyptus.css?inline";
+import marigold from "./marigold.css?inline";
+import porcelain from "./porcelain.css?inline";
+import solace from "./solace.css?inline";
+import tobacco from "./tobacco.css?inline";
+
+const themes = { solace, porcelain, tobacco, marigold, eucalyptus } as const;
+const DARK_BLOCK = /@media[^{]*prefers-color-scheme[^{]*dark[^{]*\{/i;
+
+function forceScheme(raw: string, scheme: "light" | "dark"): string | null {
+  const match = raw.match(DARK_BLOCK);
+  if (scheme === "dark" && (!match || match.index === undefined)) return null;
+  if (!match || match.index === undefined) return raw;
+
+  const at = match.index;
+  const open = at + match[0].length - 1;
+  let depth = 0;
+  for (let index = open; index < raw.length; index++) {
+    if (raw[index] === "{") depth++;
+    if (raw[index] !== "}") continue;
+    depth--;
+    if (depth !== 0) continue;
+
+    const withoutDark = raw.slice(0, at) + raw.slice(index + 1);
+    return scheme === "light" ? withoutDark : `${withoutDark}\n${raw.slice(open + 1, index)}`;
+  }
+  throw new Error("Theme contains an unterminated dark media block");
+}
+
+const variants = Object.entries(themes).flatMap(([theme, raw]) =>
+  (["light", "dark"] as const).flatMap((scheme) => {
+    const css = forceScheme(raw, scheme);
+    return css === null ? [] : [{ name: `${theme}-${scheme}`, css }];
+  }),
+);
+
+function applyPalette(css: string) {
+  const style = document.createElement("style");
+  style.id = "contrast-test-palette";
+  style.textContent = css;
+  document.head.appendChild(style);
+}
+
+afterEach(() => {
+  document.getElementById("contrast-test-palette")?.remove();
+  for (const token of [
+    "--fixture-text-fg",
+    "--fixture-text-bg",
+    "--fixture-edge",
+    "--fixture-edge-bg",
+  ]) {
+    document.documentElement.style.removeProperty(token);
+  }
+});
+
+describe.each(variants)("$name semantic contrast", ({ name, css }) => {
+  test("meets every required policy entry", () => {
+    applyPalette(css);
+    const results = auditContrast();
+    const failures = results.filter(
+      ({ enforcement = "required", minimum, ratio }) =>
+        enforcement === "required" && ratio < minimum,
+    );
+    const disabledReports = results.filter(({ kind }) => kind === "disabled");
+
+    console.info(
+      `${name} disabled-only contrast (reported, not enforced): ${disabledReports
+        .map(({ id, ratio }) => `${id}=${ratio.toFixed(2)}:1`)
+        .join(", ")}`,
+    );
+
+    expect(failures, formatContrastFailures(name, failures)).toEqual([]);
+  });
+});
+
+test("the audit catches deliberate text and non-text boundary regressions", () => {
+  const root = document.documentElement;
+  root.style.setProperty("--fixture-text-fg", "#777777");
+  root.style.setProperty("--fixture-text-bg", "#777777");
+  root.style.setProperty("--fixture-edge", "#eeeeee");
+  root.style.setProperty("--fixture-edge-bg", "#eeeeee");
+
+  const fixture: ContrastPolicyEntry[] = [
+    {
+      id: "failing-text-fixture",
+      foreground: "--fixture-text-fg",
+      background: "--fixture-text-bg",
+      minimum: 4.5,
+      kind: "text",
+      usage: "proves normal-text regressions are detected",
+    },
+    {
+      id: "failing-boundary-fixture",
+      foreground: "--fixture-edge",
+      background: "--fixture-edge-bg",
+      minimum: 3,
+      kind: "boundary",
+      usage: "proves interactive-boundary regressions are detected",
+    },
+  ];
+
+  const failures = auditContrast(fixture).filter(({ minimum, ratio }) => ratio < minimum);
+  expect(failures.map(({ id }) => id)).toEqual([
+    "failing-text-fixture",
+    "failing-boundary-fixture",
+  ]);
+});
+
+test("the WCAG math preserves the black-to-white reference ratio", () => {
+  const black = { red: 0, green: 0, blue: 0 };
+  const white = { red: 255, green: 255, blue: 255 };
+
+  expect(relativeLuminance(black)).toBe(0);
+  expect(relativeLuminance(white)).toBe(1);
+  expect(contrastRatio(black, white)).toBe(21);
+});
