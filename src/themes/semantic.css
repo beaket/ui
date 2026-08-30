@@ -43,7 +43,17 @@
   --color-danger-solid-hover: color-mix(
     in oklab,
     var(--signal-danger) 90%,
+    var(--signal-danger-on)
+  );
+  --color-danger-solid-hover: color-mix(
+    in oklab,
+    var(--signal-danger) 90%,
     contrast-color(var(--signal-danger-on))
+  );
+  --color-danger-solid-active: color-mix(
+    in oklab,
+    var(--signal-danger) 80%,
+    var(--signal-danger-on)
   );
   --color-danger-solid-active: color-mix(
     in oklab,
@@ -60,7 +70,17 @@
   --color-success-solid-hover: color-mix(
     in oklab,
     var(--signal-success) 90%,
+    var(--signal-success-on)
+  );
+  --color-success-solid-hover: color-mix(
+    in oklab,
+    var(--signal-success) 90%,
     contrast-color(var(--signal-success-on))
+  );
+  --color-success-solid-active: color-mix(
+    in oklab,
+    var(--signal-success) 80%,
+    var(--signal-success-on)
   );
   --color-success-solid-active: color-mix(
     in oklab,
@@ -77,7 +97,17 @@
   --color-warning-solid-hover: color-mix(
     in oklab,
     var(--signal-warning) 90%,
+    var(--signal-warning-on)
+  );
+  --color-warning-solid-hover: color-mix(
+    in oklab,
+    var(--signal-warning) 90%,
     contrast-color(var(--signal-warning-on))
+  );
+  --color-warning-solid-active: color-mix(
+    in oklab,
+    var(--signal-warning) 80%,
+    var(--signal-warning-on)
   );
   --color-warning-solid-active: color-mix(
     in oklab,
@@ -91,11 +121,13 @@
   /* Role — info */
   --color-info-solid: var(--signal-info);
   --color-info-fg-on-solid: var(--signal-info-on);
+  --color-info-solid-hover: color-mix(in oklab, var(--signal-info) 90%, var(--signal-info-on));
   --color-info-solid-hover: color-mix(
     in oklab,
     var(--signal-info) 90%,
     contrast-color(var(--signal-info-on))
   );
+  --color-info-solid-active: color-mix(in oklab, var(--signal-info) 80%, var(--signal-info-on));
   --color-info-solid-active: color-mix(
     in oklab,
     var(--signal-info) 80%,
@@ -111,7 +143,17 @@
   --color-info-alt-solid-hover: color-mix(
     in oklab,
     var(--signal-info-alt) 90%,
+    var(--signal-info-alt-on)
+  );
+  --color-info-alt-solid-hover: color-mix(
+    in oklab,
+    var(--signal-info-alt) 90%,
     contrast-color(var(--signal-info-alt-on))
+  );
+  --color-info-alt-solid-active: color-mix(
+    in oklab,
+    var(--signal-info-alt) 80%,
+    var(--signal-info-alt-on)
   );
   --color-info-alt-solid-active: color-mix(
     in oklab,
@@ -128,7 +170,17 @@
   --color-accent-solid-hover: color-mix(
     in oklab,
     var(--signal-accent) 90%,
+    var(--signal-accent-on)
+  );
+  --color-accent-solid-hover: color-mix(
+    in oklab,
+    var(--signal-accent) 90%,
     contrast-color(var(--signal-accent-on))
+  );
+  --color-accent-solid-active: color-mix(
+    in oklab,
+    var(--signal-accent) 80%,
+    var(--signal-accent-on)
   );
   --color-accent-solid-active: color-mix(
     in oklab,
