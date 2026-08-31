@@ -11,7 +11,7 @@
     "typecheck": "tsx scripts/generate-props.ts && astro check"
   },
   "dependencies": {
-    "@astrojs/markdown-remark": "7.2.4",
+    "@astrojs/markdown-remark": "7.3.0",
     "@astrojs/react": "^6.0.0",
     "@radix-ui/react-slot": "^1.2.4",
     "@tailwindcss/vite": "4.3.3",
