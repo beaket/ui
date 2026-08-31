@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/doc.astro';
+import { AccentStateDemo } from '../components/accent-state-demo';
 ---
 
 <Layout title="Design Rules">
@@ -12,13 +13,61 @@ import Layout from '../layouts/doc.astro';
 
 <p>No gradients. No border-radius (except Radio). No blur shadows. No opacity for styling. If it's a border, show the border. If it's a shadow, make it structural.</p>
 
-<h2>Shadows signal state</h2>
+<h2>Accent is state, not decoration</h2>
 
-<p>Offset shadows are not decoration — they speak. Pressables carry a thin accent edge: hover grows it, pressing drops the control onto it, disabled removes it. Instruments (small controls, fused strips) hold the edge static while the inner key travels under the press. Writing fields draw it only while focused (cap-off). Surfaces keep a quiet grey shade. This is the system's primary state language.</p>
+<p>Accent is scarce. It marks what is happening now; it is not a permanent synonym for “interactive.” At rest, pressables rely on neutral material — an ink fill, border, label, or geometry — and carry no standing accent edge. Raised surfaces keep a quiet grey offset shadow.</p>
+
+<h2 id="state-precedence">State precedence</h2>
+
+<p>The highest-priority state wins within a visual channel:</p>
+
+<table>
+  <thead>
+    <tr><th>Priority</th><th>State</th><th>Visual channel</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>Keyboard focus</td><td>2px outer outline on pressables; cap-off edge on writing fields. Invalid focus uses danger instead of accent.</td></tr>
+    <tr><td>2</td><td>Open ownership / active engagement</td><td>Grown offset edge on an overlay owner; 2px inset leading rule on the active menu row.</td></tr>
+    <tr><td>3</td><td>Hover intent</td><td>Thin offset edge on edged pressables, or a neutral tint/text change where an edge would be too dense.</td></tr>
+    <tr><td>4</td><td>Current selection</td><td>Faint lens fill and neutral rim, or ink fill plus position/indicator. Selection never borrows the focus outline.</td></tr>
+    <tr><td>5</td><td>Persistent affordance</td><td>Neutral border, ink surface, label, and geometry only.</td></tr>
+    <tr><td>6</td><td>Content navigation</td><td>Accent text and hover underline for links; muted-to-ink text for breadcrumb ancestors.</td></tr>
+  </tbody>
+</table>
+
+<p>Only spatially distinct channels may stack. An outer keyboard-focus outline may surround an open-owner offset edge or a selected fill. Competing marks in one channel do not stack: open replaces the hover edge, press drops the edge while the control translates, invalid focus replaces the accent focus color, and selection never adds a focus outline. Disabled controls remove interaction edges and focus treatment.</p>
+
+<h2 id="state-composition">Dense state composition</h2>
+
+<p>This server-rendered specimen pins the same outer outline used by <code>focus-visible</code> around an open owner. Its grown offset edge remains visible, while navigation, tabs, the checkbox, and pagination keep their own selection fills or indicators. The cues coexist because they occupy different channels.</p>
+
+<AccentStateDemo />
+
+<h2 id="component-families">Component families</h2>
+
+<h3>Pressables</h3>
+
+<p>Edged buttons and interactive cards are neutral at idle. Hover reveals the thin <code>shadow-offset-action</code> edge; an open overlay owner holds the grown <code>shadow-offset-action-hover</code> edge. Press drops the edge and translates the control by 1px. Ghost and link buttons use tint or underline instead of an edge. Disabled controls use a dashed muted boundary and disabled surface/text, with no edge or focus treatment.</p>
+
+<h3>Writing fields and invalid state</h3>
+
+<p>Input and Textarea stay quiet at rest. Focus caps the field with a static action edge instead of an outer outline. Invalid focus replaces that accent edge with danger; it does not layer both colors. Read-only focus keeps the neutral surface shade. The caret uses accent and text selection uses the accent tint.</p>
+
+<h3>Native choices and lens controls</h3>
+
+<p>Checkbox, Switch, and Radio keep a neutral chassis. Hover may reveal a thin edge, while checked state uses ink fill plus a check, thumb position, or dot — never an accent focus look. Pagination holds the current key down with ink fill. Navigation and Tabs are fused lens controls: the current cell gets a faint accent lens and neutral rim, while the strip itself has no standing edge.</p>
+
+<h3>Menus and selects</h3>
+
+<p>A Select trigger is field-surfaced and quiet at idle and hover. While open it holds the grown edge; keyboard focus may still use the spatially separate outer outline. Menu and Select rows mark keyboard navigation with an accent tint and 2px inset leading rule. An open submenu holds that cue, destructive rows replace it with danger, and disabled rows cannot receive it.</p>
+
+<h3>Links and breadcrumbs</h3>
+
+<p>Ordinary links use accent text and reveal an underline on hover. Breadcrumb is a trail, not a switcher: ancestors stay muted and darken on hover, the current page uses full ink, and only keyboard focus introduces accent.</p>
 
 <h2>One pattern, everywhere</h2>
 
-<p>Same keyboard focus outline on every pressable: <code>outline-2 outline-border-focus outline-offset-2</code> — writing fields signal focus with the accent edge instead (cap-off). Same disabled style everywhere: <code>border-dashed border-border-muted bg-bg-disabled text-fg-disabled</code>. Users learn the system once and trust it completely.</p>
+<p>Pressables share <code>outline-2 outline-border-focus outline-offset-2</code> for keyboard focus; writing fields use the cap-off edge. Disabled controls share <code>border-dashed border-border-muted bg-bg-disabled text-fg-disabled</code>. Preserve the channel and precedence when composing or customizing components.</p>
 
 <h2>Own it, keep it right</h2>
 

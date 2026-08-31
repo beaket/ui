@@ -53,8 +53,8 @@ const roleSlots = [
 const shadows = [
   { name: "--shadow-offset", usage: "Surfaces (cards, panels)" },
   { name: "--shadow-offset-overlay", usage: "Overlays" },
-  { name: "--shadow-offset-action", usage: "Pressables — the accent edge" },
-  { name: "--shadow-offset-action-hover", usage: "Pressable hover — edge grows" },
+  { name: "--shadow-offset-action", usage: "Thin action edge — pressable hover or field focus" },
+  { name: "--shadow-offset-action-hover", usage: "Grown action edge — open owner" },
   { name: "--shadow-offset-action-danger", usage: "Invalid writing field, focused" },
 ].map(t => ({ ...t, value: val(t.name) }));
 
@@ -116,7 +116,7 @@ const palette = [
 
 <TokenTable tokens={shadows} showSwatch={false} />
 
-<p>Surfaces use <code>shadow-offset</code>; overlays use <code>shadow-offset-overlay</code>. Pressables carry <code>shadow-offset-action</code> (+ <code>hover:shadow-offset-action-hover</code>); writing fields engage it only on focus, swapping to <code>shadow-offset-action-danger</code> when invalid. Size and color vary by theme.</p>
+<p>Surfaces use <code>shadow-offset</code>; overlays use <code>shadow-offset-overlay</code>. Pressables are neutral at rest: edged controls reveal <code>shadow-offset-action</code> on hover, and open owners hold <code>shadow-offset-action-hover</code>. Writing fields engage the thin edge only on focus, swapping to <code>shadow-offset-action-danger</code> when invalid. Size and color vary by theme.</p>
 
 <h2>Palette — authored by the theme</h2>
 
