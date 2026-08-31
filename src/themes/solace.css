@@ -3,8 +3,7 @@
  * Warm paper, cool ink — equal-weight signals, one vivid blue for action.
  * "Every mark is an ink of equal weight, hue carries meaning but never
  * emphasis, and the one vivid voice belongs solely to what you can act on."
- * Light-only by declaration. 30 values: 27 feed the 68 semantic names;
- * tone 8–10 are reserved.
+ * 30 values per scheme: 27 feed the 68 semantic names; tone 8–10 are reserved.
  */
 
 :root {
@@ -47,4 +46,51 @@
   --shadow-size: 1px;
   --shadow-color: #c0c4ca;
   --shadow-color-overlay: #a0a3a7;
+}
+
+/*
+ * Solace Dark — warm paper marks on cool, near-black ink.
+ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Surface — restrained paper layers, without gloss or bloom */
+    --surface-0: #0b0e14;
+    --surface-1: #12151c;
+    --surface-2: #1a1d25;
+
+    /* Tone — 0 is the page, 11 the warm paper foreground */
+    --tone-0: #0b0e14;
+    --tone-1: #14171e;
+    --tone-2: #1d2028;
+    --tone-3: #343740;
+    --tone-4: #686b73;
+    --tone-5: #74777f;
+    --tone-6: #85888f;
+    --tone-7: #9b9da3;
+    --tone-8: #b3b5b9;
+    --tone-9: #cacbc7;
+    --tone-10: #e1e0d9;
+    --tone-11: #f3f1e8;
+
+    /* Signal — equal-weight inks; vivid blue remains the action voice */
+    --signal-danger: #e47463;
+    --signal-warning: #d99a50;
+    --signal-success: #45aa88;
+    --signal-info: #7190d6;
+    --signal-info-alt: #48a4af;
+    --signal-accent: #6f8fff;
+
+    /* Knockout — the page endpoint keeps type readable on every solid */
+    --signal-danger-on: var(--tone-0);
+    --signal-success-on: var(--tone-0);
+    --signal-warning-on: var(--tone-0);
+    --signal-info-on: var(--tone-0);
+    --signal-info-alt-on: var(--tone-0);
+    --signal-accent-on: var(--tone-0);
+
+    /* Shadow — a cool, sharp offset edge rather than a glow */
+    --shadow-size: 1px;
+    --shadow-color: #343944;
+    --shadow-color-overlay: #4a505d;
+  }
 }

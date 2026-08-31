@@ -116,16 +116,19 @@ describe("wrapThemeCss", () => {
     expect(result.indexOf("@theme")).toBeLessThan(result.indexOf(THEME_END));
   });
 
-  it("injects the current 30-value palette contract", () => {
+  it("injects both schemes of the current 30-value palette contract", () => {
     const result = wrapThemeCss(currentTheme);
 
-    expect(result.match(/--surface-[0-2]\s*:/g)).toHaveLength(3);
+    expect(result.match(/--surface-[0-2]\s*:/g)).toHaveLength(6);
     expect(result).toContain("--surface-0: #f3f3ef");
     expect(result).toContain("--surface-1: #f9f9f5");
     expect(result).toContain("--surface-2: #fffffb");
     expect(result).toContain("--tone-0: #f3f3ef");
     expect(result).toContain("--tone-3: #a7a8a7");
     expect(result).toContain("--tone-6: #686b6e");
+    expect(result).toContain("@media (prefers-color-scheme: dark)");
+    expect(result).toContain("--surface-0: #0b0e14");
+    expect(result).toContain("--tone-11: #f3f1e8");
     expect(result).toContain("--signal-success: #3f8a55");
     expect(result).toContain("--signal-info-alt: #005f72");
     expect(result).toContain("--signal-info-alt-on: var(--tone-0)");

@@ -41,6 +41,22 @@ function declarations(css: string): Map<string, string> {
   );
 }
 
+function paletteVariants(css: string): {
+  light: Map<string, string>;
+  dark: Map<string, string> | null;
+} {
+  const beforeMedia = css.split("@media")[0];
+  const lightMatch = beforeMedia.match(/:root\s*\{([\s\S]*?)\}/);
+  const darkMatch = css.match(
+    /@media\s*\(prefers-color-scheme:\s*dark\)\s*\{\s*:root\s*\{([\s\S]*?)\}\s*\}/,
+  );
+
+  return {
+    light: declarations(lightMatch?.[1] ?? ""),
+    dark: darkMatch ? declarations(darkMatch[1]) : null,
+  };
+}
+
 function variableReferences(value: string): string[] {
   return [...value.matchAll(/var\((--[\w-]+)\)/g)].map((match) => match[1]);
 }
@@ -93,10 +109,31 @@ function contrastRatio(first: RgbColor, second: RgbColor): number {
 describe("theme palette contract", () => {
   const semantic = declarations(fs.readFileSync(path.join(themesDir, "semantic.css"), "utf8"));
 
-  it.each(themeNames)("keeps %s on the same 30-value contract", (themeName) => {
-    const palette = declarations(fs.readFileSync(path.join(themesDir, `${themeName}.css`), "utf8"));
+  it.each(themeNames)("keeps both %s schemes on the same 30-value contract", (themeName) => {
+    const palettes = paletteVariants(
+      fs.readFileSync(path.join(themesDir, `${themeName}.css`), "utf8"),
+    );
 
-    expect([...palette.keys()].sort()).toEqual(PALETTE_CONTRACT);
+    expect([...palettes.light.keys()].sort()).toEqual(PALETTE_CONTRACT);
+    expect(palettes.dark, `${themeName} does not expose a dark palette`).not.toBeNull();
+    expect([...(palettes.dark?.keys() ?? [])].sort()).toEqual(PALETTE_CONTRACT);
+  });
+
+  it("generates a complete Solace dark token set for the documentation", () => {
+    const generated = JSON.parse(
+      fs.readFileSync(path.join(root, "docs/src/data/theme-tokens.json"), "utf8"),
+    ) as Record<string, Record<string, string>>;
+
+    expect(generated["solace-dark"]).toBeDefined();
+    expect(Object.keys(generated["solace-dark"]).sort()).toEqual(
+      Object.keys(generated.solace).sort(),
+    );
+    for (const token of PALETTE_CONTRACT) {
+      expect(
+        generated["solace-dark"][token],
+        `generated solace-dark is missing ${token}`,
+      ).toBeDefined();
+    }
   });
 
   it("locks the reviewed Solace signal palette and knockouts", () => {
@@ -121,7 +158,9 @@ describe("theme palette contract", () => {
   });
 
   it("makes every functional palette value reachable from the semantic layer", () => {
-    const palette = declarations(fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"));
+    const palette = paletteVariants(
+      fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"),
+    ).light;
     const graph = new Map([...palette, ...semantic]);
     const reachable = new Set<string>();
     const pending = [...semantic.keys()];
@@ -141,7 +180,9 @@ describe("theme palette contract", () => {
   });
 
   it("keeps only the documented neutral-ramp slots reserved", () => {
-    const palette = declarations(fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"));
+    const palette = paletteVariants(
+      fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"),
+    ).light;
     const graph = new Map([...palette, ...semantic]);
     const reachable = new Set<string>();
     const pending = [...semantic.keys()];
@@ -167,7 +208,9 @@ describe("theme palette contract", () => {
   });
 
   it("keeps Solace light surfaces ordered and visibly separated", () => {
-    const palette = declarations(fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"));
+    const palette = paletteVariants(
+      fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"),
+    ).light;
     const surfaces = ["--surface-0", "--surface-1", "--surface-2"].map((token) => {
       const value = palette.get(token);
       if (!value) throw new Error(`Solace does not define ${token}`);
@@ -184,7 +227,9 @@ describe("theme palette contract", () => {
   });
 
   it("keeps the Solace neutral ramp perceptually progressive", () => {
-    const palette = declarations(fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"));
+    const palette = paletteVariants(
+      fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"),
+    ).light;
     const lightness = Array.from({ length: 12 }, (_, index) => {
       const token = `--tone-${index}`;
       const value = palette.get(token);
@@ -207,6 +252,54 @@ describe("theme palette contract", () => {
     for (const step of steps.slice(3, 7)) {
       expect(step).toBeGreaterThanOrEqual(0.05);
       expect(step).toBeLessThanOrEqual(0.1);
+    }
+  });
+
+  it("keeps Solace dark surfaces and tones ordered from page to paper", () => {
+    const palette = paletteVariants(
+      fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"),
+    ).dark;
+    if (!palette) throw new Error("Solace does not expose a dark palette");
+
+    const surfaces = ["--surface-0", "--surface-1", "--surface-2"].map((token) => {
+      const value = palette.get(token);
+      if (!value) throw new Error(`Solace dark does not define ${token}`);
+      return parseHex(value);
+    });
+    const surfaceLightness = surfaces.map(relativeLuminance);
+
+    expect(surfaceLightness[1]).toBeGreaterThan(surfaceLightness[0]);
+    expect(surfaceLightness[2]).toBeGreaterThan(surfaceLightness[1]);
+    expect(contrastRatio(surfaces[0], surfaces[1])).toBeGreaterThanOrEqual(1.05);
+    expect(contrastRatio(surfaces[1], surfaces[2])).toBeGreaterThanOrEqual(1.05);
+    expect(palette.get("--tone-0")).toBe(palette.get("--surface-0"));
+
+    const toneLightness = Array.from({ length: 12 }, (_, index) => {
+      const token = `--tone-${index}`;
+      const value = palette.get(token);
+      if (!value) throw new Error(`Solace dark does not define ${token}`);
+      return oklabLightness(parseHex(value));
+    });
+    for (let index = 1; index < toneLightness.length; index++) {
+      expect(toneLightness[index]).toBeGreaterThan(toneLightness[index - 1]);
+    }
+  });
+
+  it("keeps every Solace dark signal knockout readable", () => {
+    const palette = paletteVariants(
+      fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"),
+    ).dark;
+    if (!palette) throw new Error("Solace does not expose a dark palette");
+
+    for (const role of ["danger", "warning", "success", "info", "info-alt", "accent"]) {
+      const signal = palette.get(`--signal-${role}`);
+      const knockout = palette.get(`--signal-${role}-on`);
+      if (!signal || !knockout) throw new Error(`Solace dark does not define the ${role} pair`);
+      const knockoutToken = /^var\((--[\w-]+)\)$/.exec(knockout)?.[1];
+      const knockoutValue = knockoutToken ? palette.get(knockoutToken) : knockout;
+      if (!knockoutValue) throw new Error(`Solace dark cannot resolve ${knockout}`);
+
+      expect(contrastRatio(parseHex(signal), parseHex(knockoutValue))).toBeGreaterThanOrEqual(4.5);
     }
   });
 });
