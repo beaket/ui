@@ -25,7 +25,7 @@ export function ComponentShowcase({ components, version }: ComponentShowcaseProp
       <a
         href="/ui/installation"
         data-slot="branding-card"
-        className="shadow-offset-action hover:shadow-offset-action-hover border-border-strong bg-bg-emphasis flex flex-col justify-between border-2 p-4 no-underline transition-[box-shadow,translate] duration-100 outline-none active:translate-x-px active:translate-y-px active:shadow-none"
+        className="hover:shadow-offset-action border-border-strong bg-bg-emphasis hover:bg-bg-emphasis-hover focus-visible:outline-border-focus flex flex-col justify-between border p-4 no-underline transition-[box-shadow,translate,background-color] duration-100 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-x-px active:translate-y-px active:shadow-none"
       >
         <div>
           <div>

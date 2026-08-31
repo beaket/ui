@@ -1,5 +1,6 @@
 @import "@/styles.css";
 @source "../../../src";
+@source "../";
 
 /* Syntax highlighting — Solace defaults (theme-init.js overrides per theme) */
 :root {

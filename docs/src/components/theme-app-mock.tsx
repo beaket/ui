@@ -248,7 +248,7 @@ export function ThemeAppMock() {
 
           {/* Tabs section — lens grammar: fused hairline strip, glass plate on current */}
           <div className="mt-3">
-            <div className="shadow-offset-action inline-flex">
+            <div className="inline-flex">
               <span className="border-border-muted text-fg after:border-t-border-muted after:border-l-border-muted after:border-r-border-strong after:border-b-border-strong after:bg-accent-bg-subtle relative isolate border px-3 py-1 text-xs font-medium after:absolute after:inset-1 after:-z-[1] after:border after:content-['']">
                 Activity
               </span>
