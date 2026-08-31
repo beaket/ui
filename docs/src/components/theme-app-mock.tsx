@@ -2,19 +2,19 @@ export function ThemeAppMock() {
   return (
     <div className="border-border bg-bg border" style={{ minHeight: 520 }}>
       {/* App header */}
-      <div className="bg-bg-emphasis border-b-iron flex items-center justify-between border-b px-4 py-2">
+      <div className="bg-bg-emphasis border-border-strong flex items-center justify-between border-b px-4 py-2">
         <div className="flex items-center gap-3">
           <span className="text-fg-on-emphasis text-sm font-bold">Acme Dashboard</span>
           <nav className="flex gap-1">
-            <span className="bg-iron text-fg-on-emphasis px-3 py-1 text-xs font-medium">
+            <span className="bg-bg-emphasis-hover text-fg-on-emphasis px-3 py-1 text-xs font-medium">
               Overview
             </span>
-            <span className="text-aluminum px-3 py-1 text-xs font-medium">Analytics</span>
-            <span className="text-aluminum px-3 py-1 text-xs font-medium">Settings</span>
+            <span className="text-fg-on-emphasis px-3 py-1 text-xs font-medium">Analytics</span>
+            <span className="text-fg-on-emphasis px-3 py-1 text-xs font-medium">Settings</span>
           </nav>
         </div>
         <div className="flex items-center gap-2">
-          <span className="bg-success-solid border-success-solid text-fg-on-emphasis border px-2 py-0.5 text-xs font-bold">
+          <span className="bg-success-solid border-success-solid text-success-fg-on-solid border px-2 py-0.5 text-xs font-bold">
             Live
           </span>
           <span className="bg-bg-hover border-border text-fg border px-2 py-0.5 text-xs">
@@ -58,7 +58,7 @@ export function ThemeAppMock() {
             <div className="flex items-center justify-between">
               <span className="text-fg-muted text-xs">Queue</span>
               <span
-                className="bg-warning-solid text-fg text-xs"
+                className="bg-warning-solid text-warning-fg-on-solid text-xs"
                 style={{ padding: "1px 6px", fontWeight: 700 }}
               >
                 3
@@ -67,7 +67,7 @@ export function ThemeAppMock() {
             <div className="flex items-center justify-between">
               <span className="text-fg-muted text-xs">Errors</span>
               <span
-                className="bg-danger-solid text-fg-on-emphasis text-xs"
+                className="bg-danger-solid text-danger-fg-on-solid text-xs"
                 style={{ padding: "1px 6px", fontWeight: 700 }}
               >
                 1
@@ -227,7 +227,7 @@ export function ThemeAppMock() {
                   Reset
                 </button>
                 <button
-                  className="bg-danger-solid border-danger-solid shadow-offset text-fg-on-emphasis border px-3 py-1.5 text-xs font-semibold"
+                  className="bg-danger-solid border-danger-solid shadow-offset text-danger-fg-on-solid border px-3 py-1.5 text-xs font-semibold"
                   style={{ cursor: "pointer" }}
                 >
                   Delete

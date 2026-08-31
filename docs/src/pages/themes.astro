@@ -21,11 +21,11 @@ import CodeBlock from '../components/code-block.astro';
     <tr><th>Theme</th><th>Light</th><th>Dark</th></tr>
   </thead>
   <tbody>
-    <tr><td>Solace</td><td>Warm paper, cool ink — one vivid blue for action</td><td>Warm paper marks on cool, near-black ink</td></tr>
-    <tr><td>Porcelain</td><td>Near-white paper, cool graphite ink</td><td>Porcelain inverted</td></tr>
-    <tr><td>Tobacco</td><td>Warm earthen paper, quiet signals</td><td>Tobacco inverted</td></tr>
-    <tr><td>Marigold</td><td>Pure-grey paper, the loudest signals</td><td>Marigold inverted</td></tr>
-    <tr><td>Eucalyptus</td><td>Cool-blue paper, vivid signals</td><td>Eucalyptus inverted</td></tr>
+    <tr><td>Solace</td><td>Warm paper, cool ink — equal-weight signals and one vivid blue for action</td><td>Warm paper marks on cool, near-black ink</td></tr>
+    <tr><td>Porcelain</td><td>Near-white paper, cool graphite ink, balanced signals</td><td>Cool light ink on a near-black page</td></tr>
+    <tr><td>Tobacco</td><td>Warm earthen paper, warm-grey ink, quiet low-chroma signals</td><td>Warm ink on a warm-black page</td></tr>
+    <tr><td>Marigold</td><td>Pure-grey paper and ink, with deliberately loud bright signals</td><td>Loud signals on black</td></tr>
+    <tr><td>Eucalyptus</td><td>Cool-blue paper, blue-black ink, vivid high-chroma signals</td><td>Blue ink on a blue-black page</td></tr>
   </tbody>
 </table>
 
@@ -42,18 +42,11 @@ import CodeBlock from '../components/code-block.astro';
 
 <p>Each palette file contains both light and dark values. Dark mode activates via <code>@media (prefers-color-scheme: dark)</code>, following the user's OS setting. The semantic layer never changes — shadows and knockouts auto-flip through token references.</p>
 
-<h3>Manual control</h3>
+<h2>Docs preview controls</h2>
 
-<p>To override OS detection, set <code>beaket-color-scheme</code> in <code>localStorage</code>:</p>
+<p>The theme picker in this documentation site is a local preview implementation, not an <code>@beaket/ui</code> CSS API. It reads <code>theme</code> from the URL and <code>beaket-theme</code> / <code>beaket-color-scheme</code> from this site's <code>localStorage</code>, then injects the generated token values onto the document before paint. Those keys affect this documentation site only; importing a package palette does not read them.</p>
 
-<CodeBlock code={`// Force dark
-localStorage.setItem("beaket-color-scheme", "dark");
-
-// Force light
-localStorage.setItem("beaket-color-scheme", "light");
-
-// Follow OS (default)
-localStorage.removeItem("beaket-color-scheme");`} lang="js" />
+<p>For consumer-controlled color schemes, own that CSS in your application. The package currently ships OS-driven <code>prefers-color-scheme</code> behavior only; it does not provide a class, data attribute, or <code>localStorage</code> toggle contract.</p>
 
 </Layout>
 

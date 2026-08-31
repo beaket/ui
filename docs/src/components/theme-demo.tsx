@@ -7,8 +7,8 @@ const allTokens: Record<string, Record<string, string>> = themeTokensData;
 const themeMeta = {
   solace: {
     label: "Solace",
-    subtitle: "Warm paper, cool ink — one vivid blue for action",
-    shadowNote: "2px cool grey",
+    subtitle: "Warm paper, cool ink — equal-weight signals and one vivid blue for action",
+    shadowNote: "1px cool grey",
   },
   porcelain: {
     label: "Porcelain",
@@ -17,17 +17,17 @@ const themeMeta = {
   },
   tobacco: {
     label: "Tobacco",
-    subtitle: "Warm earthen paper, quiet low-chroma signals",
+    subtitle: "Warm earthen paper, warm-grey ink, quiet low-chroma signals",
     shadowNote: "2px warm brown",
   },
   marigold: {
     label: "Marigold",
-    subtitle: "Pure-grey paper, the loudest signals",
+    subtitle: "Pure-grey paper and ink, with deliberately loud bright signals",
     shadowNote: "3px ink",
   },
   eucalyptus: {
     label: "Eucalyptus",
-    subtitle: "Cool-blue paper, vivid high-chroma signals",
+    subtitle: "Cool-blue paper, blue-black ink, vivid high-chroma signals",
     shadowNote: "2px blue-grey",
   },
 } as const;
