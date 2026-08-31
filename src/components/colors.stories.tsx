@@ -1,4 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import {
+  CircleCheck,
+  CircleX,
+  Info,
+  MousePointerClick,
+  RadioTower,
+  TriangleAlert,
+  type LucideIcon,
+} from "lucide-react";
 
 /**
  * Two layers:
@@ -45,6 +54,14 @@ const semantic: Record<string, TokenEntry[]> = {
 };
 
 const roles = ["danger", "success", "warning", "info", "info-alt", "accent"] as const;
+const roleVisuals: Record<(typeof roles)[number], { label: string; icon: LucideIcon }> = {
+  danger: { label: "Danger", icon: CircleX },
+  success: { label: "Success", icon: CircleCheck },
+  warning: { label: "Warning", icon: TriangleAlert },
+  info: { label: "Information", icon: Info },
+  "info-alt": { label: "Live update", icon: RadioTower },
+  accent: { label: "Action", icon: MousePointerClick },
+};
 const roleSlots = [
   "solid",
   "fg-on-solid",
@@ -355,6 +372,81 @@ export const RoleTokens = () => (
           </div>
         </div>
       ))}
+    </div>
+  </div>
+);
+
+export const SignalComparison = () => (
+  <div className="bg-bg text-fg min-h-screen p-6">
+    <div className="max-w-5xl">
+      <SectionTitle>Semantic signal comparison</SectionTitle>
+      <p className="text-fg-muted mb-4 max-w-3xl text-sm">
+        Every role keeps a readable label and unique icon. The columns exercise small colored text,
+        a 16px icon, a 1px boundary, a tinted panel, and a solid badge on the page surface.
+      </p>
+      <div className="border-border grid grid-cols-[8rem_repeat(5,minmax(7rem,1fr))] border border-b-0 text-sm">
+        {["Role", "Text", "16px icon", "1px border", "Tinted panel", "Solid badge"].map(
+          (heading) => (
+            <div
+              key={heading}
+              className="border-border bg-bg-raised border-r border-b p-2 font-medium"
+            >
+              {heading}
+            </div>
+          ),
+        )}
+        {roles.map((role) => {
+          const { icon: Icon, label } = roleVisuals[role];
+          const solid = `var(--color-${role}-solid)`;
+          const foreground = `var(--color-${role}-fg)`;
+          return (
+            <div key={role} className="contents">
+              <div className="border-border bg-bg-raised border-r border-b p-3 font-medium">
+                {label}
+              </div>
+              <div className="border-border flex items-center border-r border-b p-3">
+                <span style={{ color: foreground }}>{label}</span>
+              </div>
+              <div className="border-border flex items-center gap-2 border-r border-b p-3">
+                <Icon aria-hidden="true" className="size-4" style={{ color: solid }} />
+                <span className="sr-only">{label}</span>
+              </div>
+              <div className="border-border flex items-center border-r border-b p-3">
+                <span
+                  aria-label={`${label} boundary`}
+                  className="block size-5"
+                  style={{ border: `1px solid ${solid}` }}
+                />
+              </div>
+              <div className="border-border border-r border-b p-2">
+                <div
+                  className="p-2"
+                  style={{
+                    color: foreground,
+                    backgroundColor: `var(--color-${role}-bg)`,
+                    border: `1px solid var(--color-${role}-border)`,
+                  }}
+                >
+                  {label}
+                </div>
+              </div>
+              <div className="border-border flex items-center border-r border-b p-2">
+                <span
+                  className="inline-flex items-center gap-1 border px-2 py-0.5 text-xs font-medium"
+                  style={{
+                    color: `var(--color-${role}-fg-on-solid)`,
+                    backgroundColor: solid,
+                    borderColor: solid,
+                  }}
+                >
+                  <Icon aria-hidden="true" className="size-3" />
+                  {label}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   </div>
 );

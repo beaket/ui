@@ -8,11 +8,17 @@ import {
   contrastRatio,
   formatContrastFailures,
   relativeLuminance,
+  resolveTokenColor,
   type ContrastPolicyEntry,
 } from "./contrast";
 import eucalyptus from "./eucalyptus.css?inline";
 import marigold from "./marigold.css?inline";
 import porcelain from "./porcelain.css?inline";
+import {
+  auditSignalDistances,
+  formatSignalDistanceFailures,
+  type SignalDistanceResult,
+} from "./signal-distinguishability";
 import solace from "./solace.css?inline";
 import tobacco from "./tobacco.css?inline";
 
@@ -125,4 +131,82 @@ test("the WCAG math preserves the black-to-white reference ratio", () => {
   expect(relativeLuminance(black)).toBe(0);
   expect(relativeLuminance(white)).toBe(1);
   expect(contrastRatio(black, white)).toBe(21);
+});
+
+const SOLACE_BEFORE_770 = `
+:root {
+  --signal-danger: #af5340;
+  --signal-warning: #ce8042;
+  --signal-success: #00896c;
+  --signal-info: #4c6bb6;
+  --signal-info-alt: #008597;
+  --signal-accent: #2b5bff;
+  --signal-info-alt-on: var(--tone-11);
+}`;
+
+function minimumSignalDistances(results: readonly SignalDistanceResult[]) {
+  const minima = new Map<string, SignalDistanceResult>();
+  for (const result of results) {
+    const key = `${result.form}/${result.vision}`;
+    const current = minima.get(key);
+    if (!current || result.distance < current.distance) minima.set(key, result);
+  }
+  return [...minima.values()];
+}
+
+function reviewedPairMinimum(
+  results: readonly SignalDistanceResult[],
+  first: SignalDistanceResult["first"],
+  second: SignalDistanceResult["second"],
+) {
+  return Math.min(
+    ...results
+      .filter((result) => result.first === first && result.second === second)
+      .map(({ distance }) => distance),
+  );
+}
+
+describe("Solace semantic signal distinguishability", () => {
+  test("separates every role pair in every supported form and vision simulation", () => {
+    applyPalette(solace);
+    const results = auditSignalDistances(resolveTokenColor);
+    const failures = results.filter(({ distance, minimum }) => distance < minimum);
+
+    expect(failures, formatSignalDistanceFailures(failures)).toEqual([]);
+  });
+
+  test("provides reproducible before/after evidence for the reviewed collisions", () => {
+    applyPalette(`${solace}\n${SOLACE_BEFORE_770}`);
+    const before = auditSignalDistances(resolveTokenColor);
+    document.getElementById("contrast-test-palette")?.remove();
+    applyPalette(solace);
+    const after = auditSignalDistances(resolveTokenColor);
+
+    const beforeFailures = before.filter(({ distance, minimum }) => distance < minimum);
+    const afterFailures = after.filter(({ distance, minimum }) => distance < minimum);
+    const summary = (label: string, results: readonly SignalDistanceResult[]) =>
+      `${label}: ${minimumSignalDistances(results)
+        .map(
+          ({ first, second, form, vision, distance }) =>
+            `${form}/${vision}=${first}:${second} ${distance.toFixed(3)}`,
+        )
+        .join(", ")}`;
+
+    console.info(summary("Solace before #770", before));
+    console.info(summary("Solace after #770", after));
+
+    for (const [first, second] of [
+      ["danger", "warning"],
+      ["success", "info-alt"],
+      ["info", "accent"],
+    ] as const) {
+      const previous = reviewedPairMinimum(before, first, second);
+      const current = reviewedPairMinimum(after, first, second);
+      console.info(`${first}/${second}: ${previous.toFixed(3)} → ${current.toFixed(3)}`);
+      expect(current).toBeGreaterThan(previous);
+    }
+
+    expect(beforeFailures.length).toBeGreaterThan(0);
+    expect(afterFailures, formatSignalDistanceFailures(afterFailures)).toEqual([]);
+  });
 });

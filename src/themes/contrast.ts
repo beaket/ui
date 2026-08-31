@@ -213,7 +213,7 @@ export function contrastRatio(first: RgbColor, second: RgbColor): number {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-function resolveTokenColor(token: string): RgbColor {
+export function resolveTokenColor(token: string): RgbColor {
   const rootValue = getComputedStyle(document.documentElement).getPropertyValue(token).trim();
   if (!rootValue) throw new Error(`Semantic token ${token} did not resolve in the browser`);
 

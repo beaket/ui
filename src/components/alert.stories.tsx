@@ -39,29 +39,41 @@ export const Default: Story = {
 };
 
 // Compositions for docs
-export const AllVariants = () => (
-  <div className="max-w-lg space-y-4">
-    <Alert variant="note">
-      <p>This is a note. Use it for general information.</p>
-    </Alert>
+export const AllVariants: Story = {
+  render: () => (
+    <div className="max-w-lg space-y-4">
+      <Alert variant="note">
+        <p>This is a note. Use it for general information.</p>
+      </Alert>
 
-    <Alert variant="tip">
-      <p>This is a tip. Use it for helpful suggestions.</p>
-    </Alert>
+      <Alert variant="tip">
+        <p>This is a tip. Use it for helpful suggestions.</p>
+      </Alert>
 
-    <Alert variant="important">
-      <p>This is important. Use it for key information.</p>
-    </Alert>
+      <Alert variant="important">
+        <p>This is important. Use it for key information.</p>
+      </Alert>
 
-    <Alert variant="warning">
-      <p>This is a warning. Use it for cautionary messages.</p>
-    </Alert>
+      <Alert variant="warning">
+        <p>This is a warning. Use it for cautionary messages.</p>
+      </Alert>
 
-    <Alert variant="caution">
-      <p>This is caution. Use it for dangerous actions.</p>
-    </Alert>
-  </div>
-);
+      <Alert variant="caution">
+        <p>This is caution. Use it for dangerous actions.</p>
+      </Alert>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    for (const title of ["Note", "Tip", "Important", "Warning", "Caution"]) {
+      await expect(canvas.getByText(title)).toBeVisible();
+    }
+
+    const icons = [...canvasElement.querySelectorAll('[data-slot="alert"] > svg')];
+    await expect(icons).toHaveLength(5);
+    await expect(new Set(icons.map((icon) => icon.innerHTML)).size).toBe(5);
+  },
+};
 
 export const AllStates = () => (
   <div className="max-w-lg space-y-6">
