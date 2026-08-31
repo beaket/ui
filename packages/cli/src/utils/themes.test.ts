@@ -109,6 +109,25 @@ function contrastRatio(first: RgbColor, second: RgbColor): number {
 describe("theme palette contract", () => {
   const semantic = declarations(fs.readFileSync(path.join(themesDir, "semantic.css"), "utf8"));
 
+  it("documents the shipped OS-driven CSS contract separately from the docs preview", () => {
+    const themesPage = fs.readFileSync(path.join(root, "docs/src/pages/themes.astro"), "utf8");
+    const appMock = fs.readFileSync(
+      path.join(root, "docs/src/components/theme-app-mock.tsx"),
+      "utf8",
+    );
+
+    expect(themesPage).toContain('@import "@beaket/ui/themes/semantic.css"');
+    expect(themesPage).toContain('@import "@beaket/ui/themes/solace.css"');
+    expect(themesPage).toContain("@media (prefers-color-scheme: dark)");
+    expect(themesPage).toContain("Docs preview controls");
+    expect(themesPage).toContain("local preview implementation");
+    expect(themesPage).toContain("beaket-theme");
+    expect(themesPage).toContain("beaket-color-scheme");
+    expect(themesPage).not.toContain("Manual control");
+    expect(themesPage).not.toContain('localStorage.setItem("beaket-color-scheme"');
+    expect(appMock).not.toMatch(/(?:bg|text|border)-(?:iron|aluminum)\b/);
+  });
+
   it.each(themeNames)("keeps both %s schemes on the same 30-value contract", (themeName) => {
     const palettes = paletteVariants(
       fs.readFileSync(path.join(themesDir, `${themeName}.css`), "utf8"),
