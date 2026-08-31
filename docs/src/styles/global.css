@@ -5,11 +5,11 @@
 :root {
   --astro-code-foreground: #05070c;
   --astro-code-background: #f3f4f2;
-  --astro-code-token-constant: #008597;
-  --astro-code-token-string: #00896c;
-  --astro-code-token-string-expression: #00896c;
+  --astro-code-token-constant: #005f72;
+  --astro-code-token-string: #3f8a55;
+  --astro-code-token-string-expression: #3f8a55;
   --astro-code-token-comment: #727578;
-  --astro-code-token-keyword: #4c6bb6;
+  --astro-code-token-keyword: #53628f;
   --astro-code-token-function: #2b5bff;
   --astro-code-token-punctuation: #727578;
 }

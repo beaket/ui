@@ -136,6 +136,27 @@ describe("theme palette contract", () => {
     }
   });
 
+  it("locks the reviewed Solace signal palette and knockouts", () => {
+    const palette = declarations(fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"));
+
+    expect(
+      Object.fromEntries([...palette].filter(([token]) => token.startsWith("--signal-"))),
+    ).toEqual({
+      "--signal-danger": "#a44735",
+      "--signal-warning": "#d18b3f",
+      "--signal-success": "#3f8a55",
+      "--signal-info": "#53628f",
+      "--signal-info-alt": "#005f72",
+      "--signal-accent": "#2b5bff",
+      "--signal-danger-on": "var(--tone-0)",
+      "--signal-success-on": "var(--tone-11)",
+      "--signal-warning-on": "var(--tone-11)",
+      "--signal-info-on": "var(--tone-0)",
+      "--signal-info-alt-on": "var(--tone-0)",
+      "--signal-accent-on": "var(--tone-0)",
+    });
+  });
+
   it("makes every functional palette value reachable from the semantic layer", () => {
     const palette = paletteVariants(
       fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"),

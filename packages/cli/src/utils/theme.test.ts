@@ -129,6 +129,9 @@ describe("wrapThemeCss", () => {
     expect(result).toContain("@media (prefers-color-scheme: dark)");
     expect(result).toContain("--surface-0: #0b0e14");
     expect(result).toContain("--tone-11: #f3f1e8");
+    expect(result).toContain("--signal-success: #3f8a55");
+    expect(result).toContain("--signal-info-alt: #005f72");
+    expect(result).toContain("--signal-info-alt-on: var(--tone-0)");
     expect(result).not.toContain("--surface-brand");
     expect(result).not.toContain("--shadow-size-active");
   });

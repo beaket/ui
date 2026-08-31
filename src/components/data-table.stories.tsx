@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { CircleCheck, CircleMinus, Clock } from "lucide-react";
 import { expect, fn, userEvent, within } from "storybook/test";
 import { Badge } from "./badge";
 import { DataTable, type ColumnDef } from "./data-table";
@@ -49,7 +50,13 @@ const columns: ColumnDef<User>[] = [
         inactive: "secondary",
         pending: "outline",
       } as const;
-      return <Badge variant={variants[status]}>{status}</Badge>;
+      const icons = { active: CircleCheck, inactive: CircleMinus, pending: Clock } as const;
+      const Icon = icons[status];
+      return (
+        <Badge variant={variants[status]}>
+          <Icon aria-hidden="true" className="mr-1 size-3" /> {status}
+        </Badge>
+      );
     },
   },
 ];

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { CircleCheck, CircleMinus, CircleX, Clock, Info, TriangleAlert } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
 import { Alert } from "./alert";
@@ -129,13 +130,33 @@ function PaginationDemo() {
 interface Person {
   name: string;
   role: string;
-  status: string;
+  status: "active" | "inactive";
+}
+
+function StatusBadge({ status }: { status: "active" | "inactive" | "paid" | "pending" }) {
+  const statuses = {
+    active: { label: "Active", variant: "success", icon: CircleCheck },
+    inactive: { label: "Inactive", variant: "secondary", icon: CircleMinus },
+    paid: { label: "Paid", variant: "success", icon: CircleCheck },
+    pending: { label: "Pending", variant: "warning", icon: Clock },
+  } as const;
+  const { label, variant, icon: Icon } = statuses[status];
+  return (
+    <Badge variant={variant}>
+      <Icon aria-hidden="true" className="mr-1 size-3" /> {label}
+    </Badge>
+  );
 }
 
 const dtColumns: ColumnDef<Person>[] = [
   { accessorKey: "name", header: "Name", size: 180 },
   { accessorKey: "role", header: "Role", size: 120 },
-  { accessorKey: "status", header: "Status", size: 120 },
+  {
+    accessorKey: "status",
+    header: "Status",
+    size: 120,
+    cell: ({ row }) => <StatusBadge status={row.getValue("status") as Person["status"]} />,
+  },
 ];
 
 const dtData: Person[] = [
@@ -174,10 +195,18 @@ export const AllComponents: StoryObj = {
         <Cell label="Badge" span>
           <Badge>Default</Badge>
           <Badge variant="secondary">Secondary</Badge>
-          <Badge variant="success">Success</Badge>
-          <Badge variant="error">Error</Badge>
-          <Badge variant="info">Info</Badge>
-          <Badge variant="warning">Warning</Badge>
+          <Badge variant="success">
+            <CircleCheck aria-hidden="true" className="mr-1 size-3" /> Success
+          </Badge>
+          <Badge variant="error">
+            <CircleX aria-hidden="true" className="mr-1 size-3" /> Error
+          </Badge>
+          <Badge variant="info">
+            <Info aria-hidden="true" className="mr-1 size-3" /> Info
+          </Badge>
+          <Badge variant="warning">
+            <TriangleAlert aria-hidden="true" className="mr-1 size-3" /> Warning
+          </Badge>
           <Badge variant="outline">Outline</Badge>
           <Badge variant="code">code</Badge>
         </Cell>
@@ -299,12 +328,16 @@ export const AllComponents: StoryObj = {
             <Table.Body>
               <Table.Row>
                 <Table.Cell className="font-medium">INV-001</Table.Cell>
-                <Table.Cell>Paid</Table.Cell>
+                <Table.Cell>
+                  <StatusBadge status="paid" />
+                </Table.Cell>
                 <Table.Cell className="text-right">$250.00</Table.Cell>
               </Table.Row>
               <Table.Row>
                 <Table.Cell className="font-medium">INV-002</Table.Cell>
-                <Table.Cell>Pending</Table.Cell>
+                <Table.Cell>
+                  <StatusBadge status="pending" />
+                </Table.Cell>
                 <Table.Cell className="text-right">$150.00</Table.Cell>
               </Table.Row>
             </Table.Body>
