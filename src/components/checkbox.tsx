@@ -16,9 +16,9 @@ export function Checkbox({ className, ...props }: Props) {
       data-slot="checkbox"
       className={cn(
         "group peer border-border-strong relative size-4 shrink-0 border before:absolute before:inset-[-14px] before:content-['']",
-        // Instrument grammar: the chassis floats on a static accent edge; press
-        // physics belong to the indicator (the key), not the box.
-        "bg-bg-input shadow-offset-action cursor-pointer transition-colors duration-100",
+        // Instrument grammar: the chassis is neutral at rest. Hover reveals a
+        // thin action edge; press physics belong to the indicator, not the box.
+        "bg-bg-input enabled:hover:shadow-offset-action cursor-pointer transition-[background-color,box-shadow] duration-100",
         "enabled:data-[state=unchecked]:hover:bg-bg-hover enabled:data-[state=unchecked]:active:bg-bg-active",
         "focus-visible:outline-border-focus focus-visible:outline-2 focus-visible:outline-offset-2",
         "data-[state=checked]:border-border-strong data-[state=checked]:bg-bg-emphasis data-[state=checked]:text-fg-on-emphasis enabled:data-[state=checked]:hover:bg-bg-emphasis-hover",

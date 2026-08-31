@@ -54,14 +54,10 @@ export function Button({
   );
 }
 
-// The accent edge — the "you can press this" voice — belongs to edged pressables:
-// thin at rest, grown on hover, and held grown while a trigger's overlay is open
-// (data-[state=open], which Radix sets only on asChild triggers; inert otherwise).
-// It lives on the variants that carry it rather than on the base, so ghost and link
-// simply omit it — kept out, not overridden, since twMerge can't dedupe a custom
-// shadow utility against shadow-none (the old opt-out silently leaked the edge).
-const edge =
-  "shadow-offset-action hover:shadow-offset-action-hover data-[state=open]:shadow-offset-action-hover";
+// Accent is state, not standing decoration. Edged pressables reveal a thin edge
+// on hover and a grown edge while they own an open overlay. Rest stays neutral;
+// active press drops onto the edge, and keyboard focus remains the outer outline.
+const edge = "hover:shadow-offset-action data-[state=open]:shadow-offset-action-hover";
 
 const buttonVariants = cva(
   [
@@ -77,18 +73,16 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Primary carries a light accent rim at rest (border-accent-border) over
-        // the full accent shadow — the two tones read as depth, not a doubled
-        // 2px band. On engage the rim sheds (border-transparent) so the voice
-        // consolidates into the growing shadow, not a thick accent band.
-        primary: `bg-bg-emphasis text-fg-on-emphasis border border-accent-border hover:border-transparent data-[state=open]:border-transparent hover:bg-bg-emphasis-hover data-[state=open]:bg-bg-emphasis-hover active:bg-bg-emphasis-active disabled:text-fg-disabled no-underline ${edge}`,
+        // Ink fill is the complete persistent primary signal. Accent appears
+        // only through interaction, so emphasis never splits into two voices.
+        primary: `bg-bg-emphasis text-fg-on-emphasis border border-border-strong hover:bg-bg-emphasis-hover data-[state=open]:bg-bg-emphasis-hover active:bg-bg-emphasis-active disabled:text-fg-disabled no-underline ${edge}`,
         destructive: `bg-danger-solid text-danger-fg-on-solid border border-danger-solid hover:bg-danger-solid-hover hover:border-danger-solid-hover data-[state=open]:bg-danger-solid-hover data-[state=open]:border-danger-solid-hover active:bg-danger-solid-active disabled:text-fg-disabled no-underline ${edge}`,
         // Outline is airy at rest; on engage its signal is the accent edge
         // growing, not a grey fill — so hover and held-open drop the fill and lean
         // on the edge. The press keeps a faint grey settle (active:bg-bg-active) to
         // confirm the drop.
         outline: `border border-border bg-transparent text-fg active:bg-bg-active ${edge}`,
-        secondary: `bg-accent-bg text-accent-fg border border-accent-border hover:border-accent-solid data-[state=open]:border-accent-solid ${edge}`,
+        secondary: `bg-bg-raised text-fg border border-border hover:bg-bg-hover data-[state=open]:bg-bg-hover active:bg-bg-active ${edge}`,
         // Ghost and link are not edged pressables, so they carry no accent edge.
         // Ghost's only hover signal is the grey fill (no edge to grow); link reads
         // as a link — accent text with a hover underline — not a keyed button.

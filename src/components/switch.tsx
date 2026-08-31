@@ -5,15 +5,15 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-// Instrument grammar: the track floats on a static accent edge; pressing
-// travels the thumb (the key) 1px instead of dropping the chassis. Checked
+// Instrument grammar: the track is neutral at rest and reveals a thin accent
+// edge on hover; pressing travels the thumb instead of dropping the chassis. Checked
 // fills with ink — state is carried by thumb position + ink, not a signal role.
 // Hover tints the surface, like checkbox/radio: the on-track warms
 // (emphasis-hover), the off-channel darkens one step (border-muted → border).
 // Invalid recolors border + focus ring to danger while the accent edge stays
 // (role-agnostic, exactly as on checkbox/radio).
 const switchVariants = cva(
-  "group peer inline-flex shrink-0 cursor-pointer items-center p-0.5 transition-colors duration-100 outline-none shadow-offset-action data-[state=checked]:bg-bg-emphasis enabled:data-[state=checked]:hover:bg-bg-emphasis-hover data-[state=unchecked]:bg-border-muted enabled:data-[state=unchecked]:hover:bg-border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus disabled:shadow-none disabled:cursor-not-allowed disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:data-[state=checked]:bg-bg-disabled aria-[invalid=true]:border-danger-solid aria-[invalid=true]:focus-visible:outline-danger-solid border border-border-strong relative before:absolute before:inset-[-14px] before:content-['']",
+  "group peer inline-flex shrink-0 cursor-pointer items-center p-0.5 transition-[background-color,box-shadow] duration-100 outline-none enabled:hover:shadow-offset-action data-[state=checked]:bg-bg-emphasis enabled:data-[state=checked]:hover:bg-bg-emphasis-hover data-[state=unchecked]:bg-border-muted enabled:data-[state=unchecked]:hover:bg-border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus disabled:shadow-none disabled:cursor-not-allowed disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:data-[state=checked]:bg-bg-disabled aria-[invalid=true]:border-danger-solid aria-[invalid=true]:focus-visible:outline-danger-solid border border-border-strong relative before:absolute before:inset-[-14px] before:content-['']",
   {
     variants: {
       size: {

@@ -7,17 +7,14 @@ function NavigationRoot({ className, ...props }: React.ComponentProps<"nav">) {
   return <nav data-slot="navigation" aria-label="Main" className={cn("", className)} {...props} />;
 }
 
-// One fused instrument: links share hairline borders inside a strip that
-// carries a single static accent edge. Vertical layouts swap the fusion axis:
+// One fused instrument: links share neutral hairline borders. Selection owns
+// the lens; the strip itself spends no standing accent. Vertical layouts swap the fusion axis:
 // `flex-col [&>li+li]:ml-0 [&>li+li]:-mt-px`.
 function NavigationList({ className, ...props }: React.ComponentProps<"ul">) {
   return (
     <ul
       data-slot="navigation-list"
-      className={cn(
-        "shadow-offset-action m-0 inline-flex list-none p-0 [&>li+li]:-ml-px",
-        className,
-      )}
+      className={cn("m-0 inline-flex list-none p-0 [&>li+li]:-ml-px", className)}
       {...props}
     />
   );

@@ -14,13 +14,13 @@ function TabsRoot({ className, ...props }: React.ComponentProps<typeof TabsPrimi
   );
 }
 
-// One fused instrument: triggers share hairline borders inside a strip that
-// carries a single static accent edge — the same lens grammar as Navigation.
+// One fused instrument: triggers share neutral hairline borders. Selection owns
+// the lens; the strip itself spends no standing accent.
 function TabsList({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.List>) {
   return (
     <TabsPrimitive.List
       data-slot="tabs-list"
-      className={cn("shadow-offset-action inline-flex w-fit items-center", className)}
+      className={cn("inline-flex w-fit items-center", className)}
       {...props}
     />
   );

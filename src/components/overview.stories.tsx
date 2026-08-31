@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CircleCheck, CircleMinus, CircleX, Clock, Info, TriangleAlert } from "lucide-react";
 import { type ReactNode, useState } from "react";
+import { expect, userEvent, within } from "storybook/test";
 
 import { Alert } from "./alert";
 import { Avatar } from "./avatar";
@@ -73,6 +74,78 @@ export const SurfaceDepth: StoryObj = {
       </div>
     </div>
   ),
+};
+
+/**
+ * Stress case for the accent policy. The first control is an open owner and the
+ * play step gives it keyboard focus; selection remains visible in Navigation,
+ * Tabs, Checkbox, and Pagination without competing for the outer outline.
+ */
+export const DenseInteractionHierarchy: StoryObj = {
+  render: () => (
+    <div className="bg-bg text-fg min-h-screen p-8">
+      <div className="border-border-muted bg-bg-raised mx-auto flex max-w-3xl flex-col gap-6 border border-dashed p-6">
+        <div className="flex flex-wrap items-center gap-3">
+          <Button variant="outline" data-state="open">
+            Open owner
+          </Button>
+          <Button>Primary action</Button>
+          <Button variant="secondary">Secondary action</Button>
+          <Button variant="ghost">Quiet action</Button>
+          <a
+            href="#details"
+            className="text-fg-link focus-visible:outline-border-focus underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            Content link
+          </a>
+        </div>
+
+        <Navigation aria-label="Dense example navigation">
+          <Navigation.List>
+            <Navigation.Item>
+              <Navigation.Link href="#overview" active>
+                Overview
+              </Navigation.Link>
+            </Navigation.Item>
+            <Navigation.Item>
+              <Navigation.Link href="#activity">Activity</Navigation.Link>
+            </Navigation.Item>
+            <Navigation.Item>
+              <Navigation.Link href="#settings">Settings</Navigation.Link>
+            </Navigation.Item>
+          </Navigation.List>
+        </Navigation>
+
+        <Tabs defaultValue="current">
+          <Tabs.List>
+            <Tabs.Trigger value="current">Current tab</Tabs.Trigger>
+            <Tabs.Trigger value="other">Other tab</Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content value="current" className="flex flex-wrap items-center gap-4 py-3">
+            <label className="flex items-center gap-2 text-sm">
+              <Checkbox defaultChecked aria-label="Selected option" /> Selected option
+            </label>
+            <Pagination mode="button" page={2} totalPages={4} onPageChange={() => undefined} />
+          </Tabs.Content>
+        </Tabs>
+      </div>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const owner = canvas.getByRole("button", { name: "Open owner" });
+    await userEvent.tab();
+    await expect(owner).toHaveFocus();
+    await expect(owner).toHaveAttribute("data-state", "open");
+    await expect(canvas.getByRole("link", { name: "Overview" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    await expect(canvas.getByRole("tab", { name: "Current tab" })).toHaveAttribute(
+      "data-state",
+      "active",
+    );
+  },
 };
 
 // --- layout helpers (local to this story) ---------------------------------

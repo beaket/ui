@@ -92,7 +92,7 @@ export const AllStates = () => (
         <Tooltip>
           <Tooltip.Trigger asChild>
             <button
-              className="border-border text-fg-muted hover:text-fg inline-flex size-8 items-center justify-center border"
+              className="border-border text-fg-muted hover:text-fg focus-visible:outline-border-focus inline-flex size-8 items-center justify-center border focus-visible:outline-2 focus-visible:outline-offset-2"
               aria-label="Help"
             >
               ?

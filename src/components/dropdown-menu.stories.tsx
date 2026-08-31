@@ -304,9 +304,8 @@ export const AllStates = () => (
   </div>
 );
 
-// The trigger holds its hover state while the menu is open: the accent edge
-// stays grown (still pressable, now the active owner of the menu). Left is at
-// rest, right is held open — compare the edge.
+// The trigger is neutral at rest and grows an accent edge while the menu is
+// open (still pressable, now the active owner). Compare the two states.
 export const TriggerOpenState = () => (
   <div className="flex items-start gap-16">
     <DropdownMenu>
