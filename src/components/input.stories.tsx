@@ -100,7 +100,7 @@ export const Affixes = () => {
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="hover:text-fg cursor-pointer"
+                className="hover:text-fg focus-visible:outline-border-focus cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2"
                 aria-label="Clear"
               >
                 <X />
@@ -121,7 +121,7 @@ export const Affixes = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="hover:text-fg cursor-pointer"
+              className="hover:text-fg focus-visible:outline-border-focus cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff /> : <Eye />}
@@ -163,7 +163,7 @@ export const InteractionTest: Story = {
             type="button"
             data-testid="focus-bare"
             onClick={() => bareRef.current?.focus()}
-            className="border-border-strong border px-3 py-1 text-sm"
+            className="border-border-strong focus-visible:outline-border-focus border px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             Focus
           </button>
@@ -179,7 +179,7 @@ export const InteractionTest: Story = {
             type="button"
             data-testid="focus-prefix"
             onClick={() => prefixRef.current?.focus()}
-            className="border-border-strong border px-3 py-1 text-sm"
+            className="border-border-strong focus-visible:outline-border-focus border px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             Focus
           </button>

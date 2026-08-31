@@ -64,7 +64,7 @@ export const Interactive = () => (
       </a>
     </Card>
     <p className="text-fg-muted text-sm">
-      Hover to grow the accent edge; press to drop the card onto it.
+      Hover to reveal the accent edge; press to drop the card onto it.
     </p>
   </div>
 );

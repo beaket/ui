@@ -69,12 +69,9 @@ export const AllSizes = () => (
   </div>
 );
 
-// Interaction states across the edge grammar the system is built on — what a
-// static "disabled + loading" row can't show. Two variants, because the grammar
-// differs on engage: primary sheds its rim and darkens its ink fill; outline
-// stays airy, growing only its edge, with a faint grey settle on press.
-//   Hover / Held-open: forced with data-state="open" — real styles, since the
-//     component's data-[state=open]: rules mirror its hover: rules by design.
+// Interaction states across the hierarchy. Rest is neutral, held-open owns the
+// grown edge, and pressing drops onto it. Hover itself is best inspected in the
+// canvas because it intentionally uses the thinner edge.
 //   Pressed: the active declarations reconstructed with the component's own
 //     tokens; box-shadow and transform go inline, as :active can't hold statically.
 const StateCell = ({ label, children }: { label: string; children: ReactNode }) => (
@@ -97,7 +94,7 @@ const StateRow = ({
       <StateCell label="Rest">
         <Button variant={variant}>Button</Button>
       </StateCell>
-      <StateCell label="Hover / Held-open">
+      <StateCell label="Held-open">
         <Button variant={variant} data-state="open">
           Button
         </Button>
@@ -127,10 +124,29 @@ const StateRow = ({
 
 export const AllStates = () => (
   <div className="flex flex-col gap-8">
-    <StateRow variant="primary" pressedClassName="border-transparent bg-bg-emphasis-active" />
+    <StateRow variant="primary" pressedClassName="bg-bg-emphasis-active" />
     <StateRow variant="outline" pressedClassName="bg-bg-active" />
   </div>
 );
+
+// Native representative: focus is allowed to coexist with an open-owner edge
+// because the channels are spatially distinct (outer outline vs offset edge).
+export const StatePrecedenceTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <Button variant="outline" data-state="open">
+      Focused open owner
+    </Button>
+  ),
+  play: async ({ canvasElement }) => {
+    const button = within(canvasElement).getByRole("button");
+    await userEvent.tab();
+    await expect(button).toHaveFocus();
+
+    await expect(button.className).toContain("focus-visible:outline-2");
+    await expect(button.className).toContain("data-[state=open]:shadow-offset-action-hover");
+  },
+};
 
 // Interaction Tests
 export const ClickTest: Story = {

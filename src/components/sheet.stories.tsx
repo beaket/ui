@@ -91,16 +91,28 @@ export const FullScreen: Story = {
           <Sheet.Description>Full screen sheet for mobile navigation menus.</Sheet.Description>
         </Sheet.Header>
         <div className="flex flex-col gap-2 py-4">
-          <a href="#" className="text-fg hover:text-fg-link block py-2">
+          <a
+            href="#"
+            className="text-fg-link focus-visible:outline-border-focus block py-2 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
             Home
           </a>
-          <a href="#" className="text-fg hover:text-fg-link block py-2">
+          <a
+            href="#"
+            className="text-fg-link focus-visible:outline-border-focus block py-2 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
             Products
           </a>
-          <a href="#" className="text-fg hover:text-fg-link block py-2">
+          <a
+            href="#"
+            className="text-fg-link focus-visible:outline-border-focus block py-2 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
             About
           </a>
-          <a href="#" className="text-fg hover:text-fg-link block py-2">
+          <a
+            href="#"
+            className="text-fg-link focus-visible:outline-border-focus block py-2 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
             Contact
           </a>
         </div>

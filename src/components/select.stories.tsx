@@ -182,3 +182,38 @@ export const InteractionTest: Story = {
     await expect(args.onValueChange).toHaveBeenCalledWith("banana");
   },
 };
+
+// Radix representative: the open owner keeps an offset edge while keyboard
+// navigation marks the current option with an inset rule. Both can exist at
+// once because they describe different targets in different channels.
+export const StatePrecedenceTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <div className="max-w-sm">
+      <Select defaultValue="apple">
+        <Select.Trigger aria-label="Precedence select">
+          <Select.Value />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Item value="apple">Apple</Select.Item>
+          <Select.Item value="banana">Banana</Select.Item>
+        </Select.Content>
+      </Select>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const trigger = within(canvasElement).getByRole("combobox");
+    await userEvent.tab();
+    await userEvent.keyboard("{Enter}");
+
+    const listbox = await within(document.body).findByRole("listbox");
+    const activeOption = within(listbox).getByRole("option", { name: "Apple" });
+    await expect(trigger).toHaveAttribute("data-state", "open");
+    await expect(activeOption).toHaveAttribute("data-highlighted");
+
+    await expect(trigger.className).toContain("data-[state=open]:shadow-offset-action-hover");
+    await expect(activeOption.className).toContain(
+      "data-[highlighted]:shadow-[inset_2px_0_0_0_var(--color-accent-solid)]",
+    );
+  },
+};

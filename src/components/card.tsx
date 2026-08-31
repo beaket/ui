@@ -32,12 +32,11 @@ const cardVariants = cva(
       // Passive surface — the quiet grey shade, one drawn level per elevation.
       { interactive: false, elevation: "shade", class: "shadow-offset" },
       { interactive: false, elevation: "overlay", class: "shadow-offset-overlay" },
-      // Pressable — when the whole card is a link it earns the accent edge in place
-      // of the grey shade: thin at rest, grown on hover, dropped onto the edge when
-      // pressed. The one place a surface carries the vivid voice.
+      // Pressable — neutral at rest, then a thin accent edge on hover. Focus owns
+      // the outer outline and pressing drops the card onto the revealed edge.
       {
         interactive: true,
-        class: "shadow-offset-action hover:shadow-offset-action-hover active:shadow-none",
+        class: "hover:shadow-offset-action active:shadow-none",
       },
     ],
     defaultVariants: { elevation: "shade", interactive: false },
@@ -47,7 +46,7 @@ const cardVariants = cva(
 export interface CardRootProps extends React.ComponentProps<"div"> {
   /** flat | shade | overlay. How the surface lifts off the page — the drawn grey offset shade by default */
   elevation?: "flat" | "shade" | "overlay";
-  /** Turn the whole card into a pressable link: the accent edge replaces the grey shade, grows on hover, and drops when pressed */
+  /** Turn the whole card into a pressable link: an accent edge appears on hover and drops when pressed */
   interactive?: boolean;
   /** Merge props onto the immediate child (e.g. an `<a>`) instead of rendering a div — for a card that is itself a link */
   asChild?: boolean;

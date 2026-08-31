@@ -136,12 +136,14 @@ describe("theme palette contract", () => {
     }
   });
 
-  it("locks the reviewed Solace signal palette and knockouts", () => {
-    const palette = declarations(fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"));
+  it("locks the reviewed Solace signal palettes and knockouts", () => {
+    const palettes = paletteVariants(fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"));
+    if (!palettes.dark) throw new Error("Solace does not expose a dark palette");
 
-    expect(
-      Object.fromEntries([...palette].filter(([token]) => token.startsWith("--signal-"))),
-    ).toEqual({
+    const signals = (palette: Map<string, string>) =>
+      Object.fromEntries([...palette].filter(([token]) => token.startsWith("--signal-")));
+
+    expect(signals(palettes.light)).toEqual({
       "--signal-danger": "#a44735",
       "--signal-warning": "#d18b3f",
       "--signal-success": "#3f8a55",
@@ -151,6 +153,20 @@ describe("theme palette contract", () => {
       "--signal-danger-on": "var(--tone-0)",
       "--signal-success-on": "var(--tone-11)",
       "--signal-warning-on": "var(--tone-11)",
+      "--signal-info-on": "var(--tone-0)",
+      "--signal-info-alt-on": "var(--tone-0)",
+      "--signal-accent-on": "var(--tone-0)",
+    });
+    expect(signals(palettes.dark)).toEqual({
+      "--signal-danger": "#e47463",
+      "--signal-warning": "#d99a50",
+      "--signal-success": "#45aa88",
+      "--signal-info": "#7190d6",
+      "--signal-info-alt": "#48a4af",
+      "--signal-accent": "#6f8fff",
+      "--signal-danger-on": "var(--tone-0)",
+      "--signal-success-on": "var(--tone-0)",
+      "--signal-warning-on": "var(--tone-0)",
       "--signal-info-on": "var(--tone-0)",
       "--signal-info-alt-on": "var(--tone-0)",
       "--signal-accent-on": "var(--tone-0)",

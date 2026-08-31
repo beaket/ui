@@ -186,10 +186,7 @@ export const AllStates = () => (
         <Dialog.Description>Dialog containing a form.</Dialog.Description>
       </Dialog.Header>
       <div className="py-4">
-        <input
-          placeholder="Enter something..."
-          className="border-border bg-bg h-9 w-full border px-3 text-sm"
-        />
+        <Input placeholder="Enter something..." />
       </div>
       <Dialog.Footer>
         <Dialog.Close>
