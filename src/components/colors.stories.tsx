@@ -65,6 +65,14 @@ const paletteSignals = [
   "--signal-info-alt",
   "--signal-accent",
 ];
+const neutralProgression: TokenEntry[] = [
+  { token: "--color-bg-disabled", usage: "Disabled background" },
+  { token: "--color-border-muted", usage: "Muted border" },
+  { token: "--color-border", usage: "Default border" },
+  { token: "--color-fg-disabled", usage: "Disabled foreground" },
+  { token: "--color-fg-subtle", usage: "Subtle foreground" },
+  { token: "--color-fg-muted", usage: "Muted foreground" },
+];
 
 function Swatch({ token, usage }: TokenEntry) {
   return (
@@ -124,6 +132,18 @@ function Colors() {
           <SectionTitle>Semantic — Border</SectionTitle>
           <div className="grid grid-cols-4 gap-3">
             {semantic.border.map((entry) => (
+              <Swatch key={entry.token} {...entry} />
+            ))}
+          </div>
+        </section>
+
+        <section className="mb-8">
+          <SectionTitle>Semantic — Neutral progression</SectionTitle>
+          <p className="text-fg-subtle mb-3 text-xs">
+            Functional neutral roles, ordered from quietest surface to strongest secondary ink.
+          </p>
+          <div className="grid grid-cols-6 gap-3">
+            {neutralProgression.map((entry) => (
               <Swatch key={entry.token} {...entry} />
             ))}
           </div>

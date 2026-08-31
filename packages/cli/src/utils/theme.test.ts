@@ -124,6 +124,8 @@ describe("wrapThemeCss", () => {
     expect(result).toContain("--surface-1: #f9f9f5");
     expect(result).toContain("--surface-2: #fffffb");
     expect(result).toContain("--tone-0: #f3f3ef");
+    expect(result).toContain("--tone-3: #a7a8a7");
+    expect(result).toContain("--tone-6: #686b6e");
     expect(result).not.toContain("--surface-brand");
     expect(result).not.toContain("--shadow-size-active");
   });
@@ -151,6 +153,8 @@ describe("replaceThemeInCss", () => {
 
     expect(replaced).toBe(true);
     expect(css).toContain("--surface-0: #f3f3ef");
+    expect(css).toContain("--tone-3: #a7a8a7");
+    expect(css).toContain("--tone-6: #686b6e");
     expect(css).not.toContain("--surface-brand");
     expect(css).not.toContain("--shadow-size-active");
   });

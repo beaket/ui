@@ -73,6 +73,17 @@ function relativeLuminance(color: RgbColor): number {
   );
 }
 
+function oklabLightness(color: RgbColor): number {
+  const red = linearize(color.red);
+  const green = linearize(color.green);
+  const blue = linearize(color.blue);
+  const l = Math.cbrt(0.4122214708 * red + 0.5363325363 * green + 0.0514459929 * blue);
+  const m = Math.cbrt(0.2119034982 * red + 0.6806995451 * green + 0.1073969566 * blue);
+  const s = Math.cbrt(0.0883024619 * red + 0.2817188376 * green + 0.6299787005 * blue);
+
+  return 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s;
+}
+
 function contrastRatio(first: RgbColor, second: RgbColor): number {
   const lighter = Math.max(relativeLuminance(first), relativeLuminance(second));
   const darker = Math.min(relativeLuminance(first), relativeLuminance(second));
@@ -149,5 +160,32 @@ describe("theme palette contract", () => {
     expect(contrastRatio(surfaces[1], surfaces[2])).toBeGreaterThanOrEqual(1.05);
     expect(contrastRatio(surfaces[0], surfaces[2])).toBeGreaterThanOrEqual(1.1);
     expect(palette.get("--tone-0")).toBe(palette.get("--surface-0"));
+  });
+
+  it("keeps the Solace neutral ramp perceptually progressive", () => {
+    const palette = declarations(fs.readFileSync(path.join(themesDir, "solace.css"), "utf8"));
+    const lightness = Array.from({ length: 12 }, (_, index) => {
+      const token = `--tone-${index}`;
+      const value = palette.get(token);
+      if (!value) throw new Error(`Solace does not define ${token}`);
+      return oklabLightness(parseHex(value));
+    });
+    const steps = lightness.slice(1).map((value, index) => lightness[index] - value);
+
+    // The full ramp allows 0.04–0.12 OKLab L per step. That range leaves the
+    // paper-end states quiet and gives the deepest ink enough room, without
+    // permitting either duplicate stops or the old middle-ramp cliffs.
+    for (const step of steps) {
+      expect(step).toBeGreaterThanOrEqual(0.04);
+      expect(step).toBeLessThanOrEqual(0.12);
+    }
+
+    // tone-3..7 directly serve borders and secondary/disabled text. Their
+    // narrower ceiling prevents an abrupt semantic jump, while the floor
+    // keeps neighboring roles visibly distinct.
+    for (const step of steps.slice(3, 7)) {
+      expect(step).toBeGreaterThanOrEqual(0.05);
+      expect(step).toBeLessThanOrEqual(0.1);
+    }
   });
 });

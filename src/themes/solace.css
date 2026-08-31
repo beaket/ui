@@ -15,16 +15,16 @@
 
   /* Tone — 0 is paper, 11 deepest ink; 8–10 are reserved ramp slots */
   --tone-0: #f3f3ef;
-  --tone-1: #f3f4f2;
-  --tone-2: #e9e9e8;
-  --tone-3: #c9cac9;
+  --tone-1: #e4e5e2;
+  --tone-2: #c4c4c2;
+  --tone-3: #a7a8a7;
   --tone-4: #8a8c8e;
-  --tone-5: #838588;
-  --tone-6: #6c6f72;
+  --tone-5: #7a7c7f;
+  --tone-6: #686b6e;
   --tone-7: #54575b;
-  --tone-8: #414449;
-  --tone-9: #323539;
-  --tone-10: #202228;
+  --tone-8: #42454a;
+  --tone-9: #313439;
+  --tone-10: #1d2126;
   --tone-11: #05070c;
 
   /* Signal — one ink per meaning; only the accent is vivid */
