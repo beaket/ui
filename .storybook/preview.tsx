@@ -32,7 +32,7 @@ const HAS_DARK = /@media[^{]*prefers-color-scheme[^{]*dark/i;
 function paletteFor(raw: string, scheme: Scheme): string {
   if (scheme === "system") return raw;
   const m = raw.match(DARK_BLOCK);
-  if (!m || m.index === undefined) return raw; // light-only theme (solace)
+  if (!m || m.index === undefined) return raw; // palette without a dark twin
 
   const at = m.index;
   const open = at + m[0].length - 1; // index of the block-opening `{`

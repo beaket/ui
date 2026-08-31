@@ -36,6 +36,19 @@ const codeHighlightTokens: Record<string, Record<string, string>> = {
     "--astro-code-token-punctuation": "#727578",
     "--astro-code-token-link": "#4c6bb6",
   },
+  "solace-dark": {
+    "--astro-code-foreground": "#f3f1e8",
+    "--astro-code-background": "#0b0e14",
+    "--astro-code-token-keyword": "#7190d6",
+    "--astro-code-token-string": "#45aa88",
+    "--astro-code-token-string-expression": "#45aa88",
+    "--astro-code-token-comment": "#85888f",
+    "--astro-code-token-function": "#6f8fff",
+    "--astro-code-token-constant": "#48a4af",
+    "--astro-code-token-parameter": "#f3f1e8",
+    "--astro-code-token-punctuation": "#85888f",
+    "--astro-code-token-link": "#7190d6",
+  },
   porcelain: {
     "--astro-code-foreground": "#080b10",
     "--astro-code-background": "#f3f4f6",
@@ -275,7 +288,7 @@ function main() {
       ...codeHighlightTokens[themeName],
     };
 
-    // Light-only themes (e.g. solace) have no dark twin by declaration.
+    // A palette may omit a dark twin; generated data only exposes authored variants.
     if (dark) {
       output[`${themeName}-dark`] = {
         ...resolveVars({ ...light, ...dark, ...semantic }),
