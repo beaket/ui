@@ -126,6 +126,9 @@ describe("wrapThemeCss", () => {
     expect(result).toContain("--tone-0: #f3f3ef");
     expect(result).toContain("--tone-3: #a7a8a7");
     expect(result).toContain("--tone-6: #686b6e");
+    expect(result).toContain("--signal-success: #3f8a55");
+    expect(result).toContain("--signal-info-alt: #005f72");
+    expect(result).toContain("--signal-info-alt-on: var(--tone-0)");
     expect(result).not.toContain("--surface-brand");
     expect(result).not.toContain("--shadow-size-active");
   });

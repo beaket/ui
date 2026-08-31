@@ -98,6 +98,12 @@ const palette = [
 
 <p>These are guarantees for the documented semantic pairings, not an all-against-all promise. Decorative surfaces are intentionally excluded. Disabled text and boundaries are measured and reported to theme authors, but they are not presented as WCAG failures because inactive controls are exempt from the corresponding WCAG contrast requirements. Run <code>pnpm test:contrast</code> from the repository root to audit every shipped light and dark palette.</p>
 
+<h2>Solace signal distinguishability</h2>
+
+<p>Solace additionally tests every pair of its six semantic roles as a solid, foreground, tint, 1px border, hover, and active color under normal vision and simulated protanopia, deuteranopia, and tritanopia. The simulation applies the 100% severity matrices from <a href="https://doi.org/10.1109/TVCG.2009.113">Machado, Oliveira, and Fernandes (2009)</a> to linear-light sRGB. Distances are then measured as Euclidean ΔE in OKLab.</p>
+
+<p>The undiluted solid, hover, and active forms require ΔE ≥ <strong>0.04</strong>. Derived forms scale that floor by the semantic layer's authored OKLab mixture: foreground 50% requires <strong>0.02</strong>, tint 17% requires <strong>0.007</strong>, and border 60% requires <strong>0.025</strong> (rounded up). The base floor is a Beaket safety margin for small marks, not a WCAG rule or a universal perception boundary. Tints remain supporting surfaces; shipped status examples retain readable labels or distinct icon shapes so color is never the only cue.</p>
+
 <h2>Roles</h2>
 
 <p>Six roles — <code>danger</code>, <code>success</code>, <code>warning</code>, <code>info</code>, <code>info-alt</code>, <code>accent</code> — each with seven slots. Values below show the <code>danger</code> role. The accent role alone carries one extra slot, <code>-bg-subtle</code>.</p>
