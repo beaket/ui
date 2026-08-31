@@ -4,11 +4,12 @@ import CodeBlock from '../../components/code-block.astro';
 import PropsTable from '../../components/props-table.astro';
 import ExampleSection from '../../components/example-section.astro';
 import { StoryPreview } from '../../components/story-preview';
+import { getPublicExample } from '../../../../src/examples/registry';
 import { extractExports, formatExportName } from '../../utils/story-parser';
 import registry from '../../../../registry/registry.json';
 import propsData from '../../generated/props.json';
 
-// Import story sources at build time
+// Temporary compatibility path for components not yet moved to src/examples/.
 const storySources = import.meta.glob<string>(
   '../../../../src/components/*.stories.tsx',
   { eager: true, query: '?raw', import: 'default' }
@@ -29,23 +30,22 @@ const sections = docs?.sections ?? [];
 // Get props for this component
 const props = propsData[name as keyof typeof propsData] ?? [];
 
-// Get story source for this component
-const storyPath = Object.keys(storySources).find((path) =>
-  path.includes(`/${name}.stories.tsx`)
-);
-const storySource = storyPath ? storySources[storyPath] : '';
-const parsedSources = storySource ? extractExports(storySource) : new Map();
+const storyPath = Object.keys(storySources).find((path) => path.includes(`/${name}.stories.tsx`));
+const legacySources = storyPath ? extractExports(storySources[storyPath]) : new Map();
 
 // Generate import statement
 const pascalName = name.charAt(0).toUpperCase() + name.slice(1);
 const importCode = `import { ${pascalName} } from "@/components/ui/${name}"`;
 
 // Prepare section data
-const sectionData = sections.map((sectionName) => ({
-  storyName: sectionName,
-  displayName: formatExportName(sectionName),
-  source: parsedSources.get(sectionName) ?? '',
-}));
+const sectionData = sections.map((sectionName) => {
+  const publicExample = getPublicExample(name, sectionName);
+  return {
+    storyName: sectionName,
+    displayName: publicExample?.title ?? formatExportName(sectionName),
+    source: publicExample?.source ?? legacySources.get(sectionName) ?? '',
+  };
+});
 
 // Get prev/next components
 const currentIndex = registry.components.findIndex((c) => c.name === name);

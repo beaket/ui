@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Eye, EyeOff, Mail, Search, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { Search } from "lucide-react";
+import { useRef } from "react";
 import { expect, fn, userEvent, within } from "storybook/test";
+import InputAffixesExample from "../examples/input/affixes";
+import InputAllStatesExample from "../examples/input/all-states";
+import InputAllTypesExample from "../examples/input/all-types";
 import { Input } from "./input";
 import { Label } from "./label";
 
@@ -39,99 +42,9 @@ export const Default: Story = {
 };
 
 // Compositions for docs
-export const AllStates = () => (
-  <div className="flex max-w-sm flex-col gap-4">
-    <div className="space-y-1.5">
-      <Label htmlFor="input-normal">Normal</Label>
-      <Input id="input-normal" placeholder="Email address" />
-    </div>
-    <div className="space-y-1.5">
-      <Label htmlFor="input-disabled">Disabled</Label>
-      <Input id="input-disabled" placeholder="Disabled input" disabled />
-    </div>
-    <div className="space-y-1.5">
-      <Label htmlFor="input-readonly">Read-only</Label>
-      <Input id="input-readonly" defaultValue="Read-only value" readOnly />
-    </div>
-    <div className="space-y-1.5">
-      <Label htmlFor="input-invalid">Invalid</Label>
-      <Input id="input-invalid" defaultValue="invalid@" aria-invalid={true} />
-      <span className="text-danger-fg text-xs">This field is required</span>
-    </div>
-  </div>
-);
-
-export const AllTypes = () => (
-  <div className="flex w-64 flex-col gap-4">
-    <Input type="text" placeholder="Text" />
-    <Input type="email" placeholder="Email" />
-    <Input type="password" placeholder="Password" />
-    <Input type="number" placeholder="Number" />
-    <Input type="tel" placeholder="Telephone" />
-    <Input type="url" placeholder="URL" />
-    <Input type="search" placeholder="Search" />
-  </div>
-);
-
-// Prefix/suffix slots — static icons and interactive controls (clearable,
-// password toggle) all read as one grammar: the affix sits inside the frame,
-// the caret stays the only vivid voice.
-export const Affixes = () => {
-  const [search, setSearch] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  return (
-    <div className="flex max-w-sm flex-col gap-4">
-      <div className="space-y-1.5">
-        <Label htmlFor="input-prefix">Prefix icon</Label>
-        <Input id="input-prefix" placeholder="Email address" prefix={<Mail />} />
-      </div>
-      <div className="space-y-1.5">
-        <Label htmlFor="input-suffix">Suffix icon</Label>
-        <Input id="input-suffix" placeholder="Search..." suffix={<Search />} />
-      </div>
-      <div className="space-y-1.5">
-        <Label htmlFor="input-clearable">Clearable (prefix + suffix)</Label>
-        <Input
-          id="input-clearable"
-          placeholder="Search..."
-          prefix={<Search />}
-          suffix={
-            search && (
-              <button
-                type="button"
-                onClick={() => setSearch("")}
-                className="hover:text-fg focus-visible:outline-border-focus cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2"
-                aria-label="Clear"
-              >
-                <X />
-              </button>
-            )
-          }
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-      <div className="space-y-1.5">
-        <Label htmlFor="input-password">Password toggle</Label>
-        <Input
-          id="input-password"
-          type={showPassword ? "text" : "password"}
-          placeholder="Password"
-          suffix={
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="hover:text-fg focus-visible:outline-border-focus cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2"
-              aria-label={showPassword ? "Hide password" : "Show password"}
-            >
-              {showPassword ? <EyeOff /> : <Eye />}
-            </button>
-          }
-        />
-      </div>
-    </div>
-  );
-};
+export const AllStates = () => <InputAllStatesExample />;
+export const AllTypes = () => <InputAllTypesExample />;
+export const Affixes = () => <InputAffixesExample />;
 
 // One consolidated interaction test — folds typing/onChange, focus/blur,
 // disabled no-op, clear, and ref-focus across both render branches (the bare

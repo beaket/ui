@@ -1,0 +1,76 @@
+{
+  "examples": [
+    {
+      "id": "button.all-variants",
+      "component": "button",
+      "story": "AllVariants",
+      "title": "Variants",
+      "behavior": "static",
+      "hydration": "none",
+      "module": "button/all-variants.tsx"
+    },
+    {
+      "id": "button.all-sizes",
+      "component": "button",
+      "story": "AllSizes",
+      "title": "Sizes",
+      "behavior": "static",
+      "hydration": "none",
+      "module": "button/all-sizes.tsx"
+    },
+    {
+      "id": "button.all-states",
+      "component": "button",
+      "story": "AllStates",
+      "title": "States",
+      "behavior": "static",
+      "hydration": "none",
+      "module": "button/all-states.tsx"
+    },
+    {
+      "id": "input.all-states",
+      "component": "input",
+      "story": "AllStates",
+      "title": "States",
+      "behavior": "static",
+      "hydration": "none",
+      "module": "input/all-states.tsx"
+    },
+    {
+      "id": "input.all-types",
+      "component": "input",
+      "story": "AllTypes",
+      "title": "Types",
+      "behavior": "static",
+      "hydration": "none",
+      "module": "input/all-types.tsx"
+    },
+    {
+      "id": "input.affixes",
+      "component": "input",
+      "story": "Affixes",
+      "title": "Affixes",
+      "behavior": "interactive",
+      "hydration": "visible",
+      "module": "input/affixes.tsx"
+    },
+    {
+      "id": "dialog.default",
+      "component": "dialog",
+      "story": "Default",
+      "title": "Default",
+      "behavior": "interactive",
+      "hydration": "visible",
+      "module": "dialog/default.tsx"
+    },
+    {
+      "id": "dialog.all-states",
+      "component": "dialog",
+      "story": "AllStates",
+      "title": "States",
+      "behavior": "interactive",
+      "hydration": "visible",
+      "module": "dialog/all-states.tsx"
+    }
+  ]
+}

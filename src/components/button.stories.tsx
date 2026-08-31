@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { ReactNode } from "react";
 import { expect, fn, userEvent, within } from "storybook/test";
+import AllSizesExample from "../examples/button/all-sizes";
+import AllStatesExample from "../examples/button/all-states";
+import AllVariantsExample from "../examples/button/all-variants";
 import { Button } from "./button";
 
 const meta: Meta<typeof Button> = {
@@ -46,88 +48,10 @@ export const Default: Story = {
   },
 };
 
-// Compositions for docs
-export const AllVariants = () => (
-  <div className="flex flex-wrap gap-2">
-    <Button variant="primary">Primary</Button>
-    <Button variant="secondary">Secondary</Button>
-    <Button variant="destructive">Destructive</Button>
-    <Button variant="outline">Outline</Button>
-    <Button variant="ghost">Ghost</Button>
-    <Button variant="link">Link</Button>
-    <Button variant="success">Success</Button>
-    <Button variant="warning">Warning</Button>
-  </div>
-);
-
-export const AllSizes = () => (
-  <div className="flex items-center gap-2">
-    <Button size="sm">Small</Button>
-    <Button size="md">Medium</Button>
-    <Button size="lg">Large</Button>
-    <Button size="icon">+</Button>
-  </div>
-);
-
-// Interaction states across the hierarchy. Rest is neutral, held-open owns the
-// grown edge, and pressing drops onto it. Hover itself is best inspected in the
-// canvas because it intentionally uses the thinner edge.
-//   Pressed: the active declarations reconstructed with the component's own
-//     tokens; box-shadow and transform go inline, as :active can't hold statically.
-const StateCell = ({ label, children }: { label: string; children: ReactNode }) => (
-  <div className="flex flex-col items-center gap-2">
-    {children}
-    <span className="text-fg-subtle text-xs">{label}</span>
-  </div>
-);
-
-const StateRow = ({
-  variant,
-  pressedClassName,
-}: {
-  variant: "primary" | "outline";
-  pressedClassName: string;
-}) => (
-  <div className="flex flex-col gap-3">
-    <span className="text-fg-muted text-sm font-medium">{variant}</span>
-    <div className="flex flex-wrap items-start gap-6">
-      <StateCell label="Rest">
-        <Button variant={variant}>Button</Button>
-      </StateCell>
-      <StateCell label="Held-open">
-        <Button variant={variant} data-state="open">
-          Button
-        </Button>
-      </StateCell>
-      <StateCell label="Pressed">
-        <Button
-          variant={variant}
-          className={pressedClassName}
-          style={{ boxShadow: "none", transform: "translate(1px, 1px)" }}
-        >
-          Button
-        </Button>
-      </StateCell>
-      <StateCell label="Disabled">
-        <Button variant={variant} disabled>
-          Button
-        </Button>
-      </StateCell>
-      <StateCell label="Loading">
-        <Button variant={variant} loading>
-          Button
-        </Button>
-      </StateCell>
-    </div>
-  </div>
-);
-
-export const AllStates = () => (
-  <div className="flex flex-col gap-8">
-    <StateRow variant="primary" pressedClassName="bg-bg-emphasis-active" />
-    <StateRow variant="outline" pressedClassName="bg-bg-active" />
-  </div>
-);
+// Public examples stay consumer-ready. Storybook only wraps them with its own QA metadata.
+export const AllVariants = () => <AllVariantsExample />;
+export const AllSizes = () => <AllSizesExample />;
+export const AllStates = () => <AllStatesExample />;
 
 // Native representative: focus is allowed to coexist with an open-owner edge
 // because the channels are spatially distinct (outer outline vs offset edge).

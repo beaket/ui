@@ -120,7 +120,7 @@
       "docs": {
         "title": "Input",
         "tagline": "A text input field for capturing user data.",
-        "sections": ["AllStates", "AllTypes"],
+        "sections": ["AllStates", "AllTypes", "Affixes"],
         "previewStory": "AllStates",
         "rowSpan": 2
       }
