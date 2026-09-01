@@ -151,7 +151,6 @@ export async function init(options: InitOptions) {
 
   // Write beaket.ui.json
   const config: BeaketConfig = {
-    $schema: "https://beaket.dev/schema.json",
     components: response.components,
     css: response.css || undefined,
     theme: response.theme,
