@@ -8,7 +8,7 @@ import { extractThemeBlock, replaceThemeInCss, wrapThemeCss } from "./theme.ts";
 const THEME_START = "/* beaket:theme:start */";
 const THEME_END = "/* beaket:theme:end */";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
-const currentTheme = ["semantic.css", "solace.css"]
+const currentTheme = ["foundation.css", "semantic.css", "solace.css"]
   .map((file) => fs.readFileSync(path.join(root, "src/themes", file), "utf8"))
   .join("\n");
 
@@ -116,7 +116,7 @@ describe("wrapThemeCss", () => {
     expect(result.indexOf("@theme")).toBeLessThan(result.indexOf(THEME_END));
   });
 
-  it("injects both schemes of the current 30-value palette contract", () => {
+  it("injects the foundation, semantic layer, and both palette schemes", () => {
     const result = wrapThemeCss(currentTheme);
 
     expect(result.match(/--surface-[0-2]\s*:/g)).toHaveLength(6);
@@ -132,6 +132,10 @@ describe("wrapThemeCss", () => {
     expect(result).toContain("--signal-success: #3f8a55");
     expect(result).toContain("--signal-info-alt: #005f72");
     expect(result).toContain("--signal-info-alt-on: var(--tone-0)");
+    expect(result).toContain("--text-sm: 0.8125rem");
+    expect(result).toContain("--font-sans:");
+    expect(result).toContain("--space-8: 3.5rem");
+    expect(result).toContain("--radius-full: 9999px");
     expect(result).not.toContain("--surface-brand");
     expect(result).not.toContain("--shadow-size-active");
   });
