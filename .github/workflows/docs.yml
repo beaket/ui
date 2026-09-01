@@ -21,8 +21,8 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install
-      - name: Build docs
-        run: pnpm --filter docs build
+      - name: Build docs and check public bundle boundary
+        run: pnpm docs:bundle:report
       - name: Build @beaket/paper
         run: pnpm --filter @beaket/paper build
       - name: Build Paper site

@@ -11,7 +11,8 @@ import CodeBlock from '../components/code-block.astro';
 <p>Same components, different world. <strong>Pick one in the sidebar.</strong></p>
 
 <div class="theme-showcase">
-  <ThemeAppMock client:load />
+  <!-- Static visual reference: it must remain available without JavaScript. -->
+  <ThemeAppMock />
 </div>
 
 <h2>Available themes</h2>
