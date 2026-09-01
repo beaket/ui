@@ -16,6 +16,7 @@ interface ComponentShowcaseProps {
 }
 
 export function ComponentShowcase({ components, version }: ComponentShowcaseProps) {
+  // index.astro server-renders cards, links, and static previews; do not hydrate this grid.
   return (
     <div
       className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"

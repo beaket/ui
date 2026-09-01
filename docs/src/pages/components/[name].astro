@@ -4,6 +4,7 @@ import CodeBlock from '../../components/code-block.astro';
 import PropsTable from '../../components/props-table.astro';
 import ExampleSection from '../../components/example-section.astro';
 import { StoryPreview } from '../../components/story-preview';
+import { InteractiveExample } from '../../components/interactive-example';
 import { getPublicExample } from '../../../../src/examples/registry';
 import { extractExports, formatExportName } from '../../utils/story-parser';
 import registry from '../../../../registry/registry.json';
@@ -62,7 +63,7 @@ const nextComponent = currentIndex < registry.components.length - 1 ? registry.c
       <p class="tagline">{docs?.tagline ?? component.description}</p>
       <div class="preview-box mt-2 border border-[var(--color-border-muted)] bg-[var(--color-bg)] p-4">
         {previewExample?.hydration === 'visible' ? (
-          <StoryPreview
+          <InteractiveExample
             componentName={name}
             storyName={docs?.previewStory}
             client:visible={{ rootMargin: '200px' }}
