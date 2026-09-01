@@ -1,5 +1,80 @@
 # @beaket/ui
 
+## 2.7.0
+
+### Minor Changes
+
+- [#774](https://github.com/beaket/ui/pull/774) [`6dce543`](https://github.com/beaket/ui/commit/6dce54336fae1e500f5edab1e0afb0b80df72d7b) Thanks [@jihnma](https://github.com/jihnma)! - Remove the non-functional `--surface-brand` and `--shadow-size-active` values from every built-in palette, reducing the authored theme contract from 32 to 30 values.
+
+  - `--surface-brand` is removed because no semantic token or shipped component referenced it. No replacement is needed; use a semantic background role such as `--color-bg-emphasis` when styling a brand-emphasis surface.
+  - `--shadow-size-active` is removed because active pressables intentionally drop their shadow and translate by 1px; all semantic shadow roles derive from `--shadow-size`.
+
+  The dependency audit also identifies `--tone-8` through `--tone-10` as reserved rather than functional. They remain for compatibility with the public 12-step neutral ramp and future deep-ink roles; the other 27 palette values are all reachable from the semantic layer.
+
+  Existing CSS produced by an older `init` remains valid because consumers own that CSS, but these two custom properties continue to have no effect. Run `npx @beaket/ui theme` to refresh the configured theme, or `npx @beaket/ui theme --theme <preset>` to switch presets and replace the managed block with the 30-value contract. Customized palettes can instead delete the two declarations manually.
+
+- [#781](https://github.com/beaket/ui/pull/781) [`09d2097`](https://github.com/beaket/ui/commit/09d2097db6a7e008b739709ce6002a544fb2b269) Thanks [@jihnma](https://github.com/jihnma)! - Add a dark Solace palette that follows `prefers-color-scheme: dark`, including complete generated documentation tokens and forced-dark Storybook support.
+
+- [#782](https://github.com/beaket/ui/pull/782) [`b509d5f`](https://github.com/beaket/ui/commit/b509d5f4263604d5accc3c65012cd38a540965ed) Thanks [@jihnma](https://github.com/jihnma)! - Define and apply a system-wide accent hierarchy so keyboard focus, open ownership, hover intent,
+  selection, persistent affordance, and content navigation no longer compete at equal weight.
+
+  - Buttons and interactive cards are neutral at rest, reveal a thin accent edge on hover, and hold a
+    grown edge only while they own an open overlay. Primary emphasis now comes entirely from its ink
+    surface; the secondary button returns to neutral material.
+  - Checkbox, Radio, Switch, Navigation, Tabs, and Pagination drop their standing accent edges.
+    Choice controls reveal action on hover, while navigation and tabs reserve accent for the selected
+    lens.
+  - Writing fields retain their cap-off focus edge, Select retains its open-owner edge, and menu rows
+    retain their inset active rule under an explicit channel-precedence policy.
+  - Add dense Storybook coverage plus native and Radix-backed interaction checks for simultaneous
+    focus, open, active-row, and selection states.
+
+### Patch Changes
+
+- [#711](https://github.com/beaket/ui/pull/711) [`21f1cd4`](https://github.com/beaket/ui/commit/21f1cd45207d2e8cce64a7a4c59b5923be4ae089) Thanks [@renovate](https://github.com/apps/renovate)! - Migrate DataTable to the TanStack Table v9 feature and state APIs while preserving sorting,
+  filtering, pagination, selection, and exported table types.
+
+- [#780](https://github.com/beaket/ui/pull/780) [`5261301`](https://github.com/beaket/ui/commit/5261301d7e31411ef137fd3049b38b51d454c82f) Thanks [@jihnma](https://github.com/jihnma)! - Re-cut the Solace semantic signals so small text, icons, borders, tints, and solid states remain
+  distinguishable under simulated protanopia, deuteranopia, and tritanopia.
+
+  - danger: `#af5340` → `#a44735`
+  - warning: `#ce8042` → `#d18b3f`
+  - success: `#00896c` → `#3f8a55`
+  - info: `#4c6bb6` → `#53628f`
+  - info-alt: `#008597` → `#005f72`, with the knockout switched to the paper endpoint
+  - accent remains `#2b5bff`
+
+  The browser-backed audit evaluates all 15 role pairs across six semantic forms and four vision
+  modes using the Machado 2009 full-severity transforms and OKLab distance floors. Storybook now
+  includes a dedicated small-mark comparison and reinforces semantic status examples with readable
+  labels and distinct icon shapes.
+
+- [#778](https://github.com/beaket/ui/pull/778) [`8d971e9`](https://github.com/beaket/ui/commit/8d971e9d5152df3144ab74f96125279aa2bf36ae) Thanks [@jihnma](https://github.com/jihnma)! - Rebalance the Solace light neutral ramp into a monotonic OKLab progression while preserving its warm-paper and cool-ink endpoints.
+
+  The source hex values produce these OKLab lightness values and adjacent differences (rounded to three decimals):
+
+  | Tone | Before L | Before ΔL | After L | After ΔL |
+  | ---- | -------: | --------: | ------: | -------: |
+  | 0    |    0.963 |         — |   0.963 |        — |
+  | 1    |    0.966 |    -0.003 |   0.920 |    0.043 |
+  | 2    |    0.934 |     0.032 |   0.820 |    0.100 |
+  | 3    |    0.838 |     0.096 |   0.730 |    0.090 |
+  | 4    |    0.639 |     0.199 |   0.639 |    0.091 |
+  | 5    |    0.616 |     0.023 |   0.585 |    0.054 |
+  | 6    |    0.540 |     0.076 |   0.525 |    0.060 |
+  | 7    |    0.455 |     0.085 |   0.455 |    0.070 |
+  | 8    |    0.386 |     0.070 |   0.390 |    0.066 |
+  | 9    |    0.328 |     0.058 |   0.325 |    0.064 |
+  | 10   |    0.252 |     0.075 |   0.245 |    0.080 |
+  | 11   |    0.128 |     0.124 |   0.128 |    0.117 |
+
+  The automated palette contract permits 0.04–0.12 OKLab L across the full ramp and tightens the functional `tone-3` through `tone-7` steps to 0.05–0.10. This keeps the paper and deepest-ink ends flexible while preventing functional roles from collapsing or jumping abruptly.
+
+- [#773](https://github.com/beaket/ui/pull/773) [`51041c8`](https://github.com/beaket/ui/commit/51041c8e0b7c39e051e6f72d9a5305b6b1610592) Thanks [@jihnma](https://github.com/jihnma)! - Enforce browser-resolved contrast guarantees for every built-in theme palette. Correct role
+  hover/active mixtures, knockout choices, and dark neutral values exposed by the new policy.
+
+- [#777](https://github.com/beaket/ui/pull/777) [`eea28a5`](https://github.com/beaket/ui/commit/eea28a5d9e0216f57513410ef45d85fada54d7a2) Thanks [@jihnma](https://github.com/jihnma)! - Restore visible depth between the Solace light page, raised, and overlay surfaces while preserving its restrained warm-paper character and existing contrast guarantees.
+
 ## 2.6.0
 
 ### Minor Changes
