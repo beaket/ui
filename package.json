@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "storybook dev -p 6006",
     "docs:dev": "pnpm --filter docs dev",
-    "docs:bundle:report": "pnpm --filter docs build && node scripts/report-docs-bundle.mjs",
+    "docs:bundle:report": "pnpm --filter docs build && node scripts/check-docs-preview-html.mjs && node scripts/report-docs-bundle.mjs",
     "build": "storybook build",
     "lint": "echo 'TODO: Add ESLint'",
     "format:check": "prettier --check .",
