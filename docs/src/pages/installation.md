@@ -72,6 +72,12 @@ loaded by the app.
 npx @beaket/ui init
 ```
 
+`init` writes the complete Beaket foundation into that CSS file: type scale,
+font stacks and weights, line heights, spacing, borders, radii, semantic
+tokens, and the selected color and shadow palette. The generated block is
+marked so later `add` and `theme` commands can update it without touching the
+rest of your stylesheet.
+
 Or with a [theme](/ui/themes):
 
 ```bash

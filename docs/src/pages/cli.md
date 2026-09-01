@@ -18,6 +18,8 @@ Prompts for:
 3. **Theme** — `solace`, `porcelain`, `tobacco`, `marigold`, or `eucalyptus`
 
 Creates `beaket.ui.json` with the component directory, CSS file, and selected theme.
+It also writes the complete design-system foundation into the CSS file: type,
+spacing, borders, radii, semantic tokens, and the selected palette.
 
 | Option           | Description                                                           |
 | ---------------- | --------------------------------------------------------------------- |
