@@ -46,7 +46,7 @@ export function ComponentShowcase({ components, version }: ComponentShowcaseProp
       </a>
 
       {/* Component Cards */}
-      {components.map((component, index) => {
+      {components.map((component) => {
         const colSpan = component.docs.span ?? 1;
         const rowSpan = component.docs.rowSpan ?? 1;
         const colClass = colSpan === 3 ? "col-span-full" : colSpan === 2 ? "sm:col-span-2" : "";
@@ -67,7 +67,6 @@ export function ComponentShowcase({ components, version }: ComponentShowcaseProp
               <StoryPreview
                 componentName={component.name}
                 storyName={component.docs.previewStory}
-                eager={index < 6}
               />
             </div>
           </div>
