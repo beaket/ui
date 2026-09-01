@@ -28,6 +28,7 @@ const render = () => (
       <Textarea
         id="textarea-fixed"
         autoResize={false}
+        resizable
         rows={4}
         placeholder="Fixed height with manual resize handle"
       />
