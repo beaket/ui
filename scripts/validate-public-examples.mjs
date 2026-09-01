@@ -8,10 +8,13 @@ const registry = JSON.parse(readFileSync(resolve(root, "registry/registry.json")
 const failures = [];
 const seenIds = new Set();
 const seenReferences = new Set();
+const seenModules = new Set();
 
 for (const example of manifest.examples) {
   if (seenIds.has(example.id)) failures.push(`duplicate id: ${example.id}`);
   seenIds.add(example.id);
+  if (seenModules.has(example.module)) failures.push(`duplicate module: ${example.module}`);
+  seenModules.add(example.module);
   if (!/^[a-z0-9-]+\.[a-z0-9-]+$/.test(example.id))
     failures.push(`invalid stable id: ${example.id}`);
   if (!["static", "interactive"].includes(example.behavior))
@@ -40,7 +43,7 @@ for (const example of manifest.examples) {
 
 for (const component of registry.components) {
   const docs = component.docs;
-  if (!docs || !["button", "input", "dialog"].includes(component.name)) continue;
+  if (!docs) continue;
   for (const story of [...(docs.sections ?? []), docs.previewStory].filter(Boolean)) {
     if (!seenReferences.has(`${component.name}:${story}`))
       failures.push(`registry reference has no public example: ${component.name}:${story}`);

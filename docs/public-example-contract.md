@@ -17,10 +17,10 @@ decorators, wrappers, and `play` tests in `*.stories.tsx`. Those are QA-only and
 public module or displayed source. A wrapper that changes the visible example is not allowed in
 the docs path; Storybook-only wrappers must be invisible QA scaffolding.
 
-The registry's `previewStory` and `sections` remain compatibility keys during migration. The
-contract validator requires public examples for the migrated Button, Input, and Dialog keys;
-other components keep the current preview loader only until the repository-wide migration issue.
-That migration owns removal of `extractExports`, raw story-source lookup, and the fallback path.
+The registry's `previewStory` and `sections` are stable lookup keys, not Storybook dependencies.
+The contract validator requires a public example for every registry hero and section, and the
+docs renderer reads only those modules. Storybook remains free to import a public module for
+visual coverage while retaining its own controls and interaction tests.
 
 Run `pnpm validate:examples` (also part of `pnpm typecheck`) to reject duplicate IDs, unsupported
 metadata, missing modules, missing migrated registry references, browser-only render paths, and

@@ -15,6 +15,7 @@
     "format:check": "prettier --check .",
     "typecheck": "pnpm validate:examples && pnpm --filter @beaket/paper build && tsc --noEmit && pnpm -r typecheck",
     "validate:examples": "node scripts/validate-public-examples.mjs",
+    "check:docs-preview-html": "node scripts/check-docs-preview-html.mjs",
     "test": "vitest",
     "test:contrast": "vitest run --project contrast",
     "test:cli": "./scripts/test-cli.sh",
