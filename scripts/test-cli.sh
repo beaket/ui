@@ -14,6 +14,7 @@ echo '{"compilerOptions":{"paths":{"@/*":["./*"]}}}' > tsconfig.json
 # Test init
 $CLI init -y
 test -f beaket.ui.json
+! grep -q '"\$schema"' beaket.ui.json
 
 # Test single component add
 $CLI add button
