@@ -30,18 +30,21 @@ import CodeBlock from '../components/code-block.astro';
   </tbody>
 </table>
 
-<p>Every theme supplies 30 palette values and inherits the same 68 semantic names. Components consume 27 values through that semantic layer; <code>--tone-8</code> through <code>--tone-10</code> are reserved for neutral-ramp compatibility and future deep-ink roles. Import the shared semantic layer plus one palette in your CSS.</p>
+<p>Every theme supplies 30 palette values and inherits the same 68 semantic names. Components consume 27 values through that semantic layer; <code>--tone-8</code> through <code>--tone-10</code> are reserved for neutral-ramp compatibility and future deep-ink roles.</p>
 
-<CodeBlock code={`@import "@beaket/ui/themes/semantic.css";
-@import "@beaket/ui/themes/solace.css";`} lang="css" />
+<p>Choose a theme with the CLI. It writes the semantic layer and selected palette directly into the CSS file you choose during setup.</p>
+
+<CodeBlock code={`npx @beaket/ui init --theme solace
+# Later, switch the saved project to another theme
+npx @beaket/ui theme --theme tobacco`} lang="bash" />
 
 <h2>Dark mode</h2>
 
-<p>Every theme ships with a dark twin. Import one palette and dark mode works automatically — no flags, no extra imports, no toggle configuration required.</p>
+<p>Every theme ships with a dark twin. Once the CLI has written the tokens, dark mode works automatically — no flags, no extra imports, no toggle configuration required.</p>
 
 <h3>How it works</h3>
 
-<p>Each palette file contains both light and dark values. Dark mode activates via <code>@media (prefers-color-scheme: dark)</code>, following the user's OS setting. The semantic layer never changes — shadows and knockouts auto-flip through token references.</p>
+<p>The CSS written by the CLI contains both light and dark values. Dark mode activates via <code>@media (prefers-color-scheme: dark)</code>, following the user's OS setting. The semantic layer never changes — shadows and knockouts auto-flip through token references.</p>
 
 <h2>Docs preview controls</h2>
 

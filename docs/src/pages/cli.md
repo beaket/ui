@@ -17,11 +17,11 @@ Prompts for:
 2. **CSS file** — where design tokens are written (auto-detected from framework)
 3. **Theme** — `solace`, `porcelain`, `tobacco`, `marigold`, or `eucalyptus`
 
-Creates `beaket.ui.json` with your component path and selected theme.
+Creates `beaket.ui.json` with the component directory, CSS file, and selected theme.
 
 | Option           | Description                                                           |
 | ---------------- | --------------------------------------------------------------------- |
-| `-y`             | Skip prompts, use defaults (solace theme)                             |
+| `-y`, `--yes`    | Skip prompts, use detected defaults and the solace theme              |
 | `--theme <name>` | Set theme: `solace`, `porcelain`, `tobacco`, `marigold`, `eucalyptus` |
 
 ```bash
@@ -42,3 +42,27 @@ Copies component files to your project and installs their dependencies (`clsx`, 
 | Option              | Description                        |
 | ------------------- | ---------------------------------- |
 | `-o`, `--overwrite` | Overwrite existing component files |
+
+When a file already exists, `add` compares it with the registry. Matching files
+are left alone; changed files prompt before they are overwritten.
+
+## diff
+
+```bash
+npx @beaket/ui diff
+npx @beaket/ui diff button
+```
+
+Checks copied components against the current registry without changing files.
+Use it before overwriting a customized component: a difference can be either an
+upstream update or your own edit.
+
+## theme
+
+```bash
+npx @beaket/ui theme
+npx @beaket/ui theme --theme eucalyptus
+```
+
+Rewrites the saved project's theme tokens in its configured CSS file. Without
+`--theme`, it syncs the theme already recorded in `beaket.ui.json`.

@@ -2,10 +2,10 @@ export function ThemeAppMock() {
   return (
     <div className="border-border bg-bg border" style={{ minHeight: 520 }}>
       {/* App header */}
-      <div className="bg-bg-emphasis border-border-strong flex items-center justify-between border-b px-4 py-2">
+      <div className="bg-bg-emphasis border-border-strong flex flex-col items-start gap-2 border-b px-4 py-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <span className="text-fg-on-emphasis text-sm font-bold">Acme Dashboard</span>
-          <nav className="flex gap-1">
+          <nav className="hidden gap-1 sm:flex">
             <span className="bg-bg-emphasis-hover text-fg-on-emphasis px-3 py-1 text-xs font-medium">
               Overview
             </span>
@@ -23,12 +23,9 @@ export function ThemeAppMock() {
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex flex-col sm:flex-row">
         {/* Sidebar */}
-        <div
-          className="bg-bg-raised border-border w-44 shrink-0 border-r p-3"
-          style={{ minHeight: 470 }}
-        >
+        <div className="bg-bg-raised border-border w-full shrink-0 border-b p-3 sm:w-44 sm:border-r sm:border-b-0">
           <div className="text-fg-subtle mb-2 text-xs font-semibold tracking-wider uppercase">
             Navigation
           </div>
@@ -77,7 +74,7 @@ export function ThemeAppMock() {
         </div>
 
         {/* Main content */}
-        <div className="flex-1 p-4">
+        <div className="min-w-0 flex-1 p-4">
           {/* Stats row */}
           <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {[
