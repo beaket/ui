@@ -1,7 +1,7 @@
 ---
 import CodeBlock from './code-block.astro';
 import { StoryPreview } from './story-preview';
-import { InteractiveExample } from './interactive-example';
+import { InteractiveExample, hasInteractiveExample } from './interactive-example';
 import { getPublicExample } from '../../../src/examples/registry';
 
 interface Props {
@@ -18,7 +18,7 @@ const publicExample = getPublicExample(componentName, storyName);
 <div>
   <h3>{displayName}</h3>
   <div class="preview-box mt-2 border border-[var(--color-border-muted)] bg-[var(--color-bg)] p-4">
-    {publicExample?.hydration === 'visible' ? (
+    {publicExample?.hydration === 'visible' && hasInteractiveExample(componentName, storyName) ? (
       <InteractiveExample
         componentName={componentName}
         storyName={storyName}

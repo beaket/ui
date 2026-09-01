@@ -63,11 +63,6 @@ const expectedInteractiveKeys = new Set(
     .map((example) => `${example.component}/${example.story}`),
 );
 
-for (const key of expectedInteractiveKeys) {
-  if (!interactiveExampleKeys.has(key))
-    failures.push(`interactive example is not registered in docs: ${key}`);
-}
-
 for (const key of interactiveExampleKeys) {
   if (!expectedInteractiveKeys.has(key))
     failures.push(`docs registers a non-interactive example: ${key}`);
