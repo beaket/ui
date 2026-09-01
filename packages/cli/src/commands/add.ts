@@ -1,7 +1,11 @@
 import path from "path";
 import pc from "picocolors";
 import { getConfig } from "../utils/config.ts";
-import { installDependencies, writeComponentFiles } from "../utils/files.ts";
+import {
+  DependencyInstallError,
+  installDependencies,
+  writeComponentFiles,
+} from "../utils/files.ts";
 import { fetchComponent, fetchRegistry } from "../utils/registry.ts";
 import { syncTheme } from "../utils/theme.ts";
 import { THEME_CSS } from "../utils/themes.ts";
@@ -55,8 +59,26 @@ export async function add(componentNames: string[], options: AddOptions) {
 
   // Install dependencies once
   if (allDependencies.size > 0) {
-    await installDependencies([...allDependencies]);
-    console.log(pc.green("✔"), "Installing dependencies.");
+    try {
+      await installDependencies([...allDependencies]);
+      console.log(pc.green("✔"), "Installing dependencies.");
+    } catch (error) {
+      if (!(error instanceof DependencyInstallError)) throw error;
+
+      console.log();
+      console.log(pc.red("!"), "Could not install component dependencies.");
+      console.log("  Package manager:", pc.cyan(error.packageManager));
+      console.log("  Command:", pc.cyan(error.command));
+      console.log("  Dependencies:", error.dependencies.join(", "));
+      console.log("  Install them manually, then retry this command.");
+      console.log(" ", pc.cyan(error.command));
+      if (error.packageManager === "npm") {
+        console.log("  If npm reports a peer-dependency conflict, retry with:");
+        console.log(" ", pc.cyan(`${error.command} --legacy-peer-deps`));
+      }
+      console.log(pc.yellow("ℹ"), "Continuing to add component files.");
+      process.exitCode = 1;
+    }
   }
 
   // Fetch and write all component files
