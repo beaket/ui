@@ -416,6 +416,8 @@ a:not([data-slot]) {
 
   pre {
     font-size: 0.75rem;
+    /* The always-visible Copy button needs its own row above scrollable code. */
+    padding-top: 2.75rem;
   }
 
   table {
