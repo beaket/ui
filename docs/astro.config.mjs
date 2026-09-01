@@ -16,7 +16,11 @@ export default defineConfig({
   output: "static",
   integrations: [
     react({
-      include: ["**/src/components/*.tsx", "**/src/components/*.stories.tsx"],
+      include: [
+        "**/src/components/*.tsx",
+        "**/src/components/*.stories.tsx",
+        "**/src/examples/**/*.tsx",
+      ],
     }),
   ],
   markdown: {

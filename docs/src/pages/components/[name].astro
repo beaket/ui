@@ -26,6 +26,7 @@ export function getStaticPaths() {
 const { component } = Astro.props as { component: (typeof registry.components)[0] };
 const { name, docs } = component;
 const sections = docs?.sections ?? [];
+const previewExample = getPublicExample(name, docs?.previewStory ?? 'Default');
 
 // Get props for this component
 const props = propsData[name as keyof typeof propsData] ?? [];
@@ -60,7 +61,15 @@ const nextComponent = currentIndex < registry.components.length - 1 ? registry.c
       <h1>{docs?.title ?? name}</h1>
       <p class="tagline">{docs?.tagline ?? component.description}</p>
       <div class="preview-box mt-2 border border-[var(--color-border-muted)] bg-[var(--color-bg)] p-4">
-        <StoryPreview componentName={name} storyName={docs?.previewStory} client:visible />
+        {previewExample?.hydration === 'visible' ? (
+          <StoryPreview
+            componentName={name}
+            storyName={docs?.previewStory}
+            client:visible={{ rootMargin: '200px' }}
+          />
+        ) : (
+          <StoryPreview componentName={name} storyName={docs?.previewStory} />
+        )}
       </div>
     </header>
 

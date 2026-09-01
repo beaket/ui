@@ -24,7 +24,7 @@ const currentYear = new Date().getFullYear();
       <div class="home-theme-bar">
         <ThemeSwitcher client:idle layout="inline" />
       </div>
-      <ComponentShowcase client:idle components={registry.components} version={pkg.version} />
+      <ComponentShowcase components={registry.components} version={pkg.version} />
       <footer class="site-footer mt-8">
         <span>© {currentYear} Beaket</span>
         <span class="footer-sep">·</span>
