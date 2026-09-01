@@ -274,7 +274,7 @@ function main() {
 
   const cssFiles = fs
     .readdirSync(THEMES_DIR)
-    .filter((f) => f.endsWith(".css") && f !== "semantic.css")
+    .filter((f) => f.endsWith(".css") && !["foundation.css", "semantic.css"].includes(f))
     .sort();
 
   const output: Record<string, Record<string, string>> = {};
