@@ -6,15 +6,8 @@ import ExampleSection from '../../components/example-section.astro';
 import { StoryPreview } from '../../components/story-preview';
 import { InteractiveExample } from '../../components/interactive-example';
 import { getPublicExample } from '../../../../src/examples/registry';
-import { extractExports, formatExportName } from '../../utils/story-parser';
 import registry from '../../../../registry/registry.json';
 import propsData from '../../generated/props.json';
-
-// Temporary compatibility path for components not yet moved to src/examples/.
-const storySources = import.meta.glob<string>(
-  '../../../../src/components/*.stories.tsx',
-  { eager: true, query: '?raw', import: 'default' }
-);
 
 // Generate static paths for all components
 export function getStaticPaths() {
@@ -32,9 +25,6 @@ const previewExample = getPublicExample(name, docs?.previewStory ?? 'Default');
 // Get props for this component
 const props = propsData[name as keyof typeof propsData] ?? [];
 
-const storyPath = Object.keys(storySources).find((path) => path.includes(`/${name}.stories.tsx`));
-const legacySources = storyPath ? extractExports(storySources[storyPath]) : new Map();
-
 // Generate import statement
 const pascalName = name.charAt(0).toUpperCase() + name.slice(1);
 const importCode = `import { ${pascalName} } from "@/components/ui/${name}"`;
@@ -44,8 +34,8 @@ const sectionData = sections.map((sectionName) => {
   const publicExample = getPublicExample(name, sectionName);
   return {
     storyName: sectionName,
-    displayName: publicExample?.title ?? formatExportName(sectionName),
-    source: publicExample?.source ?? legacySources.get(sectionName) ?? '',
+    displayName: publicExample?.title ?? sectionName.replace(/([a-z])([A-Z])/g, '$1 $2'),
+    source: publicExample?.source ?? '',
   };
 });
 
