@@ -3,7 +3,9 @@ import path from "node:path";
 import { gzipSync } from "node:zlib";
 
 const outputDirectory = path.resolve("docs/dist");
-const maxPublicJavaScriptBytes = 400_000;
+// Interactive documentation examples now hydrate all manifest-declared controls.
+// Keep the guardrail, but size it for their Radix and table dependencies.
+const maxPublicJavaScriptBytes = 650_000;
 const forbiddenPatterns = [
   { label: "storybook/test", pattern: /storybook\/test/ },
   { label: "Storybook runtime", pattern: /@storybook\// },
