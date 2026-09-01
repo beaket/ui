@@ -12,6 +12,26 @@ export interface WriteResult {
   unchanged: string[];
 }
 
+type PackageManager = "npm" | "pnpm" | "yarn" | "bun";
+
+export class DependencyInstallError extends Error {
+  constructor(
+    readonly packageManager: PackageManager,
+    readonly command: string,
+    readonly dependencies: string[],
+    readonly code: number | null,
+    cause?: Error,
+  ) {
+    super(
+      cause
+        ? `Could not start ${packageManager}: ${cause.message}`
+        : `Dependency install exited with code ${code}`,
+      { cause },
+    );
+    this.name = "DependencyInstallError";
+  }
+}
+
 export async function writeComponentFiles(
   baseDir: string,
   files: ComponentFile[],
@@ -64,23 +84,29 @@ export async function writeComponentFiles(
 export async function installDependencies(deps: string[]): Promise<void> {
   const packageManager = await detectPackageManager();
   const installCmd = packageManager === "npm" ? "install" : "add";
+  const args = [installCmd, ...deps];
+  const command = [packageManager, ...args].join(" ");
 
   return new Promise((resolve, reject) => {
-    const child = spawn(packageManager, [installCmd, ...deps], {
+    const child = spawn(packageManager, args, {
       stdio: "inherit",
+    });
+
+    child.once("error", (error) => {
+      reject(new DependencyInstallError(packageManager, command, deps, null, error));
     });
 
     child.on("close", (code) => {
       if (code === 0) {
         resolve();
       } else {
-        reject(new Error(`Failed to install dependencies (code ${code})`));
+        reject(new DependencyInstallError(packageManager, command, deps, code));
       }
     });
   });
 }
 
-async function detectPackageManager(): Promise<"npm" | "pnpm" | "yarn" | "bun"> {
+async function detectPackageManager(): Promise<PackageManager> {
   const cwd = process.cwd();
 
   if (await fs.pathExists(path.join(cwd, "pnpm-lock.yaml"))) {
