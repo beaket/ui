@@ -163,6 +163,9 @@ export const InteractionTest: Story = {
     <Tabs defaultValue="first" className="max-w-md" {...args}>
       <Tabs.List>
         <Tabs.Trigger value="first">First</Tabs.Trigger>
+        <Tabs.Trigger value="disabled" disabled>
+          Disabled
+        </Tabs.Trigger>
         <Tabs.Trigger value="second">Second</Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content value="first">
@@ -183,9 +186,13 @@ export const InteractionTest: Story = {
     // Initially first tab is active
     await expect(canvas.getByTestId("first-content")).toBeVisible();
 
-    // Click second tab
+    // Arrow navigation skips disabled tabs and activates the focused tab.
+    const firstTab = canvas.getByRole("tab", { name: "First" });
     const secondTab = canvas.getByRole("tab", { name: "Second" });
-    await userEvent.click(secondTab);
+    firstTab.focus();
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(secondTab).toHaveFocus();
+    await expect(canvas.getByRole("tab", { name: "Disabled" })).toBeDisabled();
 
     // Verify callback was called
     await expect(args.onValueChange).toHaveBeenCalledWith("second");

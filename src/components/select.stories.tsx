@@ -165,6 +165,14 @@ export const InteractionTest: Story = {
           <Select.Item value="orange">Orange</Select.Item>
         </Select.Content>
       </Select>
+      <Select disabled>
+        <Select.Trigger aria-label="Disabled select">
+          <Select.Value placeholder="Disabled select" />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Item value="disabled">Disabled option</Select.Item>
+        </Select.Content>
+      </Select>
     </div>
   ),
   play: async ({ args, canvasElement }) => {
@@ -172,14 +180,21 @@ export const InteractionTest: Story = {
     const body = within(document.body);
 
     const basicTrigger = canvas.getByTestId("basic-select");
-    await userEvent.click(basicTrigger);
+    basicTrigger.focus();
+    await userEvent.keyboard("{Enter}");
 
     // Select content is portaled, so search in document body
     const listbox = await body.findByRole("listbox");
     const bananaOption = within(listbox).getByRole("option", { name: "Banana" });
 
-    await userEvent.click(bananaOption);
+    await userEvent.keyboard("{ArrowDown}{Enter}");
     await expect(args.onValueChange).toHaveBeenCalledWith("banana");
+    await expect(basicTrigger).toHaveFocus();
+
+    const disabledTrigger = canvas.getByRole("combobox", { name: "Disabled select" });
+    await expect(disabledTrigger).toBeDisabled();
+    await userEvent.click(disabledTrigger);
+    await expect(body.queryByRole("listbox")).not.toBeInTheDocument();
   },
 };
 
