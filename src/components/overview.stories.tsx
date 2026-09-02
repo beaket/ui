@@ -41,6 +41,7 @@ import { Tooltip } from "./tooltip";
  */
 const meta: Meta = {
   title: "Overview",
+  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },
