@@ -10,29 +10,134 @@ interface TsConfig {
   compilerOptions?: {
     paths?: Record<string, string[]>;
   };
+  references?: Array<{ path?: string } | string>;
 }
 
-async function detectAliasPath(): Promise<string> {
-  const cwd = process.cwd();
+function componentPathFromAlias(paths?: Record<string, string[]>): string | undefined {
+  if (!paths) return undefined;
 
-  // Try to read tsconfig.json or tsconfig.app.json
-  for (const configFile of ["tsconfig.json", "tsconfig.app.json"]) {
-    const configPath = path.join(cwd, configFile);
-    if (await fs.pathExists(configPath)) {
-      try {
-        const content = await fs.readFile(configPath, "utf-8");
-        const tsconfig: TsConfig = JSON.parse(content);
-        const paths = tsconfig.compilerOptions?.paths;
-        if (paths?.["@/*"]) {
-          const aliasPath = paths["@/*"][0];
-          // "./src/*" -> "src", "./*" -> ""
-          const prefix = aliasPath.replace(/^\.\/|\/?\*$/g, "");
-          return prefix ? `${prefix}/components/ui` : "components/ui";
-        }
-      } catch {
-        // Ignore parse errors
-      }
+  let componentAliasPath: string | undefined;
+  for (const [alias, targets] of Object.entries(paths)) {
+    // A single wildcard alias maps an import root to a source directory, e.g.
+    // "@/*" -> "./src/*" or "~/*" -> "./app/*".
+    const aliasRoot = alias.slice(0, -2);
+    if (!alias.endsWith("/*") || aliasRoot.includes("/")) continue;
+
+    const target = targets[0];
+    if (!target?.endsWith("/*")) continue;
+
+    const prefix = target.replace(/^\.\//, "").replace(/\/?\*$/, "");
+    if (prefix.endsWith("/components") || prefix === "components") {
+      componentAliasPath = prefix ? `${prefix}/ui` : "ui";
+      continue;
     }
+
+    return prefix ? `${prefix}/components/ui` : "components/ui";
+  }
+
+  return componentAliasPath;
+}
+
+function removeTrailingCommas(content: string): string {
+  let result = "";
+  let inString = false;
+  let escaped = false;
+
+  for (let index = 0; index < content.length; index += 1) {
+    const character = content[index];
+    const nextCharacter = content[index + 1];
+
+    if (inString) {
+      result += character;
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === '"') inString = false;
+      continue;
+    }
+
+    if (character === '"') {
+      inString = true;
+      result += character;
+    } else if (character === ",") {
+      let nextIndex = index + 1;
+      while (/\s/.test(content[nextIndex] ?? "")) nextIndex += 1;
+      if (content[nextIndex] !== "}" && content[nextIndex] !== "]") result += character;
+    } else {
+      result += character;
+    }
+  }
+
+  return result;
+}
+
+function parseTsConfig(content: string): TsConfig {
+  let withoutComments = "";
+  let inString = false;
+  let escaped = false;
+
+  for (let index = 0; index < content.length; index += 1) {
+    const character = content[index];
+    const nextCharacter = content[index + 1];
+
+    if (inString) {
+      withoutComments += character;
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === '"') inString = false;
+      continue;
+    }
+
+    if (character === '"') {
+      inString = true;
+      withoutComments += character;
+    } else if (character === "/" && nextCharacter === "/") {
+      while (index < content.length && content[index] !== "\n") index += 1;
+      withoutComments += "\n";
+    } else if (character === "/" && nextCharacter === "*") {
+      index += 2;
+      while (index < content.length && !(content[index] === "*" && content[index + 1] === "/")) {
+        index += 1;
+      }
+      index += 1;
+    } else {
+      withoutComments += character;
+    }
+  }
+
+  return JSON.parse(removeTrailingCommas(withoutComments)) as TsConfig;
+}
+
+async function readTsConfig(configPath: string, visited: Set<string>): Promise<string | undefined> {
+  const resolvedPath = path.resolve(configPath);
+  if (visited.has(resolvedPath) || !(await fs.pathExists(resolvedPath))) return undefined;
+  visited.add(resolvedPath);
+
+  try {
+    const tsconfig = parseTsConfig(await fs.readFile(resolvedPath, "utf-8"));
+    const componentPath = componentPathFromAlias(tsconfig.compilerOptions?.paths);
+    if (componentPath) return componentPath;
+
+    for (const reference of tsconfig.references ?? []) {
+      const referencePath = typeof reference === "string" ? reference : reference.path;
+      if (!referencePath) continue;
+
+      const referencedConfig = path.resolve(path.dirname(resolvedPath), referencePath);
+      const configFile = referencedConfig.endsWith(".json")
+        ? referencedConfig
+        : path.join(referencedConfig, "tsconfig.json");
+      const referencedComponentPath = await readTsConfig(configFile, visited);
+      if (referencedComponentPath) return referencedComponentPath;
+    }
+  } catch {
+    // Ignore parse errors and continue with other configs.
+  }
+}
+
+export async function detectAliasPath(cwd = process.cwd()): Promise<string> {
+  // Check the root configs, then follow project references (used by React Router).
+  for (const configFile of ["tsconfig.json", "tsconfig.app.json"]) {
+    const componentPath = await readTsConfig(path.join(cwd, configFile), new Set());
+    if (componentPath) return componentPath;
   }
 
   // Fallback: detect from package.json
@@ -55,24 +160,78 @@ async function detectAliasPath(): Promise<string> {
   return "src/components/ui";
 }
 
-async function detectCssPath(): Promise<string> {
-  const cwd = process.cwd();
+async function containsTailwindImport(filePath: string): Promise<boolean> {
+  try {
+    return /@import\s+["']tailwindcss["']/.test(await fs.readFile(filePath, "utf-8"));
+  } catch {
+    return false;
+  }
+}
+
+async function findTailwindCssFiles(directory: string): Promise<string[]> {
+  const files: string[] = [];
+  const ignoredDirectories = new Set([".git", "build", "dist", "node_modules"]);
+
+  async function visit(currentDirectory: string) {
+    const entries = await fs.readdir(currentDirectory, { withFileTypes: true });
+    for (const entry of entries) {
+      const entryPath = path.join(currentDirectory, entry.name);
+      if (entry.isDirectory() && !ignoredDirectories.has(entry.name)) {
+        await visit(entryPath);
+      } else if (entry.isFile() && entry.name.endsWith(".css")) {
+        files.push(entryPath);
+      }
+    }
+  }
+
+  try {
+    await visit(directory);
+  } catch {
+    // A missing or unreadable directory simply has no CSS candidates.
+  }
+  return files;
+}
+
+export async function detectCssPath(cwd = process.cwd()): Promise<string> {
   const pkgPath = path.join(cwd, "package.json");
+  let nextProject = false;
 
   if (await fs.pathExists(pkgPath)) {
     try {
       const content = await fs.readFile(pkgPath, "utf-8");
       const pkg = JSON.parse(content);
       const deps = { ...pkg.dependencies, ...pkg.devDependencies };
-      if (deps.next) {
-        return "app/globals.css";
-      }
+      nextProject = Boolean(deps.next);
     } catch {
       // Ignore parse errors
     }
   }
 
-  return "src/index.css";
+  const candidates = [
+    "app/app.css",
+    "src/app/globals.css",
+    "app/globals.css",
+    "src/index.css",
+    "src/app.css",
+    "src/styles.css",
+    "styles/globals.css",
+  ];
+  const existingCandidates = [] as string[];
+  for (const candidate of candidates) {
+    const candidatePath = path.join(cwd, candidate);
+    if (await fs.pathExists(candidatePath)) existingCandidates.push(candidate);
+  }
+
+  for (const candidate of existingCandidates) {
+    if (await containsTailwindImport(path.join(cwd, candidate))) return candidate;
+  }
+
+  const cssFiles = await findTailwindCssFiles(cwd);
+  for (const cssFile of cssFiles) {
+    if (await containsTailwindImport(cssFile)) return path.relative(cwd, cssFile);
+  }
+
+  return existingCandidates[0] ?? (nextProject ? "app/globals.css" : "src/index.css");
 }
 
 interface InitOptions {
