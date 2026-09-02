@@ -1,4 +1,5 @@
 name: CI
+# Accessibility contract: docs/a11y-automated-check-contract.md
 
 permissions:
   contents: read
