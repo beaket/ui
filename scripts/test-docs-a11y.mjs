@@ -18,7 +18,7 @@ let browser;
 async function waitForServer() {
   for (let attempt = 0; attempt < 30; attempt += 1) {
     try {
-      if ((await fetch(baseURL)).ok) return;
+      if ((await fetch(baseURL, { signal: AbortSignal.timeout(1000) })).ok) return;
     } catch {}
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
@@ -60,6 +60,6 @@ try {
   try {
     process.kill(-server.pid, "SIGTERM");
   } catch (error) {
-    if (error.code !== "ESRCH") throw error;
+    if (error.code !== "ESRCH") console.warn("Could not stop docs preview server:", error);
   }
 }
