@@ -18,6 +18,7 @@
     "check:docs-preview-html": "node scripts/check-docs-preview-html.mjs",
     "test": "vitest",
     "test:a11y:components": "vitest run --project storybook",
+    "test:a11y:docs": "pnpm --filter docs build && node scripts/test-docs-a11y.mjs",
     "test:contrast": "vitest run --project contrast",
     "test:cli": "./scripts/test-cli.sh",
     "test:editor": "pnpm --filter @beaket/paper test",
@@ -35,6 +36,7 @@
   "license": "MIT",
   "packageManager": "pnpm@11.25.0",
   "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
     "@changesets/changelog-github": "^1.0.0",
     "@changesets/cli": "^3.0.0",
     "@storybook/addon-a11y": "10.5.10",
