@@ -199,9 +199,21 @@ export const InteractionTest: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    // Default dialog: opens on trigger, closes via its X button
-    await userEvent.click(canvas.getByRole("button", { name: "Open default" }));
+    // Keyboard opens the dialog, keeps focus trapped inside it, and restores the trigger.
+    const defaultTrigger = canvas.getByRole("button", { name: "Open default" });
+    defaultTrigger.focus();
+    await userEvent.keyboard("{Enter}");
     let dialog = await screen.findByRole("dialog");
+    await expect(dialog).toContainElement(document.activeElement);
+    await userEvent.keyboard("{Tab}");
+    await expect(dialog).toContainElement(document.activeElement);
+    await userEvent.keyboard("{Escape}");
+    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    await expect(defaultTrigger).toHaveFocus();
+
+    // Default dialog: closes via its X button
+    await userEvent.click(defaultTrigger);
+    dialog = await screen.findByRole("dialog");
     await userEvent.click(within(dialog).getByRole("button", { name: "Close dialog" }));
     await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 

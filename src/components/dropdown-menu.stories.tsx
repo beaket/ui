@@ -386,16 +386,21 @@ export const InteractionTest: Story = {
         "data-highlighted",
       ),
     );
+    await expect(within(menu).getByRole("menuitem", { name: "Profile" })).toHaveFocus();
     await expect(within(menu).getByRole("menuitem", { name: "Disabled" })).toHaveAttribute(
       "data-disabled",
     );
 
     // Arrow keys move the highlight through the menu
     await userEvent.keyboard("{ArrowDown}");
+    await expect(
+      within(menu).getByRole("menuitemcheckbox", { name: "Toggle Option" }),
+    ).toHaveFocus();
 
     // Escape closes
     await userEvent.keyboard("{Escape}");
     await expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+    await expect(trigger).toHaveFocus();
 
     // Selecting a plain item closes the menu
     await userEvent.click(trigger);
