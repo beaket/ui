@@ -27,7 +27,7 @@ export default function AffixesExample() {
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="hover:text-fg focus-visible:outline-border-focus cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2"
+                className="hover:text-fg focus-visible:outline-border-focus flex size-6 cursor-pointer items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-2"
                 aria-label="Clear"
               >
                 <X />
@@ -48,7 +48,7 @@ export default function AffixesExample() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="hover:text-fg focus-visible:outline-border-focus cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2"
+              className="hover:text-fg focus-visible:outline-border-focus flex size-6 cursor-pointer items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-2"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff /> : <Eye />}

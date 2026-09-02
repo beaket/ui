@@ -113,7 +113,10 @@ export const AnyContent = () => (
 
     <Card>
       <Card.Section>
-        <div className="bg-bg-hover text-fg-subtle flex h-24 items-center justify-center text-xs tracking-wide uppercase">
+        <div
+          aria-hidden="true"
+          className="bg-bg-hover text-fg flex h-24 items-center justify-center text-xs tracking-wide uppercase"
+        >
           figure
         </div>
       </Card.Section>

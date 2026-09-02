@@ -254,9 +254,8 @@ function Colors() {
           <div className="border-border bg-bg-hover border p-4">
             <ul className="text-fg space-y-2 text-xs">
               <li>
-                <strong>Semantic names only</strong> — Always{" "}
-                <code className="text-fg-link">bg-bg</code>,{" "}
-                <code className="text-fg-link">text-fg</code> — never raw hex, never a palette value
+                <strong>Semantic names only</strong> — Always <code>bg-bg</code>,{" "}
+                <code>text-fg</code> — never raw hex, never a palette value
               </li>
             </ul>
           </div>
@@ -414,6 +413,7 @@ export const SignalComparison = () => (
               <div className="border-border flex items-center border-r border-b p-3">
                 <span
                   aria-label={`${label} boundary`}
+                  role="img"
                   className="block size-5"
                   style={{ border: `1px solid ${solid}` }}
                 />

@@ -38,6 +38,8 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
       - name: Test semantic theme contrast
         run: pnpm test:contrast
+      - name: Test component accessibility
+        run: pnpm test:a11y:components
       - name: Test CLI
         run: pnpm test:cli
       - name: Test Editor
