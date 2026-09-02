@@ -92,6 +92,13 @@ const preview: Preview = {
     },
 
     a11y: {
+      // Keep the runner and the documented contract on the same WCAG rule set.
+      options: {
+        runOnly: {
+          type: "tag",
+          values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"],
+        },
+      },
       // 'todo' - show a11y violations in the test UI only
       // 'error' - fail CI on a11y violations
       // 'off' - skip a11y checks entirely
