@@ -273,9 +273,9 @@ export const InteractionTest: Story = {
     defaultTrigger.focus();
     await userEvent.keyboard("{Enter}");
     let sheet = await screen.findByRole("dialog");
-    await expect(sheet).toContainElement(document.activeElement);
+    await expect(sheet.contains(document.activeElement)).toBe(true);
     await userEvent.keyboard("{Tab}");
-    await expect(sheet).toContainElement(document.activeElement);
+    await expect(sheet.contains(document.activeElement)).toBe(true);
     await userEvent.keyboard("{Escape}");
     await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     await expect(defaultTrigger).toHaveFocus();
