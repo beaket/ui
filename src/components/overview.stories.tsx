@@ -148,6 +148,46 @@ export const DenseInteractionHierarchy: StoryObj = {
   },
 };
 
+// A small, deterministic surface for Chromatic's approval gate. The focused
+// control is reached by keyboard; disabled and invalid states stay visible.
+export const AccessibleStates: StoryObj = {
+  parameters: {
+    chromatic: {
+      modes: {
+        "solace light": { theme: "solace", scheme: "light" },
+        "solace dark": { theme: "solace", scheme: "dark" },
+        "porcelain light": { theme: "porcelain", scheme: "light" },
+        "porcelain dark": { theme: "porcelain", scheme: "dark" },
+        "tobacco light": { theme: "tobacco", scheme: "light" },
+        "tobacco dark": { theme: "tobacco", scheme: "dark" },
+        "marigold light": { theme: "marigold", scheme: "light" },
+        "marigold dark": { theme: "marigold", scheme: "dark" },
+        "eucalyptus light": { theme: "eucalyptus", scheme: "light" },
+        "eucalyptus dark": { theme: "eucalyptus", scheme: "dark" },
+      },
+    },
+  },
+  render: () => (
+    <div className="bg-bg text-fg min-h-64 space-y-6 p-8">
+      <div className="flex flex-wrap gap-3">
+        <Button>Focused action</Button>
+        <Button disabled>Disabled action</Button>
+        <Button variant="destructive">Destructive action</Button>
+      </div>
+      <div className="max-w-sm space-y-2">
+        <Label htmlFor="visual-invalid-input">Invalid input</Label>
+        <Input id="visual-invalid-input" aria-invalid="true" defaultValue="invalid@example.com" />
+      </div>
+      <Alert variant="caution">This error state must remain distinguishable.</Alert>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const focused = within(canvasElement).getByRole("button", { name: "Focused action" });
+    await userEvent.tab();
+    await expect(focused).toHaveFocus();
+  },
+};
+
 // --- layout helpers (local to this story) ---------------------------------
 
 function Cell({ label, span, children }: { label: string; span?: boolean; children: ReactNode }) {

@@ -51,5 +51,3 @@ jobs:
           buildScriptName: build-storybook
           autoAcceptChanges: "main"
           onlyChanged: true
-          exitZeroOnChanges: true
-          exitOnceUploaded: true
