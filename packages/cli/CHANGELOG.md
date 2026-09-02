@@ -1,5 +1,21 @@
 # @beaket/ui
 
+## 2.8.0
+
+### Minor Changes
+
+- [#808](https://github.com/beaket/ui/pull/808) [`2e9f99a`](https://github.com/beaket/ui/commit/2e9f99a681c19a5260abd13434aa8be908da0277) Thanks [@jihnma](https://github.com/jihnma)! - Install the shared type, spacing, border, and radius foundation with semantic and palette tokens so copied components render with their intended scale and shapes.
+
+### Patch Changes
+
+- [#812](https://github.com/beaket/ui/pull/812) [`3d6db4d`](https://github.com/beaket/ui/commit/3d6db4d5b88da42827e23e7354637ad10149ac93) Thanks [@jihnma](https://github.com/jihnma)! - Stop generating a `$schema` URL that does not resolve in new configuration files.
+
+- [#810](https://github.com/beaket/ui/pull/810) [`aa9c1d8`](https://github.com/beaket/ui/commit/aa9c1d8864c8420d63ed2081deaeb83b9fc85952) Thanks [@jihnma](https://github.com/jihnma)! - Handle dependency installation failures without crashing the add command.
+
+- [#813](https://github.com/beaket/ui/pull/813) [`872eed2`](https://github.com/beaket/ui/commit/872eed2bdb4f7a5666f926873beee843b1c2541e) Thanks [@jihnma](https://github.com/jihnma)! - Detect component aliases and Tailwind CSS entry files from referenced TypeScript configs.
+
+- [#814](https://github.com/beaket/ui/pull/814) [`73a7e07`](https://github.com/beaket/ui/commit/73a7e07c86d02545ec8af507c6513c2412844e06) Thanks [@jihnma](https://github.com/jihnma)! - Show dependency installation progress before the add command begins installing packages.
+
 ## 2.7.0
 
 ### Minor Changes
