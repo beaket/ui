@@ -7,8 +7,9 @@ import themeInitScript from '../../public/theme-init.js?raw';
 
 interface Props {
   title?: string;
+  wide?: boolean;
 }
-const { title = 'Beaket UI' } = Astro.props;
+const { title = 'Beaket UI', wide = false } = Astro.props;
 const currentPath = Astro.url.pathname;
 const components = registry.components;
 const currentYear = new Date().getFullYear();
@@ -68,7 +69,7 @@ const currentYear = new Date().getFullYear();
         </div>
       </nav>
 
-      <main class="main">
+      <main class:list={["main", { wide }]}>
         <slot />
         <footer class="site-footer">
           <span>© {currentYear} Beaket</span>
