@@ -92,25 +92,25 @@ export const FullScreen: Story = {
         </Sheet.Header>
         <div className="flex flex-col gap-2 py-4">
           <a
-            href="#"
+            href="#home"
             className="text-fg-link focus-visible:outline-border-focus block py-2 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             Home
           </a>
           <a
-            href="#"
+            href="#products"
             className="text-fg-link focus-visible:outline-border-focus block py-2 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             Products
           </a>
           <a
-            href="#"
+            href="#about"
             className="text-fg-link focus-visible:outline-border-focus block py-2 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             About
           </a>
           <a
-            href="#"
+            href="#contact"
             className="text-fg-link focus-visible:outline-border-focus block py-2 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             Contact

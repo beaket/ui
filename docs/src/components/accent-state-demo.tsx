@@ -56,9 +56,9 @@ export function AccentStateDemo() {
           <Tabs.Trigger value="other">Other tab</Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="current" className="flex flex-wrap items-center gap-5 py-3">
-          <label className="text-fg flex items-center gap-2 text-sm">
+          <div className="text-fg flex items-center gap-2 text-sm">
             <Checkbox defaultChecked aria-label="Selected option" /> Selected option
-          </label>
+          </div>
           <Pagination mode="button" page={2} totalPages={4} onPageChange={() => undefined} />
         </Tabs.Content>
       </Tabs>

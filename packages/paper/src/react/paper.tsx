@@ -139,7 +139,6 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
     };
     // Uncontrolled: do not recreate on defaultValue change (full replacement is ref.setValue).
     // Live reconfiguration of onInsertImage/slashItems (Compartment) is follow-up scope — fixed at creation time for now.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // highlights is a live prop — re-resolved IME-safely on change (the controller defers during composition).

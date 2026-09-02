@@ -172,8 +172,11 @@ export function ThemeAppMock() {
               <div className="text-fg mb-3 text-sm font-bold">Quick Actions</div>
 
               <div className="mb-2">
-                <label className="text-fg mb-1 block text-xs font-semibold">Search Users</label>
+                <label htmlFor="search-users" className="text-fg mb-1 block text-xs font-semibold">
+                  Search Users
+                </label>
                 <input
+                  id="search-users"
                   type="text"
                   placeholder="Enter name or email..."
                   className="border-border-strong bg-bg-hover text-fg w-full border px-2 py-1.5 text-xs outline-none"
@@ -182,7 +185,7 @@ export function ThemeAppMock() {
               </div>
 
               <div className="mb-2">
-                <label className="text-fg mb-1 block text-xs font-semibold">Category</label>
+                <div className="text-fg mb-1 block text-xs font-semibold">Category</div>
                 <div className="border-border-strong bg-bg text-fg flex items-center justify-between border px-2 py-1.5 text-xs">
                   <span className="text-fg-subtle">Select category...</span>
                   <span className="text-fg-muted">▾</span>
@@ -190,7 +193,7 @@ export function ThemeAppMock() {
               </div>
 
               <div className="mb-3 flex items-center gap-4">
-                <label className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5">
                   <span className="border-border-strong bg-bg-emphasis flex size-3.5 items-center justify-center border">
                     <svg
                       className="text-fg-on-emphasis size-2.5"
@@ -203,11 +206,11 @@ export function ThemeAppMock() {
                     </svg>
                   </span>
                   <span className="text-fg text-xs">Active only</span>
-                </label>
-                <label className="flex items-center gap-1.5">
+                </div>
+                <div className="flex items-center gap-1.5">
                   <span className="border-border-strong size-3.5 border" />
                   <span className="text-fg text-xs">Include archived</span>
-                </label>
+                </div>
               </div>
 
               <div className="flex gap-2">
