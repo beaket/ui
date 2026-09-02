@@ -68,7 +68,8 @@ body {
 
 .sidebar-link {
   display: block;
-  padding: 0.125rem 0;
+  min-height: 24px;
+  padding: 0.5rem 0;
   font-size: 0.75rem;
   color: var(--color-fg-muted);
   text-decoration: none;

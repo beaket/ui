@@ -197,7 +197,7 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
             type="button"
             key={name}
             onClick={() => handleClick(name)}
-            className={`sidebar-link${active === name ? "active" : ""} bg-transparent`}
+            className={`sidebar-link ${active === name ? "active" : ""}bg-transparent`}
             style={{ display: "flex", alignItems: "center", gap: "6px" }}
           >
             <span

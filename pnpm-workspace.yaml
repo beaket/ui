@@ -6,6 +6,7 @@ packages:
 minimumReleaseAge: 0
 
 overrides:
+  axe-core: "4.13.0"
   esbuild: "0.28.2"
   rollup: ">=4.59.0"
   minimatch: ">=10.2.3"

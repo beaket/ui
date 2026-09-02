@@ -19,14 +19,14 @@ claim WCAG certification or complete WCAG conformance.
 
 ## Coverage matrix
 
-| WCAG surface                              | Automated signal                     | Covered surface                                    | Manual-only or not applicable                                                                      |
-| ----------------------------------------- | ------------------------------------ | -------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Rules in the five axe tags above          | Storybook addon using the tags above | Component stories once #819 enables the CI project | Rule applicability depends on the rendered story state; axe-core 4.13.0 has no `wcag22a` tag.      |
-| Rendered component semantics and contrast | Storybook axe browser scan           | Public component-story DOM                         | Alternative-text quality, reading order, and assistive-technology usability require manual review. |
-| Keyboard focus and dismissal              | Story `play` tests                   | Composite widget states added in #820              | axe cannot prove focus movement or screen-reader announcements.                                    |
-| Composed documentation flows              | Playwright plus axe                  | Production docs flows added in #821                | The suite is targeted, not a crawl of every URL or state.                                          |
-| Semantic token contrast                   | `pnpm test:contrast`                 | Shipped light and dark theme token pairings        | This is not a rendered-DOM scan and does not cover arbitrary consumer CSS.                         |
-| Visual regressions                        | Chromatic                            | Stable accessible states added in #822             | Pixel diffs are not proof of WCAG contrast compliance.                                             |
+| WCAG surface                              | Automated signal                     | Covered surface                                         | Manual-only or not applicable                                                                      |
+| ----------------------------------------- | ------------------------------------ | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Rules in the five axe tags above          | Storybook addon using the tags above | Component stories once #819 enables the CI project      | Rule applicability depends on the rendered story state; axe-core 4.13.0 has no `wcag22a` tag.      |
+| Rendered component semantics and contrast | Storybook axe browser scan           | Public component-story DOM                              | Alternative-text quality, reading order, and assistive-technology usability require manual review. |
+| Keyboard focus and dismissal              | Story `play` tests                   | Composite widget states added in #820                   | axe cannot prove focus movement or screen-reader announcements.                                    |
+| Composed documentation flows              | Playwright plus axe                  | Production docs navigation and an opened Dialog preview | The suite is targeted, not a crawl of every URL or state.                                          |
+| Semantic token contrast                   | `pnpm test:contrast`                 | Shipped light and dark theme token pairings             | This is not a rendered-DOM scan and does not cover arbitrary consumer CSS.                         |
+| Visual regressions                        | Chromatic                            | Stable accessible states added in #822                  | Pixel diffs are not proof of WCAG contrast compliance.                                             |
 
 ## Exceptions
 

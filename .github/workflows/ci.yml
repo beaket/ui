@@ -40,6 +40,14 @@ jobs:
         run: pnpm test:contrast
       - name: Test component accessibility
         run: pnpm test:a11y:components
+      - name: Test documentation accessibility
+        run: pnpm test:a11y:docs
+      - name: Upload documentation accessibility results
+        if: always() && hashFiles('test-results/docs-a11y.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-a11y-results
+          path: test-results/docs-a11y.json
       - name: Test CLI
         run: pnpm test:cli
       - name: Test Editor
