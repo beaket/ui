@@ -1,39 +1,10 @@
 ---
-import '../styles/global.css';
+import Layout from '../layouts/doc.astro';
 import { ComponentShowcase } from '../components/component-showcase';
-import { ThemeSwitcher } from '../components/theme-switcher';
 import registry from '../../../registry/registry.json';
 import pkg from '../../../packages/cli/package.json';
-import themeInitScript from '../../public/theme-init.js?raw';
-
-const currentYear = new Date().getFullYear();
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Beaket UI</title>
-    <meta name="description" content="Ink & Instrument: React components set like print — sharp, flat, offset. Copy them directly into your project." />
-    <link rel="icon" type="image/svg+xml" href="/ui/favicon.svg" />
-    <script is:inline set:html={themeInitScript} />
-  </head>
-  <body class="min-h-screen bg-bg">
-    <main class="mx-auto max-w-4xl p-4">
-      <div class="home-theme-bar">
-        <ThemeSwitcher client:idle layout="inline" />
-      </div>
-      <ComponentShowcase components={registry.components} version={pkg.version} />
-      <footer class="site-footer mt-8">
-        <span>© {currentYear} Beaket</span>
-        <span class="footer-sep">·</span>
-        <a href="https://github.com/beaket/ui/blob/main/LICENSE">MIT License</a>
-        <span class="footer-sep">·</span>
-        <a href="https://github.com/beaket/ui">GitHub</a>
-        <span class="footer-sep">·</span>
-        <a href="https://www.npmjs.com/package/@beaket/ui">npm</a>
-      </footer>
-    </main>
-  </body>
-</html>
+<Layout wide>
+  <ComponentShowcase components={registry.components} version={pkg.version} />
+</Layout>
