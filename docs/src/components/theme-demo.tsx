@@ -115,8 +115,11 @@ export function ThemeDemo() {
             </div>
           </div>
           <div>
-            <label className="text-fg mb-1.5 block text-sm font-semibold">Text Input</label>
+            <label htmlFor="theme-demo-text" className="text-fg mb-1.5 block text-sm font-semibold">
+              Text Input
+            </label>
             <input
+              id="theme-demo-text"
               type="text"
               placeholder="Placeholder text..."
               className="border-border bg-bg-hover text-fg mb-4 w-full border-2 px-3 py-2 text-sm outline-none"

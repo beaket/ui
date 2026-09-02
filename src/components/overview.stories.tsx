@@ -122,9 +122,9 @@ export const DenseInteractionHierarchy: StoryObj = {
             <Tabs.Trigger value="other">Other tab</Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content value="current" className="flex flex-wrap items-center gap-4 py-3">
-            <label className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm">
               <Checkbox defaultChecked aria-label="Selected option" /> Selected option
-            </label>
+            </div>
             <Pagination mode="button" page={2} totalPages={4} onPageChange={() => undefined} />
           </Tabs.Content>
         </Tabs>
@@ -303,28 +303,28 @@ export const AllComponents: StoryObj = {
         </Cell>
         <Cell label="Checkbox">
           <div className="space-y-2">
-            <label className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm">
               <Checkbox defaultChecked aria-label="Checked" /> Checked
-            </label>
-            <label className="flex items-center gap-2 text-sm">
+            </div>
+            <div className="flex items-center gap-2 text-sm">
               <Checkbox aria-label="Unchecked" /> Unchecked
-            </label>
-            <label className="text-fg-disabled flex items-center gap-2 text-sm">
+            </div>
+            <div className="text-fg-disabled flex items-center gap-2 text-sm">
               <Checkbox disabled aria-label="Disabled" /> Disabled
-            </label>
+            </div>
           </div>
         </Cell>
         <Cell label="Radio">
           <RadioGroup defaultValue="option2" aria-label="Options" className="flex-col">
-            <label className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm">
               <RadioItem value="option1" aria-label="Option 1" /> Option 1
-            </label>
-            <label className="flex items-center gap-2 text-sm">
+            </div>
+            <div className="flex items-center gap-2 text-sm">
               <RadioItem value="option2" aria-label="Option 2" /> Option 2
-            </label>
-            <label className="flex items-center gap-2 text-sm">
+            </div>
+            <div className="flex items-center gap-2 text-sm">
               <RadioItem value="option3" aria-label="Option 3" /> Option 3
-            </label>
+            </div>
           </RadioGroup>
         </Cell>
         <Cell label="Switch">

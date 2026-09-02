@@ -40,7 +40,7 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
 // quiet at rest; pointing at a step darkens it from muted to full ink, and the
 // one accent mark is the keyboard focus ring (the vivid voice kept for where you
 // act). No pressable edge: a link is not a key.
-function BreadcrumbLink({ className, ...props }: React.ComponentProps<"a">) {
+function BreadcrumbLink({ className, children, ...props }: React.ComponentProps<"a">) {
   return (
     <a
       data-slot="breadcrumb-link"
@@ -51,7 +51,9 @@ function BreadcrumbLink({ className, ...props }: React.ComponentProps<"a">) {
         className,
       )}
       {...props}
-    />
+    >
+      {children}
+    </a>
   );
 }
 
