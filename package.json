@@ -17,7 +17,7 @@
     "validate:examples": "node scripts/validate-public-examples.mjs",
     "check:docs-preview-html": "node scripts/check-docs-preview-html.mjs",
     "test": "vitest",
-    "test:a11y:components": "vitest run --project storybook",
+    "test:a11y:components": "vitest run --project storybook --reporter=json --outputFile=test-results/components-a11y.json",
     "test:a11y:docs": "pnpm --filter docs build && node scripts/test-docs-a11y.mjs",
     "test:contrast": "vitest run --project contrast",
     "test:cli": "./scripts/test-cli.sh",
