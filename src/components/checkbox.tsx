@@ -15,7 +15,7 @@ export function Checkbox({ className, ...props }: Props) {
     <CheckboxPrimitive.Root
       data-slot="checkbox"
       className={cn(
-        "group peer border-border-strong relative size-4 shrink-0 border before:absolute before:inset-[-14px] before:content-['']",
+        "group peer border-border-strong relative size-6 shrink-0 border before:absolute before:inset-[-10px] before:content-['']",
         // Instrument grammar: the chassis is neutral at rest. Hover reveals a
         // thin action edge; press physics belong to the indicator, not the box.
         "bg-bg-input enabled:hover:shadow-offset-action cursor-pointer transition-[background-color,box-shadow] duration-100",

@@ -119,7 +119,7 @@ export function Pagination(props: PaginationProps) {
   // One fused instrument: cells share neutral borders; pressing a key travels
   // its label 1px inside the frame, and the current page stays held down.
   const buttonBaseClass =
-    "group flex items-center justify-center h-8 px-3 -ml-px first:ml-0 border text-sm transition-colors relative before:absolute before:inset-[-8px] before:content-[''] focus-visible:z-[2] focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2";
+    "group flex min-h-6 min-w-6 items-center justify-center h-8 px-3 -ml-px first:ml-0 border text-sm transition-colors relative before:absolute before:inset-[-8px] before:content-[''] focus-visible:z-[2] focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2";
   const buttonActiveClass =
     "bg-bg-emphasis text-fg-on-emphasis border-border-strong z-[1] cursor-default before:hidden";
   const buttonInactiveClass = "border-border cursor-pointer hover:bg-bg-hover active:bg-bg-active";

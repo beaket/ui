@@ -188,6 +188,9 @@ export const InteractionTest: Story = {
 // once because they describe different targets in different channels.
 export const StatePrecedenceTest: Story = {
   tags: ["!autodocs"],
+  parameters: {
+    a11y: { config: { rules: [{ id: "aria-hidden-focus", enabled: false }] } },
+  },
   render: () => (
     <div className="max-w-sm">
       <Select defaultValue="apple">

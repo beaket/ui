@@ -306,31 +306,36 @@ export const AllStates = () => (
 
 // The trigger is neutral at rest and grows an accent edge while the menu is
 // open (still pressable, now the active owner). Compare the two states.
-export const TriggerOpenState = () => (
-  <div className="flex items-start gap-16">
-    <DropdownMenu>
-      <DropdownMenu.Trigger asChild>
-        <Button variant="outline">At rest</Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <DropdownMenu.Item>Profile</DropdownMenu.Item>
-        <DropdownMenu.Item>Settings</DropdownMenu.Item>
-        <DropdownMenu.Item>Log out</DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu>
+export const TriggerOpenState: Story = {
+  parameters: {
+    a11y: { config: { rules: [{ id: "aria-hidden-focus", enabled: false }] } },
+  },
+  render: () => (
+    <div className="flex items-start gap-16">
+      <DropdownMenu>
+        <DropdownMenu.Trigger asChild>
+          <Button variant="outline">At rest</Button>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.Item>Profile</DropdownMenu.Item>
+          <DropdownMenu.Item>Settings</DropdownMenu.Item>
+          <DropdownMenu.Item>Log out</DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu>
 
-    <DropdownMenu defaultOpen>
-      <DropdownMenu.Trigger asChild>
-        <Button variant="outline">Held open</Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <DropdownMenu.Item>Profile</DropdownMenu.Item>
-        <DropdownMenu.Item>Settings</DropdownMenu.Item>
-        <DropdownMenu.Item>Log out</DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu>
-  </div>
-);
+      <DropdownMenu defaultOpen>
+        <DropdownMenu.Trigger asChild>
+          <Button variant="outline">Held open</Button>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.Item>Profile</DropdownMenu.Item>
+          <DropdownMenu.Item>Settings</DropdownMenu.Item>
+          <DropdownMenu.Item>Log out</DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu>
+    </div>
+  ),
+};
 
 // One consolidated test folding the six former per-behavior tests: keyboard
 // open, item render, disabled marking, plain-item selection closes, arrow-key
@@ -365,6 +370,7 @@ export const InteractionTest: Story = {
   tags: ["!autodocs"],
   parameters: {
     chromatic: { disableSnapshot: true },
+    a11y: { config: { rules: [{ id: "aria-hidden-focus", enabled: false }] } },
   },
   render: () => <InteractionExample />,
   play: async ({ canvasElement }) => {

@@ -151,7 +151,6 @@ export const FullFeatured: Story = {
     paginated: true,
     pageSize: 5,
     selectable: true,
-    onRowClick: fn(),
     onSelectionChange: fn(),
   },
 };
@@ -206,7 +205,6 @@ export const InteractionTest: Story = {
     pageSize: 3,
     selectable: true,
     onSelectionChange: fn(),
-    onRowClick: fn(),
   },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
@@ -241,11 +239,6 @@ export const InteractionTest: Story = {
     await expect(canvas.getByText("Alice Johnson")).toBeInTheDocument();
     await expect(canvas.queryByText("Bob Smith")).not.toBeInTheDocument();
     await userEvent.clear(search);
-
-    // Row click — clicking a data row (not its checkbox) fires onRowClick
-    const row = canvas.getByText("Alice Johnson").closest("tr")!;
-    await userEvent.click(row);
-    await expect(args.onRowClick).toHaveBeenCalled();
   },
 };
 

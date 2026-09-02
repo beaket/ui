@@ -48,7 +48,7 @@ function Typography() {
             {typeScale.map((type) => (
               <div key={type.element} className="bg-bg p-4">
                 <div className="mb-2 flex items-baseline justify-between">
-                  <code className="text-fg-link text-xs">&lt;{type.element}&gt;</code>
+                  <code className="text-xs">&lt;{type.element}&gt;</code>
                   <span className="text-fg-subtle text-xs">
                     {type.size} / {type.lineHeight}
                   </span>
@@ -150,12 +150,10 @@ function Typography() {
                 <strong>Limited weights</strong> — 400 (regular), 600 (semibold), 700 (bold)
               </li>
               <li>
-                <strong>Ink for text</strong> — Primary text uses{" "}
-                <code className="text-fg-link">text-fg</code>
+                <strong>Ink for text</strong> — Primary text uses <code>text-fg</code>
               </li>
               <li>
-                <strong>Steel for secondary</strong> — Muted text uses{" "}
-                <code className="text-fg-link">text-fg-muted</code>
+                <strong>Steel for secondary</strong> — Muted text uses <code>text-fg-muted</code>
               </li>
             </ul>
           </div>
@@ -192,7 +190,7 @@ export const TypeScale = () => (
       {typeScale.map((type) => (
         <div key={type.element} className="bg-bg p-4">
           <div className="mb-2 flex items-baseline justify-between">
-            <code className="text-fg-link text-xs">&lt;{type.element}&gt;</code>
+            <code className="text-xs">&lt;{type.element}&gt;</code>
             <span className="text-fg-subtle text-xs">
               {type.size} / {type.lineHeight}
             </span>
