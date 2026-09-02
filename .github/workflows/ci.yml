@@ -42,12 +42,18 @@ jobs:
         run: pnpm test:a11y:components
       - name: Test documentation accessibility
         run: pnpm test:a11y:docs
-      - name: Upload documentation accessibility results
-        if: always() && hashFiles('test-results/docs-a11y.json') != ''
+      - name: Summarize accessibility evidence
+        if: always()
+        run: node scripts/report-a11y-evidence.mjs
+      - name: Publish accessibility evidence
+        if: always() && hashFiles('test-results/*') != ''
         uses: actions/upload-artifact@v7
         with:
-          name: docs-a11y-results
-          path: test-results/docs-a11y.json
+          name: accessibility-evidence
+          path: test-results/
+      - name: Add accessibility evidence to job summary
+        if: always() && hashFiles('test-results/a11y-summary.md') != ''
+        run: cat test-results/a11y-summary.md >> "$GITHUB_STEP_SUMMARY"
       - name: Test CLI
         run: pnpm test:cli
       - name: Test Editor
