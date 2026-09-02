@@ -60,8 +60,9 @@ export async function add(componentNames: string[], options: AddOptions) {
   // Install dependencies once
   if (allDependencies.size > 0) {
     try {
+      console.log("  Installing dependencies…");
       await installDependencies([...allDependencies]);
-      console.log(pc.green("✔"), "Installing dependencies.");
+      console.log(pc.green("✔"), "Installed dependencies.");
     } catch (error) {
       if (!(error instanceof DependencyInstallError)) throw error;
 
