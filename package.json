@@ -51,8 +51,8 @@
     "@types/react-dom": "19.2.7",
     "@typescript-eslint/parser": "^8.69.0",
     "@vitejs/plugin-react": "6.1.1",
-    "@vitest/browser-playwright": "4.1.11",
-    "@vitest/coverage-v8": "4.1.11",
+    "@vitest/browser-playwright": "5.0.0",
+    "@vitest/coverage-v8": "5.0.0",
     "eslint": "^10.9.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "husky": "9.1.7",
@@ -67,7 +67,7 @@
     "turbo": "^2.9.18",
     "typescript": "6.0.3",
     "vite": "8.2.2",
-    "vitest": "4.1.11"
+    "vitest": "5.0.0"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",
