@@ -51,7 +51,7 @@ const signalSwatches = [
   { role: "accent", label: "Accent" },
 ] as const;
 
-/** Pick --color-* and --shadow-* tokens for inline style (skip --astro-code-*) */
+/** Pick theme tokens used by the preview's inline styles. */
 function pickStyleTokens(tokens: Record<string, string>): Record<string, string> {
   const style: Record<string, string> = {};
   for (const [key, value] of Object.entries(tokens)) {
