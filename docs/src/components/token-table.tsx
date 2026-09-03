@@ -91,8 +91,8 @@ export function TokenTable({
                 <code
                   style={{
                     fontSize: "0.75rem",
-                    background: "var(--color-bg-active)",
-                    padding: "0.1rem 0.2rem",
+                    background: "none",
+                    padding: 0,
                   }}
                 >
                   {token.value}

@@ -2,15 +2,15 @@ export function ThemeAppMock() {
   return (
     <div className="border-border bg-bg border" style={{ minHeight: 520 }}>
       {/* App header */}
-      <div className="bg-bg-emphasis border-border-strong flex flex-col items-start gap-2 border-b px-4 py-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className="bg-bg-overlay border-border-strong flex flex-col items-start gap-2 border-b px-4 py-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <span className="text-fg-on-emphasis text-sm font-bold">Acme Dashboard</span>
+          <span className="text-fg text-sm font-bold">Acme Dashboard</span>
           <nav className="hidden gap-1 sm:flex">
-            <span className="bg-bg-emphasis-hover text-fg-on-emphasis px-3 py-1 text-xs font-medium">
+            <span className="bg-accent-bg-subtle text-fg px-3 py-1 text-xs font-medium">
               Overview
             </span>
-            <span className="text-fg-on-emphasis px-3 py-1 text-xs font-medium">Analytics</span>
-            <span className="text-fg-on-emphasis px-3 py-1 text-xs font-medium">Settings</span>
+            <span className="text-fg px-3 py-1 text-xs font-medium">Analytics</span>
+            <span className="text-fg px-3 py-1 text-xs font-medium">Settings</span>
           </nav>
         </div>
         <div className="flex items-center gap-2">
@@ -30,9 +30,7 @@ export function ThemeAppMock() {
             Navigation
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="bg-bg-emphasis text-fg-on-emphasis px-2 py-1 text-xs font-medium">
-              Dashboard
-            </span>
+            <span className="bg-bg-active text-fg px-2 py-1 text-xs font-medium">Dashboard</span>
             <span className="text-fg hover:bg-bg-hover px-2 py-1 text-xs">Users</span>
             <span className="text-fg hover:bg-bg-hover px-2 py-1 text-xs">Products</span>
             <span className="text-fg hover:bg-bg-hover px-2 py-1 text-xs">Orders</span>
@@ -46,7 +44,7 @@ export function ThemeAppMock() {
             <div className="flex items-center justify-between">
               <span className="text-fg-muted text-xs">API</span>
               <span
-                className="bg-success-solid text-success-fg-on-solid text-xs"
+                className="bg-success-solid text-success-fg-on-solid inline-flex w-10 justify-center text-xs"
                 style={{ padding: "1px 6px", fontWeight: 700 }}
               >
                 OK
@@ -55,7 +53,7 @@ export function ThemeAppMock() {
             <div className="flex items-center justify-between">
               <span className="text-fg-muted text-xs">Queue</span>
               <span
-                className="bg-warning-solid text-warning-fg-on-solid text-xs"
+                className="bg-warning-solid text-warning-fg-on-solid inline-flex w-10 justify-center text-xs"
                 style={{ padding: "1px 6px", fontWeight: 700 }}
               >
                 3
@@ -64,7 +62,7 @@ export function ThemeAppMock() {
             <div className="flex items-center justify-between">
               <span className="text-fg-muted text-xs">Errors</span>
               <span
-                className="bg-danger-solid text-danger-fg-on-solid text-xs"
+                className="bg-danger-solid text-danger-fg-on-solid inline-flex w-10 justify-center text-xs"
                 style={{ padding: "1px 6px", fontWeight: 700 }}
               >
                 1
@@ -122,27 +120,39 @@ export function ThemeAppMock() {
                   {[
                     {
                       id: "#1042",
-                      name: "Alice Kim",
+                      name: "Sofia Martinez",
                       status: "Shipped",
-                      color: "var(--color-success-fg)",
+                      role: "success",
                     },
                     {
                       id: "#1041",
-                      name: "Bob Chen",
+                      name: "Liam O'Connor",
                       status: "Pending",
-                      color: "var(--color-warning-fg)",
+                      role: "warning",
                     },
                     {
                       id: "#1040",
-                      name: "Carol Wu",
+                      name: "Aisha Rahman",
                       status: "Failed",
-                      color: "var(--color-danger-fg)",
+                      role: "danger",
                     },
                     {
                       id: "#1039",
-                      name: "Dan Park",
+                      name: "Noah Williams",
                       status: "Shipped",
-                      color: "var(--color-success-fg)",
+                      role: "success",
+                    },
+                    {
+                      id: "#1038",
+                      name: "Priya Nair",
+                      status: "Pending",
+                      role: "warning",
+                    },
+                    {
+                      id: "#1037",
+                      name: "Mateo Silva",
+                      status: "Failed",
+                      role: "danger",
                     },
                   ].map((row) => (
                     <tr key={row.id} className="border-border border-b last:border-b-0">
@@ -150,12 +160,12 @@ export function ThemeAppMock() {
                       <td className="text-fg px-3 py-1.5">{row.name}</td>
                       <td className="px-3 py-1.5 text-right">
                         <span
-                          className="border text-xs font-bold"
+                          className="inline-flex w-20 justify-center border text-xs font-bold"
                           style={{
                             padding: "1px 6px",
-                            backgroundColor: row.color,
-                            borderColor: row.color,
-                            color: row.status === "Pending" ? "var(--color-fg)" : "var(--color-bg)",
+                            backgroundColor: `var(--color-${row.role}-solid)`,
+                            borderColor: `var(--color-${row.role}-solid)`,
+                            color: `var(--color-${row.role}-fg-on-solid)`,
                           }}
                         >
                           {row.status}
@@ -249,13 +259,13 @@ export function ThemeAppMock() {
           {/* Tabs section — lens grammar: fused hairline strip, glass plate on current */}
           <div className="mt-3">
             <div className="inline-flex">
-              <span className="border-border-muted text-fg after:border-t-border-muted after:border-l-border-muted after:border-r-border-strong after:border-b-border-strong after:bg-accent-bg-subtle relative isolate border px-3 py-1 text-xs font-medium after:absolute after:inset-1 after:-z-[1] after:border after:content-['']">
+              <span className="border-border-muted text-fg after:border-t-border-muted after:border-l-border-muted after:border-r-border-strong after:border-b-border-strong after:bg-accent-bg-subtle relative isolate flex h-8 items-center justify-center gap-1.5 border px-3.5 text-sm font-medium whitespace-nowrap after:absolute after:inset-1 after:-z-[1] after:border after:content-['']">
                 Activity
               </span>
-              <span className="border-border-muted text-fg -ml-px border px-3 py-1 text-xs font-medium">
+              <span className="border-border-muted text-fg -ml-px flex h-8 items-center justify-center gap-1.5 border px-3.5 text-sm font-medium whitespace-nowrap">
                 Logs
               </span>
-              <span className="border-border-muted text-fg -ml-px border px-3 py-1 text-xs font-medium">
+              <span className="border-border-muted text-fg -ml-px flex h-8 items-center justify-center gap-1.5 border px-3.5 text-sm font-medium whitespace-nowrap">
                 Webhooks
               </span>
             </div>

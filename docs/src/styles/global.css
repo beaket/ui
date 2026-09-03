@@ -2,17 +2,19 @@
 @source "../../../src";
 @source "../";
 
-/* Syntax highlighting — Solace defaults (theme-init.js overrides per theme) */
+/* Syntax highlighting uses the same semantic roles as the rest of the docs. */
 :root {
-  --astro-code-foreground: #05070c;
-  --astro-code-background: #f3f4f2;
-  --astro-code-token-constant: #005f72;
-  --astro-code-token-string: #3f8a55;
-  --astro-code-token-string-expression: #3f8a55;
-  --astro-code-token-comment: #727578;
-  --astro-code-token-keyword: #53628f;
-  --astro-code-token-function: #2b5bff;
-  --astro-code-token-punctuation: #727578;
+  --astro-code-foreground: var(--color-fg);
+  --astro-code-background: var(--color-bg-raised);
+  --astro-code-token-constant: var(--color-info-alt-solid);
+  --astro-code-token-string: var(--color-success-solid);
+  --astro-code-token-string-expression: var(--color-success-solid);
+  --astro-code-token-comment: var(--color-fg-muted);
+  --astro-code-token-keyword: var(--color-info-solid);
+  --astro-code-token-function: var(--color-accent-solid);
+  --astro-code-token-parameter: var(--color-fg);
+  --astro-code-token-punctuation: var(--color-fg-muted);
+  --astro-code-token-link: var(--color-info-solid);
 }
 
 body {
@@ -171,7 +173,7 @@ tr:last-child td {
 code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.8125rem;
-  background: var(--color-bg-active);
+  background: var(--color-bg-hover);
   padding: 0.125rem 0.25rem;
 }
 
@@ -188,7 +190,6 @@ pre code {
   background: none;
   padding: 0;
 }
-
 .copy-button {
   position: absolute;
   top: 0.5rem;

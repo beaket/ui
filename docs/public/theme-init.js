@@ -102,18 +102,7 @@
       "--shadow-offset-overlay": "2px 2px 0 0 #8295ae",
       "--shadow-offset-action": "2px 2px 0 0 #175a84",
       "--shadow-offset-action-hover": "calc(2px + 1px) calc(2px + 1px) 0 0 #175a84",
-      "--shadow-offset-action-danger": "2px 2px 0 0 #d2171c",
-      "--astro-code-foreground": "#162036",
-      "--astro-code-background": "#eff2f8",
-      "--astro-code-token-keyword": "#1240cc",
-      "--astro-code-token-string": "#047857",
-      "--astro-code-token-string-expression": "#047857",
-      "--astro-code-token-comment": "#5a6d88",
-      "--astro-code-token-function": "#6828e0",
-      "--astro-code-token-constant": "#9a5c00",
-      "--astro-code-token-parameter": "#162036",
-      "--astro-code-token-punctuation": "#5a6d88",
-      "--astro-code-token-link": "#1240cc"
+      "--shadow-offset-action-danger": "2px 2px 0 0 #d2171c"
     },
     "eucalyptus-dark": {
       "--surface-0": "#0a0e1a",
@@ -213,18 +202,7 @@
       "--shadow-offset-overlay": "2px 2px 0 0 #3c4858",
       "--shadow-offset-action": "2px 2px 0 0 #4fb0d6",
       "--shadow-offset-action-hover": "calc(2px + 1px) calc(2px + 1px) 0 0 #4fb0d6",
-      "--shadow-offset-action-danger": "2px 2px 0 0 #de3e58",
-      "--astro-code-foreground": "#dce2ec",
-      "--astro-code-background": "#0c1020",
-      "--astro-code-token-keyword": "#5080ff",
-      "--astro-code-token-string": "#20e0a0",
-      "--astro-code-token-string-expression": "#20e0a0",
-      "--astro-code-token-comment": "#687288",
-      "--astro-code-token-function": "#b878ff",
-      "--astro-code-token-constant": "#ffb830",
-      "--astro-code-token-parameter": "#dce2ec",
-      "--astro-code-token-punctuation": "#687288",
-      "--astro-code-token-link": "#5080ff"
+      "--shadow-offset-action-danger": "2px 2px 0 0 #de3e58"
     },
     "marigold": {
       "--surface-0": "#ebebeb",
@@ -324,18 +302,7 @@
       "--shadow-offset-overlay": "3px 3px 0 0 #0a0a0a",
       "--shadow-offset-action": "3px 3px 0 0 #8330d8",
       "--shadow-offset-action-hover": "calc(3px + 1px) calc(3px + 1px) 0 0 #8330d8",
-      "--shadow-offset-action-danger": "3px 3px 0 0 #f14d1d",
-      "--astro-code-foreground": "#121212",
-      "--astro-code-background": "#f0f0f0",
-      "--astro-code-token-keyword": "#0044ee",
-      "--astro-code-token-string": "#c03010",
-      "--astro-code-token-string-expression": "#c03010",
-      "--astro-code-token-comment": "#5a5a5a",
-      "--astro-code-token-function": "#6820b8",
-      "--astro-code-token-constant": "#007a88",
-      "--astro-code-token-parameter": "#121212",
-      "--astro-code-token-punctuation": "#5a5a5a",
-      "--astro-code-token-link": "#0044ee"
+      "--shadow-offset-action-danger": "3px 3px 0 0 #f14d1d"
     },
     "marigold-dark": {
       "--surface-0": "#141414",
@@ -435,18 +402,7 @@
       "--shadow-offset-overlay": "3px 3px 0 0 #f5f5f5",
       "--shadow-offset-action": "3px 3px 0 0 #bb55ff",
       "--shadow-offset-action-hover": "calc(3px + 1px) calc(3px + 1px) 0 0 #bb55ff",
-      "--shadow-offset-action-danger": "3px 3px 0 0 #ff2a1a",
-      "--astro-code-foreground": "#ececec",
-      "--astro-code-background": "#161616",
-      "--astro-code-token-keyword": "#4488ff",
-      "--astro-code-token-string": "#ff4838",
-      "--astro-code-token-string-expression": "#ff4838",
-      "--astro-code-token-comment": "#999999",
-      "--astro-code-token-function": "#bb55ff",
-      "--astro-code-token-constant": "#00ccdd",
-      "--astro-code-token-parameter": "#ececec",
-      "--astro-code-token-punctuation": "#999999",
-      "--astro-code-token-link": "#4488ff"
+      "--shadow-offset-action-danger": "3px 3px 0 0 #ff2a1a"
     },
     "porcelain": {
       "--surface-0": "#eff0f1",
@@ -546,18 +502,7 @@
       "--shadow-offset-overlay": "1px 1px 0 0 #a0a3a7",
       "--shadow-offset-action": "1px 1px 0 0 #1e40af",
       "--shadow-offset-action-hover": "calc(1px + 1px) calc(1px + 1px) 0 0 #1e40af",
-      "--shadow-offset-action-danger": "1px 1px 0 0 #d02c2d",
-      "--astro-code-foreground": "#080b10",
-      "--astro-code-background": "#f3f4f6",
-      "--astro-code-token-keyword": "#0858a8",
-      "--astro-code-token-string": "#067060",
-      "--astro-code-token-string-expression": "#067060",
-      "--astro-code-token-comment": "#686b70",
-      "--astro-code-token-function": "#6a1b9a",
-      "--astro-code-token-constant": "#006d76",
-      "--astro-code-token-parameter": "#080b12",
-      "--astro-code-token-punctuation": "#686b70",
-      "--astro-code-token-link": "#0858a8"
+      "--shadow-offset-action-danger": "1px 1px 0 0 #d02c2d"
     },
     "porcelain-dark": {
       "--surface-0": "#0c0e15",
@@ -657,18 +602,7 @@
       "--shadow-offset-overlay": "1px 1px 0 0 #3e4454",
       "--shadow-offset-action": "1px 1px 0 0 #7fa0f0",
       "--shadow-offset-action-hover": "calc(1px + 1px) calc(1px + 1px) 0 0 #7fa0f0",
-      "--shadow-offset-action-danger": "1px 1px 0 0 #e53644",
-      "--astro-code-foreground": "#dce0e6",
-      "--astro-code-background": "#0e1016",
-      "--astro-code-token-keyword": "#40b0ff",
-      "--astro-code-token-string": "#00e088",
-      "--astro-code-token-string-expression": "#00e088",
-      "--astro-code-token-comment": "#6c7488",
-      "--astro-code-token-function": "#b070ff",
-      "--astro-code-token-constant": "#00d4e8",
-      "--astro-code-token-parameter": "#dce0e6",
-      "--astro-code-token-punctuation": "#6c7486",
-      "--astro-code-token-link": "#40b0ff"
+      "--shadow-offset-action-danger": "1px 1px 0 0 #e53644"
     },
     "solace": {
       "--surface-0": "#f3f3ef",
@@ -768,18 +702,7 @@
       "--shadow-offset-overlay": "1px 1px 0 0 #a0a3a7",
       "--shadow-offset-action": "1px 1px 0 0 #2b5bff",
       "--shadow-offset-action-hover": "calc(1px + 1px) calc(1px + 1px) 0 0 #2b5bff",
-      "--shadow-offset-action-danger": "1px 1px 0 0 #a44735",
-      "--astro-code-foreground": "#05070c",
-      "--astro-code-background": "#f3f4f2",
-      "--astro-code-token-keyword": "#53628f",
-      "--astro-code-token-string": "#3f8a55",
-      "--astro-code-token-string-expression": "#3f8a55",
-      "--astro-code-token-comment": "#727578",
-      "--astro-code-token-function": "#2b5bff",
-      "--astro-code-token-constant": "#005f72",
-      "--astro-code-token-parameter": "#05070c",
-      "--astro-code-token-punctuation": "#727578",
-      "--astro-code-token-link": "#53628f"
+      "--shadow-offset-action-danger": "1px 1px 0 0 #a44735"
     },
     "solace-dark": {
       "--surface-0": "#0b0e14",
@@ -879,18 +802,7 @@
       "--shadow-offset-overlay": "1px 1px 0 0 #4a505d",
       "--shadow-offset-action": "1px 1px 0 0 #6f8fff",
       "--shadow-offset-action-hover": "calc(1px + 1px) calc(1px + 1px) 0 0 #6f8fff",
-      "--shadow-offset-action-danger": "1px 1px 0 0 #e47463",
-      "--astro-code-foreground": "#f3f1e8",
-      "--astro-code-background": "#0b0e14",
-      "--astro-code-token-keyword": "#7190d6",
-      "--astro-code-token-string": "#45aa88",
-      "--astro-code-token-string-expression": "#45aa88",
-      "--astro-code-token-comment": "#85888f",
-      "--astro-code-token-function": "#6f8fff",
-      "--astro-code-token-constant": "#48a4af",
-      "--astro-code-token-parameter": "#f3f1e8",
-      "--astro-code-token-punctuation": "#85888f",
-      "--astro-code-token-link": "#7190d6"
+      "--shadow-offset-action-danger": "1px 1px 0 0 #e47463"
     },
     "tobacco": {
       "--surface-0": "#e8e7e0",
@@ -990,18 +902,7 @@
       "--shadow-offset-overlay": "2px 2px 0 0 #46443e",
       "--shadow-offset-action": "2px 2px 0 0 #6c5240",
       "--shadow-offset-action-hover": "calc(2px + 1px) calc(2px + 1px) 0 0 #6c5240",
-      "--shadow-offset-action-danger": "2px 2px 0 0 #c5623f",
-      "--astro-code-foreground": "#1a1a18",
-      "--astro-code-background": "#edece6",
-      "--astro-code-token-keyword": "#2e4a8c",
-      "--astro-code-token-string": "#a84020",
-      "--astro-code-token-string-expression": "#a84020",
-      "--astro-code-token-comment": "#5e5d54",
-      "--astro-code-token-function": "#6a3898",
-      "--astro-code-token-constant": "#186058",
-      "--astro-code-token-parameter": "#1a1a18",
-      "--astro-code-token-punctuation": "#5e5d54",
-      "--astro-code-token-link": "#2e4a8c"
+      "--shadow-offset-action-danger": "2px 2px 0 0 #c5623f"
     },
     "tobacco-dark": {
       "--surface-0": "#121110",
@@ -1101,18 +1002,7 @@
       "--shadow-offset-overlay": "2px 2px 0 0 #a8a49a",
       "--shadow-offset-action": "2px 2px 0 0 #bda488",
       "--shadow-offset-action-hover": "calc(2px + 1px) calc(2px + 1px) 0 0 #bda488",
-      "--shadow-offset-action-danger": "2px 2px 0 0 #d64e3d",
-      "--astro-code-foreground": "#e2e0d6",
-      "--astro-code-background": "#141312",
-      "--astro-code-token-keyword": "#7090ee",
-      "--astro-code-token-string": "#f06040",
-      "--astro-code-token-string-expression": "#f06040",
-      "--astro-code-token-comment": "#787468",
-      "--astro-code-token-function": "#d070b8",
-      "--astro-code-token-constant": "#40d8b0",
-      "--astro-code-token-parameter": "#e2e0d6",
-      "--astro-code-token-punctuation": "#787468",
-      "--astro-code-token-link": "#7090ee"
+      "--shadow-offset-action-danger": "2px 2px 0 0 #d64e3d"
     }
   };
   function resolveTheme(name) {
