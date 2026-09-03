@@ -11,7 +11,7 @@ interface Props {
 }
 const { title = 'Beaket UI', wide = false } = Astro.props;
 const currentPath = Astro.url.pathname;
-const components = registry.components;
+const components = [...registry.components].sort((a, b) => a.docs.title.localeCompare(b.docs.title));
 const currentYear = new Date().getFullYear();
 ---
 
@@ -32,7 +32,7 @@ const currentYear = new Date().getFullYear();
           <a href="/ui/" class="sidebar-title">Beaket UI</a>
           <span class="sidebar-version">v{pkg.version}</span>
           <button class="sidebar-toggle" aria-label="Toggle menu" aria-expanded="false">
-            {title} ▼
+            Menu ▼
           </button>
         </div>
 
@@ -85,12 +85,11 @@ const currentYear = new Date().getFullYear();
     <script>
       const toggle = document.querySelector('.sidebar-toggle');
       const nav = document.querySelector('.sidebar-nav');
-      const pageTitle = toggle?.textContent?.replace(/[▼▲]/, '').trim() || '';
       toggle?.addEventListener('click', () => {
         const expanded = toggle.getAttribute('aria-expanded') === 'true';
         toggle.setAttribute('aria-expanded', String(!expanded));
         nav?.classList.toggle('open');
-        if (toggle) toggle.textContent = `${pageTitle} ${expanded ? '▼' : '▲'}`;
+        if (toggle) toggle.textContent = `Menu ${expanded ? '▼' : '▲'}`;
       });
 
       // Add copy buttons to all code blocks

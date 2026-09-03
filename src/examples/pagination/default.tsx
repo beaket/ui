@@ -2,14 +2,18 @@ import { useState } from "react";
 
 import { Pagination } from "../../components/pagination";
 
-const buildPageUrl = (page: number) => `?page=${page}`;
-
-const args = {
-  page: 1,
-  totalPages: 10,
-  buildPageUrl,
-};
-
 export default function Example() {
-  return <Pagination {...args} />;
+  const [page, setPage] = useState(1);
+
+  return (
+    <div className="flex h-full items-center justify-center">
+      <Pagination
+        mode="button"
+        page={page}
+        totalPages={20}
+        maxPageButtons={7}
+        onPageChange={setPage}
+      />
+    </div>
+  );
 }

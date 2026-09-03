@@ -62,5 +62,5 @@ const render = () => (
 );
 
 export default function Example() {
-  return render();
+  return <div className="flex h-full w-full items-center justify-center">{render()}</div>;
 }
