@@ -42,6 +42,8 @@ jobs:
         run: pnpm test:a11y:components
       - name: Test documentation accessibility
         run: pnpm test:a11y:docs
+      - name: Check docs bundle boundary
+        run: pnpm docs:bundle:report
       - name: Summarize accessibility evidence
         if: always()
         run: node scripts/report-a11y-evidence.mjs
