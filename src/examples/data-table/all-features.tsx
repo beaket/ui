@@ -51,7 +51,7 @@ const columns: ColumnDef<User>[] = [
       const icons = { active: CircleCheck, inactive: CircleMinus, pending: Clock } as const;
       const Icon = icons[status];
       return (
-        <Badge variant={variants[status]}>
+        <Badge variant={variants[status]} className="inline-flex w-24 justify-center">
           <Icon aria-hidden="true" className="mr-1 size-3" /> {status}
         </Badge>
       );

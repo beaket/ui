@@ -5,8 +5,6 @@ const invoices = [
   { id: "INV001", status: "Paid", method: "Credit Card", amount: "¥25,000" },
   { id: "INV002", status: "Pending", method: "PayPal", amount: "¥15,000" },
   { id: "INV003", status: "Unpaid", method: "Bank Transfer", amount: "¥35,000" },
-  { id: "INV004", status: "Paid", method: "Credit Card", amount: "¥45,000" },
-  { id: "INV005", status: "Paid", method: "PayPal", amount: "¥55,000" },
 ];
 
 const args = {};

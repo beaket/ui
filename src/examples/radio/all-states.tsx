@@ -8,19 +8,19 @@ export default () => (
         <div className="flex items-center gap-1">
           <RadioItem value="option1" id="h-opt1" />
           <label htmlFor="h-opt1" className="text-sm">
-            Option 1
+            A
           </label>
         </div>
         <div className="flex items-center gap-1">
           <RadioItem value="option2" id="h-opt2" />
           <label htmlFor="h-opt2" className="text-sm">
-            Option 2
+            B
           </label>
         </div>
         <div className="flex items-center gap-1">
           <RadioItem value="option3" id="h-opt3" />
           <label htmlFor="h-opt3" className="text-sm">
-            Option 3
+            C
           </label>
         </div>
       </RadioGroup>

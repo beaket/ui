@@ -9,19 +9,25 @@ function NavigationRoot({ className, ...props }: React.ComponentProps<"nav">) {
 
 // One fused instrument: links share neutral hairline borders. Selection owns
 // the lens; the strip itself spends no standing accent. Vertical layouts swap the fusion axis:
-// `flex-col [&>li+li]:ml-0 [&>li+li]:-mt-px`.
+// `flex-col [&>li+li]:border-l [&>li+li]:-mt-px`.
 function NavigationList({ className, ...props }: React.ComponentProps<"ul">) {
   return (
     <ul
       data-slot="navigation-list"
-      className={cn("m-0 inline-flex list-none p-0 [&>li+li]:-ml-px", className)}
+      className={cn("!m-0 inline-flex list-none !p-0 [&>li+li]:border-l-0", className)}
       {...props}
     />
   );
 }
 
 function NavigationItem({ className, ...props }: React.ComponentProps<"li">) {
-  return <li data-slot="navigation-item" className={cn("", className)} {...props} />;
+  return (
+    <li
+      data-slot="navigation-item"
+      className={cn("border-border-muted !m-0 border", className)}
+      {...props}
+    />
+  );
 }
 
 interface NavigationLinkProps extends React.ComponentProps<"a"> {
@@ -40,8 +46,8 @@ function NavigationLink({ className, active, children, ...props }: NavigationLin
       data-slot="navigation-link"
       data-active={active || undefined}
       className={cn(
-        "group relative isolate flex h-8 items-center border px-3.5 text-sm no-underline",
-        "border-border-muted text-fg",
+        "group relative isolate flex h-8 items-center px-3.5 text-sm no-underline",
+        "text-fg",
         "before:absolute before:inset-[-8px] before:content-['']",
         "focus-visible:outline-border-focus focus-visible:z-[2] focus-visible:outline-2 focus-visible:outline-offset-2",
         "transition-colors duration-100",

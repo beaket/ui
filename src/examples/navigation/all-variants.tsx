@@ -7,15 +7,15 @@ export default () => (
       <Navigation>
         <Navigation.List>
           <Navigation.Item>
-            <Navigation.Link href="/" active>
+            <Navigation.Link href="#home" active>
               Home
             </Navigation.Link>
           </Navigation.Item>
           <Navigation.Item>
-            <Navigation.Link href="/docs">Docs</Navigation.Link>
+            <Navigation.Link href="#docs">Docs</Navigation.Link>
           </Navigation.Item>
           <Navigation.Item>
-            <Navigation.Link href="/about">About</Navigation.Link>
+            <Navigation.Link href="#about">About</Navigation.Link>
           </Navigation.Item>
         </Navigation.List>
       </Navigation>
@@ -23,14 +23,14 @@ export default () => (
     <div>
       <p className="text-fg-muted mb-2 text-xs">Vertical navigation</p>
       <Navigation>
-        <Navigation.List className="w-48 flex-col [&>li+li]:-mt-px [&>li+li]:ml-0">
+        <Navigation.List className="w-48 flex-col [&>li+li]:-mt-px [&>li+li]:border-l">
           <Navigation.Item>
-            <Navigation.Link href="/" active className="w-full">
+            <Navigation.Link href="#dashboard" active className="w-full">
               Dashboard
             </Navigation.Link>
           </Navigation.Item>
           <Navigation.Item>
-            <Navigation.Link href="/settings" className="w-full">
+            <Navigation.Link href="#settings" className="w-full">
               Settings
             </Navigation.Link>
           </Navigation.Item>

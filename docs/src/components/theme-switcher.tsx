@@ -191,21 +191,21 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
     <>
       {baseThemes.map((name) => {
         const resolvedKey = dark && themeTokens[`${name}-dark`] ? `${name}-dark` : name;
-        const chromeColor = themeTokens[resolvedKey]["--color-border"];
+        const accentColor = themeTokens[resolvedKey]["--signal-accent"];
         return (
           <button
             type="button"
             key={name}
             onClick={() => handleClick(name)}
-            className={`sidebar-link ${active === name ? "active" : ""}bg-transparent`}
-            style={{ display: "flex", alignItems: "center", gap: "6px" }}
+            className={`sidebar-link bg-transparent ${active === name ? "active" : ""}`}
+            style={{ display: "flex", width: "100%", alignItems: "center", gap: "6px" }}
           >
             <span
               style={{
                 display: "inline-block",
                 width: 8,
                 height: 8,
-                backgroundColor: chromeColor,
+                backgroundColor: accentColor,
                 border: active === name ? "1px solid var(--color-fg)" : "none",
                 flexShrink: 0,
               }}

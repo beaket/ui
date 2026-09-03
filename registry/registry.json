@@ -267,7 +267,8 @@
         "title": "Separator",
         "tagline": "A visual divider that separates content into distinct sections.",
         "sections": ["AllStates"],
-        "previewStory": "Default"
+        "previewStory": "Default",
+        "span": 2
       }
     },
     {
@@ -320,7 +321,7 @@
         "tagline": "A navigation component for paginated content with ellipsis support.",
         "sections": ["AllStates"],
         "previewStory": "Default",
-        "span": 2
+        "span": 3
       }
     },
     {
@@ -334,7 +335,7 @@
         "tagline": "A powerful data table with sorting, filtering, pagination, and selection.",
         "sections": ["AllFeatures"],
         "previewStory": "FullFeatured",
-        "span": 3,
+        "span": 4,
         "rowSpan": 2
       }
     },
@@ -348,7 +349,9 @@
         "title": "Skeleton",
         "tagline": "An animated placeholder for content that is loading.",
         "sections": ["AllStates"],
-        "previewStory": "CardPreview"
+        "previewStory": "CardPreview",
+        "span": 2,
+        "lgSpan": 1
       }
     },
     {

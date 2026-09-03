@@ -7,7 +7,7 @@ export default () => (
       <Breadcrumb>
         <Breadcrumb.List>
           <Breadcrumb.Item>
-            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+            <Breadcrumb.Link href="#home">Home</Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
             <Breadcrumb.Separator />
@@ -21,7 +21,7 @@ export default () => (
       <Breadcrumb>
         <Breadcrumb.List>
           <Breadcrumb.Item>
-            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+            <Breadcrumb.Link href="#home">Home</Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
             <Breadcrumb.Separator>&gt;</Breadcrumb.Separator>
