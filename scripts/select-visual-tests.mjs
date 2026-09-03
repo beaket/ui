@@ -56,7 +56,13 @@ export function selectVisualTests(files) {
     }
 
     // Known non-visual files may skip; every other path is conservatively global.
-    if (!file.startsWith(".changeset/") && file !== "README.md") return { mode: "full" };
+    if (
+      !file.startsWith(".changeset/") &&
+      file !== "README.md" &&
+      !/^docs\/[^/]+\.md$/.test(file)
+    ) {
+      return { mode: "full" };
+    }
   }
 
   if (!selectedComponents.size && !selectedDocs.size) return { mode: "skip" };
@@ -80,6 +86,17 @@ if (process.argv[2] === "--test") {
   });
   assert.deepEqual(selectVisualTests(["src/themes/dark.css"]), { mode: "full" });
   assert.deepEqual(selectVisualTests(["README.md"]), { mode: "skip" });
+  assert.deepEqual(selectVisualTests(["docs/a11y-automated-check-contract.md"]), { mode: "skip" });
+  assert.deepEqual(selectVisualTests(["src/components/button.stories.tsx"]), {
+    mode: "selected",
+    components: ["button"],
+    docs: ["/ui/components/button"],
+  });
+  assert.deepEqual(selectVisualTests(["docs/src/pages/cli.md"]), {
+    mode: "selected",
+    components: [],
+    docs: ["/ui/cli"],
+  });
 } else {
   const [base, head] = process.argv.slice(2);
   if (!base || !head) throw new Error("Usage: select-visual-tests.mjs <base-sha> <head-sha>");

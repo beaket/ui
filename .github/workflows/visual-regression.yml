@@ -2,18 +2,6 @@ name: Visual regression
 
 on:
   pull_request:
-    paths:
-      [
-        ".github/workflows/visual-regression.yml",
-        "docs/**",
-        "src/**",
-        "registry/**",
-        ".storybook/**",
-        "package.json",
-        "pnpm-lock.yaml",
-        "playwright.visual.config.ts",
-        "tests/**",
-      ]
   push:
     branches: [main]
     paths:
@@ -33,19 +21,33 @@ permissions:
   contents: read
 
 jobs:
+  selection:
+    runs-on: ubuntu-latest
+    outputs:
+      mode: ${{ steps.selection.outputs.mode }}
+      components: ${{ steps.selection.outputs.components }}
+      docs: ${{ steps.selection.outputs.docs }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: selection
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --no-tags origin '${{ github.event.pull_request.base.sha }}'
+          node scripts/select-visual-tests.mjs '${{ github.event.pull_request.base.sha }}' '${{ github.event.pull_request.head.sha }}' >> "$GITHUB_OUTPUT"
+
   screenshots:
+    needs: selection
+    if: github.event_name != 'pull_request' || needs.selection.outputs.mode != 'skip'
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright:v1.62.1-noble
     steps:
       - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
-      - id: selection
-        if: github.event_name == 'pull_request'
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git fetch --no-tags origin '${{ github.event.pull_request.base.sha }}'
-          node scripts/select-visual-tests.mjs '${{ github.event.pull_request.base.sha }}' '${{ github.event.pull_request.head.sha }}' >> "$GITHUB_OUTPUT"
+          persist-credentials: false
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -53,11 +55,10 @@ jobs:
           cache: pnpm
       - run: pnpm install
       - run: pnpm test:visual
-        if: steps.selection.outputs.mode != 'skip'
         env:
-          VISUAL_TEST_MODE: ${{ steps.selection.outputs.mode }}
-          VISUAL_COMPONENTS: ${{ steps.selection.outputs.components }}
-          VISUAL_DOCS: ${{ steps.selection.outputs.docs }}
+          VISUAL_TEST_MODE: ${{ needs.selection.outputs.mode }}
+          VISUAL_COMPONENTS: ${{ needs.selection.outputs.components }}
+          VISUAL_DOCS: ${{ needs.selection.outputs.docs }}
       - uses: actions/upload-artifact@v7
         if: failure()
         with:
