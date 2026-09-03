@@ -13,7 +13,7 @@ jobs:
       github.event.label.name == 'visual-baseline-update' &&
       github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    container: mcr.microsoft.com/playwright:v1.62.0-noble
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
     steps:
       - uses: actions/checkout@v7.0.1
         with:
