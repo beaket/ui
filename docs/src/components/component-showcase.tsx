@@ -16,10 +16,8 @@ interface ComponentShowcaseProps {
   components: ComponentData[];
 }
 
-const interactiveSelector =
-  "a, button, input, select, textarea, label, [role=button], [role=checkbox], [role=combobox], [role=menuitem], [role=radio], [role=switch], [role=tab]";
-
 export function ComponentShowcase({ components }: ComponentShowcaseProps) {
+  // index.astro server-renders cards, links, and static previews; do not hydrate this grid.
   return (
     <div
       className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
@@ -73,20 +71,15 @@ export function ComponentShowcase({ components }: ComponentShowcaseProps) {
         return (
           <div
             key={component.name}
-            role="link"
-            tabIndex={0}
-            aria-label={`View ${component.docs.title} details`}
-            className={`border-border bg-bg-raised hover:border-border-strong focus-visible:outline-border-focus flex cursor-pointer flex-col border p-4 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 ${colClass} ${responsiveClass} ${positionClass}`}
+            className={`border-border bg-bg-raised hover:border-border-strong relative flex flex-col border p-4 ${colClass} ${responsiveClass} ${positionClass}`}
             style={rowSpan > 1 ? { gridRow: `span ${rowSpan}` } : undefined}
-            onClick={(event) => {
-              if ((event.target as HTMLElement).closest(interactiveSelector)) return;
-              window.location.assign(`/ui/components/${component.name}`);
-            }}
-            onKeyDown={(event) => {
-              if (event.target !== event.currentTarget || event.key !== "Enter") return;
-              window.location.assign(`/ui/components/${component.name}`);
-            }}
           >
+            <a
+              data-slot="component-link"
+              href={`/ui/components/${component.name}`}
+              aria-label={`View ${component.docs.title} details`}
+              className="focus-visible:outline-border-focus absolute -inset-px z-10 outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
+            />
             <div
               className={`-m-1 min-h-0 flex-1 p-1 ${overflowClass} [&_[data-slot=input-wrapper]]:w-full [&_[data-slot=input]]:w-full [&_[data-slot=select]]:w-full [&_ul]:justify-start [&>*]:m-0`}
             >
