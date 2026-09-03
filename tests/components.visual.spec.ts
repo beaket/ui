@@ -1,15 +1,22 @@
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 
-type Story = { id: string; type: string; tags: string[] };
+type Story = { id: string; type: string; tags: string[]; importPath: string };
+const selectedComponents = process.env.VISUAL_COMPONENTS?.split(",").filter(Boolean) ?? [];
 const { entries } = JSON.parse(readFileSync("storybook-static/index.json", "utf8")) as {
   entries: Record<string, Story>;
 };
 // Play-function checks and the intentionally empty inactive state have no visual surface to compare.
-const stories = Object.values(entries).filter(
-  ({ id, type, tags }) =>
-    type === "story" && id !== "ui-navigationprogress--inactive" && !tags.includes("play-fn"),
-);
+const stories = Object.values(entries)
+  .filter(
+    ({ id, type, tags }) =>
+      type === "story" && id !== "ui-navigationprogress--inactive" && !tags.includes("play-fn"),
+  )
+  .filter(
+    ({ importPath }) =>
+      process.env.VISUAL_TEST_MODE !== "selected" ||
+      selectedComponents.some((name) => importPath === `./src/components/${name}.stories.tsx`),
+  );
 
 for (const viewport of [
   { name: "mobile", width: 375, height: 812 },
