@@ -10,7 +10,11 @@ const routes = [
   "/ui/themes",
   "/ui/changelog",
   ...registry.components.map(({ name }) => `/ui/components/${name}`),
-];
+].filter(
+  (route) =>
+    process.env.VISUAL_TEST_MODE !== "selected" ||
+    (process.env.VISUAL_DOCS?.split(",").filter(Boolean) ?? []).includes(route),
+);
 
 for (const viewport of [
   { name: "mobile", width: 375, height: 812 },

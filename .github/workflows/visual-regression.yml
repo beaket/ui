@@ -38,6 +38,14 @@ jobs:
     container: mcr.microsoft.com/playwright:v1.62.1-noble
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+      - id: selection
+        if: github.event_name == 'pull_request'
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git fetch --no-tags origin '${{ github.event.pull_request.base.sha }}'
+          node scripts/select-visual-tests.mjs '${{ github.event.pull_request.base.sha }}' '${{ github.event.pull_request.head.sha }}' >> "$GITHUB_OUTPUT"
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -45,6 +53,11 @@ jobs:
           cache: pnpm
       - run: pnpm install
       - run: pnpm test:visual
+        if: steps.selection.outputs.mode != 'skip'
+        env:
+          VISUAL_TEST_MODE: ${{ steps.selection.outputs.mode }}
+          VISUAL_COMPONENTS: ${{ steps.selection.outputs.components }}
+          VISUAL_DOCS: ${{ steps.selection.outputs.docs }}
       - uses: actions/upload-artifact@v7
         if: failure()
         with:
