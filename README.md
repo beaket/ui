@@ -1,6 +1,6 @@
 # Beaket UI
 
-[![CI](https://github.com/beaket/ui/actions/workflows/ci.yml/badge.svg)](https://github.com/beaket/ui/actions/workflows/ci.yml) [![Chromatic](https://github.com/beaket/ui/actions/workflows/chromatic.yml/badge.svg)](https://github.com/beaket/ui/actions/workflows/chromatic.yml)
+[![CI](https://github.com/beaket/ui/actions/workflows/ci.yml/badge.svg)](https://github.com/beaket/ui/actions/workflows/ci.yml)
 
 Ink & Instrument — a printed page you can press. Two things live in this repo:
 

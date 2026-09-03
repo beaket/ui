@@ -109,9 +109,6 @@ export const AllStates = () => (
 // One consolidated test — folds selection across items and the disabled no-op.
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    chromatic: { disableSnapshot: true },
-  },
   args: { onValueChange: fn() },
   render: (args) => (
     <div className="flex flex-col gap-6">

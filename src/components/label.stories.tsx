@@ -80,9 +80,6 @@ export const AllStates: Story = {
 
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    chromatic: { disableSnapshot: true },
-  },
   render: () => (
     <div className="flex items-center gap-2">
       <Checkbox id="test-terms" data-testid="test-checkbox" />

@@ -19,29 +19,14 @@ claim WCAG certification or complete WCAG conformance.
 
 ## Coverage matrix
 
-| WCAG surface                              | Automated signal                     | Covered surface                                                        | Manual-only or not applicable                                                                      |
-| ----------------------------------------- | ------------------------------------ | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Rules in the five axe tags above          | Storybook addon using the tags above | Component stories once #819 enables the CI project                     | Rule applicability depends on the rendered story state; axe-core 4.13.0 has no `wcag22a` tag.      |
-| Rendered component semantics and contrast | Storybook axe browser scan           | Public component-story DOM                                             | Alternative-text quality, reading order, and assistive-technology usability require manual review. |
-| Keyboard focus and dismissal              | Story `play` tests                   | Composite widget states added in #820                                  | axe cannot prove focus movement or screen-reader announcements.                                    |
-| Composed documentation flows              | Playwright plus axe                  | Production docs navigation and an opened Dialog preview                | The suite is targeted, not a crawl of every URL or state.                                          |
-| Semantic token contrast                   | `pnpm test:contrast`                 | Shipped light and dark theme token pairings                            | This is not a rendered-DOM scan and does not cover arbitrary consumer CSS.                         |
-| Visual regressions                        | Chromatic                            | `Overview/AccessibleStates` across every palette and light/dark scheme | Pixel diffs are not proof of WCAG contrast compliance.                                             |
-
-## Chromatic visual-review policy
-
-Chromatic is a required review signal for UI changes. Pull requests fail when
-Chromatic finds a visual or accessibility regression; a reviewer must approve
-the build in Chromatic before merging. Pushes to `main` alone accept the
-reviewed baseline automatically. `Overview/AccessibleStates` captures keyboard
-focus, disabled, invalid/error, and every supported palette plus light/dark
-scheme as deterministic snapshots.
-
-Chromatic accessibility scanning is enabled for this Storybook project and
-uses a baseline to flag changed violations. It runs in Chrome only and does
-not report axe `incomplete` results. Its pixel diffs are regression detection,
-not a 4.5:1 contrast calculation or proof of WCAG conformance; the required
-Storybook axe gate and `pnpm test:contrast` cover those separate signals.
+| WCAG surface                              | Automated signal                     | Covered surface                                         | Manual-only or not applicable                                                                      |
+| ----------------------------------------- | ------------------------------------ | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Rules in the five axe tags above          | Storybook addon using the tags above | Component stories once #819 enables the CI project      | Rule applicability depends on the rendered story state; axe-core 4.13.0 has no `wcag22a` tag.      |
+| Rendered component semantics and contrast | Storybook axe browser scan           | Public component-story DOM                              | Alternative-text quality, reading order, and assistive-technology usability require manual review. |
+| Keyboard focus and dismissal              | Story `play` tests                   | Composite widget states added in #820                   | axe cannot prove focus movement or screen-reader announcements.                                    |
+| Composed documentation flows              | Playwright plus axe                  | Production docs navigation and an opened Dialog preview | The suite is targeted, not a crawl of every URL or state.                                          |
+| Semantic token contrast                   | `pnpm test:contrast`                 | Shipped light and dark theme token pairings             | This is not a rendered-DOM scan and does not cover arbitrary consumer CSS.                         |
+| Visual regressions                        | Playwright PNG snapshots             | Storybook stories and production docs routes            | Pixel diffs are not proof of WCAG contrast compliance.                                             |
 
 ## Exceptions
 

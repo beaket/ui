@@ -65,9 +65,6 @@ export const AllStates = () => (
 // One consolidated test — folds the toggle path and the disabled no-op.
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    chromatic: { disableSnapshot: true },
-  },
   args: { onCheckedChange: fn() },
   render: (args) => (
     <div className="flex flex-col gap-4">

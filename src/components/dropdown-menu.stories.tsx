@@ -369,7 +369,6 @@ function InteractionExample() {
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
   parameters: {
-    chromatic: { disableSnapshot: true },
     a11y: { config: { rules: [{ id: "aria-hidden-focus", enabled: false }] } },
   },
   render: () => <InteractionExample />,

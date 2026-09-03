@@ -112,9 +112,6 @@ export const AllStates = () => (
 
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    chromatic: { disableSnapshot: true },
-  },
   args: {
     variant: "warning",
     title: "Test Warning",
