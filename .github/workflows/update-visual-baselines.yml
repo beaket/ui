@@ -26,6 +26,7 @@ jobs:
       - run: pnpm install
       - run: pnpm test:visual:update
       - run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git add tests/__screenshots__
           git diff --cached --quiet || git -c user.name=github-actions[bot] -c user.email=41898282+github-actions[bot] commit -m "test: update visual baselines"
           git push
