@@ -237,9 +237,6 @@ export const AllStates = () => (
 // button) and preventClose (Escape is a no-op, the action button still closes).
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    chromatic: { disableSnapshot: true },
-  },
   render: () => (
     <div className="flex gap-2">
       <Sheet trigger={<Button>Open default</Button>}>

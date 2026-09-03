@@ -193,9 +193,6 @@ const interactionUsers: User[] = [
 
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    chromatic: { disableSnapshot: true },
-  },
   args: {
     columns,
     data: interactionUsers,

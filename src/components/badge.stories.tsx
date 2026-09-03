@@ -52,9 +52,6 @@ export const AllVariants = () => (
 // One consolidated test — folds render + the role/label accessibility path.
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    chromatic: { disableSnapshot: true },
-  },
   args: {
     children: "Status",
     role: "status",

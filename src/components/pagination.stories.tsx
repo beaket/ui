@@ -120,9 +120,6 @@ export const ButtonMode = {
 // (first/last disabled edges, current marker, live page changes).
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    chromatic: { disableSnapshot: true },
-  },
   render: () => (
     <div className="space-y-8">
       <div data-testid="link-first">

@@ -52,9 +52,6 @@ export const Affixes = () => <InputAffixesExample />;
 // fields share the canvas (and a password field isn't role "textbox").
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    chromatic: { disableSnapshot: true },
-  },
   args: { onChange: fn(), onFocus: fn(), onBlur: fn() },
   render: (args) => {
     const bareRef = useRef<HTMLInputElement>(null);

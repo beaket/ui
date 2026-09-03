@@ -149,25 +149,9 @@ export const DenseInteractionHierarchy: StoryObj = {
   },
 };
 
-// A small, deterministic surface for Chromatic's approval gate. The focused
-// control is reached by keyboard; disabled and invalid states stay visible.
+// A small, deterministic visual-regression surface. The focused control is
+// reached by keyboard; disabled and invalid states stay visible.
 export const AccessibleStates: StoryObj = {
-  parameters: {
-    chromatic: {
-      modes: {
-        "solace light": { theme: "solace", scheme: "light" },
-        "solace dark": { theme: "solace", scheme: "dark" },
-        "porcelain light": { theme: "porcelain", scheme: "light" },
-        "porcelain dark": { theme: "porcelain", scheme: "dark" },
-        "tobacco light": { theme: "tobacco", scheme: "light" },
-        "tobacco dark": { theme: "tobacco", scheme: "dark" },
-        "marigold light": { theme: "marigold", scheme: "light" },
-        "marigold dark": { theme: "marigold", scheme: "dark" },
-        "eucalyptus light": { theme: "eucalyptus", scheme: "light" },
-        "eucalyptus dark": { theme: "eucalyptus", scheme: "dark" },
-      },
-    },
-  },
   render: () => (
     <div className="bg-bg text-fg min-h-64 space-y-6 p-8">
       <div className="flex flex-wrap gap-3">

@@ -109,9 +109,6 @@ export const AvatarGroup = () => (
 // a broken image falls back, and the shadow prop + data-slot land on the root.
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    chromatic: { disableSnapshot: true },
-  },
   render: () => (
     <div className="flex gap-4">
       <div data-testid="fallback-avatar">
@@ -158,9 +155,6 @@ const INLINE_PNG =
 
 export const HydrationGuardTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    chromatic: { disableSnapshot: true },
-  },
   render: () => (
     <Avatar>
       <Avatar.Image src={INLINE_PNG} alt="@beaket" />

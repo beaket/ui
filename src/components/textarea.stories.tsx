@@ -100,9 +100,6 @@ export const AutoResize: Story = {
 
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    chromatic: { disableSnapshot: true },
-  },
   args: { onChange: fn() },
   render: (args) => (
     <div className="flex flex-col gap-6">

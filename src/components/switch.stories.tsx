@@ -116,9 +116,6 @@ export const WithLabel: Story = {
 
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    chromatic: { disableSnapshot: true },
-  },
   args: { onCheckedChange: fn() },
   render: (args) => (
     <div className="flex gap-3">
