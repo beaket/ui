@@ -42,7 +42,7 @@ docs/             # @beaket/ui docs site (Astro)
 
 ## Docs & links
 
-- Deeper: [CONTRIBUTING.md](./CONTRIBUTING.md) (components) · [packages/paper/docs/CONTEXT.md](./packages/paper/docs/CONTEXT.md) (editor map) · [CLAUDE.md](./CLAUDE.md) (conventions)
+- Deeper: [CONTRIBUTING.md](./CONTRIBUTING.md) (components) · [packages/paper/docs/CONTEXT.md](./packages/paper/docs/CONTEXT.md) (editor map) · [CLAUDE.md](./CLAUDE.md) (conventions) · [docs/component-api-patterns.md](./docs/component-api-patterns.md) (API shape)
 - Sites: [Docs](https://beaket.github.io/ui/) · [Paper](https://beaket.github.io/ui/paper/)
 - npm: [@beaket/ui](https://www.npmjs.com/package/@beaket/ui) · [@beaket/paper](https://www.npmjs.com/package/@beaket/paper)
 - Accessibility: the defined automated checks pass per revision; this is not WCAG certification. [Coverage and limits](./docs/a11y-automated-check-contract.md)
