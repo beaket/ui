@@ -1,7 +1,7 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { type ClassValue, clsx } from "clsx";
 import { X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Children, isValidElement, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
@@ -79,6 +79,18 @@ const sideAnimations = {
     "data-[state=open]:animate-in data-[state=open]:slide-in-from-bottom data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom",
 };
 
+/**
+ * Opens the sheet. `asChild` defaults to true — as it does on `Sheet.Close` — so
+ * the natural `<Sheet.Trigger><Button>…</Button></Sheet.Trigger>` keeps the
+ * consumer's own element. The `trigger` prop is sugar over exactly this part.
+ */
+function SheetTrigger({
+  asChild = true,
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
+  return <DialogPrimitive.Trigger data-slot="sheet-trigger" {...props} asChild={asChild} />;
+}
+
 function SheetRoot({
   children,
   trigger,
@@ -126,9 +138,20 @@ function SheetRoot({
     if (!isControlled) setInternalOpen(value);
   };
 
+  // A `Sheet.Trigger` has to be a sibling of the Portal, not content inside it,
+  // so the root sorts children into the two places they can legally go.
+  const childList = Children.toArray(children);
+  const triggers = childList.filter(
+    (child) => isValidElement(child) && child.type === SheetTrigger,
+  );
+  const content = childList.filter(
+    (child) => !(isValidElement(child) && child.type === SheetTrigger),
+  );
+
   return (
     <DialogPrimitive.Root open={sheetOpen} onOpenChange={handleOpenChange}>
-      {trigger && <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger>}
+      {trigger && <SheetTrigger>{trigger}</SheetTrigger>}
+      {triggers}
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay
           data-slot="sheet-overlay"
@@ -144,7 +167,7 @@ function SheetRoot({
           onInteractOutside={preventClose ? (e) => e.preventDefault() : undefined}
           onEscapeKeyDown={preventClose ? (e) => e.preventDefault() : undefined}
         >
-          {children}
+          {content}
           {!hideCloseButton && (
             <DialogPrimitive.Close
               data-slot="sheet-close"
@@ -211,6 +234,7 @@ function SheetClose({
 }
 
 export const Sheet = Object.assign(SheetRoot, {
+  Trigger: SheetTrigger,
   Title: SheetTitle,
   Description: SheetDescription,
   Header: SheetHeader,

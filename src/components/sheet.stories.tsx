@@ -298,3 +298,25 @@ export const InteractionTest: Story = {
     await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   },
 };
+
+// The `trigger` prop and the `Sheet.Trigger` part are the same mechanism —
+// the prop is sugar that renders exactly this part.
+export const TriggerPartTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <Sheet>
+      <Sheet.Trigger>
+        <Button data-testid="sheet-trigger">Open panel</Button>
+      </Sheet.Trigger>
+      <Sheet.Title>Panel</Sheet.Title>
+      <Sheet.Description>Opened from the part, not the prop.</Sheet.Description>
+    </Sheet>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    await userEvent.click(canvas.getByTestId("sheet-trigger"));
+    await expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    await expect(screen.getByText("Opened from the part, not the prop.")).toBeInTheDocument();
+  },
+};
