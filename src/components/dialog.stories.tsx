@@ -238,3 +238,39 @@ export const InteractionTest: Story = {
     await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   },
 };
+
+// §2 — the `trigger` prop was the whole API: a consumer needing two triggers,
+// or a conditional one, had nowhere to go. Radix's context was already mounted;
+// the wrapper simply did not expose the part.
+export const TriggerPartTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <Dialog>
+      <Dialog.Trigger>
+        <Button data-testid="trigger-a">Open from A</Button>
+      </Dialog.Trigger>
+      <Dialog.Trigger>
+        <Button data-testid="trigger-b">Open from B</Button>
+      </Dialog.Trigger>
+      <Dialog.Title>Two triggers</Dialog.Title>
+      <Dialog.Description>Either one opens this dialog.</Dialog.Description>
+    </Dialog>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Both triggers are siblings of the portal, not content inside it.
+    const a = canvas.getByTestId("trigger-a");
+    const b = canvas.getByTestId("trigger-b");
+    await expect(a).toBeInTheDocument();
+    await expect(b).toBeInTheDocument();
+    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    await userEvent.click(b);
+    await expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    await expect(screen.getByText("Two triggers")).toBeInTheDocument();
+
+    // Content children still land inside the dialog, not beside the triggers.
+    await expect(canvas.queryByText("Two triggers")).not.toBeInTheDocument();
+  },
+};
