@@ -43,7 +43,7 @@ const variantTitles = {
   caution: "Caution",
 } as const;
 
-interface AlertProps
+export interface AlertProps
   extends Omit<React.ComponentProps<"div">, "title">, VariantProps<typeof alertVariants> {
   /** note | tip | important | warning | caution. Semantic variant that controls color and icon */
   variant?: "note" | "tip" | "important" | "warning" | "caution";

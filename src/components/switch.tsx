@@ -44,7 +44,7 @@ const switchThumbVariants = cva(
   },
 );
 
-interface SwitchProps
+export interface SwitchProps
   extends
     Omit<React.ComponentProps<typeof SwitchPrimitive.Root>, "asChild">,
     VariantProps<typeof switchVariants> {
@@ -105,5 +105,3 @@ export function Switch({ className, size, ...props }: SwitchProps) {
     </SwitchPrimitive.Root>
   );
 }
-
-export type { SwitchProps };

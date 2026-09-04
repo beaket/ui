@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export interface Props extends Omit<React.ComponentProps<"input">, "prefix"> {
+export interface InputProps extends Omit<React.ComponentProps<"input">, "prefix"> {
   /** Element to render before the input (e.g., icon) */
   prefix?: React.ReactNode;
   /** Element to render after the input (e.g., icon or button) */
@@ -27,7 +27,7 @@ const inputBaseStyles = [
   "aria-[invalid=true]:border-danger-solid aria-[invalid=true]:not-read-only:focus:shadow-offset-action-danger",
 ].join(" ");
 
-export function Input({ className, type = "text", prefix, suffix, ref, ...props }: Props) {
+export function Input({ className, type = "text", prefix, suffix, ref, ...props }: InputProps) {
   if (!prefix && !suffix) {
     return (
       <input

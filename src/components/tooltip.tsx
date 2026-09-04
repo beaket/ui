@@ -4,7 +4,9 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-interface TooltipProviderProps extends React.ComponentProps<typeof TooltipPrimitive.Provider> {
+export interface TooltipProviderProps extends React.ComponentProps<
+  typeof TooltipPrimitive.Provider
+> {
   /**
    * The duration in milliseconds before the tooltip appears
    * @default 0
@@ -16,7 +18,7 @@ function TooltipProvider({ delayDuration = 0, ...props }: TooltipProviderProps) 
   return <TooltipPrimitive.Provider delayDuration={delayDuration} {...props} />;
 }
 
-interface TooltipProps extends React.ComponentProps<typeof TooltipPrimitive.Root> {
+export interface TooltipProps extends React.ComponentProps<typeof TooltipPrimitive.Root> {
   /**
    * The duration in milliseconds before the tooltip appears
    * @default 0

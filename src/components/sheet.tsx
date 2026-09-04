@@ -1,12 +1,12 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { type ClassValue, clsx } from "clsx";
 import { X } from "lucide-react";
-import { Children, isValidElement, useEffect, useRef, useState } from "react";
+import { Children, isValidElement, useEffect, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-interface Props {
+export interface SheetProps {
   /**
    * When true, prevents closing the sheet via ESC key or clicking outside.
    */
@@ -38,11 +38,6 @@ interface Props {
    * Callback when the open state changes
    */
   onOpenChange?: (open: boolean) => void;
-
-  /**
-   * When this value becomes truthy, automatically close the sheet.
-   */
-  closeWhen?: unknown;
 
   /**
    * left | right | top | bottom. Side from which the sheet slides in
@@ -98,45 +93,24 @@ function SheetRoot({
   hideCloseButton = false,
   open,
   onOpenChange,
-  closeWhen,
   side = "right",
   fullScreen = false,
-}: Props) {
-  const [internalOpen, setInternalOpen] = useState(false);
-  const isControlled = open !== undefined;
-  const sheetOpen = isControlled ? open : internalOpen;
-
-  const onOpenChangeRef = useRef(onOpenChange);
-  onOpenChangeRef.current = onOpenChange;
-
+}: SheetProps) {
+  // Radix's Root already implements controlled/uncontrolled, so `open` and
+  // `onOpenChange` go straight to it. The only thing left of the hand-rolled
+  // wrapper is §9's dev warning, which is about `open` without `onOpenChange` —
+  // not about the state it used to mirror.
   const hasWarnedRef = useRef(false);
   useEffect(() => {
     if (process.env.NODE_ENV !== "production") {
-      if (isControlled && !onOpenChange && !hasWarnedRef.current) {
+      if (open !== undefined && !onOpenChange && !hasWarnedRef.current) {
         console.warn(
           "Sheet: `open` prop provided without `onOpenChange`. The sheet will be read-only.",
         );
         hasWarnedRef.current = true;
       }
     }
-  }, [isControlled, onOpenChange]);
-
-  // Auto-close when closeWhen becomes truthy
-  useEffect(() => {
-    if (closeWhen) {
-      if (isControlled) {
-        onOpenChangeRef.current?.(false);
-      } else {
-        setInternalOpen(false);
-        onOpenChangeRef.current?.(false);
-      }
-    }
-  }, [closeWhen, isControlled]);
-
-  const handleOpenChange = (value: boolean) => {
-    onOpenChangeRef.current?.(value);
-    if (!isControlled) setInternalOpen(value);
-  };
+  }, [open, onOpenChange]);
 
   // A `Sheet.Trigger` has to be a sibling of the Portal, not content inside it,
   // so the root sorts children into the two places they can legally go.
@@ -149,7 +123,7 @@ function SheetRoot({
   );
 
   return (
-    <DialogPrimitive.Root open={sheetOpen} onOpenChange={handleOpenChange}>
+    <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       {trigger && <SheetTrigger>{trigger}</SheetTrigger>}
       {triggers}
       <DialogPrimitive.Portal>

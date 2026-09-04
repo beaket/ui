@@ -5,12 +5,12 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export interface Props extends React.ComponentProps<typeof CheckboxPrimitive.Root> {
+export interface CheckboxProps extends React.ComponentProps<typeof CheckboxPrimitive.Root> {
   /** Additional CSS classes to apply to the checkbox */
   className?: string;
 }
 
-export function Checkbox({ className, ...props }: Props) {
+export function Checkbox({ className, ...props }: CheckboxProps) {
   return (
     <CheckboxPrimitive.Root
       data-slot="checkbox"

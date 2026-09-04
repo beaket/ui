@@ -1,4 +1,4 @@
-import { RadioGroup, RadioItem } from "../../components/radio";
+import { RadioGroup } from "../../components/radio";
 
 export default () => (
   <div className="flex flex-col gap-6">
@@ -6,19 +6,19 @@ export default () => (
       <span className="text-fg-muted text-xs tracking-wide uppercase">Horizontal</span>
       <RadioGroup defaultValue="option1" aria-label="Horizontal options">
         <div className="flex items-center gap-1">
-          <RadioItem value="option1" id="h-opt1" />
+          <RadioGroup.Item value="option1" id="h-opt1" />
           <label htmlFor="h-opt1" className="text-sm">
             A
           </label>
         </div>
         <div className="flex items-center gap-1">
-          <RadioItem value="option2" id="h-opt2" />
+          <RadioGroup.Item value="option2" id="h-opt2" />
           <label htmlFor="h-opt2" className="text-sm">
             B
           </label>
         </div>
         <div className="flex items-center gap-1">
-          <RadioItem value="option3" id="h-opt3" />
+          <RadioGroup.Item value="option3" id="h-opt3" />
           <label htmlFor="h-opt3" className="text-sm">
             C
           </label>
@@ -34,19 +34,19 @@ export default () => (
         aria-label="Vertical options"
       >
         <div className="flex items-center gap-2">
-          <RadioItem value="option1" id="v-opt1" />
+          <RadioGroup.Item value="option1" id="v-opt1" />
           <label htmlFor="v-opt1" className="text-sm">
             Option 1
           </label>
         </div>
         <div className="flex items-center gap-2">
-          <RadioItem value="option2" id="v-opt2" />
+          <RadioGroup.Item value="option2" id="v-opt2" />
           <label htmlFor="v-opt2" className="text-sm">
             Option 2
           </label>
         </div>
         <div className="flex items-center gap-2">
-          <RadioItem value="option3" id="v-opt3" />
+          <RadioGroup.Item value="option3" id="v-opt3" />
           <label htmlFor="v-opt3" className="text-sm">
             Option 3
           </label>
@@ -57,13 +57,13 @@ export default () => (
       <span className="text-fg-muted text-xs tracking-wide uppercase">Disabled</span>
       <RadioGroup disabled defaultValue="option1" aria-label="Disabled options">
         <div className="flex items-center gap-1">
-          <RadioItem value="option1" id="d-opt1" />
+          <RadioGroup.Item value="option1" id="d-opt1" />
           <label htmlFor="d-opt1" className="text-fg-muted text-sm">
             Option 1
           </label>
         </div>
         <div className="flex items-center gap-1">
-          <RadioItem value="option2" id="d-opt2" />
+          <RadioGroup.Item value="option2" id="d-opt2" />
           <label htmlFor="d-opt2" className="text-fg-muted text-sm">
             Option 2
           </label>
