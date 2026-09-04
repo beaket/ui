@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export interface BlockquoteProps extends React.HTMLAttributes<HTMLQuoteElement> {
+export interface BlockquoteProps extends React.ComponentProps<"blockquote"> {
   /** URL source for the quote */
   cite?: string;
   /** Name of the person being quoted */

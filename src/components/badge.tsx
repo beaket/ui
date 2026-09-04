@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export interface Props extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
+export interface Props extends Omit<React.ComponentProps<"span">, "children"> {
   /** default | secondary | success | error | info | outline | warning | code. Badge style variant */
   variant?: "default" | "secondary" | "success" | "error" | "info" | "outline" | "warning" | "code";
   /** Visible label or content. A badge must not communicate its state through color alone. */

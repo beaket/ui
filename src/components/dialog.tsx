@@ -50,7 +50,7 @@ interface Props {
   closeWhen?: unknown;
 }
 
-export function Dialog({
+function DialogRoot({
   children,
   trigger,
   preventClose = false,
@@ -148,7 +148,7 @@ function DialogDescription({
   );
 }
 
-function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="dialog-header"
@@ -158,7 +158,7 @@ function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
   );
 }
 
-function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="dialog-footer"
@@ -175,8 +175,10 @@ function DialogClose({
   return <DialogPrimitive.Close data-slot="dialog-close-action" {...props} asChild={asChild} />;
 }
 
-Dialog.Title = DialogTitle;
-Dialog.Description = DialogDescription;
-Dialog.Header = DialogHeader;
-Dialog.Footer = DialogFooter;
-Dialog.Close = DialogClose;
+export const Dialog = Object.assign(DialogRoot, {
+  Title: DialogTitle,
+  Description: DialogDescription,
+  Header: DialogHeader,
+  Footer: DialogFooter,
+  Close: DialogClose,
+});

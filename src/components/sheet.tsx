@@ -79,7 +79,7 @@ const sideAnimations = {
     "data-[state=open]:animate-in data-[state=open]:slide-in-from-bottom data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom",
 };
 
-export function Sheet({
+function SheetRoot({
   children,
   trigger,
   preventClose = false,
@@ -183,7 +183,7 @@ function SheetDescription({
   );
 }
 
-function SheetHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sheet-header"
@@ -193,7 +193,7 @@ function SheetHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElemen
   );
 }
 
-function SheetFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sheet-footer"
@@ -210,8 +210,10 @@ function SheetClose({
   return <DialogPrimitive.Close data-slot="sheet-close-action" {...props} asChild={asChild} />;
 }
 
-Sheet.Title = SheetTitle;
-Sheet.Description = SheetDescription;
-Sheet.Header = SheetHeader;
-Sheet.Footer = SheetFooter;
-Sheet.Close = SheetClose;
+export const Sheet = Object.assign(SheetRoot, {
+  Title: SheetTitle,
+  Description: SheetDescription,
+  Header: SheetHeader,
+  Footer: SheetFooter,
+  Close: SheetClose,
+});

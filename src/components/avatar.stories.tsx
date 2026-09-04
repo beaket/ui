@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { hydrateRoot } from "react-dom/client";
+import { renderToString } from "react-dom/server";
 import { expect, waitFor, within } from "storybook/test";
 import { Avatar } from "./avatar";
 
@@ -146,30 +148,63 @@ export const InteractionTest: Story = {
   },
 };
 
-// Kept separate — a distinct async concern: Avatar.Image defers rendering until
-// after mount (hydration guard), so the image element only appears once mounted
-// and loaded. Uses an inline data: image (not a network URL) so the load is
-// deterministic — no race between the fetch and the assertion.
+// Kept separate — a distinct async concern, and the deletion trigger for the
+// old #291 hydration guard. `Avatar.Image` used to defer rendering until after
+// mount because Radix's `useIsHydrated` (via `useSyncExternalStore`) returned
+// true during React 19 client hydration, so a cached image rendered <img> where
+// the server had rendered the fallback <span>. @radix-ui/react-avatar 1.2.6 no
+// longer uses that mechanism — the loading status is a plain `useState("idle")`,
+// identical on the server and on the first client render — so the guard is gone.
+// This story is what fails if a future Radix bump brings the mismatch back.
+//
+// Uses an inline data: image (not a network URL) so the load is deterministic —
+// no race between the fetch and the assertion.
 const INLINE_PNG =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
 
-export const HydrationGuardTest: Story = {
+export const SsrHydrationTest: Story = {
   tags: ["!autodocs"],
-  render: () => (
-    <Avatar>
-      <Avatar.Image src={INLINE_PNG} alt="@beaket" />
-      <Avatar.Fallback>HG</Avatar.Fallback>
-    </Avatar>
-  ),
+  render: () => <div data-testid="ssr-host" />,
   play: async ({ canvasElement }) => {
-    // The image element only exists after the hydration guard clears (it renders
-    // client-side, post-mount) and the inline image loads.
+    const tree = (
+      <Avatar>
+        <Avatar.Image src={INLINE_PNG} alt="@beaket" />
+        <Avatar.Fallback>HG</Avatar.Fallback>
+      </Avatar>
+    );
+
+    // Warm the browser cache, so the image is `complete` at hydration time —
+    // the exact condition #291 needed to reproduce.
+    await new Promise<void>((resolve) => {
+      const probe = new Image();
+      probe.onload = () => resolve();
+      probe.onerror = () => resolve();
+      probe.src = INLINE_PNG;
+    });
+
+    const host = within(canvasElement).getByTestId("ssr-host");
+    host.innerHTML = renderToString(tree);
+
+    // The server renders the fallback, never the <img>.
+    await expect(host.querySelector("[data-slot='avatar-fallback']")).toBeInTheDocument();
+    await expect(host.querySelector("[data-slot='avatar-image']")).not.toBeInTheDocument();
+
+    const recovered: unknown[] = [];
+    const root = hydrateRoot(host, tree, {
+      onRecoverableError: (error) => recovered.push(error),
+    });
+
+    // After hydration the image takes over…
     await waitFor(
       () => {
-        const img = canvasElement.querySelector("[data-slot='avatar-image']");
-        expect(img).toBeInTheDocument();
+        expect(host.querySelector("[data-slot='avatar-image']")).toBeInTheDocument();
       },
       { timeout: 3000 },
     );
+
+    // …and React recovered from nothing on the way there.
+    await expect(recovered).toEqual([]);
+
+    root.unmount();
   },
 };

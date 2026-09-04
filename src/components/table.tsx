@@ -8,7 +8,7 @@ export interface TableProps extends React.ComponentProps<"table"> {
   shadow?: boolean;
 }
 
-export function Table({ className, shadow, ...props }: TableProps) {
+function TableRoot({ className, shadow, ...props }: TableProps) {
   return (
     <table
       data-slot="table"
@@ -117,11 +117,13 @@ function TableCaption({ className, ...props }: React.ComponentProps<"caption">) 
   );
 }
 
-Table.Header = TableHeader;
-Table.Body = TableBody;
-Table.Footer = TableFooter;
-Table.Row = TableRow;
-Table.Head = TableHead;
-Table.Cell = TableCell;
-Table.SectionHeader = TableSectionHeader;
-Table.Caption = TableCaption;
+export const Table = Object.assign(TableRoot, {
+  Header: TableHeader,
+  Body: TableBody,
+  Footer: TableFooter,
+  Row: TableRow,
+  Head: TableHead,
+  Cell: TableCell,
+  SectionHeader: TableSectionHeader,
+  Caption: TableCaption,
+});
