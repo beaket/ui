@@ -187,11 +187,14 @@ export function DataTable<TData extends RowData, TValue extends CellData>({
   }, [rowSelection, selectable]);
 
   return (
-    <div className={className}>
+    <div data-slot="data-table" className={className}>
       {searchable && (
-        <div className="mb-4 flex items-center gap-2">
-          <div className="relative max-w-sm flex-1">
-            <Search className="text-fg-muted absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+        <div data-slot="data-table-toolbar" className="mb-4 flex items-center gap-2">
+          <div data-slot="data-table-search" className="relative max-w-sm flex-1">
+            <Search
+              data-slot="data-table-search-icon"
+              className="text-fg-muted absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
+            />
             <Input
               type="search"
               placeholder={searchPlaceholder}
@@ -204,13 +207,16 @@ export function DataTable<TData extends RowData, TValue extends CellData>({
         </div>
       )}
 
-      <div className="border-border bg-bg-raised overflow-x-auto border">
-        <Table className="min-w-full">
-          <Table.Header>
+      <div
+        data-slot="data-table-container"
+        className="border-border bg-bg-raised overflow-x-auto border"
+      >
+        <Table data-slot="data-table-table" className="min-w-full">
+          <Table.Header data-slot="data-table-header">
             {table.getHeaderGroups().map((headerGroup) => (
-              <Table.Row key={headerGroup.id}>
+              <Table.Row data-slot="data-table-header-row" key={headerGroup.id}>
                 {selectable && (
-                  <Table.Head className="w-12 py-3">
+                  <Table.Head data-slot="data-table-select-head" className="w-12 py-3">
                     <Checkbox
                       checked={
                         table.getIsAllPageRowsSelected() ||
@@ -229,6 +235,7 @@ export function DataTable<TData extends RowData, TValue extends CellData>({
 
                   return (
                     <Table.Head
+                      data-slot="data-table-head"
                       key={header.id}
                       scope="col"
                       className={canSort ? "cursor-pointer select-none" : ""}
@@ -256,16 +263,25 @@ export function DataTable<TData extends RowData, TValue extends CellData>({
                       }
                     >
                       {header.isPlaceholder ? null : (
-                        <div className="flex items-center gap-2">
+                        <div
+                          data-slot="data-table-head-content"
+                          className="flex items-center gap-2"
+                        >
                           {flexRender(header.column.columnDef.header, header.getContext())}
                           {canSort && (
-                            <div className="flex h-4 w-4 items-center justify-center">
+                            <div
+                              data-slot="data-table-sort-indicator"
+                              className="flex h-4 w-4 items-center justify-center"
+                            >
                               {sortDirection === "asc" ? (
-                                <ArrowUp className="h-4 w-4" />
+                                <ArrowUp data-slot="data-table-sort-icon" className="h-4 w-4" />
                               ) : sortDirection === "desc" ? (
-                                <ArrowDown className="h-4 w-4" />
+                                <ArrowDown data-slot="data-table-sort-icon" className="h-4 w-4" />
                               ) : (
-                                <ArrowUpDown className="text-fg-muted h-4 w-4" />
+                                <ArrowUpDown
+                                  data-slot="data-table-sort-icon"
+                                  className="text-fg-muted h-4 w-4"
+                                />
                               )}
                             </div>
                           )}
@@ -277,10 +293,11 @@ export function DataTable<TData extends RowData, TValue extends CellData>({
               </Table.Row>
             ))}
           </Table.Header>
-          <Table.Body>
+          <Table.Body data-slot="data-table-body">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <Table.Row
+                  data-slot="data-table-row"
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() => onRowClick?.(row.original)}
@@ -307,6 +324,7 @@ export function DataTable<TData extends RowData, TValue extends CellData>({
                 >
                   {selectable && (
                     <Table.Cell
+                      data-slot="data-table-select-cell"
                       onClick={(e) => e.stopPropagation()}
                       className={compact ? "py-2" : "py-3.5"}
                     >
@@ -319,6 +337,7 @@ export function DataTable<TData extends RowData, TValue extends CellData>({
                   )}
                   {row.getVisibleCells().map((cell) => (
                     <Table.Cell
+                      data-slot="data-table-cell"
                       key={cell.id}
                       className={compact ? "py-2" : ""}
                       style={{ width: cell.column.getSize() }}
@@ -329,12 +348,17 @@ export function DataTable<TData extends RowData, TValue extends CellData>({
                 </Table.Row>
               ))
             ) : (
-              <Table.Row>
+              <Table.Row data-slot="data-table-empty-row">
                 <Table.Cell
+                  data-slot="data-table-empty-cell"
                   colSpan={columns.length + (selectable ? 1 : 0)}
                   className="h-64 text-center"
                 >
-                  {emptyState || <div className="text-fg-muted">{emptyMessage}</div>}
+                  {emptyState || (
+                    <div data-slot="data-table-empty" className="text-fg-muted">
+                      {emptyMessage}
+                    </div>
+                  )}
                 </Table.Cell>
               </Table.Row>
             )}
@@ -343,8 +367,11 @@ export function DataTable<TData extends RowData, TValue extends CellData>({
       </div>
 
       {paginated && (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
-          <div className="text-fg-muted text-sm">
+        <div
+          data-slot="data-table-footer"
+          className="mt-4 flex flex-wrap items-center justify-between gap-4"
+        >
+          <div data-slot="data-table-summary" className="text-fg-muted text-sm">
             Showing{" "}
             {table.getFilteredRowModel().rows.length === 0
               ? 0
