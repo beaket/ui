@@ -1,16 +1,45 @@
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { type ClassValue, clsx } from "clsx";
+import { Activity, createContext, useContext, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-function TabsRoot({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Root>) {
+// `keepMounted` needs to know which tab is current, and Radix does not hand
+// that back. The root mirrors it — value and defaultValue still go to Radix
+// untouched, so Radix stays in charge of selection and this only observes.
+//
+// The accessor deliberately does not throw on a missing provider (§1.4 rule 2):
+// a Tabs.Content outside a root is Radix's error to raise, and throwing here
+// would require more of callers who never opt into keepMounted.
+const TabsValueContext = createContext<string | undefined>(undefined);
+
+const useTabsValue = () => useContext(TabsValueContext);
+
+function TabsRoot({
+  className,
+  value,
+  defaultValue,
+  onValueChange,
+  ...props
+}: React.ComponentProps<typeof TabsPrimitive.Root>) {
+  const [internalValue, setInternalValue] = useState(defaultValue);
+  const currentValue = value ?? internalValue;
+
   return (
-    <TabsPrimitive.Root
-      data-slot="tabs"
-      className={cn("flex flex-col gap-2", className)}
-      {...props}
-    />
+    <TabsValueContext.Provider value={currentValue}>
+      <TabsPrimitive.Root
+        data-slot="tabs"
+        className={cn("flex flex-col gap-2", className)}
+        value={value}
+        defaultValue={defaultValue}
+        onValueChange={(next) => {
+          if (value === undefined) setInternalValue(next);
+          onValueChange?.(next);
+        }}
+        {...props}
+      />
+    </TabsValueContext.Provider>
   );
 }
 
@@ -53,13 +82,42 @@ function TabsTrigger({ className, ...props }: React.ComponentProps<typeof TabsPr
   );
 }
 
-function TabsContent({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Content>) {
+export interface TabsContentProps extends React.ComponentProps<typeof TabsPrimitive.Content> {
+  /**
+   * Keep this panel's state — scroll position, uncommitted input, anything in
+   * a hook — while another tab is active. Off by default, which is Radix's
+   * behavior: inactive panels unmount and their state is destroyed.
+   *
+   * Uses React 19.2's `<Activity mode="hidden">`, the middle ground between
+   * unmounting and Radix's `forceMount`: state is preserved, effects are torn
+   * down, and re-rendering is deprioritized. Requires React >= 19.2.
+   */
+  keepMounted?: boolean;
+}
+
+function TabsContent({
+  className,
+  keepMounted = false,
+  value,
+  children,
+  ...props
+}: TabsContentProps) {
+  const currentValue = useTabsValue();
+
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
+      value={value}
+      forceMount={keepMounted || undefined}
       className={cn("flex-1 outline-none", className)}
       {...props}
-    />
+    >
+      {keepMounted ? (
+        <Activity mode={currentValue === value ? "visible" : "hidden"}>{children}</Activity>
+      ) : (
+        children
+      )}
+    </TabsPrimitive.Content>
   );
 }
 

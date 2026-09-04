@@ -230,3 +230,78 @@ export const DisabledTabTest: Story = {
     await expect(disabledTab).toBeDisabled();
   },
 };
+
+// F4 — the issue's one unverified claim, demonstrated rather than asserted from
+// Radix's docs: by default an inactive panel unmounts and its state is
+// destroyed. `keepMounted` is the opt-in middle ground — state preserved,
+// effects torn down — via React 19.2's <Activity mode="hidden">.
+function TypeAndSwitch({ keepMounted }: { keepMounted?: boolean }) {
+  return (
+    <Tabs defaultValue="one">
+      <Tabs.List>
+        <Tabs.Trigger value="one">One</Tabs.Trigger>
+        <Tabs.Trigger value="two">Two</Tabs.Trigger>
+      </Tabs.List>
+      <Tabs.Content value="one" keepMounted={keepMounted}>
+        <input aria-label="draft" defaultValue="" data-testid="draft" />
+      </Tabs.Content>
+      <Tabs.Content value="two" keepMounted={keepMounted}>
+        <p>Second panel</p>
+      </Tabs.Content>
+    </Tabs>
+  );
+}
+
+export const KeepMountedTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <div className="flex flex-col gap-8">
+      <div data-testid="default">
+        <TypeAndSwitch />
+      </div>
+      <div data-testid="kept">
+        <TypeAndSwitch keepMounted />
+      </div>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    for (const [scope, survives] of [
+      ["default", false],
+      ["kept", true],
+    ] as const) {
+      const region = within(canvas.getByTestId(scope));
+
+      await userEvent.type(region.getByTestId("draft"), "unsaved");
+      await expect(region.getByTestId("draft")).toHaveValue("unsaved");
+
+      await userEvent.click(region.getByRole("tab", { name: "Two" }));
+      await userEvent.click(region.getByRole("tab", { name: "One" }));
+
+      if (survives) {
+        // <Activity mode="hidden"> kept the panel's state across the switch.
+        await expect(region.getByTestId("draft")).toHaveValue("unsaved");
+      } else {
+        // Radix unmounted the inactive panel — this is the behavior the prop
+        // exists to opt out of, and it is demonstrated here, not assumed.
+        await expect(region.getByTestId("draft")).toHaveValue("");
+      }
+    }
+  },
+};
+
+// keepMounted must not change which panel is visible.
+export const KeepMountedVisibilityTest: Story = {
+  tags: ["!autodocs"],
+  render: () => <TypeAndSwitch keepMounted />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByTestId("draft")).toBeVisible();
+    await expect(canvas.queryByText("Second panel")).not.toBeVisible();
+
+    await userEvent.click(canvas.getByRole("tab", { name: "Two" }));
+    await expect(canvas.getByText("Second panel")).toBeVisible();
+    await expect(canvas.getByTestId("draft")).not.toBeVisible();
+  },
+};

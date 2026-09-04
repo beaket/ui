@@ -232,6 +232,7 @@
     },
     {
       "name": "tabs",
+      "react": ">=19.2.0",
       "description": "Tab navigation component for switching between content panels",
       "dependencies": ["@radix-ui/react-tabs", "clsx", "tailwind-merge"],
       "registryDependencies": [],
