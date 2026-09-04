@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useState } from "react";
+import { Component, useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { Pagination } from "./pagination";
 
@@ -192,5 +192,106 @@ export const InteractionTest: Story = {
     // Prev → page 4
     await userEvent.click(btn.getByRole("button", { name: "Previous page" }));
     await expect(pageInfo).toHaveTextContent("Page 4 of 5");
+  },
+};
+
+// The compositional core the `mode` union is now sugar over. The root holds
+// page/totalPages once; each part reads it. `asChild` hands the element to the
+// consumer's router, which is what the union could never do.
+export const ComposedPartsTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <Pagination page={2} totalPages={5} buildPageUrl={(p) => `/page/${p}`}>
+      <Pagination.Previous />
+      <Pagination.Item page={1} />
+      <Pagination.Item page={2} />
+      <Pagination.Ellipsis />
+      <Pagination.Item page={5} asChild>
+        <a href="/router/5" data-testid="router-item" data-router="true">
+          5
+        </a>
+      </Pagination.Item>
+      <Pagination.Next />
+    </Pagination>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // The current page is derived from the root, not repeated on every cell.
+    await expect(canvas.getByRole("link", { name: "2" })).toHaveAttribute("aria-current", "page");
+    await expect(canvas.getByRole("link", { name: "1" })).not.toHaveAttribute("aria-current");
+
+    // Link mode: the root's buildPageUrl reaches the parts.
+    await expect(canvas.getByRole("link", { name: "1" })).toHaveAttribute("href", "/page/1");
+    await expect(canvas.getByLabelText("Previous page")).toHaveAttribute("href", "/page/1");
+    await expect(canvas.getByLabelText("Next page")).toHaveAttribute("href", "/page/3");
+
+    // asChild keeps the consumer's element and its own href, gains our hook,
+    // and gets no wrapper span injected into it.
+    const routerItem = canvas.getByTestId("router-item");
+    await expect(routerItem).toHaveAttribute("data-slot", "pagination-page");
+    await expect(routerItem).toHaveAttribute("href", "/router/5");
+    await expect(routerItem).toHaveAttribute("data-router", "true");
+    await expect(routerItem.querySelector("span")).toBeNull();
+
+    await expect(
+      canvasElement.querySelector('[data-slot="pagination-ellipsis"]'),
+    ).toHaveTextContent("...");
+  },
+};
+
+// Button mode composes the same way, and the disabled edges still behave.
+export const ComposedButtonModeTest: Story = {
+  tags: ["!autodocs"],
+  render: function Render() {
+    const [page, setPage] = useState(1);
+    return (
+      <Pagination page={page} totalPages={3} onPageChange={setPage}>
+        <Pagination.Previous />
+        <Pagination.Item page={1} />
+        <Pagination.Item page={2} />
+        <Pagination.Item page={3} />
+        <Pagination.Next />
+      </Pagination>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await expect(canvas.getByLabelText("Previous page")).toBeDisabled();
+    await userEvent.click(canvas.getByRole("button", { name: "3" }));
+    await expect(canvas.getByRole("button", { name: "3" })).toHaveAttribute("aria-current", "page");
+    await expect(canvas.getByLabelText("Next page")).toBeDisabled();
+    await expect(canvas.getByLabelText("Previous page")).not.toBeDisabled();
+  },
+};
+
+// §1.4 rule 2 — a part outside the root says what is wrong instead of crashing
+// on a null context read.
+class ErrorProbe extends Component<{ children: React.ReactNode }, { message: string | null }> {
+  state = { message: null as string | null };
+  static getDerivedStateFromError(error: Error) {
+    return { message: error.message };
+  }
+  render() {
+    return this.state.message ? (
+      <p data-testid="boundary">{this.state.message}</p>
+    ) : (
+      this.props.children
+    );
+  }
+}
+
+export const PartOutsideRootTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <ErrorProbe>
+      <Pagination.Item page={1} />
+    </ErrorProbe>
+  ),
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByTestId("boundary")).toHaveTextContent(
+      "`Pagination.Item` must be used inside `<Pagination>`",
+    );
   },
 };

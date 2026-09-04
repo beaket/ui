@@ -314,7 +314,7 @@
     {
       "name": "pagination",
       "description": "Pagination component with link and button modes for SSR and client-side navigation",
-      "dependencies": ["clsx", "lucide-react", "tailwind-merge"],
+      "dependencies": ["@radix-ui/react-slot", "clsx", "lucide-react", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/pagination.tsx"],
       "docs": {
