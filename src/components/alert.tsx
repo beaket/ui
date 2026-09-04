@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { type ClassValue, clsx } from "clsx";
 import { AlertCircle, AlertTriangle, Info, Lightbulb, Shield } from "lucide-react";
+import { Children, isValidElement } from "react";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
@@ -52,9 +53,44 @@ interface AlertProps
   title?: string;
 }
 
-export function Alert({ className, variant = "note", title, children, ...props }: AlertProps) {
+function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="alert-title"
+      className={cn("col-start-2 min-h-4 font-medium tracking-tight", className)}
+      {...props}
+    />
+  );
+}
+
+function AlertDescription({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="alert-description"
+      className={cn("col-start-2 text-sm [&_p]:leading-relaxed", className)}
+      {...props}
+    />
+  );
+}
+
+// Namespacing, not context (§1.3): the parts share no state, so a provider
+// would be pure machinery. The variant icon stays on the root, where the
+// variant lives.
+//
+// The root has to tell the two paths apart because `children` used to mean
+// "the description". Parts must be direct children — a fragment or a wrapper
+// component around them reads as description content, which is what it looked
+// like before this change.
+function hasParts(children: React.ReactNode): boolean {
+  return Children.toArray(children).some(
+    (child) =>
+      isValidElement(child) && (child.type === AlertTitle || child.type === AlertDescription),
+  );
+}
+
+function AlertRoot({ className, variant = "note", title, children, ...props }: AlertProps) {
   const Icon = variantIcons[variant!];
-  const displayTitle = title || variantTitles[variant!];
+  const composed = hasParts(children);
 
   return (
     <div
@@ -64,14 +100,25 @@ export function Alert({ className, variant = "note", title, children, ...props }
       {...props}
     >
       <Icon aria-hidden="true" />
-      <div data-slot="alert-title" className="col-start-2 min-h-4 font-medium tracking-tight">
-        {displayTitle}
-      </div>
-      {children && (
-        <div data-slot="alert-description" className="col-start-2 text-sm [&_p]:leading-relaxed">
+      {composed ? (
+        <>
+          {/* An explicit `title` still renders; the variant-name default does
+              not, because the consumer's own Alert.Title is the title. */}
+          {title && <AlertTitle>{title}</AlertTitle>}
           {children}
-        </div>
+        </>
+      ) : (
+        <>
+          {/* §2 sugar over the parts, byte-identical to the old output. */}
+          <AlertTitle>{title || variantTitles[variant!]}</AlertTitle>
+          {children && <AlertDescription>{children}</AlertDescription>}
+        </>
       )}
     </div>
   );
 }
+
+export const Alert = Object.assign(AlertRoot, {
+  Title: AlertTitle,
+  Description: AlertDescription,
+});
