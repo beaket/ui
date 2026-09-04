@@ -4,9 +4,16 @@ export interface ComponentDefinition {
   dependencies: string[];
   registryDependencies: string[];
   files: string[];
+  /**
+   * Minimum React this component needs, when it is higher than the registry's.
+   * A floor is a check, not an install — see `utils/react-version.ts`.
+   */
+  react?: string;
 }
 
 export interface Registry {
+  /** Minimum React every component in the registry needs. */
+  react?: string;
   components: ComponentDefinition[];
 }
 

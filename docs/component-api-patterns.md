@@ -472,6 +472,8 @@ Two workable options, and it is a maintainer call:
 1. **A versioned spec in `dependencies`** — `"react@>=19.2"`. Both npm and pnpm accept that syntax, so no CLI change, but it changes the meaning of a field that has never carried a version, and it still _installs_ rather than _checks_.
 2. **A separate documented floor** — one React minimum for the registry (or per component), read by `add` and **verified against the consumer's installed version**, warning rather than installing. This is what a floor actually is.
 
+**Decided (#861): option 2.** `registry.json` carries a top-level `"react"` floor, and any component needing more carries its own `"react"` that overrides it. `add` reads the consumer's installed React — `node_modules/react/package.json` first, the declared range in `package.json` as the fallback, read as its minimum — and prints a warning when the floor is unmet. **The files are still written**: the consumer may be about to upgrade, and a copy-paste library has no business changing their React version. A floor that cannot be parsed, or an installed version that cannot be determined, produces no warning rather than a guess.
+
 ### F1 — `ref` is missing from seven public prop declarations (five files)
 
 `React.HTMLAttributes` and `React.ButtonHTMLAttributes` do **not** include `ref`. `React.ComponentProps<"button">` does, because React 19 moved `ref` into intrinsic element props. So this fails to typecheck today, for no reason anyone intended — **confirmed, not inferred**: a probe passing a `ref` to all seven produced seven `TS2322`s and nothing else, while `<Input ref={inputRef} />` compiled clean.
