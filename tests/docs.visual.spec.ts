@@ -8,7 +8,13 @@ const routes = [
   "/ui/design-rules",
   "/ui/tokens",
   "/ui/themes",
-  "/ui/changelog",
+  // `/ui/changelog` is deliberately absent. It renders generated release data,
+  // so its snapshot changes wholesale on every release; it is ~22,000px tall;
+  // and at the 768px tablet viewport it oscillates between 22,802px and
+  // 22,230px because its own scrollbar pushes the effective width across the
+  // breakpoint, which changes the height, which changes whether there is a
+  // scrollbar. Three consecutive runs alternated between exactly those two
+  // heights. It guards no layout the other routes do not already cover.
   ...registry.components.map(({ name }) => `/ui/components/${name}`),
 ].filter(
   (route) =>
