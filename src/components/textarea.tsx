@@ -33,15 +33,19 @@ export function Textarea({
   ...props
 }: Props) {
   const internalRef = useRef<HTMLTextAreaElement>(null);
-  const externalRef = useRef(ref);
-  externalRef.current = ref;
 
-  const mergedRef = useCallback((node: HTMLTextAreaElement | null) => {
-    internalRef.current = node;
-    const extRef = externalRef.current;
-    if (typeof extRef === "function") extRef(node);
-    else if (extRef) extRef.current = node;
-  }, []);
+  // Depending on `ref` instead of holding it in a ref written during render:
+  // this is a forwarded-ref merge, not an Effect callback, so useEffectEvent
+  // does not apply. The identity only changes when the caller's own ref does,
+  // which is what a caller passing an inline callback already signs up for.
+  const mergedRef = useCallback(
+    (node: HTMLTextAreaElement | null) => {
+      internalRef.current = node;
+      if (typeof ref === "function") ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
 
   const userHeightRef = useRef<number | null>(null);
   const lastAppliedHeightRef = useRef<number | null>(null);
