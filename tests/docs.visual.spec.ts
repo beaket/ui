@@ -36,6 +36,12 @@ for (const viewport of [
           {
             animations: "disabled",
             fullPage: true,
+            // The sidebar prints the published package version on every page
+            // (`doc.astro` renders `v{pkg.version}`), so a release PR's version
+            // bump shifts a handful of pixels on all 99 docs snapshots at once
+            // and blocks the release that produced it. The version is not what
+            // these snapshots are guarding.
+            mask: [page.locator(".sidebar-version")],
           },
         );
       });
