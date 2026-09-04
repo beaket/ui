@@ -310,3 +310,64 @@ export const WithWideContent = {
     },
   },
 };
+
+// §4 — the blessed observable. Every element this component renders carries a
+// `data-slot`, so a consumer styles the DOM by name instead of by our class
+// names, which are ours to rewrite on every redesign. The three composed
+// controls (Input, Checkbox, Pagination) keep their own slots — they are
+// already addressable, and `[data-slot=input]` has live dependents.
+export const DataSlotTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <DataTable columns={columns} data={users} searchable selectable paginated pageSize={2} />
+  ),
+  play: async ({ canvasElement }) => {
+    const present = [
+      "data-table",
+      "data-table-toolbar",
+      "data-table-search",
+      "data-table-search-icon",
+      "data-table-container",
+      "data-table-table",
+      "data-table-header",
+      "data-table-header-row",
+      "data-table-select-head",
+      "data-table-head",
+      "data-table-head-content",
+      "data-table-sort-indicator",
+      "data-table-sort-icon",
+      "data-table-body",
+      "data-table-row",
+      "data-table-select-cell",
+      "data-table-cell",
+      "data-table-footer",
+      "data-table-summary",
+    ];
+
+    for (const slot of present) {
+      await expect(
+        canvasElement.querySelector(`[data-slot="${slot}"]`),
+        `missing [data-slot="${slot}"]`,
+      ).toBeInTheDocument();
+    }
+
+    // Composed controls keep their own identity rather than being overwritten.
+    await expect(canvasElement.querySelector('[data-slot="input"]')).toBeInTheDocument();
+    await expect(canvasElement.querySelector('[data-slot="checkbox"]')).toBeInTheDocument();
+    await expect(canvasElement.querySelector('[data-slot="pagination"]')).toBeInTheDocument();
+  },
+};
+
+// The empty branch renders three elements no other branch does.
+export const EmptyStateDataSlotTest: Story = {
+  tags: ["!autodocs"],
+  render: () => <DataTable columns={columns} data={[]} />,
+  play: async ({ canvasElement }) => {
+    for (const slot of ["data-table-empty-row", "data-table-empty-cell", "data-table-empty"]) {
+      await expect(
+        canvasElement.querySelector(`[data-slot="${slot}"]`),
+        `missing [data-slot="${slot}"]`,
+      ).toBeInTheDocument();
+    }
+  },
+};
