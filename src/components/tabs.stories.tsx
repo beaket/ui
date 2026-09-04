@@ -303,5 +303,16 @@ export const KeepMountedVisibilityTest: Story = {
     await userEvent.click(canvas.getByRole("tab", { name: "Two" }));
     await expect(canvas.getByText("Second panel")).toBeVisible();
     await expect(canvas.getByTestId("draft")).not.toBeVisible();
+
+    // forceMount makes Radix render every panel with hidden={false}, so the
+    // inactive tabpanel itself — not just its content — has to be taken out of
+    // layout and out of the a11y tree, or it leaves an empty gap behind.
+    const panels = canvas.getAllByRole("tabpanel", { hidden: true });
+    await expect(panels).toHaveLength(2);
+    for (const panel of panels) {
+      const active = panel.getAttribute("data-state") === "active";
+      if (active) await expect(panel).toBeVisible();
+      else await expect(panel).not.toBeVisible();
+    }
   },
 };

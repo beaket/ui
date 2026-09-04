@@ -109,7 +109,17 @@ function TabsContent({
       data-slot="tabs-content"
       value={value}
       forceMount={keepMounted || undefined}
-      className={cn("flex-1 outline-none", className)}
+      className={cn(
+        "flex-1 outline-none",
+        // Under forceMount Radix computes `present = forceMount || isSelected`
+        // and renders `hidden={!present}` — so the panel element itself is never
+        // hidden, and an inactive panel would sit in the flex layout and in the
+        // a11y tree as an empty box. `data-state` is still correct under
+        // forceMount, so the class does the hiding the attribute no longer can.
+        // Without `keepMounted` nothing inactive renders, so this is inert.
+        "data-[state=inactive]:hidden",
+        className,
+      )}
       {...props}
     >
       {keepMounted ? (
