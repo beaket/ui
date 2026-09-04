@@ -6,6 +6,7 @@ import {
   installDependencies,
   writeComponentFiles,
 } from "../utils/files.ts";
+import { reactFloorWarning, readInstalledReact } from "../utils/react-version.ts";
 import { fetchComponent, fetchRegistry } from "../utils/registry.ts";
 import { syncTheme } from "../utils/theme.ts";
 import { THEME_CSS } from "../utils/themes.ts";
@@ -45,6 +46,26 @@ export async function add(componentNames: string[], options: AddOptions) {
       console.log(`  - ${c.name}`);
     });
     process.exit(1);
+  }
+
+  // Check the React floor. Deliberately a check and not an install: the files
+  // are still written, because the consumer may be about to upgrade React and a
+  // copy-paste library has no business changing their React version.
+  const installedReact = await readInstalledReact(process.cwd());
+  const floorWarning = reactFloorWarning(
+    registry.react,
+    componentDefs.filter((def) => def !== undefined),
+    installedReact,
+  );
+  if (floorWarning) {
+    const { floor, names } = floorWarning;
+    console.log();
+    console.log(
+      pc.yellow("!"),
+      `${names.join(", ")} need${names.length === 1 ? "s" : ""} React ${floor} — found ${installedReact}.`,
+    );
+    console.log("  The files are still copied; they may fail at runtime until React is upgraded.");
+    console.log();
   }
 
   // Collect all unique dependencies

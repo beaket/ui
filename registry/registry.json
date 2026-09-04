@@ -1,4 +1,5 @@
 {
+  "react": ">=19.0.0",
   "components": [
     {
       "name": "blockquote",
