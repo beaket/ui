@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CircleCheck, CircleMinus, Clock } from "lucide-react";
-import { expect, fn, userEvent, within } from "storybook/test";
+import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 import { Badge } from "./badge";
 import { DataTable, type ColumnDef } from "./data-table";
 
@@ -464,5 +464,34 @@ export const ComposedEmptyTest: Story = {
     await expect(cell).toHaveTextContent("Nothing here yet");
     // colSpan comes from the root, not from the consumer counting columns.
     await expect(cell).toHaveAttribute("colspan", String(columns.length));
+  },
+};
+
+// F6 — the filter pass is deferred, the input is not. This is what regresses if
+// the toolbar is ever rewired to read `table.state.globalFilter`, which is the
+// deferred value: the field would lag a keystroke behind the typist.
+export const DeferredFilterTest: Story = {
+  tags: ["!autodocs"],
+  render: () => <DataTable columns={columns} data={users} searchable />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const search = canvas.getByLabelText("Search");
+
+    await userEvent.type(search, "Alice");
+    // The field holds every keystroke, with no waitFor.
+    await expect(search).toHaveValue("Alice");
+
+    // …and the table catches up.
+    await waitFor(() =>
+      expect(canvasElement.querySelectorAll("[data-slot='data-table-row']")).toHaveLength(1),
+    );
+
+    await userEvent.clear(search);
+    await expect(search).toHaveValue("");
+    await waitFor(() =>
+      expect(canvasElement.querySelectorAll("[data-slot='data-table-row']").length).toBeGreaterThan(
+        1,
+      ),
+    );
   },
 };

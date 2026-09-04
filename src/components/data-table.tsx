@@ -27,7 +27,15 @@ import {
 } from "@tanstack/react-table";
 import { clsx, type ClassValue } from "clsx";
 import { ArrowDown, ArrowUp, ArrowUpDown, Search } from "lucide-react";
-import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useDeferredValue,
+  useEffect,
+  useEffectEvent,
+  useMemo,
+  useState,
+} from "react";
 import { twMerge } from "tailwind-merge";
 import { Checkbox } from "./checkbox";
 import { Input } from "./input";
@@ -126,6 +134,12 @@ interface DataTableContextValue<TData extends RowData = RowData> {
   selectable: boolean;
   /** Column count including the selection column — the empty row's colSpan. */
   columnCount: number;
+  /**
+   * The search field's own value. Not `table.state.globalFilter`, which is the
+   * deferred one — the input must never lag behind the keystroke (F6).
+   */
+  globalFilter: string;
+  setGlobalFilter: (value: string) => void;
 }
 
 // §1.4: the context lives in this file, is never exported, and carries the one
@@ -153,7 +167,7 @@ function DataTableToolbar({
   searchPlaceholder = "Search...",
   ...props
 }: DataTableToolbarProps) {
-  const { table } = useDataTableContext("DataTable.Toolbar");
+  const { globalFilter, setGlobalFilter } = useDataTableContext("DataTable.Toolbar");
 
   return (
     <div
@@ -170,8 +184,8 @@ function DataTableToolbar({
           <Input
             type="search"
             placeholder={searchPlaceholder}
-            value={table.state.globalFilter ?? ""}
-            onChange={(e) => table.setGlobalFilter(e.target.value)}
+            value={globalFilter}
+            onChange={(e) => setGlobalFilter(e.target.value)}
             className="pl-9"
             aria-label="Search"
           />
@@ -432,6 +446,9 @@ function DataTableRoot<TData extends RowData, TValue extends CellData>({
     initialColumnVisibility || {},
   );
   const [globalFilter, setGlobalFilter] = useState("");
+  // F6: the search input stays bound to the immediate value so typing is never
+  // blocked; the whole-table filter pass lags by one render, by design.
+  const deferredGlobalFilter = useDeferredValue(globalFilter);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>(initialRowSelection || {});
 
   const table = useTable({
@@ -453,7 +470,7 @@ function DataTableRoot<TData extends RowData, TValue extends CellData>({
       sorting,
       columnFilters,
       columnVisibility,
-      globalFilter,
+      globalFilter: deferredGlobalFilter,
       rowSelection,
     },
     initialState: {
@@ -464,19 +481,17 @@ function DataTableRoot<TData extends RowData, TValue extends CellData>({
     },
   });
 
-  const tableRef = useRef(table);
-  tableRef.current = table;
-
-  const onSelectionChangeRef = useRef(onSelectionChange);
-  onSelectionChangeRef.current = onSelectionChange;
+  // F2: both hand-rolled "latest ref" writes happened during render, which React
+  // tells you not to do and which React Compiler refuses to optimize past.
+  // useEffectEvent is the official replacement for exactly this shape — an
+  // Effect calling the freshest callback without listing it as a dependency —
+  // and it closes over the freshest `table` too, so the tableRef goes with it.
+  const emitSelectionChange = useEffectEvent(() => {
+    onSelectionChange?.(table.getFilteredSelectedRowModel().rows.map((row) => row.original));
+  });
 
   useEffect(() => {
-    if (selectable && onSelectionChangeRef.current) {
-      const selectedRows = tableRef.current
-        .getFilteredSelectedRowModel()
-        .rows.map((row) => row.original);
-      onSelectionChangeRef.current(selectedRows);
-    }
+    if (selectable) emitSelectionChange();
   }, [rowSelection, selectable]);
 
   const context = useMemo(
@@ -487,8 +502,10 @@ function DataTableRoot<TData extends RowData, TValue extends CellData>({
       compact,
       selectable,
       columnCount: columns.length + (selectable ? 1 : 0),
+      globalFilter,
+      setGlobalFilter,
     }),
-    [table, compact, selectable, columns.length],
+    [table, compact, selectable, columns.length, globalFilter],
   );
 
   const rows = table.getRowModel().rows;
