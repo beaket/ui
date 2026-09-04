@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, fn, userEvent, within } from "storybook/test";
+import { useState } from "react";
+import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 import AllSizesExample from "../examples/button/all-sizes";
 import AllStatesExample from "../examples/button/all-states";
 import AllVariantsExample from "../examples/button/all-variants";
@@ -116,5 +117,52 @@ export const LoadingClickTest: Story = {
     // Loading button should not trigger onClick
     await userEvent.click(button);
     await expect(args.onClick).not.toHaveBeenCalled();
+  },
+};
+
+// F5 — React 19's useFormStatus is a design-system hook: a submit button in a
+// <form> reads the form's pending state directly, so the most common loading
+// case there is needs no wiring by the consumer. The explicit prop still wins.
+export const FormStatusTest: Story = {
+  tags: ["!autodocs"],
+  render: function Render() {
+    const [done, setDone] = useState(false);
+    return (
+      <form
+        action={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 600));
+          setDone(true);
+        }}
+        className="flex items-center gap-2"
+      >
+        <Button type="submit" data-testid="submit">
+          Save
+        </Button>
+        <Button type="submit" loading={false} data-testid="override">
+          Never spins
+        </Button>
+        <Button data-testid="plain">Plain</Button>
+        {done && <span data-testid="done">done</span>}
+      </form>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const submit = canvas.getByTestId("submit");
+
+    await expect(submit).not.toBeDisabled();
+    await userEvent.click(submit);
+
+    // The submit button follows the form with no `loading` prop in sight.
+    await waitFor(() => expect(submit).toBeDisabled());
+    await expect(submit.querySelector("[aria-live='polite']")).toBeInTheDocument();
+
+    // An explicit `loading={false}` overrides the fallback…
+    await expect(canvas.getByTestId("override")).not.toBeDisabled();
+    // …and a button that is not a submit button is untouched.
+    await expect(canvas.getByTestId("plain")).not.toBeDisabled();
+
+    await waitFor(() => expect(canvas.getByTestId("done")).toBeInTheDocument(), { timeout: 5000 });
+    await waitFor(() => expect(submit).not.toBeDisabled());
   },
 };
