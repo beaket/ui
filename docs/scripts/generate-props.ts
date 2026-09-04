@@ -249,8 +249,25 @@ function generateProps() {
         if (!ts.isFunctionDeclaration(node) || !node.name) return;
         const funcName = node.name.text;
 
-        if (funcName === rootFuncName && props.length === 0) {
-          props.push(...extractFunctionProps(node, sourceFile));
+        if (funcName === rootFuncName) {
+          const rootProps = extractFunctionProps(node, sourceFile);
+          if (props.length === 0) {
+            props.push(...rootProps);
+          } else {
+            // react-docgen-typescript sees `Object.assign(Root, {...})` as the
+            // exported component but cannot reach Root's default parameters
+            // through it, so every root default arrives as null. Backfill them
+            // from the function declaration; types and ordering stay docgen's.
+            const defaults = new Map(
+              rootProps.filter((p) => p.defaultValue !== null).map((p) => [p.name, p.defaultValue]),
+            );
+            for (const prop of props) {
+              if (prop.name.includes(".")) continue;
+              if (prop.defaultValue !== null) continue;
+              const fallback = defaults.get(prop.name);
+              if (fallback !== undefined) prop.defaultValue = fallback;
+            }
+          }
         }
 
         const subName = subs.get(funcName);
