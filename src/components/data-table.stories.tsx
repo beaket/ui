@@ -371,3 +371,98 @@ export const EmptyStateDataSlotTest: Story = {
     }
   },
 };
+
+// §11 — a logic component must be deep behind a narrow interface. The root
+// builds the TanStack instance and hands it back; the parts read it. Every one
+// of the 20 config props is then either a part or the consumer's own markup.
+export const ComposedPartsTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <DataTable columns={columns} data={users} searchable selectable paginated pageSize={2}>
+      {(table) => (
+        <>
+          <DataTable.Toolbar searchPlaceholder="Filter people…" />
+          <DataTable.Table>
+            <DataTable.Head />
+            <DataTable.Body>
+              {table.getRowModel().rows.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <DataTable.Row
+                    key={row.id}
+                    row={row}
+                    // getRowClassName / onRowMouseEnter / onRowMouseLeave are
+                    // now just props on the consumer's own row.
+                    className={row.original.status === "inactive" ? "opacity-60" : undefined}
+                    data-testid={`row-${row.id}`}
+                  />
+                ))
+              ) : (
+                <DataTable.Empty>Nothing here</DataTable.Empty>
+              )}
+            </DataTable.Body>
+          </DataTable.Table>
+          <DataTable.Pagination />
+        </>
+      )}
+    </DataTable>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // The parts render the same DOM the props path does.
+    for (const slot of [
+      "data-table-toolbar",
+      "data-table-container",
+      "data-table-header",
+      "data-table-row",
+      "data-table-select-cell",
+      "data-table-footer",
+    ]) {
+      await expect(
+        canvasElement.querySelector(`[data-slot="${slot}"]`),
+        `missing [data-slot="${slot}"]`,
+      ).toBeInTheDocument();
+    }
+
+    // The toolbar prop reaches the part.
+    await expect(canvas.getByLabelText("Search")).toHaveAttribute("placeholder", "Filter people…");
+
+    // The instance is live: sorting through the head reorders the body.
+    const firstRowBefore = canvasElement.querySelector("[data-slot='data-table-row']");
+    await expect(firstRowBefore).toBeInTheDocument();
+
+    // The consumer's own row className landed.
+    await expect(canvasElement.querySelectorAll("[data-slot='data-table-row']").length).toBe(2);
+
+    // Pagination composed from the instance still drives the table.
+    await userEvent.click(canvas.getByLabelText("Next page"));
+    await expect(canvasElement.querySelector("[data-slot='data-table-summary']")).toHaveTextContent(
+      "Showing 3 to 4",
+    );
+  },
+};
+
+// The composed empty branch, and §1.4 rule 2's message for a part outside the root.
+export const ComposedEmptyTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <DataTable columns={columns} data={[]}>
+      {(table) => (
+        <DataTable.Table>
+          <DataTable.Head />
+          <DataTable.Body>
+            {table.getRowModel().rows.length ? null : (
+              <DataTable.Empty>Nothing here yet</DataTable.Empty>
+            )}
+          </DataTable.Body>
+        </DataTable.Table>
+      )}
+    </DataTable>
+  ),
+  play: async ({ canvasElement }) => {
+    const cell = canvasElement.querySelector("[data-slot='data-table-empty-cell']");
+    await expect(cell).toHaveTextContent("Nothing here yet");
+    // colSpan comes from the root, not from the consumer counting columns.
+    await expect(cell).toHaveAttribute("colspan", String(columns.length));
+  },
+};
