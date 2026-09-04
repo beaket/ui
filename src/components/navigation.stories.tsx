@@ -186,3 +186,95 @@ export const HoverTest: Story = {
     await expect(link).toBeInTheDocument();
   },
 };
+
+// The root answers "which page is current?" once; each Link derives its own
+// state — and an explicit `active` still wins. `asChild` hands the element to
+// the consumer's router, injecting nothing of ours into it.
+export const RootValueAndAsChildTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <Navigation value="/docs">
+      <Navigation.List>
+        <Navigation.Item>
+          <Navigation.Link href="/" value="/">
+            Home
+          </Navigation.Link>
+        </Navigation.Item>
+        <Navigation.Item>
+          <Navigation.Link href="/docs" value="/docs">
+            Docs
+          </Navigation.Link>
+        </Navigation.Item>
+        <Navigation.Item>
+          {/* Explicit `active` overrides the derived answer */}
+          <Navigation.Link href="/about" value="/about" active>
+            About
+          </Navigation.Link>
+        </Navigation.Item>
+        <Navigation.Item>
+          <Navigation.Link asChild value="/blog">
+            <a href="/blog" data-testid="as-child-link">
+              Blog
+            </a>
+          </Navigation.Link>
+        </Navigation.Item>
+      </Navigation.List>
+    </Navigation>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Derived from the root's value
+    await expect(canvas.getByRole("link", { name: "Docs" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    await expect(canvas.getByRole("link", { name: "Home" })).not.toHaveAttribute("aria-current");
+
+    // Explicit `active` wins over the derived answer
+    await expect(canvas.getByRole("link", { name: "About" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+
+    // asChild renders the consumer's element, carrying our styling hook…
+    const asChild = canvas.getByTestId("as-child-link");
+    await expect(asChild).toHaveAttribute("data-slot", "navigation-link");
+    await expect(asChild).toHaveAttribute("href", "/blog");
+
+    // …and nothing of ours inside it: the press-travel wrapper is skipped.
+    await expect(asChild.querySelector("span")).toBeNull();
+    await expect(asChild).toHaveTextContent("Blog");
+  },
+};
+
+// A Link with an explicit `active` and no root `value` behaves exactly as it
+// did before the root gained one — the context is optional, never required.
+export const NoRootValueTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <Navigation>
+      <Navigation.List>
+        <Navigation.Item>
+          <Navigation.Link href="/" active>
+            Home
+          </Navigation.Link>
+        </Navigation.Item>
+        <Navigation.Item>
+          <Navigation.Link href="/docs" value="/docs">
+            Docs
+          </Navigation.Link>
+        </Navigation.Item>
+      </Navigation.List>
+    </Navigation>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("link", { name: "Home" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    // A `value` with nothing to compare against is not current.
+    await expect(canvas.getByRole("link", { name: "Docs" })).not.toHaveAttribute("aria-current");
+  },
+};

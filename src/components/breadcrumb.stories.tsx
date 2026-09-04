@@ -151,3 +151,37 @@ export const RenderTest: Story = {
     await expect(currentPage).toHaveAttribute("aria-current", "page");
   },
 };
+
+// `asChild` hands the element to the consumer's router. Our styling hook rides
+// along; the child owns its tag and its content.
+export const AsChildTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <Breadcrumb>
+      <Breadcrumb.List>
+        <Breadcrumb.Item>
+          <Breadcrumb.Link asChild>
+            <a href="/" data-testid="router-link" data-router="true">
+              Home
+            </a>
+          </Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Breadcrumb.Separator />
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Breadcrumb.Page>Docs</Breadcrumb.Page>
+        </Breadcrumb.Item>
+      </Breadcrumb.List>
+    </Breadcrumb>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const link = canvas.getByTestId("router-link");
+
+    await expect(link).toHaveAttribute("data-slot", "breadcrumb-link");
+    await expect(link).toHaveAttribute("data-router", "true");
+    await expect(link).toHaveClass("text-fg-muted");
+    await expect(link.tagName).toBe("A");
+  },
+};

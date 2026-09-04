@@ -1,3 +1,4 @@
+import { Slot } from "@radix-ui/react-slot";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -34,15 +35,22 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   );
 }
 
+export interface BreadcrumbLinkProps extends React.ComponentProps<"a"> {
+  /** Renders the consumer's own element (a router `Link`) instead of an `<a>` */
+  asChild?: boolean;
+}
+
 // A breadcrumb is a trail, not a switcher — a sentence read left to right, not
 // the lens (that belongs to navigation and tabs). It stays in one ink: ancestors
 // in muted ink, the current page in full ink. No standing blue — the trail is
 // quiet at rest; pointing at a step darkens it from muted to full ink, and the
 // one accent mark is the keyboard focus ring (the vivid voice kept for where you
 // act). No pressable edge: a link is not a key.
-function BreadcrumbLink({ className, children, ...props }: React.ComponentProps<"a">) {
+function BreadcrumbLink({ className, children, asChild = false, ...props }: BreadcrumbLinkProps) {
+  const Comp = asChild ? Slot : "a";
+
   return (
-    <a
+    <Comp
       data-slot="breadcrumb-link"
       className={cn(
         "text-fg-muted hover:text-fg no-underline transition-colors duration-100",
@@ -53,7 +61,7 @@ function BreadcrumbLink({ className, children, ...props }: React.ComponentProps<
       {...props}
     >
       {children}
-    </a>
+    </Comp>
   );
 }
 

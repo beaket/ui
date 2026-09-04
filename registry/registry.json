@@ -16,7 +16,7 @@
     {
       "name": "breadcrumb",
       "description": "Navigation component showing the current page location within a hierarchy",
-      "dependencies": ["clsx", "tailwind-merge"],
+      "dependencies": ["@radix-ui/react-slot", "clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/breadcrumb.tsx"],
       "docs": {
@@ -29,7 +29,7 @@
     {
       "name": "navigation",
       "description": "Primary site navigation component with active state support",
-      "dependencies": ["clsx", "tailwind-merge"],
+      "dependencies": ["@radix-ui/react-slot", "clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/navigation.tsx"],
       "docs": {
