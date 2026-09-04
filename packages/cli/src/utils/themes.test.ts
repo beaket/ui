@@ -116,8 +116,12 @@ describe("theme palette contract", () => {
       "utf8",
     );
 
-    expect(themesPage).toContain('@import "@beaket/ui/themes/semantic.css"');
-    expect(themesPage).toContain('@import "@beaket/ui/themes/solace.css"');
+    // The shipped contract is that the CLI writes the tokens into the consumer's
+    // own CSS file. It stopped being a pair of `@import` lines in 2e9f99a, when
+    // `init` began installing the foundation inline — this assertion followed
+    // the page rather than pinning a spelling the product had left behind.
+    expect(themesPage).toContain("writes the foundation, semantic layer, and selected palette");
+    expect(themesPage).toContain("npx @beaket/ui init --theme");
     expect(themesPage).toContain("@media (prefers-color-scheme: dark)");
     expect(themesPage).toContain("Docs preview controls");
     expect(themesPage).toContain("local preview implementation");
