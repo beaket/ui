@@ -1,10 +1,35 @@
+import { Slot } from "@radix-ui/react-slot";
 import { type ClassValue, clsx } from "clsx";
+import { createContext, useContext } from "react";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-function NavigationRoot({ className, ...props }: React.ComponentProps<"nav">) {
-  return <nav data-slot="navigation" aria-label="Main" className={cn("", className)} {...props} />;
+// The current page is one answer, not one answer per link. The root holds it;
+// `Navigation.Link` compares its own `value` and derives `active` itself.
+//
+// Optional by construction: the default is `undefined`, so a `Navigation.Link`
+// used with an explicit `active` — inside a root that sets no `value`, or
+// outside a root entirely — keeps working exactly as before. That is why this
+// accessor does not throw the way §1.4's rule 2 asks: throwing here would
+// *require more* of existing callers, which Part 3's growth rule forbids.
+// The value is a primitive, so there is nothing to memoize by hand (§1.4 rule 3
+// is about object values).
+const NavigationValueContext = createContext<string | undefined>(undefined);
+
+const useNavigationValue = () => useContext(NavigationValueContext);
+
+export interface NavigationProps extends React.ComponentProps<"nav"> {
+  /** The current page's value. `Navigation.Link` compares its own `value` to it. */
+  value?: string;
+}
+
+function NavigationRoot({ className, value, ...props }: NavigationProps) {
+  return (
+    <NavigationValueContext.Provider value={value}>
+      <nav data-slot="navigation" aria-label="Main" className={cn("", className)} {...props} />
+    </NavigationValueContext.Provider>
+  );
 }
 
 // One fused instrument: links share neutral hairline borders. Selection owns
@@ -30,9 +55,13 @@ function NavigationItem({ className, ...props }: React.ComponentProps<"li">) {
   );
 }
 
-interface NavigationLinkProps extends React.ComponentProps<"a"> {
-  /** Whether this link represents the current page */
+export interface NavigationLinkProps extends React.ComponentProps<"a"> {
+  /** Whether this link represents the current page. Overrides the derived state. */
   active?: boolean;
+  /** This link's value, compared against the root's `value` to derive `active`. */
+  value?: string;
+  /** Renders the consumer's own element (a router `Link`) instead of an `<a>` */
+  asChild?: boolean;
 }
 
 // The current page is not stamped in ink — it sits under a glass lens plate:
@@ -40,35 +69,53 @@ interface NavigationLinkProps extends React.ComponentProps<"a"> {
 // in the system falls), and the faintest accent wash. The plate lies beneath
 // the type, so the label keeps full ink density. Pressing any other link
 // travels its label 1px like an instrument key.
-function NavigationLink({ className, active, children, ...props }: NavigationLinkProps) {
+function NavigationLink({
+  className,
+  active,
+  value,
+  asChild = false,
+  children,
+  ...props
+}: NavigationLinkProps) {
+  const currentValue = useNavigationValue();
+  const isActive = active ?? (value !== undefined && value === currentValue);
+  const Comp = asChild ? Slot : "a";
+
   return (
-    <a
+    <Comp
       data-slot="navigation-link"
-      data-active={active || undefined}
+      data-active={isActive || undefined}
       className={cn(
         "group relative isolate flex h-8 items-center px-3.5 text-sm no-underline",
         "text-fg",
         "before:absolute before:inset-[-8px] before:content-['']",
         "focus-visible:outline-border-focus focus-visible:z-[2] focus-visible:outline-2 focus-visible:outline-offset-2",
         "transition-colors duration-100",
-        active
+        isActive
           ? "after:border-t-border-muted after:border-l-border-muted after:border-r-border-strong after:border-b-border-strong after:bg-accent-bg-subtle cursor-default after:absolute after:inset-1 after:-z-[1] after:border after:content-['']"
           : "hover:bg-bg-hover active:bg-bg-active cursor-pointer",
         className,
       )}
-      aria-current={active ? "page" : undefined}
+      aria-current={isActive ? "page" : undefined}
       {...props}
     >
-      <span
-        className={cn(
-          "inline-flex items-center",
-          !active &&
-            "transition-transform duration-100 group-active:translate-x-px group-active:translate-y-px",
-        )}
-      >
-        {children}
-      </span>
-    </a>
+      {/* Under `asChild` the child owns its tag and its content — the press-travel
+          wrapper is ours to inject, so it is skipped, the way Button skips its
+          spinner. */}
+      {asChild ? (
+        children
+      ) : (
+        <span
+          className={cn(
+            "inline-flex items-center",
+            !isActive &&
+              "transition-transform duration-100 group-active:translate-x-px group-active:translate-y-px",
+          )}
+        >
+          {children}
+        </span>
+      )}
+    </Comp>
   );
 }
 
