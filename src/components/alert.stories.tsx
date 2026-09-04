@@ -132,3 +132,53 @@ export const InteractionTest: Story = {
     await expect(content).toBeInTheDocument();
   },
 };
+
+// §2 — the parts are the compositional core; `title` is sugar over them. A
+// title can now be reordered, wrapped, conditionally rendered or styled, which
+// is what a `string` prop could never do.
+export const PartsTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <div className="flex flex-col gap-4">
+      <div data-testid="composed">
+        <Alert variant="warning">
+          <Alert.Title className="uppercase">
+            Deploy blocked <span data-testid="title-child">(3 checks)</span>
+          </Alert.Title>
+          <Alert.Description>Two required checks have not reported yet.</Alert.Description>
+        </Alert>
+      </div>
+      <div data-testid="sugar">
+        <Alert variant="warning">Two required checks have not reported yet.</Alert>
+      </div>
+      <div data-testid="sugar-titled">
+        <Alert variant="warning" title="Deploy blocked">
+          Two required checks have not reported yet.
+        </Alert>
+      </div>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Composed: the consumer's own title and description, no synthesized ones.
+    const composed = canvas.getByTestId("composed");
+    await expect(composed.querySelectorAll("[data-slot='alert-title']")).toHaveLength(1);
+    await expect(composed.querySelector("[data-slot='alert-title']")).toHaveClass("uppercase");
+    await expect(within(composed).getByTestId("title-child")).toBeInTheDocument();
+    await expect(composed.querySelectorAll("[data-slot='alert-description']")).toHaveLength(1);
+
+    // Sugar with no title still falls back to the variant name.
+    const sugar = canvas.getByTestId("sugar");
+    await expect(sugar.querySelector("[data-slot='alert-title']")).toHaveTextContent("Warning");
+    await expect(sugar.querySelector("[data-slot='alert-description']")).toHaveTextContent(
+      "Two required checks have not reported yet.",
+    );
+
+    // Sugar with a title is unchanged.
+    const titled = canvas.getByTestId("sugar-titled");
+    await expect(titled.querySelector("[data-slot='alert-title']")).toHaveTextContent(
+      "Deploy blocked",
+    );
+  },
+};
