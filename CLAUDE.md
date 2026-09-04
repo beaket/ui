@@ -78,6 +78,8 @@ export function ComponentName({ className, ...props }: React.ComponentProps<"div
 
 ## Required Checklist
 
+API shape is decided before this list starts: `docs/component-api-patterns.md` **Part 5 — Checklist for a new component** is the 14 steps that lead here (compound packaging, `asChild`, `data-slot`, `<Component>Props`, sugar over a compositional path). Step 14 is this list.
+
 When creating a component, you **must** create all of:
 
 - [ ] `src/components/[name].tsx` — Component with `data-slot`, `cn`, design tokens
