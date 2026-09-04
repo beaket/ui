@@ -4,7 +4,7 @@
 
 Maintainer doc. Lives outside the npm tarball and outside Astro routing (`docs/src/pages/`), like `git-rules.md`. No changeset needed to edit it.
 
-**Status:** every "Today" note and Part 4 finding below was re-checked against the tree at `0cf033a` on 2026-09-04; where the code disagreed, the code won and the correction is inline. The work is tracked as **epic #856** with one child issue per finding — see the table at the end of Part 3.
+**Status: landed.** Every finding below was written against the tree at `0cf033a` and **epic #856 closed all seventeen of them on 2026-09-04**. The "Today" notes now describe the tree _after_ that work, with the PR that changed each one; the pre-epic state survives only where it explains why a rule exists. Where the code and this document disagreed, the code won and the correction is inline and attributed. See the tracking table at the end of Part 3.
 
 Read Part 0 and Part 1 once — they are the reasoning the rules come from. Part 2 is the reference you come back to; **§12 rules on what every component should become**, and **Part 4 records where we are behind React 19.**
 
@@ -187,11 +187,11 @@ _Axis A — parts, and the state behind them:_
 - **Every part must be optional.** If the root is broken without it, it is not a part — it belongs in the root. (`Card`'s own source comment states this: parts are "optional layout helpers, never the required anatomy.")
 - One export per file: the component, plus its props type. Parts are not exported individually.
 
-**Today**
+**Today** — all three of these are now settled; the epic's notes are kept because they are the evidence the rules were derived from.
 
-- _Assembly:_ `Object.assign` in Card, Breadcrumb, Navigation, Select, Tabs, Tooltip; post-hoc mutation (`Dialog.Title = …`) in Dialog, Sheet, DropdownMenu, Table **and Avatar** — five files. Identical public shape, two spellings — prefer `Object.assign`.
-- _Shape:_ the Radix-backed components are flexible compound components already (their context is Radix's). The rest are namespaced parts. **Nothing in this repo writes its own context yet** — §12 says where that changes.
-- _Odd one out:_ `Radio` is the only Radix-backed component exported flat (`RadioGroup` + `RadioItem` as two names) instead of `RadioGroup.Item`. It is a true compound component wearing the wrong packaging.
+- _Assembly:_ one `Object.assign` everywhere. The five post-hoc-mutation files (Dialog, Sheet, DropdownMenu, Table, Avatar) were converted in **#875**.
+- _Shape:_ the Radix-backed components are flexible compound components (their context is Radix's); the rest are namespaced parts. **Three components now write their own context** — Pagination (#879), Navigation (#876) and DataTable (#881) — under §1.4's five rules.
+- _Odd one out:_ `Radio` was the only Radix-backed component exported flat (`RadioGroup` + `RadioItem`). It is `RadioGroup.Item` as of **#890**.
 
 ## §2 Progressive Disclosure — a core you compose, plus sugar you may ignore
 
@@ -214,7 +214,7 @@ This supersedes the blunter "composition over configuration". The blunt version 
 
 **Rule** — ship the compositional path first. Add sugar afterwards, only if it collapses a genuinely common case, and only where removing the sugar would still leave the component fully usable.
 
-**Today** — Dialog and Sheet take `trigger` with no `Dialog.Trigger` beneath it: the sugar _is_ the API, so a consumer who needs two triggers or a conditional one has nowhere to go. `Alert` takes `title`. `Pagination` and `DataTable` are configuration end to end. New components follow the table; these change only when the file is open for other reasons (Part 3).
+**Today** — every §2 violation the epic found now has a compositional core underneath its sugar. `Dialog.Trigger` / `Sheet.Trigger` (#885) sit beneath the `trigger` prop; `Alert.Title` / `Alert.Description` (#880) beneath `title`; Pagination's parts (#879) beneath its `mode` union; DataTable's parts (#881) beneath its 20 configuration props. In every case the old prop kept working and became the shortcut, which is the shape this section asks for.
 
 ## §3 The Slot Pattern — `asChild`, never an `as` prop
 
@@ -237,7 +237,7 @@ _Term: the **Slot pattern** (Radix's `Slot` utility + an `asChild` boolean). It 
 - Under `asChild`, inject nothing. See `Button`: `type` and `disabled` apply only when `asChild` is false, and the spinner is skipped — the child owns its tag.
 - Opting out is fine but must be _stated in the type_: `Switch` uses `Omit<…, "asChild">` because a switch is its own instrument.
 
-**Today** — **offered as a prop** by Button (`button.tsx:17`), Card root (`card.tsx:52`), and `Dialog.Close` / `Sheet.Close` (`dialog.tsx:172`, `sheet.tsx:207` — defaulted to `true` and forwarded to Radix); `switch.tsx:49` is the documented `Omit` opt-out. The other `asChild` occurrences are **internal forwarding, not an offered prop**: `dialog.tsx:100` / `sheet.tsx:131` wrap the `trigger` node, `select.tsx:53` is `SelectPrimitive.Icon asChild`. Missing where it costs the most: `Breadcrumb.Link`, `Navigation.Link`, `Pagination`. Adding it is purely additive (Part 3, safe).
+**Today** — offered by Button, Card root, `Dialog.Close` / `Sheet.Close` and `Dialog.Trigger` / `Sheet.Trigger` (#885), and — since the epic — by `Breadcrumb.Link` and `Navigation.Link` (#876) and all four Pagination parts (#879), which is where it cost the most. `switch.tsx` remains the documented `Omit` opt-out. Under `asChild` these components inject nothing: `Navigation.Link` skips its press-travel wrapper and `Pagination.Item` its key span, the way Button skips its spinner.
 
 ## §4 Styling Hooks — `data-slot` on every rendered element
 
@@ -254,7 +254,7 @@ _Term: **styling hooks** — the design-systems name for internals a component d
 
 **Rule** — kebab-case, `<component>-<part>`, matching the file name. Distinguish look-alike roles: `dialog-close` (the X) vs `dialog-close-action` (a footer button).
 
-**Today** — near-universal, with one hole: **`data-table.tsx` has zero `data-slot`s** — the only component in the registry with none; the other 25 carry between 1 (`button`, `badge`, `label`, `skeleton`) and 14 (`dropdown-menu`). Its entire DOM is unaddressable, which is part of why it compensates with `getRowClassName` and 20 props.
+**Today** — universal. `data-table.tsx` was the one hole (zero `data-slot`s, the only component in the registry with none); **#877** gave 24 of its 28 rendered elements a `data-table-*` slot. The four exceptions are composed _controls_ — `Input`, two `Checkbox`es and `Pagination` — which keep their own slots because they are already addressable and `docs/src/components/component-showcase.tsx` styles `[data-slot=input]` directly.
 
 ## §5 The Escape Hatch — `className` is the last word, and custom utilities never layer
 
@@ -285,7 +285,7 @@ _Term: **Anti-Corruption Layer** (Domain-Driven Design) — a boundary that stop
 
 **Rule** — when a custom prop shadows a native one, `Omit` it so the conflict is visible in the type: `Omit<React.ComponentProps<"input">, "prefix">` (Input), `Omit<…, "title">` (Alert).
 
-**Today** — six components still use the pre-React-19 `HTMLAttributes` families, which silently drop `ref` from their public type. See **F1**, the cheapest fix in this document.
+**Today** — none. The seven declarations across five files that still used the pre-React-19 `HTMLAttributes` families — silently dropping `ref` from their public type — were switched to `React.ComponentProps<…>` in **#875** (F1). `grep -n "React.HTMLAttributes\|ButtonHTMLAttributes" src/components/*.tsx` returns nothing.
 
 ## §7 Intention-Revealing Names — name the props type after the component, and export it
 
@@ -293,7 +293,7 @@ _Term: **Anti-Corruption Layer** (Domain-Driven Design) — a boundary that stop
 
 **Why it holds** — the file is standalone, so `Props` reads fine _here_ and badly everywhere else: a consumer importing two components writes `import { Props as ButtonProps }`, and `Props` is un-greppable across a codebase. Exporting it is what lets them write a wrapper, which is the first thing anyone does with a copy-pasted component.
 
-**Today** — mixed, and only a quarter of it is actually breaking to fix:
+**Today** — every props type is named after its component and exported (**#890**, with the free half of the sweep riding along). The inventory below is the pre-epic state, kept because it is what made the "only a quarter of this is breaking" argument:
 
 | State                                  | Where                                                                                                                                                                                                                                                                                | Cost to fix                                   |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------- |
@@ -302,7 +302,7 @@ _Term: **Anti-Corruption Layer** (Domain-Driven Design) — a boundary that stop
 | Generic `Props`, not exported          | `avatar.tsx:10`, `dialog.tsx:9`, `sheet.tsx:9`, `textarea.tsx:7`                                                                                                                                                                                                                     | **Free** — rename                             |
 | Generic `Props`, **exported**          | `badge.tsx:7`, `button.tsx:8`, `checkbox.tsx:8`, `input.tsx:6`                                                                                                                                                                                                                       | **Breaking** — renames a public name (Part 3) |
 
-So the §7 sweep is four breaking renames, not a wholesale break.
+So the §7 sweep was four breaking renames, not a wholesale break — and that is what shipped: `BadgeProps`, `ButtonProps`, `CheckboxProps`, `InputProps`. Components added since carry the rule from birth (`BreadcrumbLinkProps`, `NavigationProps`, `NavigationLinkProps`, `PaginationItemProps`, `TabsContentProps`, `DataTableRowProps`, …).
 
 **Correction (#873).** `SwitchProps` was listed as "named, not exported". It was already exported, through a trailing `export type { SwitchProps };` statement at the bottom of `switch.tsx` — which the inventory's declaration-line grep could not see. It is the only such case in `src/components/`; the sweep normalised it to the inline `export interface` form the other eleven use.
 
@@ -320,7 +320,7 @@ So the §7 sweep is four breaking renames, not a wholesale break.
 - Sizes are `sm | md | lg` (+ `icon` where it applies). No other vocabulary.
 - Repeated fragments get a named `const` — `const edge = "hover:shadow-offset-action …"` in `button.tsx` — so a shared grammar is stated once and reads as one idea.
 
-**Today** — `cva`: Button, Card, Alert, Badge, Switch. Inline strings with ternaries: Radio, Navigation, Tabs. Hand-rolled class constants: Pagination.
+**Today** — `cva`: Button, Card, Alert, Badge, Switch. Inline strings with ternaries: Radio, Navigation, Tabs. Hand-rolled class constants: Pagination — now at module scope rather than rebuilt inside the render (#879), but still not `cva`. Unchanged by the epic: §12 did not touch variant machinery.
 
 ## §9 Controlled vs. Uncontrolled, with a dev warning
 
@@ -336,9 +336,11 @@ _Term: **Control Props** — one of the inversion-of-control patterns Kent C. Do
 
 - Warn, never throw. A misconfigured prop must not take down the page.
 - Guard with `process.env.NODE_ENV !== "production"` and fire once (`hasWarnedRef`).
-- Keep the block **byte-identical** across components — this is Fact 1's isomorphism rule. It cannot be extracted; its whole value is instant recognition. Copy it from `dialog.tsx`, do not improve it in place. (The component name inside the warning string is the only difference between `dialog.tsx:74` and `sheet.tsx:105` today, and the only one permitted.)
+- Keep the block **byte-identical** across components — this is Fact 1's isomorphism rule. It cannot be extracted; its whole value is instant recognition. Copy it from `dialog.tsx`, do not improve it in place. (The component name inside the warning string is the only difference between `dialog.tsx` and `sheet.tsx`, and the only one permitted.)
 
-**Before you copy it:** the block also contains a render-time ref write that React tells you not to do, and that `useEffectEvent` now replaces (**F2**). And Radix's `Root` already implements controlled/uncontrolled itself. In `Dialog` and `Sheet` the wrapper state exists _only_ to serve `closeWhen`. Drop `closeWhen` and, measured: the prop, its effect (**exactly 11 lines** — `dialog.tsx:81-91`, `sheet.tsx:112-122`) and the `onOpenChangeRef` pair it needs go with it — **~14 lines per file**, rising to ~25 if the rest of the open-state wrapper (`internalOpen` / `isControlled` / `handleOpenChange`) is also handed back to Radix's `Root`. The dev warning stays either way; it is about `open` without `onOpenChange`, not about `closeWhen`. Do not add this block to a Radix-backed component that has no equivalent need.
+**Done in `Dialog` and `Sheet` (#890) — read this before copying the block anywhere.** The wrapper state in those two files existed _only_ to serve `closeWhen`, which Radix's `Root` made redundant: `Root` already implements controlled/uncontrolled. Dropping `closeWhen` took the prop, its effect (**exactly 11 lines**) and the `onOpenChangeRef` pair with it — measured at **~14 lines per file**, ~25 once `internalOpen` / `isControlled` / `handleOpenChange` went back to Radix too. It also removed a render-time ref write, which is why **F2** deliberately left those two files alone.
+
+What survives is only the warning: `open !== undefined && !onOpenChange`, guarded and fired once. **That** is the block to copy byte-identically. Do not reintroduce the state wrapper around a Radix-backed component — `Root` does it — and do not add either to a component that has no equivalent need.
 
 ## §10 Make Illegal States Unrepresentable
 
@@ -359,7 +361,7 @@ interface PaginationButtonProps {
 
 **Why it holds** — the invalid combination fails at the call site, and each mode's required prop is genuinely required instead of optional-and-hoped-for. A runtime guard finds the same bug later, in someone else's app.
 
-**When not to** — if the modes differ only in _which element gets rendered_, `asChild` (§3) deletes the union outright. Pagination's two modes are exactly that case: the union is the expensive answer to a question `asChild` had already answered.
+**When not to** — if the modes differ only in _which element gets rendered_, `asChild` (§3) deletes the union outright. Pagination's two modes were exactly that case: the union was the expensive answer to a question `asChild` had already answered. #879 kept it as the §2 sugar layer over parts that each take `asChild`, so it no longer _is_ the API — the compositional path underneath it is.
 
 ## §11 Deep vs. Shallow Modules — two kinds of component, two different rules
 
@@ -374,7 +376,7 @@ _Term: **deep vs. shallow modules** — Ousterhout, *A Philosophy of Software De
 | Extend by      | Adding a part                                                  | Handing back control (`asChild`, children, a `table` instance) — **not** by adding a prop |
 | Failure mode   | Too many props for something that renders one `<div>`          | An interface as wide as the feature list                                                  |
 
-Ousterhout's measure is the ratio of functionality to interface. A shallow _material_ component is fine — its interface is small because its job is small. A shallow _logic_ component is the classic mistake: `DataTable` carries genuine complexity **and** exposes 20 props, so the consumer pays twice — once to learn the interface and again when the 21st need is not on the list.
+Ousterhout's measure is the ratio of functionality to interface. A shallow _material_ component is fine — its interface is small because its job is small. A shallow _logic_ component is the classic mistake: `DataTable` carried genuine complexity **and** exposed 20 props, so the consumer paid twice — once to learn the interface and again when the 21st need was not on the list. #881 answered it the way this section asks: the root hands the TanStack instance back, so the 21st need is answered by composition instead of a 21st prop. The 20 props remain as sugar.
 
 **Rule** — for a logic component, every new requirement is first attempted as _giving something back_ (a slot, a part, the underlying instance) and only becomes a prop when that fails. Ask: _does this prop describe behavior, or is it an arrangement question I failed to hand back?_
 
@@ -390,7 +392,7 @@ Ousterhout's measure is the ratio of functionality to interface. A shallow _mate
 | Select, Tabs, DropdownMenu, Tooltip, Avatar                                                                  | Flexible compound (Radix's context) | The state is genuinely shared and genuinely implicit. Nothing to add.                                                                                                 |
 | Button, Badge, Input, Textarea, Checkbox, Switch, Label, Separator, Skeleton, Blockquote, NavigationProgress | Single element, flat export         | No internal structure, so no dot. A namespace here would be ceremony.                                                                                                 |
 
-**Should change — with the reason and the cost.**
+**Should change — with the reason and the cost.** _All of these landed in epic #856; the table is kept because the reason column is the argument, not the changelog. See the tracking table at the end of Part 3 for which PR carried each._
 
 | Component                                      | Today                                                                                  | Should be                                                                                                                                                               | Why                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Landing                                                                                    |
 | ---------------------------------------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
@@ -430,23 +432,25 @@ Rich Hickey's rule for evolving an interface: **you may require less, or provide
 
 The **"Today"** notes in Part 2 are the evidence behind these rows, not a separate backlog.
 
-## Tracking — epic #856
+## Tracking — epic #856 · all seventeen landed 2026-09-04
 
-| Issue       | Finding                                                                                        | Gate                                  |
-| ----------- | ---------------------------------------------------------------------------------------------- | ------------------------------------- |
-| #857        | F1 — `ref` in public prop types                                                                | — do first                            |
-| #858        | land this document at `docs/component-api-patterns.md`                                         | —                                     |
-| #859        | §3 `asChild` on `Breadcrumb.Link` / `Navigation.Link`                                          | —                                     |
-| #860        | §4 `data-slot` throughout `data-table.tsx`                                                     | —                                     |
-| #861        | F0 React floor in `registry.json`                                                              | **gates #869, #870**                  |
-| #862        | §12 Pagination → flexible compound                                                             | —                                     |
-| #863        | §12 DataTable → flexible compound                                                              | after #860                            |
-| #864        | §12 Navigation root `value`                                                                    | after #859 (same file)                |
-| #865 / #866 | §12 `Alert.Title`·`.Description` / `Dialog.Trigger`·`Sheet.Trigger`                            | —                                     |
-| #867 / #868 | F5 `useFormStatus` / F6 `useDeferredValue`                                                     | no floor needed                       |
-| #869 / #870 | F2 render-time ref writes / F4 Tabs `keepMounted`                                              | after #861                            |
-| #871 / #872 | §1.5 `Object.assign` / F7 avatar flag                                                          | —                                     |
-| #873        | Part 3 breaking batch — `RadioGroup.Item`, the four exported `Props` renames, drop `closeWhen` | after all of the above, with sign-off |
+| Issue              | Finding                                                                             | Landed in      |
+| ------------------ | ----------------------------------------------------------------------------------- | -------------- |
+| #858               | land this document at `docs/component-api-patterns.md`                              | #874           |
+| #857 / #871 / #872 | F1 `ref` in public prop types / §1.5 `Object.assign` / F7 avatar flag               | #875           |
+| #859 / #864        | §3 `asChild` on `Breadcrumb.Link` · `Navigation.Link` / §12 Navigation root `value` | #876           |
+| #860               | §4 `data-slot` throughout `data-table.tsx`                                          | #877           |
+| #862               | §12 Pagination → flexible compound                                                  | #879           |
+| #865               | §12 `Alert.Title` · `.Description`                                                  | #880           |
+| #863               | §12 DataTable → flexible compound over the TanStack instance                        | #881           |
+| #861               | F0 React floor in `registry.json` — **gated #869, #870**                            | #883           |
+| #867               | F5 Button `loading` → `useFormStatus`                                               | #884           |
+| #866               | §12 `Dialog.Trigger` · `Sheet.Trigger`                                              | #885           |
+| #870               | F4 Tabs `keepMounted` via `<Activity mode="hidden">`                                | #886           |
+| #868 / #869        | F6 `useDeferredValue` / F2 render-time ref writes → `useEffectEvent`                | #887           |
+| #873               | Part 3 breaking batch — `RadioGroup.Item`, four `Props` renames, drop `closeWhen`   | #890 (`major`) |
+
+**Corrections this document owes the epic**, each recorded inline where it applies: the F0 fix as written would have installed React rather than checked it (#861); `SwitchProps` was already exported (#873); `react-dom` must not be a registry `dependency` (#867); `data-table.tsx` renders 28 elements, not 27 (#860); `avatar.tsx` was a fifth post-hoc-mutation file (#871); dropping `closeWhen` frees ~14 lines per file, not ~40 (#873); and the pinned `@radix-ui/react-avatar` no longer needs the F7 workaround at all (#872).
 
 ---
 
@@ -456,13 +460,13 @@ The repo pins **React 19.2.8** (`package.json`), the current stable line — the
 
 Below is where our components are behind that platform. Each item says what is wrong, what React now offers, and what it costs to adopt.
 
-_Verification note (updated 2026-09-04, tree at `0cf033a`): these were type-level readings of the source; they have since been checked against a working tree with `node_modules` installed. **F1 is now confirmed by a real typecheck** — all seven declarations fail, individually probed. F0's proposed fix turned out not to work as written and is rewritten below. What is still **unverified**: that Radix `Tabs.Content` unmounts inactive panels (F4 — documented Radix behavior, not demonstrated by a test here), and whether the pinned `@radix-ui/react-avatar` still needs the F7 workaround._
+_Verification note (updated 2026-09-04, after epic #856): these began as type-level readings of the source. **F1 was confirmed by a real typecheck** — all seven declarations failed, individually probed — and fixed in #875. F0's proposed fix turned out not to work as written; it is rewritten below and the decision it needed is recorded there. **The two remaining unknowns are now settled, and neither went the way the note assumed:** Radix `Tabs.Content` does unmount inactive panels, demonstrated by a story rather than taken from Radix's docs (#886, `KeepMountedTest`); and the pinned `@radix-ui/react-avatar` **no longer needs the F7 workaround at all**, so the flag was deleted rather than annotated (#875)._
 
 ### The constraint that governs all of it
 
 A registry component is copied into a project whose React version **we do not control**, and `registry.json` declares npm dependencies but **never a React version floor**. So "React 19.2 added X" is not on its own a reason to use X.
 
-> **Fix this first: the registry must state a React floor.** Today a component using a 19.2-only API would be copied into an 18.x project and fail at runtime with no warning from the CLI. Everything below marked _raises the floor_ depends on this existing.
+> **Fix this first: the registry must state a React floor.** Without one, a component using a 19.2-only API is copied into an 18.x project and fails at runtime with no warning from the CLI. Everything below marked _raises the floor_ depended on this existing — it does now (#883), and `tabs` and `data-table` are the two components that declare more than the registry default.
 
 **But not by adding a bare `react` entry to `dependencies` — that was this document's original advice and it is wrong.** Checked against the actual format:
 
@@ -478,7 +482,7 @@ Two workable options, and it is a maintainer call:
 
 ### F1 — `ref` is missing from seven public prop declarations (five files)
 
-`React.HTMLAttributes` and `React.ButtonHTMLAttributes` do **not** include `ref`. `React.ComponentProps<"button">` does, because React 19 moved `ref` into intrinsic element props. So this fails to typecheck today, for no reason anyone intended — **confirmed, not inferred**: a probe passing a `ref` to all seven produced seven `TS2322`s and nothing else, while `<Input ref={inputRef} />` compiled clean.
+`React.HTMLAttributes` and `React.ButtonHTMLAttributes` do **not** include `ref`. `React.ComponentProps<"button">` does, because React 19 moved `ref` into intrinsic element props. So this failed to typecheck for no reason anyone intended — **confirmed, not inferred**: a probe passing a `ref` to all seven produced seven `TS2322`s and nothing else, while `<Input ref={inputRef} />` compiled clean. Fixed in #875; the same probe now compiles clean.
 
 ```tsx
 <Button ref={buttonRef}>Save</Button> // `ref` does not exist on type Props
@@ -539,7 +543,7 @@ React 19's `useFormStatus` is documented as a **design-system** hook: a submit b
 const { pending } = useFormStatus(); // true while the form's action runs
 ```
 
-Today every consumer wires `loading` by hand for the most common case there is — a submit button in a form.
+Every consumer used to wire `loading` by hand for the most common case there is — a submit button in a form. Since #884 they do not have to: the prop is the override and the form's pending state is the fallback beneath it.
 
 **Fix, in §2's shape:** keep `loading` as the explicit override; when it is not supplied and the button is a submit button, fall back to `useFormStatus().pending`.
 **Honest caveats:** the hook returns `false` outside a `<form>` (harmless), and it must be called from a component _inside_ the form — `Button` always is. Under `asChild` the button injects nothing, so the fallback stays out of someone else's element too.
@@ -557,7 +561,9 @@ Today every consumer wires `loading` by hand for the most common case there is �
 
 `avatar.tsx` carries a module-level `let hydrated = false` to work around a Radix `useIsHydrated` behavior under React 19 SSR (issue #291). **This is not a server-state leak** — `useEffect` never runs during SSR, so the flag stays `false` on the server — but it is invisible state shared across every Avatar instance in the module. It should carry a link to the upstream issue so it can be deleted when that is fixed, rather than surviving as folklore.
 
-**Correction:** the comment is _not_ missing a reference — `avatar.tsx:41` already says "See #291". But **#291 is this repo's own issue** (`beaket/ui#291`, _"fix: Avatar.Image hydration mismatch in React 19 SSR"_), and it is **CLOSED** — so it can never signal that the workaround is safe to delete. What is missing is the **upstream** Radix issue, or an explicit note that no upstream tracking issue exists. Check whether the pinned `@radix-ui/react-avatar` still reproduces the behavior first; the answer may be that the flag simply goes.
+**Correction:** the comment was _not_ missing a reference — `avatar.tsx` already said "See #291". But **#291 is this repo's own issue** (`beaket/ui#291`, _"fix: Avatar.Image hydration mismatch in React 19 SSR"_), and it is **CLOSED** — so it could never signal that the workaround was safe to delete. The instruction that followed was to check whether the pinned `@radix-ui/react-avatar` still reproduces the behavior before writing any comment.
+
+**Answer (#875): it does not, so the flag is gone rather than annotated.** `@radix-ui/react-avatar` 1.2.6 contains no `useIsHydrated` at all; the image loading status is a plain `useState("idle")`, which is identical on the server and on the first client render by construction. No upstream Radix issue exists to cite. A new `SsrHydrationTest` story renders the avatar with `renderToString`, hydrates it against a warmed image cache and asserts React recovered from nothing — so a future Radix bump that reintroduces the mismatch fails loudly instead of silently. **This is the shape a deletion trigger should take: a test, not a comment.**
 
 ---
 
