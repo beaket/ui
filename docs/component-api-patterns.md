@@ -540,7 +540,9 @@ const { pending } = useFormStatus(); // true while the form's action runs
 Today every consumer wires `loading` by hand for the most common case there is — a submit button in a form.
 
 **Fix, in §2's shape:** keep `loading` as the explicit override; when it is not supplied and the button is a submit button, fall back to `useFormStatus().pending`.
-**Honest caveats:** the hook returns `false` outside a `<form>` (harmless), and it must be called from a component _inside_ the form — `Button` always is. **`react-dom` becomes a declared dependency** of the button component.
+**Honest caveats:** the hook returns `false` outside a `<form>` (harmless), and it must be called from a component _inside_ the form — `Button` always is. Under `asChild` the button injects nothing, so the fallback stays out of someone else's element too.
+
+**Correction (#867), from F0's finding:** the original note said "`react-dom` becomes a declared dependency of the button component". It must **not** go in `registry.json`'s `dependencies` — those are bare names handed straight to `npm install`, so a `"react-dom"` entry would pull react-dom to latest in the consumer's project and desynchronise it from their React, which is the exact hazard F0 documents. `react-dom` ships in lockstep with `react`, so the registry's `"react"` floor already expresses the requirement, and `useFormStatus` needs only 19.0 — the registry floor.
 **Cost:** additive at React 19.0.
 
 ### F6 — `DataTable`'s global filter re-filters synchronously on every keystroke

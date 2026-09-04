@@ -1,6 +1,7 @@
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 import { type ClassValue, clsx } from "clsx";
+import { useFormStatus } from "react-dom";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
@@ -11,7 +12,11 @@ export interface Props extends React.ComponentProps<"button"> {
     "primary" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "success" | "warning";
   /** sm | md | lg | icon. Button size */
   size?: "sm" | "md" | "lg" | "icon";
-  /** Shows a loading spinner and disables the button */
+  /**
+   * Shows a loading spinner and disables the button.
+   * Left unset on a `type="submit"` button inside a `<form>`, it follows the
+   * form's own pending state. Set it explicitly to override that either way.
+   */
   loading?: boolean;
   /** Merges props onto the immediate child element instead of rendering a button */
   asChild?: boolean;
@@ -30,19 +35,27 @@ export function Button({
 }: Props) {
   const Comp = asChild ? Slot : "button";
 
+  // React 19's design-system hook: a submit button inside a <form> reads the
+  // form's pending state directly, with no prop drilling and no wiring by the
+  // consumer. It returns false outside a form, which is exactly right here.
+  // Under asChild the button injects nothing — no type, no disabled, no spinner
+  // — so the fallback stays out of someone else's element too.
+  const { pending } = useFormStatus();
+  const isLoading = loading ?? (!asChild && type === "submit" && pending);
+
   return (
     <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size }), className)}
       type={!asChild ? (type ?? "button") : undefined}
-      disabled={!asChild ? disabled || loading : undefined}
+      disabled={!asChild ? disabled || isLoading : undefined}
       {...props}
     >
       {asChild ? (
         children
       ) : (
         <>
-          {loading && (
+          {isLoading && (
             <span aria-live="polite">
               <Spinner />
             </span>
