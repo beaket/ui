@@ -9,7 +9,7 @@ export interface RadioGroupProps extends React.ComponentProps<typeof RadioGroupP
   className?: string;
 }
 
-export function RadioGroup({ className, ...props }: RadioGroupProps) {
+function RadioGroupRoot({ className, ...props }: RadioGroupProps) {
   return (
     <RadioGroupPrimitive.Root
       data-slot="radio-group"
@@ -24,7 +24,7 @@ export interface RadioItemProps extends React.ComponentProps<typeof RadioGroupPr
   className?: string;
 }
 
-export function RadioItem({ className, ...props }: RadioItemProps) {
+function RadioGroupItem({ className, ...props }: RadioItemProps) {
   return (
     <RadioGroupPrimitive.Item
       data-slot="radio-item"
@@ -53,3 +53,7 @@ export function RadioItem({ className, ...props }: RadioItemProps) {
     </RadioGroupPrimitive.Item>
   );
 }
+
+export const RadioGroup = Object.assign(RadioGroupRoot, {
+  Item: RadioGroupItem,
+});

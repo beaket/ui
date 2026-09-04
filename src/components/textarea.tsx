@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-interface Props extends React.ComponentProps<"textarea"> {
+export interface TextareaProps extends React.ComponentProps<"textarea"> {
   /**
    * Additional CSS classes to apply to the textarea
    */
@@ -31,7 +31,7 @@ export function Textarea({
   onPointerUp,
   ref,
   ...props
-}: Props) {
+}: TextareaProps) {
   const internalRef = useRef<HTMLTextAreaElement>(null);
   const externalRef = useRef(ref);
   externalRef.current = ref;

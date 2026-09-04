@@ -17,7 +17,7 @@ function SelectValue(props: React.ComponentProps<typeof SelectPrimitive.Value>) 
   return <SelectPrimitive.Value data-slot="select-value" {...props} />;
 }
 
-interface SelectTriggerProps extends React.ComponentProps<typeof SelectPrimitive.Trigger> {
+export interface SelectTriggerProps extends React.ComponentProps<typeof SelectPrimitive.Trigger> {
   /**
    * sm | default. Size variant of the select trigger
    */

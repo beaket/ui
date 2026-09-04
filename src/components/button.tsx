@@ -6,7 +6,7 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export interface Props extends React.ComponentProps<"button"> {
+export interface ButtonProps extends React.ComponentProps<"button"> {
   /** primary | secondary | destructive | outline | ghost | link | success | warning. Button style variant */
   variant?:
     "primary" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "success" | "warning";
@@ -32,7 +32,7 @@ export function Button({
   asChild = false,
   type,
   ...props
-}: Props) {
+}: ButtonProps) {
   const Comp = asChild ? Slot : "button";
 
   // React 19's design-system hook: a submit button inside a <form> reads the

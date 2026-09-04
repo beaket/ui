@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
-import { RadioGroup, RadioItem } from "./radio";
+import { RadioGroup } from "./radio";
 
 const meta: Meta<typeof RadioGroup> = {
   title: "UI/Radio",
@@ -25,9 +25,9 @@ type Story = StoryObj<typeof RadioGroup>;
 export const Default: Story = {
   render: (args) => (
     <RadioGroup {...args} aria-label="Options">
-      <RadioItem value="option1" aria-label="Option 1" />
-      <RadioItem value="option2" aria-label="Option 2" />
-      <RadioItem value="option3" aria-label="Option 3" />
+      <RadioGroup.Item value="option1" aria-label="Option 1" />
+      <RadioGroup.Item value="option2" aria-label="Option 2" />
+      <RadioGroup.Item value="option3" aria-label="Option 3" />
     </RadioGroup>
   ),
 };
@@ -39,19 +39,19 @@ export const AllStates = () => (
       <span className="text-fg-muted text-xs tracking-wide uppercase">Horizontal</span>
       <RadioGroup defaultValue="option1" aria-label="Horizontal options">
         <div className="flex items-center gap-1">
-          <RadioItem value="option1" id="h-opt1" />
+          <RadioGroup.Item value="option1" id="h-opt1" />
           <label htmlFor="h-opt1" className="text-sm">
             Option 1
           </label>
         </div>
         <div className="flex items-center gap-1">
-          <RadioItem value="option2" id="h-opt2" />
+          <RadioGroup.Item value="option2" id="h-opt2" />
           <label htmlFor="h-opt2" className="text-sm">
             Option 2
           </label>
         </div>
         <div className="flex items-center gap-1">
-          <RadioItem value="option3" id="h-opt3" />
+          <RadioGroup.Item value="option3" id="h-opt3" />
           <label htmlFor="h-opt3" className="text-sm">
             Option 3
           </label>
@@ -67,19 +67,19 @@ export const AllStates = () => (
         aria-label="Vertical options"
       >
         <div className="flex items-center gap-2">
-          <RadioItem value="option1" id="v-opt1" />
+          <RadioGroup.Item value="option1" id="v-opt1" />
           <label htmlFor="v-opt1" className="text-sm">
             Option 1
           </label>
         </div>
         <div className="flex items-center gap-2">
-          <RadioItem value="option2" id="v-opt2" />
+          <RadioGroup.Item value="option2" id="v-opt2" />
           <label htmlFor="v-opt2" className="text-sm">
             Option 2
           </label>
         </div>
         <div className="flex items-center gap-2">
-          <RadioItem value="option3" id="v-opt3" />
+          <RadioGroup.Item value="option3" id="v-opt3" />
           <label htmlFor="v-opt3" className="text-sm">
             Option 3
           </label>
@@ -90,13 +90,13 @@ export const AllStates = () => (
       <span className="text-fg-muted text-xs tracking-wide uppercase">Disabled</span>
       <RadioGroup disabled defaultValue="option1" aria-label="Disabled options">
         <div className="flex items-center gap-1">
-          <RadioItem value="option1" id="d-opt1" />
+          <RadioGroup.Item value="option1" id="d-opt1" />
           <label htmlFor="d-opt1" className="text-fg-muted text-sm">
             Option 1
           </label>
         </div>
         <div className="flex items-center gap-1">
-          <RadioItem value="option2" id="d-opt2" />
+          <RadioGroup.Item value="option2" id="d-opt2" />
           <label htmlFor="d-opt2" className="text-fg-muted text-sm">
             Option 2
           </label>
@@ -114,15 +114,15 @@ export const InteractionTest: Story = {
     <div className="flex flex-col gap-6">
       <div data-testid="enabled-group">
         <RadioGroup aria-label="Enabled options" onValueChange={args.onValueChange}>
-          <RadioItem value="option1" aria-label="Option 1" />
-          <RadioItem value="option2" aria-label="Option 2" />
-          <RadioItem value="option3" aria-label="Option 3" />
+          <RadioGroup.Item value="option1" aria-label="Option 1" />
+          <RadioGroup.Item value="option2" aria-label="Option 2" />
+          <RadioGroup.Item value="option3" aria-label="Option 3" />
         </RadioGroup>
       </div>
       <div data-testid="disabled-group">
         <RadioGroup aria-label="Disabled options" disabled onValueChange={args.onValueChange}>
-          <RadioItem value="option1" aria-label="Option A" />
-          <RadioItem value="option2" aria-label="Option B" />
+          <RadioGroup.Item value="option1" aria-label="Option A" />
+          <RadioGroup.Item value="option2" aria-label="Option B" />
         </RadioGroup>
       </div>
     </div>

@@ -19,7 +19,7 @@ import { Label } from "./label";
 import { Navigation } from "./navigation";
 import { NavigationProgress } from "./navigation-progress";
 import { Pagination } from "./pagination";
-import { RadioGroup, RadioItem } from "./radio";
+import { RadioGroup } from "./radio";
 import { Select } from "./select";
 import { Separator } from "./separator";
 import { Sheet } from "./sheet";
@@ -342,13 +342,13 @@ export const AllComponents: StoryObj = {
         <Cell label="Radio">
           <RadioGroup defaultValue="option2" aria-label="Options" className="flex-col">
             <div className="flex items-center gap-2 text-sm">
-              <RadioItem value="option1" aria-label="Option 1" /> Option 1
+              <RadioGroup.Item value="option1" aria-label="Option 1" /> Option 1
             </div>
             <div className="flex items-center gap-2 text-sm">
-              <RadioItem value="option2" aria-label="Option 2" /> Option 2
+              <RadioGroup.Item value="option2" aria-label="Option 2" /> Option 2
             </div>
             <div className="flex items-center gap-2 text-sm">
-              <RadioItem value="option3" aria-label="Option 3" /> Option 3
+              <RadioGroup.Item value="option3" aria-label="Option 3" /> Option 3
             </div>
           </RadioGroup>
         </Cell>
