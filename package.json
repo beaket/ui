@@ -23,6 +23,7 @@
     "test:visual:update": "pnpm test:visual --update-snapshots",
     "test:contrast": "vitest run --project contrast",
     "test:cli": "./scripts/test-cli.sh",
+    "test:cli:unit": "vitest run --project cli",
     "test:editor": "pnpm --filter @beaket/paper test",
     "check:adr": "node scripts/check-adr-refs.mjs",
     "build-storybook": "storybook build",

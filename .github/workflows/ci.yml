@@ -58,6 +58,8 @@ jobs:
         run: cat test-results/a11y-summary.md >> "$GITHUB_STEP_SUMMARY"
       - name: Test CLI
         run: pnpm test:cli
+      - name: Test CLI units
+        run: pnpm test:cli:unit
       - name: Test Editor
         run: pnpm test:editor
       - name: Check ADR references resolve
