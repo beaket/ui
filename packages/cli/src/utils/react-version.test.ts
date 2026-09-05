@@ -60,6 +60,13 @@ describe("highestFloor", () => {
 });
 
 describe("readInstalledReact", () => {
+  it("reads a package.json that carries a BOM", async () => {
+    const cwd = await mkdtemp(path.join(os.tmpdir(), "beaket-react-floor-"));
+    tmpDirs.push(cwd);
+    await writeFile(path.join(cwd, "package.json"), `\uFEFF{"dependencies":{"react":"^19.2.0"}}`);
+    expect(await readInstalledReact(cwd)).toBe("^19.2.0");
+  });
+
   it("prefers the installed version over the declared range", async () => {
     const cwd = await tmpProject({
       "package.json": { dependencies: { react: "^19.0.0" } },
