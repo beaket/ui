@@ -45,28 +45,31 @@ jobs:
 
       - name: Create Release Pull Request or Publish
         id: changesets
-        # v2 requires @changesets/cli v3 and uses a different input contract.
-        # Keep the action on v1 while our patched CLI remains on v2.
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
-          title: "Changes Included in the Next Release"
-          commit: "chore: version packages"
-          publish: pnpm run release
+          pr-title: "Changes Included in the Next Release"
+          commit-message: "chore: version packages"
+          publish-script: pnpm run release
         env:
+          # For @changesets/changelog-github, not for the action. `changeset
+          # version` renders changelogs through it, and it throws without
+          # GITHUB_TOKEN in the environment. The action takes its own token
+          # through the `github-token` input (default: github.token).
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          # Provenance is enabled via `provenance=true` in the repo-root .npmrc —
-          # pnpm ignores NPM_CONFIG_PROVENANCE, so do NOT re-add it here.
+          # Provenance comes from a patch to @changesets/cli that appends
+          # `--provenance` to its publish flags — see .npmrc for why. Do NOT
+          # add NPM_CONFIG_PROVENANCE here; pnpm ignores it.
 
       - name: Create check run for Release PR
-        if: steps.changesets.outputs.pullRequestNumber
+        if: steps.changesets.outputs.pr-number
         uses: actions/github-script@v9
         with:
           script: |
             const pr = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: ${{ steps.changesets.outputs.pullRequestNumber }}
+              pull_number: ${{ steps.changesets.outputs.pr-number }}
             });
 
             await github.rest.checks.create({

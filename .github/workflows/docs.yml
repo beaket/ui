@@ -1,21 +1,14 @@
 name: Docs
 
 on:
-  # Deploy from main directly. The only automated path used to be release.yml's
-  # `docs` job, gated on `needs.release.outputs.published == 'true'` — and that
-  # output comes from changesets/action@v1 parsing the publish command's stdout.
-  # The CLI is now v3, whose output is the clack style ("◇  Successfully
-  # published:"), which v1 cannot parse, so `published` is never 'true' and the
-  # job has been silently skipping. Every recent docs deploy was a manual
-  # workflow_dispatch.
-  #
-  # main's `packages/cli/package.json` always holds the published version — the
-  # bump lands in the release commit — so docs built from main always describe
-  # the released package. There is nothing for a publish signal to add.
+  # Deploy from main directly. main's `packages/cli/package.json` always holds
+  # the published version — the bump lands in the release commit — so docs built
+  # from main always describe the released package. There is nothing a publish
+  # signal could add. (The old path was a release.yml `docs` job gated on the
+  # changesets action's `published` output, which silently skipped for months.)
   push:
     branches:
       - main
-  workflow_call:
   workflow_dispatch:
 
 concurrency:
