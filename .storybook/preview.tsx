@@ -1,5 +1,6 @@
 import type { Decorator, Preview } from "@storybook/react-vite";
 import "../src/styles.css";
+import { forceScheme, hasDarkBlock } from "../src/themes/theme-css";
 
 // Every palette as a raw string. `styles.css` already loads solace at :root as a
 // baseline; the decorator below injects the *selected* palette on top of it.
@@ -13,48 +14,6 @@ const THEMES = { solace, porcelain, tobacco, marigold, eucalyptus } as const;
 type ThemeName = keyof typeof THEMES;
 type Scheme = "light" | "dark" | "system";
 
-// Whitespace-tolerant so it survives CSS minification in `storybook build`
-// (`prefers-color-scheme:dark` with the space collapsed still matches).
-const DARK_BLOCK = /@media[^{]*prefers-color-scheme[^{]*dark[^{]*\{/i;
-const HAS_DARK = /@media[^{]*prefers-color-scheme[^{]*dark/i;
-
-/**
- * Return a theme's palette CSS, forcing a color scheme when asked.
- *
- * Themes wrap their dark ramp in `@media (prefers-color-scheme: dark) { :root {…} }`:
- * - "system" — leave as authored, follows the OS.
- * - "light"  — drop the dark block so the OS can't flip it.
- * - "dark"   — unwrap the dark block so its `:root` wins unconditionally.
- *
- * Any parse surprise falls back to the raw CSS (i.e. system behaviour), so the
- * toolbar can never leave the page with an undefined palette.
- */
-function paletteFor(raw: string, scheme: Scheme): string {
-  if (scheme === "system") return raw;
-  const m = raw.match(DARK_BLOCK);
-  if (!m || m.index === undefined) return raw; // palette without a dark twin
-
-  const at = m.index;
-  const open = at + m[0].length - 1; // index of the block-opening `{`
-  let depth = 0;
-  let close = -1;
-  for (let i = open; i < raw.length; i++) {
-    if (raw[i] === "{") depth++;
-    else if (raw[i] === "}") {
-      depth--;
-      if (depth === 0) {
-        close = i;
-        break;
-      }
-    }
-  }
-  if (close === -1) return raw;
-
-  const withoutDark = raw.slice(0, at) + raw.slice(close + 1);
-  if (scheme === "light") return withoutDark;
-  return withoutDark + "\n" + raw.slice(open + 1, close); // the inner `:root {…}`
-}
-
 function applyGlobals(theme: ThemeName, scheme: Scheme) {
   if (typeof document === "undefined") return;
   const raw = THEMES[theme] ?? THEMES.solace;
@@ -65,11 +24,11 @@ function applyGlobals(theme: ThemeName, scheme: Scheme) {
     el.id = "beaket-palette";
     document.head.appendChild(el); // appended last → wins the :root cascade
   }
-  el.textContent = paletteFor(raw, scheme);
+  el.textContent = scheme === "system" ? raw : (forceScheme(raw, scheme) ?? raw);
 
   // Hint native chrome (scrollbars, form controls). A light-only palette forced
   // to "dark" stays light, so keep colorScheme light to match.
-  const effective = scheme === "dark" && !HAS_DARK.test(raw) ? "light" : scheme;
+  const effective = scheme === "dark" && !hasDarkBlock(raw) ? "light" : scheme;
   document.documentElement.style.colorScheme = effective === "system" ? "light dark" : effective;
 }
 

@@ -3,7 +3,7 @@ import path from "node:path";
 import { gzipSync } from "node:zlib";
 
 const outputDirectory = path.resolve("docs/dist");
-// Interactive documentation examples now hydrate all manifest-declared controls.
+// Interactive documentation examples hydrate every control the docs register.
 // Keep the guardrail, but size it for their Radix and table dependencies.
 const maxPublicJavaScriptBytes = 650_000;
 const forbiddenPatterns = [

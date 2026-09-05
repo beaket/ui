@@ -1,5 +1,10 @@
-import fs from "fs-extra";
+import { readFile } from "node:fs/promises";
 import path from "path";
+
+// A consumer's package.json may carry a BOM (Windows editors write one, and
+// `JSON.parse` rejects it). fs-extra's `readJson` stripped it; this keeps that.
+const readJson = async (file: string) =>
+  JSON.parse((await readFile(file, "utf-8")).replace(/^\uFEFF/, ""));
 
 /**
  * A React floor is a **check, not an install**. `registry.json`'s `dependencies`
@@ -51,14 +56,14 @@ export function highestFloor(floors: (string | undefined)[]): string | null {
  */
 export async function readInstalledReact(cwd: string): Promise<string | null> {
   try {
-    const installed = await fs.readJson(path.join(cwd, "node_modules", "react", "package.json"));
+    const installed = await readJson(path.join(cwd, "node_modules", "react", "package.json"));
     if (typeof installed?.version === "string") return installed.version;
   } catch {
     // fall through to the declared range
   }
 
   try {
-    const pkg = await fs.readJson(path.join(cwd, "package.json"));
+    const pkg = await readJson(path.join(cwd, "package.json"));
     for (const field of ["dependencies", "devDependencies", "peerDependencies"] as const) {
       const declared = pkg?.[field]?.react;
       if (typeof declared === "string") return declared;

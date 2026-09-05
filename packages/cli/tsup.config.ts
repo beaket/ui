@@ -6,7 +6,7 @@ const pkg = JSON.parse(readFileSync("./package.json", "utf-8"));
 export default defineConfig({
   entry: ["src/index.ts"],
   format: ["esm"],
-  target: "node20",
+  target: "node22",
   outDir: "dist",
   clean: true,
   banner: {

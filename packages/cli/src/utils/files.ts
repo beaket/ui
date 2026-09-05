@@ -1,5 +1,6 @@
 import { spawn } from "child_process";
-import fs from "fs-extra";
+import { existsSync } from "node:fs";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "path";
 import prompts from "prompts";
 import { normalize } from "./diff.ts";
@@ -47,8 +48,8 @@ export async function writeComponentFiles(
     const targetPath = path.join(baseDir, relativePath);
 
     // Check if file exists
-    if (await fs.pathExists(targetPath)) {
-      const local = await fs.readFile(targetPath, "utf-8");
+    if (existsSync(targetPath)) {
+      const local = await readFile(targetPath, "utf-8");
       const differs = normalize(local) !== normalize(file.content);
 
       // Already the latest — nothing to do, and no reason to nag the user.
@@ -73,8 +74,8 @@ export async function writeComponentFiles(
       }
     }
 
-    await fs.ensureDir(path.dirname(targetPath));
-    await fs.writeFile(targetPath, file.content);
+    await mkdir(path.dirname(targetPath), { recursive: true });
+    await writeFile(targetPath, file.content);
     written.push(targetPath);
   }
 
@@ -109,13 +110,13 @@ export async function installDependencies(deps: string[]): Promise<void> {
 async function detectPackageManager(): Promise<PackageManager> {
   const cwd = process.cwd();
 
-  if (await fs.pathExists(path.join(cwd, "pnpm-lock.yaml"))) {
+  if (existsSync(path.join(cwd, "pnpm-lock.yaml"))) {
     return "pnpm";
   }
-  if (await fs.pathExists(path.join(cwd, "yarn.lock"))) {
+  if (existsSync(path.join(cwd, "yarn.lock"))) {
     return "yarn";
   }
-  if (await fs.pathExists(path.join(cwd, "bun.lock"))) {
+  if (existsSync(path.join(cwd, "bun.lock"))) {
     return "bun";
   }
 

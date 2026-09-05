@@ -129,7 +129,7 @@
     {
       "name": "label",
       "description": "Label component for form controls with accessibility support",
-      "dependencies": ["@radix-ui/react-label", "clsx", "tailwind-merge"],
+      "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/label.tsx"],
       "docs": {
@@ -214,7 +214,7 @@
     },
     {
       "name": "card",
-      "description": "A quiet, content-free surface — identity in the material, flexibility in the children",
+      "description": "A quiet, content-free surface \u2014 identity in the material, flexibility in the children",
       "dependencies": [
         "@radix-ui/react-slot",
         "class-variance-authority",
@@ -225,7 +225,7 @@
       "files": ["components/card.tsx"],
       "docs": {
         "title": "Card",
-        "tagline": "A surface, not a template — pour any content into a quiet, drawn frame.",
+        "tagline": "A surface, not a template \u2014 pour any content into a quiet, drawn frame.",
         "sections": ["Elevation", "Interactive", "AnyContent"],
         "previewStory": "Default"
       }
@@ -262,7 +262,7 @@
     {
       "name": "separator",
       "description": "Visual divider for separating content into sections",
-      "dependencies": ["@radix-ui/react-separator", "clsx", "tailwind-merge"],
+      "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/separator.tsx"],
       "docs": {

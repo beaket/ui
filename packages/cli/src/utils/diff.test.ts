@@ -1,4 +1,4 @@
-import fs from "fs-extra";
+import { mkdtemp, writeFile } from "node:fs/promises";
 import os from "os";
 import path from "path";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -134,7 +134,7 @@ const buttonDef: ComponentDefinition = {
 };
 
 async function tempDir(): Promise<string> {
-  return fs.mkdtemp(path.join(os.tmpdir(), "beaket-diff-"));
+  return mkdtemp(path.join(os.tmpdir(), "beaket-diff-"));
 }
 
 describe("isComponentInstalled", () => {
@@ -145,7 +145,7 @@ describe("isComponentInstalled", () => {
 
   it("is true when the component file exists", async () => {
     const dir = await tempDir();
-    await fs.writeFile(path.join(dir, "button.tsx"), "x");
+    await writeFile(path.join(dir, "button.tsx"), "x");
     expect(await isComponentInstalled(buttonDef, dir)).toBe(true);
   });
 });
@@ -168,7 +168,7 @@ describe("compareComponent", () => {
 
   it("reports up-to-date when local matches upstream (ignoring line endings)", async () => {
     const dir = await tempDir();
-    await fs.writeFile(path.join(dir, "button.tsx"), "line1\r\nline2\n");
+    await writeFile(path.join(dir, "button.tsx"), "line1\r\nline2\n");
     stubFetchContent("line1\nline2");
     const cmp = await compareComponent(buttonDef, dir);
     expect(cmp.status).toBe("up-to-date");
@@ -177,7 +177,7 @@ describe("compareComponent", () => {
 
   it("reports outdated when the local copy differs", async () => {
     const dir = await tempDir();
-    await fs.writeFile(path.join(dir, "button.tsx"), "old style");
+    await writeFile(path.join(dir, "button.tsx"), "old style");
     stubFetchContent("new style");
     const cmp = await compareComponent(buttonDef, dir);
     expect(cmp.status).toBe("outdated");

@@ -2,7 +2,7 @@ import tsParser from "@typescript-eslint/parser";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 
 export default [
-  { ignores: ["**/dist/**", "**/coverage/**", "docs/.vitepress/cache/**", "storybook-static/**"] },
+  { ignores: ["**/dist/**", "**/coverage/**", "storybook-static/**"] },
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
     languageOptions: {

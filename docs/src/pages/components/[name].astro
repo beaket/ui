@@ -20,7 +20,6 @@ export function getStaticPaths() {
 const { component } = Astro.props as { component: (typeof registry.components)[0] };
 const { name, docs } = component;
 const sections = docs?.sections ?? [];
-const previewExample = getPublicExample(name, docs?.previewStory ?? 'Default');
 
 // Get props for this component
 const props = propsData[name as keyof typeof propsData] ?? [];
@@ -34,7 +33,7 @@ const sectionData = sections.map((sectionName) => {
   const publicExample = getPublicExample(name, sectionName);
   return {
     storyName: sectionName,
-    displayName: publicExample?.title ?? sectionName.replace(/([a-z])([A-Z])/g, '$1 $2'),
+    displayName: sectionName.replace(/([a-z])([A-Z])/g, '$1 $2'),
     source: publicExample?.source ?? '',
   };
 });
@@ -52,7 +51,7 @@ const nextComponent = currentIndex < registry.components.length - 1 ? registry.c
       <h1>{docs?.title ?? name}</h1>
       <p class="tagline">{docs?.tagline ?? component.description}</p>
       <div class="preview-box mt-2 border border-[var(--color-border-muted)] bg-[var(--color-bg)] p-4">
-        {previewExample?.hydration === 'visible' && hasInteractiveExample(name, docs?.previewStory) ? (
+        {hasInteractiveExample(name, docs?.previewStory) ? (
           <InteractiveExample
             componentName={name}
             storyName={docs?.previewStory}
