@@ -27,11 +27,16 @@ jobs:
       mode: ${{ steps.selection.outputs.mode }}
       components: ${{ steps.selection.outputs.components }}
       docs: ${{ steps.selection.outputs.docs }}
+      playwright: ${{ steps.playwright.outputs.version }}
     steps:
       - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
+      - id: playwright
+        # The container must ship the browser build this Playwright expects.
+        # Reading it from package.json keeps one version, not four.
+        run: echo "version=$(node -p "require('./package.json').devDependencies.playwright")" >> "$GITHUB_OUTPUT"
       - id: selection
         if: github.event_name == 'pull_request'
         run: |
@@ -42,7 +47,7 @@ jobs:
     needs: selection
     if: github.event_name != 'pull_request' || needs.selection.outputs.mode != 'skip'
     runs-on: ubuntu-latest
-    container: mcr.microsoft.com/playwright:v1.62.1-noble
+    container: mcr.microsoft.com/playwright:v${{ needs.selection.outputs.playwright }}-noble
     steps:
       - uses: actions/checkout@v7.0.1
         with:

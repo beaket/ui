@@ -8,12 +8,27 @@ permissions:
   contents: write
 
 jobs:
-  update:
+  version:
     if: >-
       github.event.label.name == 'visual-baseline-update' &&
       github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    container: mcr.microsoft.com/playwright:v1.62.1-noble
+    outputs:
+      playwright: ${{ steps.playwright.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.head_ref }}
+      - id: playwright
+        # The container must ship the browser build this Playwright expects.
+        # Reading it from package.json keeps one version, not four.
+        run: echo "version=$(node -p "require('./package.json').devDependencies.playwright")" >> "$GITHUB_OUTPUT"
+
+  update:
+    needs: version
+    runs-on: ubuntu-latest
+    # Baselines must be drawn by the same browser build that verifies them.
+    container: mcr.microsoft.com/playwright:v${{ needs.version.outputs.playwright }}-noble
     steps:
       - uses: actions/checkout@v7.0.1
         with:
