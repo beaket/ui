@@ -4,13 +4,20 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "src/**"
-      - "packages/**"
-      - ".changeset/**"
-      - ".github/workflows/release.yml"
-      - "package.json"
-      - "pnpm-lock.yaml"
+    # Deliberately no `paths` filter. This workflow does two jobs, and only one
+    # of them is about package content:
+    #
+    #   1. publish when main has no changesets left, and
+    #   2. keep the release PR rebased on main.
+    #
+    # (2) depends on all of main, not a subset of it. With a paths filter, a
+    # push that misses the list leaves the release PR sitting on a stale base
+    # until some unrelated change happens to touch `src/**` — and a stale base
+    # is invisible until the release PR's checks fail against a tree nobody is
+    # looking at. That is exactly how #893's fix failed to reach #882.
+    #
+    # The run is cheap when there is nothing to do, and `concurrency` below
+    # collapses bursts, so the filter was buying very little.
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
