@@ -70,7 +70,7 @@ export default () => (
 
     <Card>
       <Card.Section>
-        <div className="bg-bg-hover text-fg-subtle flex h-24 items-center justify-center text-xs tracking-wide uppercase">
+        <div className="bg-bg-hover text-fg-muted flex h-24 items-center justify-center text-xs tracking-wide uppercase">
           figure
         </div>
       </Card.Section>

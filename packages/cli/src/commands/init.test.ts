@@ -1,4 +1,4 @@
-import fs from "fs-extra";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -7,19 +7,24 @@ import { detectAliasPath, detectCssPath } from "./init.ts";
 const temporaryDirectories: string[] = [];
 
 async function makeProject(files: Record<string, string>): Promise<string> {
-  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "beaket-ui-init-"));
+  const directory = await mkdtemp(path.join(os.tmpdir(), "beaket-ui-init-"));
   temporaryDirectories.push(directory);
   await Promise.all(
     Object.entries(files).map(async ([file, content]) => {
       const target = path.join(directory, file);
-      await fs.outputFile(target, content);
+      await mkdir(path.dirname(target), { recursive: true });
+      await writeFile(target, content);
     }),
   );
   return directory;
 }
 
 afterEach(async () => {
-  await Promise.all(temporaryDirectories.splice(0).map((directory) => fs.remove(directory)));
+  await Promise.all(
+    temporaryDirectories
+      .splice(0)
+      .map((directory) => rm(directory, { recursive: true, force: true })),
+  );
 });
 
 describe("init path detection", () => {

@@ -1,4 +1,4 @@
-import pc from "picocolors";
+import { styleText } from "node:util";
 import { getConfig, writeConfig } from "../utils/config.ts";
 import { syncTheme } from "../utils/theme.ts";
 import { THEME_CSS, VALID_THEMES } from "../utils/themes.ts";
@@ -12,8 +12,8 @@ export async function theme(options: ThemeOptions) {
 
   const config = await getConfig();
   if (!config) {
-    console.log(pc.red("Error:"), "beaket.ui.json not found.");
-    console.log("Run", pc.cyan("npx @beaket/ui init"), "first.");
+    console.log(styleText("red", "Error:"), "beaket.ui.json not found.");
+    console.log("Run", styleText("cyan", "npx @beaket/ui init"), "first.");
     process.exit(1);
   }
 
@@ -21,7 +21,7 @@ export async function theme(options: ThemeOptions) {
   if (options.theme) {
     if (!VALID_THEMES.includes(options.theme)) {
       console.log(
-        pc.red("Error:"),
+        styleText("red", "Error:"),
         `Invalid theme "${options.theme}". Choose from: ${VALID_THEMES.join(", ")}`,
       );
       process.exit(1);
@@ -34,7 +34,7 @@ export async function theme(options: ThemeOptions) {
   // Persist theme change to config only after successful sync
   if (options.theme) {
     await writeConfig(config);
-    console.log(pc.green("✔"), `Switched to ${options.theme} theme.`);
+    console.log(styleText("green", "✔"), `Switched to ${options.theme} theme.`);
   }
 
   console.log();

@@ -1,4 +1,5 @@
-import fs from "fs-extra";
+import { existsSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 import path from "path";
 import { fetchComponent, type ComponentDefinition } from "./registry.ts";
 
@@ -67,7 +68,7 @@ export async function isComponentInstalled(
 ): Promise<boolean> {
   for (const filePath of def.files) {
     const localPath = path.join(componentsDir, toLocalRelativePath(filePath));
-    if (await fs.pathExists(localPath)) return true;
+    if (existsSync(localPath)) return true;
   }
   return false;
 }
@@ -84,12 +85,12 @@ export async function compareComponent(
     const rel = toLocalRelativePath(upstream.path);
     const localPath = path.join(componentsDir, rel);
 
-    if (!(await fs.pathExists(localPath))) {
+    if (!existsSync(localPath)) {
       files.push({ path: rel, status: "missing", local: null, upstream: upstream.content });
       continue;
     }
 
-    const local = await fs.readFile(localPath, "utf-8");
+    const local = await readFile(localPath, "utf-8");
     const status: FileStatus =
       normalize(local) === normalize(upstream.content) ? "same" : "different";
     files.push({ path: rel, status, local, upstream: upstream.content });

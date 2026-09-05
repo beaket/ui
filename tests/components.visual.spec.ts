@@ -18,9 +18,10 @@ const stories = Object.values(entries)
       selectedComponents.some((name) => importPath === `./src/components/${name}.stories.tsx`),
   );
 
+// Components declare no `md:` rules, so a 768px capture sits between two widths
+// that already bracket every responsive rule they do declare.
 for (const viewport of [
   { name: "mobile", width: 375, height: 812 },
-  { name: "tablet", width: 768, height: 1024 },
   { name: "desktop", width: 1440, height: 1000 },
 ]) {
   test.describe(viewport.name, () => {

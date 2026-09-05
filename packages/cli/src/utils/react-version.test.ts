@@ -1,4 +1,4 @@
-import fs from "fs-extra";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "os";
 import path from "path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -14,18 +14,18 @@ import {
 const tmpDirs: string[] = [];
 
 async function tmpProject(files: Record<string, unknown>): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "beaket-react-floor-"));
+  const dir = await mkdtemp(path.join(os.tmpdir(), "beaket-react-floor-"));
   tmpDirs.push(dir);
   for (const [relative, content] of Object.entries(files)) {
     const target = path.join(dir, relative);
-    await fs.ensureDir(path.dirname(target));
-    await fs.writeJson(target, content);
+    await mkdir(path.dirname(target), { recursive: true });
+    await writeFile(target, JSON.stringify(content));
   }
   return dir;
 }
 
 afterEach(async () => {
-  await Promise.all(tmpDirs.splice(0).map((dir) => fs.remove(dir)));
+  await Promise.all(tmpDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
 });
 
 describe("parseVersion", () => {

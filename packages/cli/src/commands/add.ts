@@ -1,5 +1,5 @@
+import { styleText } from "node:util";
 import path from "path";
-import pc from "picocolors";
 import { getConfig } from "../utils/config.ts";
 import {
   DependencyInstallError,
@@ -21,14 +21,14 @@ export async function add(componentNames: string[], options: AddOptions) {
   // Read config
   const config = await getConfig();
   if (!config) {
-    console.log(pc.red("Error:"), "beaket.ui.json not found.");
-    console.log("Run", pc.cyan("npx @beaket/ui init"), "first.");
+    console.log(styleText("red", "Error:"), "beaket.ui.json not found.");
+    console.log("Run", styleText("cyan", "npx @beaket/ui init"), "first.");
     process.exit(1);
   }
 
   // Fetch registry
   const registry = await fetchRegistry();
-  console.log(pc.green("✔"), "Checking registry.");
+  console.log(styleText("green", "✔"), "Checking registry.");
 
   // Validate all components exist
   const notFound: string[] = [];
@@ -39,7 +39,7 @@ export async function add(componentNames: string[], options: AddOptions) {
   });
 
   if (notFound.length > 0) {
-    console.log(pc.red("Error:"), `Component(s) not found: ${notFound.join(", ")}`);
+    console.log(styleText("red", "Error:"), `Component(s) not found: ${notFound.join(", ")}`);
     console.log();
     console.log("Available components:");
     registry.components.forEach((c) => {
@@ -61,7 +61,7 @@ export async function add(componentNames: string[], options: AddOptions) {
     const { floor, names } = floorWarning;
     console.log();
     console.log(
-      pc.yellow("!"),
+      styleText("yellow", "!"),
       `${names.join(", ")} need${names.length === 1 ? "s" : ""} React ${floor} — found ${installedReact}.`,
     );
     console.log("  The files are still copied; they may fail at runtime until React is upgraded.");
@@ -83,22 +83,22 @@ export async function add(componentNames: string[], options: AddOptions) {
     try {
       console.log("  Installing dependencies…");
       await installDependencies([...allDependencies]);
-      console.log(pc.green("✔"), "Installed dependencies.");
+      console.log(styleText("green", "✔"), "Installed dependencies.");
     } catch (error) {
       if (!(error instanceof DependencyInstallError)) throw error;
 
       console.log();
-      console.log(pc.red("!"), "Could not install component dependencies.");
-      console.log("  Package manager:", pc.cyan(error.packageManager));
-      console.log("  Command:", pc.cyan(error.command));
+      console.log(styleText("red", "!"), "Could not install component dependencies.");
+      console.log("  Package manager:", styleText("cyan", error.packageManager));
+      console.log("  Command:", styleText("cyan", error.command));
       console.log("  Dependencies:", error.dependencies.join(", "));
       console.log("  Install them manually, then retry this command.");
-      console.log(" ", pc.cyan(error.command));
+      console.log(" ", styleText("cyan", error.command));
       if (error.packageManager === "npm") {
         console.log("  If npm reports a peer-dependency conflict, retry with:");
-        console.log(" ", pc.cyan(`${error.command} --legacy-peer-deps`));
+        console.log(" ", styleText("cyan", `${error.command} --legacy-peer-deps`));
       }
-      console.log(pc.yellow("ℹ"), "Continuing to add component files.");
+      console.log(styleText("yellow", "ℹ"), "Continuing to add component files.");
       process.exitCode = 1;
     }
   }
@@ -124,17 +124,20 @@ export async function add(componentNames: string[], options: AddOptions) {
 
   // Files already matching upstream — reassure rather than warn.
   if (allUnchanged.length > 0) {
-    console.log(pc.green("✔"), `${allUnchanged.length} file(s) already up to date.`);
+    console.log(styleText("green", "✔"), `${allUnchanged.length} file(s) already up to date.`);
   }
 
   // Show skipped files
   if (allSkipped.length > 0) {
     console.log(
-      pc.yellow("ℹ"),
+      styleText("yellow", "ℹ"),
       `Skipped ${allSkipped.length} file(s): (use --overwrite to take the latest)`,
     );
     allSkipped.forEach((f) => console.log(`  - ${f}`));
-    console.log(pc.dim("  See what changed with"), pc.cyan("npx @beaket/ui diff <component>"));
+    console.log(
+      styleText("dim", "  See what changed with"),
+      styleText("cyan", "npx @beaket/ui diff <component>"),
+    );
   }
 
   if (allWritten.length === 0) {
@@ -144,7 +147,7 @@ export async function add(componentNames: string[], options: AddOptions) {
 
   console.log();
   console.log("Added:");
-  allWritten.forEach((f) => console.log(pc.cyan(`  ${f}`)));
+  allWritten.forEach((f) => console.log(styleText("cyan", `  ${f}`)));
 
   // Sync theme tokens
   if (config.css) {

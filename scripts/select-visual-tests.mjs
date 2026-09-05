@@ -1,31 +1,36 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { globSync } from "node:fs";
 import registry from "../registry/registry.json" with { type: "json" };
 
 const components = new Set(registry.components.map(({ name }) => name));
-const pages = new Map([
-  ["docs/src/pages/index.astro", "/ui/"],
-  ["docs/src/pages/installation.md", "/ui/installation"],
-  ["docs/src/pages/cli.md", "/ui/cli"],
-  ["docs/src/pages/design-rules.astro", "/ui/design-rules"],
-  ["docs/src/pages/tokens.astro", "/ui/tokens"],
-  ["docs/src/pages/themes.astro", "/ui/themes"],
-  ["docs/src/pages/changelog.astro", "/ui/changelog"],
-]);
+// Every top-level docs page is its own route: `index` is the site root.
+const pages = new Map(
+  globSync("docs/src/pages/*.{astro,md}").map((file) => [
+    file,
+    `/ui/${file
+      .slice("docs/src/pages/".length)
+      .replace(/\.(astro|md)$/, "")
+      .replace(/^index$/, "")}`,
+  ]),
+);
 
 export function selectVisualTests(files) {
   const selectedComponents = new Set();
   const selectedDocs = new Set();
 
   for (const file of files) {
-    const component = file
-      .match(/^src\/(?:components\/([a-z0-9-]+)(?:\.stories)?\.tsx|examples\/([a-z0-9-]+)\/)/)
-      ?.slice(1)
-      .find(Boolean);
-    if (component) {
+    const match = file.match(
+      /^src\/(?:components\/([a-z0-9-]+)(?:\.stories)?\.tsx|examples\/([a-z0-9-]+)\/)/,
+    );
+    if (match) {
+      const [, fromComponent, fromExample] = match;
+      const component = fromComponent ?? fromExample;
       if (!components.has(component)) return { mode: "full" };
       selectedComponents.add(component);
       selectedDocs.add(`/ui/components/${component}`);
+      // The overview story is the only snapshot that renders example modules.
+      if (fromExample) selectedComponents.add("overview");
       continue;
     }
 
@@ -91,6 +96,11 @@ if (process.argv[2] === "--test") {
     mode: "selected",
     components: ["button"],
     docs: ["/ui/components/button"],
+  });
+  assert.deepEqual(selectVisualTests(["src/examples/alert/default.tsx"]), {
+    mode: "selected",
+    components: ["alert", "overview"],
+    docs: ["/ui/components/alert"],
   });
   assert.deepEqual(selectVisualTests(["docs/src/pages/cli.md"]), {
     mode: "selected",

@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import registry from "../registry/registry.json" with { type: "json" };
 
 const routes = [
   "/ui/",
@@ -15,7 +14,12 @@ const routes = [
   // breakpoint, which changes the height, which changes whether there is a
   // scrollbar. Three consecutive runs alternated between exactly those two
   // heights. It guards no layout the other routes do not already cover.
-  ...registry.components.map(({ name }) => `/ui/components/${name}`),
+  // Two component pages, not all 26: they share one layout, their examples are
+  // already captured story by story, and `check-docs-preview-html.mjs` asserts
+  // server-rendered preview markup on every page. `button` is the simplest of
+  // them and `data-table` the densest.
+  "/ui/components/button",
+  "/ui/components/data-table",
 ].filter(
   (route) =>
     process.env.VISUAL_TEST_MODE !== "selected" ||

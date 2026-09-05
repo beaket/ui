@@ -6,11 +6,12 @@ its required public context, and ordinary React dependencies, then default-expor
 rendered beside its code block. The docs site reads that exact file through Vite's `?raw` import;
 it never derives snippets from a Storybook CSF file.
 
-`src/examples/manifest.json` assigns each module a stable `<component>.<example>` ID, a visible
-title, its compatibility story key, and `behavior` plus `hydration` metadata. `static` examples
-use `hydration: "none"`; `interactive` examples use `hydration: "visible"`. The later SSR preview
-work can choose an island boundary from this metadata without evaluating browser globals during
-server render.
+Nothing declares that set: a module's path _is_ its identity. `getPublicExample(component, story)`
+kebab-cases the registry's story key to find `src/examples/<component>/<example>.tsx`, so the file
+name and the section key are the same fact written once. Whether an example hydrates is likewise
+one fact in one place — `docs/src/components/interactive-example.tsx` imports the interactive
+modules explicitly, which both answers the question and keeps static examples out of the client
+bundle.
 
 Storybook imports the default export from the public module and may add controls, parameters,
 decorators, wrappers, and `play` tests in `*.stories.tsx`. Those are QA-only and never enter the
@@ -22,7 +23,7 @@ The contract validator requires a public example for every registry hero and sec
 docs renderer reads only those modules. Storybook remains free to import a public module for
 visual coverage while retaining its own controls and interaction tests.
 
-Run `pnpm validate:examples` (also part of `pnpm typecheck`) to reject duplicate IDs, unsupported
-metadata, missing modules, missing migrated registry references, browser-only render paths, and
-Storybook leakage. The proof set is Button (static/native), Input Affixes (stateful), and Dialog
-(portal/Radix-backed).
+Run `pnpm validate:examples` (also part of `pnpm typecheck`) to reject missing modules, examples
+nothing documents, missing default exports, browser-only render paths, Storybook leakage, and a
+docs-registered example that does not exist. The proof set is Button (static/native), Input
+Affixes (stateful), and Dialog (portal/Radix-backed).

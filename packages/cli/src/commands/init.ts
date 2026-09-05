@@ -1,6 +1,7 @@
-import fs from "fs-extra";
+import { existsSync } from "node:fs";
+import { readdir, readFile, writeFile } from "node:fs/promises";
+import { styleText } from "node:util";
 import path from "path";
-import pc from "picocolors";
 import prompts from "prompts";
 import { writeConfig, type BeaketConfig } from "../utils/config.ts";
 import { replaceThemeInCss } from "../utils/theme.ts";
@@ -109,11 +110,11 @@ function parseTsConfig(content: string): TsConfig {
 
 async function readTsConfig(configPath: string, visited: Set<string>): Promise<string | undefined> {
   const resolvedPath = path.resolve(configPath);
-  if (visited.has(resolvedPath) || !(await fs.pathExists(resolvedPath))) return undefined;
+  if (visited.has(resolvedPath) || !existsSync(resolvedPath)) return undefined;
   visited.add(resolvedPath);
 
   try {
-    const tsconfig = parseTsConfig(await fs.readFile(resolvedPath, "utf-8"));
+    const tsconfig = parseTsConfig(await readFile(resolvedPath, "utf-8"));
     const componentPath = componentPathFromAlias(tsconfig.compilerOptions?.paths);
     if (componentPath) return componentPath;
 
@@ -142,9 +143,9 @@ export async function detectAliasPath(cwd = process.cwd()): Promise<string> {
 
   // Fallback: detect from package.json
   const pkgPath = path.join(cwd, "package.json");
-  if (await fs.pathExists(pkgPath)) {
+  if (existsSync(pkgPath)) {
     try {
-      const content = await fs.readFile(pkgPath, "utf-8");
+      const content = await readFile(pkgPath, "utf-8");
       const pkg = JSON.parse(content);
       const deps = { ...pkg.dependencies, ...pkg.devDependencies };
       // Next.js uses root alias by default
@@ -162,7 +163,7 @@ export async function detectAliasPath(cwd = process.cwd()): Promise<string> {
 
 async function containsTailwindImport(filePath: string): Promise<boolean> {
   try {
-    return /@import\s+["']tailwindcss["']/.test(await fs.readFile(filePath, "utf-8"));
+    return /@import\s+["']tailwindcss["']/.test(await readFile(filePath, "utf-8"));
   } catch {
     return false;
   }
@@ -173,7 +174,7 @@ async function findTailwindCssFiles(directory: string): Promise<string[]> {
   const ignoredDirectories = new Set([".git", "build", "dist", "node_modules"]);
 
   async function visit(currentDirectory: string) {
-    const entries = await fs.readdir(currentDirectory, { withFileTypes: true });
+    const entries = await readdir(currentDirectory, { withFileTypes: true });
     for (const entry of entries) {
       const entryPath = path.join(currentDirectory, entry.name);
       if (entry.isDirectory() && !ignoredDirectories.has(entry.name)) {
@@ -196,9 +197,9 @@ export async function detectCssPath(cwd = process.cwd()): Promise<string> {
   const pkgPath = path.join(cwd, "package.json");
   let nextProject = false;
 
-  if (await fs.pathExists(pkgPath)) {
+  if (existsSync(pkgPath)) {
     try {
-      const content = await fs.readFile(pkgPath, "utf-8");
+      const content = await readFile(pkgPath, "utf-8");
       const pkg = JSON.parse(content);
       const deps = { ...pkg.dependencies, ...pkg.devDependencies };
       nextProject = Boolean(deps.next);
@@ -219,7 +220,7 @@ export async function detectCssPath(cwd = process.cwd()): Promise<string> {
   const existingCandidates = [] as string[];
   for (const candidate of candidates) {
     const candidatePath = path.join(cwd, candidate);
-    if (await fs.pathExists(candidatePath)) existingCandidates.push(candidate);
+    if (existsSync(candidatePath)) existingCandidates.push(candidate);
   }
 
   for (const candidate of existingCandidates) {
@@ -241,13 +242,13 @@ interface InitOptions {
 
 export async function init(options: InitOptions) {
   console.log();
-  console.log(pc.bold("Initializing Beaket UI..."));
+  console.log(styleText("bold", "Initializing Beaket UI..."));
   console.log();
 
   // Validate --theme flag early
   if (options.theme && !VALID_THEMES.includes(options.theme)) {
     console.log(
-      pc.red("Error:"),
+      styleText("red", "Error:"),
       `Invalid theme "${options.theme}". Choose from: ${VALID_THEMES.join(", ")}`,
     );
     process.exit(1);
@@ -297,7 +298,7 @@ export async function init(options: InitOptions) {
     ]);
 
     if (!answers.components) {
-      console.log(pc.red("Cancelled."));
+      console.log(styleText("red", "Cancelled."));
       process.exit(1);
     }
 
@@ -316,40 +317,40 @@ export async function init(options: InitOptions) {
   };
 
   await writeConfig(config);
-  console.log(pc.green("✔"), "Created beaket.ui.json");
+  console.log(styleText("green", "✔"), "Created beaket.ui.json");
 
   // Inject CSS variables into Tailwind CSS file
   const selectedCss = THEME_CSS[response.theme];
   if (!selectedCss) {
-    console.log(pc.red("Error:"), `Unknown theme "${response.theme}".`);
+    console.log(styleText("red", "Error:"), `Unknown theme "${response.theme}".`);
     process.exit(1);
   }
   if (response.css) {
     const cssPath = path.join(process.cwd(), response.css);
-    if (await fs.pathExists(cssPath)) {
-      const cssContent = await fs.readFile(cssPath, "utf-8");
+    if (existsSync(cssPath)) {
+      const cssContent = await readFile(cssPath, "utf-8");
       if (
         !cssContent.includes("Beaket UI Design System") &&
         !cssContent.includes("beaket:theme:start")
       ) {
         const { css } = replaceThemeInCss(cssContent, selectedCss);
-        await fs.writeFile(cssPath, css);
-        console.log(pc.green("✔"), `Added CSS variables to ${response.css}`);
-        console.log(pc.green("✔"), `Using ${response.theme} theme`);
+        await writeFile(cssPath, css);
+        console.log(styleText("green", "✔"), `Added CSS variables to ${response.css}`);
+        console.log(styleText("green", "✔"), `Using ${response.theme} theme`);
       } else {
-        console.log(pc.yellow("ℹ"), "CSS variables already exist");
+        console.log(styleText("yellow", "ℹ"), "CSS variables already exist");
       }
     } else {
-      console.log(pc.yellow("!"), `CSS file not found: ${response.css}`);
+      console.log(styleText("yellow", "!"), `CSS file not found: ${response.css}`);
       console.log("  Add CSS variables manually:");
-      console.log(pc.cyan("  https://beaket.github.io/ui/installation"));
+      console.log(styleText("cyan", "  https://beaket.github.io/ui/installation"));
     }
   }
 
   console.log();
-  console.log(pc.green("Done!"), "Beaket UI is ready.");
+  console.log(styleText("green", "Done!"), "Beaket UI is ready.");
   console.log();
   console.log("Add components:");
-  console.log(pc.cyan("  npx @beaket/ui add button"));
+  console.log(styleText("cyan", "  npx @beaket/ui add button"));
   console.log();
 }

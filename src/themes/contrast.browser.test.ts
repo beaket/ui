@@ -20,31 +20,10 @@ import {
   type SignalDistanceResult,
 } from "./signal-distinguishability";
 import solace from "./solace.css?inline";
+import { forceScheme } from "./theme-css";
 import tobacco from "./tobacco.css?inline";
 
 const themes = { solace, porcelain, tobacco, marigold, eucalyptus } as const;
-const DARK_BLOCK = /@media[^{]*prefers-color-scheme[^{]*dark[^{]*\{/i;
-
-function forceScheme(raw: string, scheme: "light" | "dark"): string | null {
-  const match = raw.match(DARK_BLOCK);
-  if (scheme === "dark" && (!match || match.index === undefined)) return null;
-  if (!match || match.index === undefined) return raw;
-
-  const at = match.index;
-  const open = at + match[0].length - 1;
-  let depth = 0;
-  for (let index = open; index < raw.length; index++) {
-    if (raw[index] === "{") depth++;
-    if (raw[index] !== "}") continue;
-    depth--;
-    if (depth !== 0) continue;
-
-    const withoutDark = raw.slice(0, at) + raw.slice(index + 1);
-    return scheme === "light" ? withoutDark : `${withoutDark}\n${raw.slice(open + 1, index)}`;
-  }
-  throw new Error("Theme contains an unterminated dark media block");
-}
-
 const variants = Object.entries(themes).flatMap(([theme, raw]) =>
   (["light", "dark"] as const).flatMap((scheme) => {
     const css = forceScheme(raw, scheme);

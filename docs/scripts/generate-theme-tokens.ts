@@ -12,6 +12,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
+import { declarations, paletteVariants } from "../../src/themes/theme-css";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const THEMES_DIR = path.resolve(__dirname, "../../src/themes");
@@ -21,17 +22,9 @@ const THEME_INIT_FILE = path.resolve(__dirname, "../public/theme-init.js");
 // ---------------------------------------------------------------------------
 // CSS parsing
 // ---------------------------------------------------------------------------
-function parseDeclarations(block: string): Record<string, string> {
-  const tokens: Record<string, string> = {};
-  const re = /--([\w-]+)\s*:\s*([^;]+);/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(block)) !== null) {
-    const key = `--${m[1]}`;
-    // Skip animation tokens — not needed for docs
-    if (key.startsWith("--animate-")) continue;
-    tokens[key] = m[2].replace(/\s+/g, " ").trim();
-  }
-  return tokens;
+/** Animation tokens are not needed for docs. */
+function withoutAnimations(tokens: Map<string, string>): Record<string, string> {
+  return Object.fromEntries([...tokens].filter(([key]) => !key.startsWith("--animate-")));
 }
 
 /** Substitute var() references until a fixpoint (handles chained refs). */
@@ -58,27 +51,16 @@ function parsePaletteFile(filePath: string): {
   light: Record<string, string>;
   dark: Record<string, string> | null;
 } {
-  const content = fs.readFileSync(filePath, "utf-8");
+  const { light, dark } = paletteVariants(fs.readFileSync(filePath, "utf-8"));
 
-  // Light palette: the top-level `:root { ... }` block (before any @media)
-  const beforeMedia = content.split("@media")[0];
-  const lightMatch = beforeMedia.match(/:root\s*\{([\s\S]*?)\}/);
-  const light = lightMatch ? parseDeclarations(lightMatch[1]) : {};
-
-  // Dark twin: @media (prefers-color-scheme: dark) { :root { ... } }
-  const darkMatch = content.match(
-    /@media\s*\(prefers-color-scheme:\s*dark\)\s*\{\s*:root\s*\{([\s\S]*?)\}\s*\}/,
-  );
-  const dark = darkMatch ? parseDeclarations(darkMatch[1]) : null;
-
-  return { light, dark };
+  return { light: withoutAnimations(light), dark: dark ? withoutAnimations(dark) : null };
 }
 
 function parseSemantic(): Record<string, string> {
   const content = fs.readFileSync(path.join(THEMES_DIR, "semantic.css"), "utf-8");
   const themeMatch = content.match(/@theme\s*\{([\s\S]*?)\n\}/);
   if (!themeMatch) throw new Error("semantic.css: @theme block not found");
-  return parseDeclarations(themeMatch[1]);
+  return withoutAnimations(declarations(themeMatch[1]));
 }
 
 // ---------------------------------------------------------------------------
