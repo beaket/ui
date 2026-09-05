@@ -1,5 +1,259 @@
 # @beaket/ui
 
+## 3.0.0
+
+### Major Changes
+
+- [#890](https://github.com/beaket/ui/pull/890) [`22104a3`](https://github.com/beaket/ui/commit/22104a3fd90c329ad081b21c6bc01e6eb0cf1ace) Thanks [@jihnma](https://github.com/jihnma)! - Breaking: `RadioGroup.Item`, `<Component>Props` names, and `closeWhen` is gone
+
+  Three breaking changes batched into one sign-off, because a major bump is a cost paid once (`docs/git-rules.md`).
+
+  ### `RadioItem` → `RadioGroup.Item`
+
+  Radio was already a true compound component — it shares state through Radix's context — and only the packaging disagreed with `Select` and `Tabs`.
+
+  ```diff
+  - import { RadioGroup, RadioItem } from "@/components/ui/radio";
+  + import { RadioGroup } from "@/components/ui/radio";
+
+    <RadioGroup defaultValue="a">
+  -   <RadioItem value="a" />
+  +   <RadioGroup.Item value="a" />
+    </RadioGroup>
+  ```
+
+  `RadioItemProps` keeps its name and stays exported. `data-slot="radio-item"` is unchanged.
+
+  ### Generic `Props` → `<Component>Props`, exported everywhere
+
+  `Props` lands in _your_ codebase, where it is un-greppable and forces `import { Props as ButtonProps }`. Four exported names change:
+
+  ```diff
+  - import { Button, type Props } from "@/components/ui/button";
+  + import { Button, type ButtonProps } from "@/components/ui/button";
+  ```
+
+  | Was                    | Now             |
+  | ---------------------- | --------------- |
+  | `badge.tsx` `Props`    | `BadgeProps`    |
+  | `button.tsx` `Props`   | `ButtonProps`   |
+  | `checkbox.tsx` `Props` | `CheckboxProps` |
+  | `input.tsx` `Props`    | `InputProps`    |
+
+  The rest is free: `AvatarProps`, `DialogProps`, `SheetProps` and `TextareaProps` were generic `Props` that nobody could import, and `AlertProps`, `SelectTriggerProps`, `TooltipProps` and `TooltipProviderProps` were named right but unexported. Exporting a props type is what lets you write a wrapper — the first thing anyone does with a copy-pasted component.
+
+  ### `closeWhen` removed from Dialog and Sheet
+
+  ```diff
+  - <Dialog open={open} onOpenChange={setOpen} closeWhen={result?.ok}>
+  + <Dialog open={open} onOpenChange={setOpen}>
+  ```
+
+  Close it from the state you already own: `useEffect(() => { if (result?.ok) setOpen(false); }, [result])`.
+
+  `closeWhen` was the only reason Dialog and Sheet hand-rolled controlled/uncontrolled state that Radix's `Root` already implements. With it gone, `open` and `onOpenChange` pass straight to Radix, and the render-time ref write that served it disappears with it. The dev warning for `open` without `onOpenChange` is unchanged.
+
+### Minor Changes
+
+- [#876](https://github.com/beaket/ui/pull/876) [`b8015bb`](https://github.com/beaket/ui/commit/b8015bb9b006c77e8754464efe3f9f65badafc1c) Thanks [@jihnma](https://github.com/jihnma)! - `Breadcrumb.Link` and `Navigation.Link` accept `asChild`
+
+  Both hardcoded a plain `<a href>`, so in Next.js or React Router a consumer had to either lose client-side navigation or rewrite the component — which, under Open Code, means forking the file forever. `asChild` renders the consumer's own element instead:
+
+  ```tsx
+  <Breadcrumb.Link asChild>
+    <Link href="/docs">Docs</Link>
+  </Breadcrumb.Link>
+  ```
+
+  Under `asChild` the component injects nothing: the child owns its tag, and `Navigation.Link` skips its press-travel wrapper the way Button skips its spinner. Both components now list `@radix-ui/react-slot` in the registry.
+
+- [#887](https://github.com/beaket/ui/pull/887) [`005e77f`](https://github.com/beaket/ui/commit/005e77f6f2a991d32bade483d4228c3034b2f78e) Thanks [@jihnma](https://github.com/jihnma)! - DataTable defers its global filter, and the render-time ref writes are gone
+
+  **F6** — typing in the search field re-ran filtering and re-rendered the whole table in the same commit. The input is now bound to the immediate value and the table receives a `useDeferredValue` of it: typing stays responsive and the expensive pass lags by design.
+
+  **F2** — `data-table.tsx` carried two hand-rolled "latest ref" writes _during render_ (`tableRef.current = table`, `onSelectionChangeRef.current = onSelectionChange`) — a shape React tells you not to write and that React Compiler, which runs in **your** build, refuses to optimize past. `useEffectEvent` replaces both: it is the official answer for an Effect calling the freshest callback, and it closes over the freshest `table` as well, so the second ref disappears with the first.
+
+  `textarea.tsx` had the same render-time write for its forwarded-ref merge. That is not an Effect callback, so `useEffectEvent` does not apply; the ref is simply gone and the merge depends on `ref` directly.
+
+  `data-table` now declares `"react": ">=19.2.0"` in the registry (`useEffectEvent`); `add` warns if your project is below it. `useDeferredValue` is a React 18 API and needs no floor.
+
+- [#877](https://github.com/beaket/ui/pull/877) [`a955418`](https://github.com/beaket/ui/commit/a955418601f5c53105812054334db20f6bdd21c1) Thanks [@jihnma](https://github.com/jihnma)! - `data-slot` on every element DataTable renders
+
+  `data-table.tsx` was the only component in the registry with **zero** `data-slot` attributes, so its entire DOM was unaddressable from outside — part of why it compensates with `getRowClassName` and a 20-prop interface.
+
+  Hyrum's Law says something becomes the contract whether we choose it or not. `data-slot` is the blessed observable: stable, named, free at runtime, and explicitly not the class names, which are ours to rewrite on every redesign.
+
+  24 of the 28 rendered elements now carry a `data-table-*` slot — `data-table`, `-toolbar`, `-search`, `-search-icon`, `-container`, `-table`, `-header`, `-header-row`, `-select-head`, `-head`, `-head-content`, `-sort-indicator`, `-sort-icon`, `-body`, `-row`, `-select-cell`, `-cell`, `-empty-row`, `-empty-cell`, `-empty`, `-footer`, `-summary`.
+
+  The other four are composed controls — `Input`, two `Checkbox`es and `Pagination` — which keep their own slots rather than being overwritten; they are addressable through the named container around each.
+
+  Attributes only. No API change.
+
+- [#885](https://github.com/beaket/ui/pull/885) [`8a6c2bc`](https://github.com/beaket/ui/commit/8a6c2bc4ff9ac2c7abf5e69c759ce01706fd316d) Thanks [@jihnma](https://github.com/jihnma)! - `Dialog.Trigger` and `Sheet.Trigger` parts
+
+  Dialog and Sheet accepted the trigger as a `ReactNode` prop and exposed no `Trigger` part, so the sugar **was** the API. A consumer who needed two triggers, or a conditional one, or a trigger that is not the first child, had nowhere to go — and a `ReactNode` prop is structurally invisible: nothing in the type says `trigger` must be focusable.
+
+  ```tsx
+  <Dialog>
+    <Dialog.Trigger>
+      <Button>Open</Button>
+    </Dialog.Trigger>
+    <Dialog.Trigger>
+      <Button variant="ghost">Also open</Button>
+    </Dialog.Trigger>
+    <Dialog.Title>…</Dialog.Title>
+  </Dialog>
+  ```
+
+  Radix's context was already mounted here; the wrapper simply did not expose the part. `asChild` defaults to `true`, matching `Dialog.Close`, so the natural nesting keeps the consumer's own element.
+
+  Additive: `trigger` keeps working unchanged and is now literally sugar that renders this part. A `Trigger` child is placed as a sibling of the portal rather than as content inside it, so triggers and content each land where they are legal.
+
+- [#884](https://github.com/beaket/ui/pull/884) [`35d7666`](https://github.com/beaket/ui/commit/35d7666aac5061478791f34c098cb0528a41fc73) Thanks [@jihnma](https://github.com/jihnma)! - Button's `loading` falls back to the form's pending state
+
+  React 19's `useFormStatus` is documented as a **design-system** hook: a submit button nested in a `<form>` can read the form's pending state directly, with no prop drilling and no wiring by the consumer. Until now every consumer wired `loading` by hand for the most common case there is.
+
+  ```tsx
+  <form action={save}>
+    <Button type="submit">Save</Button> {/* spins and disables on its own */}
+  </form>
+  ```
+
+  `loading` remains the override — supplied, it wins, including `loading={false}`. The fallback applies only to a `type="submit"` button; an ordinary button is untouched, and under `asChild` the component still injects nothing at all.
+
+  No new registry dependency: `react-dom` ships in lockstep with `react`, and adding it to a component's `dependencies` would run `npm install react-dom` in your project.
+
+- [#883](https://github.com/beaket/ui/pull/883) [`8510bab`](https://github.com/beaket/ui/commit/8510bab86cb1195cdcaffeeb491997d640030def) Thanks [@jihnma](https://github.com/jihnma)! - `add` warns when your React is older than a component needs
+
+  A registry component is copied into a project whose React version we do not control, and `registry.json` declared npm dependencies but never a React floor — so a component using a 19.2-only API would land in an 18.x project and fail at runtime with no warning.
+
+  `registry.json` now carries a top-level `"react"` floor, and a component needing more can carry its own. `add` reads the React you actually have (`node_modules/react/package.json`, falling back to the declared range read as its minimum) and says so when the floor is unmet:
+
+  ```
+  ! tabs needs React >=19.2.0 — found 18.3.1.
+    The files are still copied; they may fail at runtime until React is upgraded.
+  ```
+
+  **A check, not an install.** Putting `"react"` in a component's `dependencies` would have run `npm install react` in your project — pulling React to latest as a side effect of `add button` — which is the opposite of declaring a minimum. The files are still written either way: you may be about to upgrade, and a copy-paste library has no business changing your React version. An unparseable floor, or a React version that cannot be determined, produces no warning rather than a guess.
+
+- [#879](https://github.com/beaket/ui/pull/879) [`f5f23ce`](https://github.com/beaket/ui/commit/f5f23cea4b43644f89dd4d89a9af367a593ddace) Thanks [@jihnma](https://github.com/jihnma)! - `Pagination` is a flexible compound component: `Pagination.Previous`, `.Item`, `.Ellipsis`, `.Next`
+
+  Pagination was one function with configuration props, a discriminated union with `never` guards, and hardcoded `<a href>`s — so the consumer's router was unusable and the page-number algorithm was entangled with rendering.
+
+  The root now holds `page` / `totalPages` / navigation mode in context and the parts read it, each taking `asChild`:
+
+  ```tsx
+  <Pagination page={page} totalPages={10} buildPageUrl={(p) => `/page/${p}`}>
+    <Pagination.Previous />
+    <Pagination.Item page={1} />
+    <Pagination.Ellipsis />
+    <Pagination.Item page={10} asChild>
+      <Link href="/page/10">10</Link>
+    </Pagination.Item>
+    <Pagination.Next />
+  </Pagination>
+  ```
+
+  Additive: `mode="link"` / `mode="button"` keep working unchanged and are now sugar that lays the same parts out for you. `PaginationBaseProps`, `PaginationLinkProps` and `PaginationButtonProps` are exported alongside the new `PaginationItemProps` and `PaginationEllipsisProps`.
+
+- [#880](https://github.com/beaket/ui/pull/880) [`75391da`](https://github.com/beaket/ui/commit/75391da5e225c8a463300df18bbe848573712cc9) Thanks [@jihnma](https://github.com/jihnma)! - `Alert.Title` and `Alert.Description` parts
+
+  `Alert` took its title as a content prop — `title?: string` — which forced the props type to `Omit<…, "title">` and could only ever be extended by another content prop: `title` invites `titleIcon`, then `titleClassName`, then `renderTitle`. A `string` title also cannot be reordered, wrapped, conditionally rendered or styled.
+
+  ```tsx
+  <Alert variant="warning">
+    <Alert.Title className="uppercase">
+      Deploy blocked <Badge>3</Badge>
+    </Alert.Title>
+    <Alert.Description>Two required checks have not reported yet.</Alert.Description>
+  </Alert>
+  ```
+
+  Namespacing, not context — the parts share no state, so a provider would be pure machinery. The variant icon stays on the root, where the variant lives.
+
+  Additive: `title` keeps working as the sugar over the parts, including the variant-name default (`"Warning"`, `"Note"`, …), and bare children are still wrapped as the description. Parts must be direct children of `Alert`.
+
+- [#876](https://github.com/beaket/ui/pull/876) [`b8015bb`](https://github.com/beaket/ui/commit/b8015bb9b006c77e8754464efe3f9f65badafc1c) Thanks [@jihnma](https://github.com/jihnma)! - `Navigation` takes a root `value`; `Navigation.Link` derives its own active state
+
+  The consumer answered "is this the current page?" by hand on every single link. The root now holds that one answer and each link compares its own `value`:
+
+  ```tsx
+  <Navigation value={pathname}>
+    <Navigation.Link href="/docs" value="/docs">
+      Docs
+    </Navigation.Link>
+  </Navigation>
+  ```
+
+  Additive: the root's `value` is optional, an explicit `active` still overrides the derived state, and a `Navigation.Link` used with no root `value` behaves exactly as before. The context accessor deliberately does not throw when there is no provider — throwing would require more of existing callers.
+
+- [#881](https://github.com/beaket/ui/pull/881) [`2f3064a`](https://github.com/beaket/ui/commit/2f3064aef5a574edf6005d39bf66c9847100da06) Thanks [@jihnma](https://github.com/jihnma)! - `DataTable` is a flexible compound over the TanStack instance
+
+  `DataTableProps` exposes **20 configuration props** — among them `emptyMessage` _and_ `emptyState`; `onRowClick`, `onRowMouseEnter`, `onRowMouseLeave`; `getRowClassName`. That is the mechanical result of answering layout questions with props instead of with children, and by Ousterhout's measure it makes DataTable a shallow _logic_ component: real complexity behind a wide interface, so the consumer pays twice — once to learn it, again when the 21st need is not on the list.
+
+  The root now builds the TanStack `table` object and hands it back; the parts read it:
+
+  ```tsx
+  <DataTable columns={columns} data={data} searchable paginated>
+    {(table) => (
+      <>
+        <DataTable.Toolbar searchPlaceholder="Filter people…" />
+        <DataTable.Table>
+          <DataTable.Head />
+          <DataTable.Body>
+            {table.getRowModel().rows.map((row) => (
+              <DataTable.Row key={row.id} row={row} className={rowClass(row)} onMouseEnter={…} />
+            ))}
+          </DataTable.Body>
+        </DataTable.Table>
+        <DataTable.Pagination />
+      </>
+    )}
+  </DataTable>
+  ```
+
+  `emptyMessage`/`emptyState` become `DataTable.Empty`; `getRowClassName`, `onRowMouseEnter` and `onRowMouseLeave` become ordinary props on your own `<DataTable.Row>`.
+
+  Additive: all 20 props keep working and now lay out exactly these parts, so the sugar path and the composed path render the same DOM by construction. Removing any of the 20 is a separate breaking decision.
+
+- [#875](https://github.com/beaket/ui/pull/875) [`77ea99f`](https://github.com/beaket/ui/commit/77ea99f917876dd6024db7435c9edee1fdad6f24) Thanks [@jihnma](https://github.com/jihnma)! - `ref` now typechecks on Badge, Blockquote, Button, `Dialog.Header`/`.Footer` and `Sheet.Header`/`.Footer`
+
+  These seven prop declarations extended `React.HTMLAttributes` / `React.ButtonHTMLAttributes`, which do not carry `ref`. React 19 moved `ref` into intrinsic element props, so `React.ComponentProps<"button">` does. Passing a `ref` to any of the seven failed to typecheck for no reason anyone intended; they now extend `React.ComponentProps<…>` like the rest of the registry.
+
+  Widened type only — nothing that compiled before stops compiling.
+
+- [#886](https://github.com/beaket/ui/pull/886) [`352b6f5`](https://github.com/beaket/ui/commit/352b6f52d758684fc21bdf749055e22e89f5fc6f) Thanks [@jihnma](https://github.com/jihnma)! - `Tabs.Content` takes `keepMounted`
+
+  Radix unmounts inactive tab panels, so scroll position, uncommitted form input and any in-panel state are destroyed on every tab switch. `forceMount` was the only escape and it keeps the panel **fully live** — the opposite extreme.
+
+  ```tsx
+  <Tabs.Content value="draft" keepMounted>
+    <textarea /> {/* survives a trip to another tab */}
+  </Tabs.Content>
+  ```
+
+  `keepMounted` is React 19.2's `<Activity mode="hidden">`: state preserved, effects torn down, re-render deprioritized. **Off by default** — this adds a way out, it does not change what Tabs already does.
+
+  Under `keepMounted` the panel is hidden with `data-[state=inactive]:hidden` rather than Radix's `hidden` attribute, which `forceMount` disables — so an inactive panel leaves no empty box in the layout or the accessibility tree.
+
+  Requires React >= 19.2, which the `tabs` entry in `registry.json` now declares; `add` warns if your project is below it.
+
+### Patch Changes
+
+- [#875](https://github.com/beaket/ui/pull/875) [`77ea99f`](https://github.com/beaket/ui/commit/77ea99f917876dd6024db7435c9edee1fdad6f24) Thanks [@jihnma](https://github.com/jihnma)! - Avatar drops the module-level hydration guard
+
+  `avatar.tsx` carried a `let hydrated = false` module global and a post-mount render gate to work around a React 19 SSR hydration mismatch ([#291](https://github.com/beaket/ui/issues/291)): Radix's `useIsHydrated`, built on `useSyncExternalStore`, returned `true` during client hydration, so a cached image rendered `<img>` where the server had rendered the fallback `<span>`.
+
+  Root cause is gone upstream. `@radix-ui/react-avatar` 1.2.6 no longer uses that mechanism — the image loading status is a plain `useState("idle")`, identical on the server and on the first client render. The guard cost every Avatar a `useState`, a `useEffect`, and one blank frame before the image appeared.
+
+  A new `SsrHydrationTest` story renders the avatar with `renderToString`, hydrates it with a warmed image cache, and asserts React recovered from no errors — so a future Radix bump that reintroduces the mismatch fails loudly instead of silently.
+
+- [#875](https://github.com/beaket/ui/pull/875) [`77ea99f`](https://github.com/beaket/ui/commit/77ea99f917876dd6024db7435c9edee1fdad6f24) Thanks [@jihnma](https://github.com/jihnma)! - Dialog, Sheet, DropdownMenu, Table and Avatar attach their parts with one `Object.assign`
+
+  These five files attached parts by post-hoc mutation (`Dialog.Title = DialogTitle`) while the other six compound components used a single `Object.assign`. One expression is the complete public surface, instead of a surface scattered down the file and dependent on statement order — and TypeScript's expando-function support means a typo in `Dialog.Titel = …` quietly adds a property rather than failing.
+
+  Identical public shape. Nothing to change when re-copying.
+
 ## 2.8.0
 
 ### Minor Changes
