@@ -109,6 +109,8 @@ function AlertRoot({ className, variant = "note", title, children, ...props }: A
   );
 }
 
+export { AlertDescription, AlertTitle };
+
 export const Alert = Object.assign(AlertRoot, {
   Title: AlertTitle,
   Description: AlertDescription,

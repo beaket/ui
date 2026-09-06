@@ -126,6 +126,8 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+export { CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardSection, CardTitle };
+
 export const Card = Object.assign(CardRoot, {
   Section: CardSection,
   Header: CardHeader,
