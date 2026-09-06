@@ -11,6 +11,9 @@ import { fetchComponent, type ComponentDefinition } from "./registry.ts";
  * consumer's project lives flat under their components dir (`button.tsx`).
  */
 export function toLocalRelativePath(registryFilePath: string): string {
+  if (!/^(?:components\/)?[\w-]+(?:\.[\w-]+)*\.tsx$/.test(registryFilePath)) {
+    throw new Error(`Invalid component file path: ${registryFilePath}`);
+  }
   return registryFilePath.replace(/^components\//, "");
 }
 
@@ -36,6 +39,7 @@ export interface FileComparison {
   upstream: string;
   baseline?: string;
   analysis?: ThreeWayAnalysis;
+  removedUpstream?: boolean;
 }
 
 export interface ThreeWayAnalysis {
@@ -137,6 +141,8 @@ export async function compareComponent(
   installed?: Record<string, InstalledFile>,
 ): Promise<ComponentComparison> {
   const upstreamFiles = await fetchComponent(def, ref);
+  const removedFiles = Object.keys(installed ?? {}).filter((file) => !def.files.includes(file));
+  upstreamFiles.push(...removedFiles.map((file) => ({ path: file, content: "" })));
   const files: FileComparison[] = [];
 
   for (const upstream of upstreamFiles) {
@@ -151,6 +157,7 @@ export async function compareComponent(
           ? "same"
           : "different";
     const file: FileComparison = { path: rel, status, local, upstream: upstream.content };
+    file.removedUpstream = removedFiles.includes(upstream.path);
     const recorded = installed?.[upstream.path];
     if (recorded) {
       const [baseline] = await fetchComponent({ ...def, files: [upstream.path] }, recorded.ref);

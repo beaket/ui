@@ -21,6 +21,11 @@ export async function diff(componentName: string | undefined, options: RegistryO
   if (!config) throw new Error("beaket.ui.json not found. Run npx @beaket/ui init first.");
   const ref = await resolveRegistryRef(options);
   const registry = await fetchRegistry(ref);
+  for (const name of Object.keys(config.installed ?? {})) {
+    if (!registry.components.some((component) => component.name === name)) {
+      registry.components.push({ name, files: [], dependencies: [], registryDependencies: [] });
+    }
+  }
   if (componentName && !registry.components.some(({ name }) => name === componentName))
     throw new Error(`Component not found: ${componentName}`);
   const componentsDir = path.join(process.cwd(), config.components);
@@ -45,6 +50,7 @@ export async function diff(componentName: string | undefined, options: RegistryO
       const analysis = file.analysis;
       const status = analysis?.status ?? (file.status === "same" ? "clean" : "unknown baseline");
       console.log(`  ${definition.name}/${file.path}: ${status}`);
+      if (file.removedUpstream) console.log("    Removed from the target registry.");
       if (analysis)
         console.log(
           `    upstream: ${analysis.upstreamLines} added/removed lines; local: ${analysis.localLines} added/removed lines; conflicting regions: ${analysis.conflicts}`,

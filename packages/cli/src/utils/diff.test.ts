@@ -24,6 +24,10 @@ afterEach(() => {
 });
 
 describe("toLocalRelativePath", () => {
+  it("rejects paths that could read or write outside the component directory", () => {
+    expect(() => toLocalRelativePath("components/../../secret.tsx")).toThrow("Invalid");
+    expect(() => toLocalRelativePath("/tmp/secret.tsx")).toThrow("Invalid");
+  });
   it("strips the registry components/ prefix", () => {
     expect(toLocalRelativePath("components/button.tsx")).toBe("button.tsx");
   });
