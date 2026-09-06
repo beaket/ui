@@ -72,7 +72,7 @@ const support = markdown({
 export const markdownParser = support.language.parser;
 
 /** Source highlighting only (for sharing styles without a parser, e.g. subviews) */
-export const sourceHighlighting = syntaxHighlighting(sourceHighlight);
+const sourceHighlighting = syntaxHighlighting(sourceHighlight);
 
 export function markdownExtension(): Extension {
   return [support, sourceHighlighting];

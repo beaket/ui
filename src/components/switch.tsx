@@ -1,5 +1,4 @@
 import * as SwitchPrimitive from "@radix-ui/react-switch";
-import { cva, type VariantProps } from "class-variance-authority";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -12,47 +11,28 @@ const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 // (emphasis-hover), the off-channel darkens one step (border-muted → border).
 // Invalid recolors border + focus ring to danger while the accent edge stays
 // (role-agnostic, exactly as on checkbox/radio).
-const switchVariants = cva(
-  "group peer inline-flex shrink-0 cursor-pointer items-center p-0.5 transition-[background-color,box-shadow] duration-100 outline-none enabled:hover:shadow-offset-action data-[state=checked]:bg-bg-emphasis enabled:data-[state=checked]:hover:bg-bg-emphasis-hover data-[state=unchecked]:bg-border-muted enabled:data-[state=unchecked]:hover:bg-border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus disabled:shadow-none disabled:cursor-not-allowed disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:data-[state=checked]:bg-bg-disabled aria-[invalid=true]:border-danger-solid aria-[invalid=true]:focus-visible:outline-danger-solid border border-border-strong relative before:absolute before:inset-[-14px] before:content-['']",
-  {
-    variants: {
-      size: {
-        sm: "h-4 w-8",
-        md: "h-4 w-9",
-        lg: "h-5 w-11",
-      },
-    },
-    defaultVariants: {
-      size: "md",
-    },
-  },
-);
+const switchBase =
+  "group peer inline-flex shrink-0 cursor-pointer items-center p-0.5 transition-[background-color,box-shadow] duration-100 outline-none enabled:hover:shadow-offset-action data-[state=checked]:bg-bg-emphasis enabled:data-[state=checked]:hover:bg-bg-emphasis-hover data-[state=unchecked]:bg-border-muted enabled:data-[state=unchecked]:hover:bg-border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus disabled:shadow-none disabled:cursor-not-allowed disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:data-[state=checked]:bg-bg-disabled aria-[invalid=true]:border-danger-solid aria-[invalid=true]:focus-visible:outline-danger-solid border border-border-strong relative before:absolute before:inset-[-14px] before:content-['']";
 
-const switchThumbVariants = cva(
-  "pointer-events-none block bg-bg-input group-disabled:bg-border-muted ring-0 transition-transform data-[state=unchecked]:translate-x-0 group-active:translate-y-px group-active:data-[state=unchecked]:translate-x-px",
-  {
-    variants: {
-      size: {
-        sm: "size-2 data-[state=checked]:translate-x-4 group-active:data-[state=checked]:translate-x-[17px]",
-        md: "size-2.5 data-[state=checked]:translate-x-5 group-active:data-[state=checked]:translate-x-[21px]",
-        lg: "size-3.5 data-[state=checked]:translate-x-6 group-active:data-[state=checked]:translate-x-[25px]",
-      },
-    },
-    defaultVariants: {
-      size: "md",
-    },
-  },
-);
+const switchSizes = {
+  sm: "h-4 w-8",
+  md: "h-4 w-9",
+  lg: "h-5 w-11",
+} as const;
 
-export interface SwitchProps
-  extends
-    Omit<React.ComponentProps<typeof SwitchPrimitive.Root>, "asChild">,
-    VariantProps<typeof switchVariants> {
-  /**
-   * Additional CSS classes to apply to the switch
-   */
-  className?: string;
+const thumbBase =
+  "pointer-events-none block bg-bg-input group-disabled:bg-border-muted ring-0 transition-transform data-[state=unchecked]:translate-x-0 group-active:translate-y-px group-active:data-[state=unchecked]:translate-x-px";
 
+const thumbSizes = {
+  sm: "size-2 data-[state=checked]:translate-x-4 group-active:data-[state=checked]:translate-x-[17px]",
+  md: "size-2.5 data-[state=checked]:translate-x-5 group-active:data-[state=checked]:translate-x-[21px]",
+  lg: "size-3.5 data-[state=checked]:translate-x-6 group-active:data-[state=checked]:translate-x-[25px]",
+} as const;
+
+export interface SwitchProps extends Omit<
+  React.ComponentProps<typeof SwitchPrimitive.Root>,
+  "asChild"
+> {
   /**
    * sm | md | lg. Size of the switch
    */
@@ -94,14 +74,17 @@ export interface SwitchProps
   value?: string;
 }
 
-export function Switch({ className, size, ...props }: SwitchProps) {
+export function Switch({ className, size = "md", ...props }: SwitchProps) {
   return (
     <SwitchPrimitive.Root
       data-slot="switch"
-      className={cn(switchVariants({ size }), className)}
+      className={cn(switchBase, switchSizes[size], className)}
       {...props}
     >
-      <SwitchPrimitive.Thumb data-slot="switch-thumb" className={switchThumbVariants({ size })} />
+      <SwitchPrimitive.Thumb
+        data-slot="switch-thumb"
+        className={`${thumbBase} ${thumbSizes[size]}`}
+      />
     </SwitchPrimitive.Root>
   );
 }

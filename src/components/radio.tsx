@@ -4,10 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export interface RadioGroupProps extends React.ComponentProps<typeof RadioGroupPrimitive.Root> {
-  /** Additional CSS classes to apply to the radio group */
-  className?: string;
-}
+export type RadioGroupProps = React.ComponentProps<typeof RadioGroupPrimitive.Root>;
 
 function RadioGroupRoot({ className, ...props }: RadioGroupProps) {
   return (
@@ -19,10 +16,7 @@ function RadioGroupRoot({ className, ...props }: RadioGroupProps) {
   );
 }
 
-export interface RadioItemProps extends React.ComponentProps<typeof RadioGroupPrimitive.Item> {
-  /** Additional CSS classes to apply to the radio item */
-  className?: string;
-}
+export type RadioItemProps = React.ComponentProps<typeof RadioGroupPrimitive.Item>;
 
 function RadioGroupItem({ className, ...props }: RadioItemProps) {
   return (

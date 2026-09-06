@@ -8,7 +8,7 @@ export interface TooltipProviderProps extends React.ComponentProps<
   typeof TooltipPrimitive.Provider
 > {
   /**
-   * The duration in milliseconds before the tooltip appears
+   * How long to wait, in milliseconds, before showing any tooltip inside this provider
    * @default 0
    */
   delayDuration?: number;
@@ -20,20 +20,16 @@ function TooltipProvider({ delayDuration = 0, ...props }: TooltipProviderProps) 
 
 export interface TooltipProps extends React.ComponentProps<typeof TooltipPrimitive.Root> {
   /**
-   * The duration in milliseconds before the tooltip appears
-   * @default 0
+   * Overrides the enclosing `TooltipProvider` delay, in milliseconds, for this tooltip alone
    */
   delayDuration?: number;
 }
 
-function TooltipRoot({ delayDuration = 0, children, ...props }: TooltipProps) {
-  return (
-    <TooltipPrimitive.Provider delayDuration={delayDuration}>
-      <TooltipPrimitive.Root data-slot="tooltip" {...props}>
-        {children}
-      </TooltipPrimitive.Root>
-    </TooltipPrimitive.Provider>
-  );
+// The delay belongs to the provider, which every tooltip must sit inside (Radix
+// throws otherwise). A root that mounted its own provider made the one wrapped
+// around a group unreachable — the inner context always won.
+function TooltipRoot(props: TooltipProps) {
+  return <TooltipPrimitive.Root data-slot="tooltip" {...props} />;
 }
 
 function TooltipTrigger(props: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {

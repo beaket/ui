@@ -43,7 +43,7 @@
     {
       "name": "alert",
       "description": "Callout component for important information, tips, warnings, or cautions",
-      "dependencies": ["class-variance-authority", "clsx", "lucide-react", "tailwind-merge"],
+      "dependencies": ["clsx", "lucide-react", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/alert.tsx"],
       "docs": {
@@ -69,7 +69,7 @@
     {
       "name": "badge",
       "description": "Badge component for status indicators and labels",
-      "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
+      "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/badge.tsx"],
       "docs": {
@@ -170,12 +170,7 @@
     {
       "name": "switch",
       "description": "Toggle switch component for binary on/off states",
-      "dependencies": [
-        "@radix-ui/react-switch",
-        "class-variance-authority",
-        "clsx",
-        "tailwind-merge"
-      ],
+      "dependencies": ["@radix-ui/react-switch", "clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/switch.tsx"],
       "docs": {
