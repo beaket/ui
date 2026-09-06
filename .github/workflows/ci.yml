@@ -31,6 +31,8 @@ jobs:
         run: pnpm format:check
       - name: Typecheck
         run: pnpm typecheck
+      - name: Check documented React requirements
+        run: node scripts/sync-react-requirements.mjs --check
       - name: Install Chromium for browser-backed theme tests
         run: pnpm exec playwright install --with-deps chromium
       - name: Test semantic theme contrast

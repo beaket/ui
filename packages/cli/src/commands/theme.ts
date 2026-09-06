@@ -5,6 +5,7 @@ import { THEME_CSS, VALID_THEMES } from "../utils/themes.ts";
 
 interface ThemeOptions {
   theme?: string;
+  overwrite?: boolean;
 }
 
 export async function theme(options: ThemeOptions) {
@@ -29,10 +30,10 @@ export async function theme(options: ThemeOptions) {
     config.theme = options.theme;
   }
 
-  await syncTheme(config, THEME_CSS, { overwrite: true });
+  const synced = await syncTheme(config, THEME_CSS, { overwrite: options.overwrite });
 
   // Persist theme change to config only after successful sync
-  if (options.theme) {
+  if (options.theme && synced) {
     await writeConfig(config);
     console.log(styleText("green", "✔"), `Switched to ${options.theme} theme.`);
   }

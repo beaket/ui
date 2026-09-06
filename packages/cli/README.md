@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 
 ## Requirements
 
-- React 18+
+- React >=19.0.0 (`tabs` requires React >=19.2.0; `data-table` requires React >=19.2.0)
 - Tailwind CSS 4+
 - TypeScript
 

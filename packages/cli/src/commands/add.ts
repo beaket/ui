@@ -7,7 +7,7 @@ import {
   writeComponentFiles,
 } from "../utils/files.ts";
 import { reactFloorWarning, readInstalledReact } from "../utils/react-version.ts";
-import { fetchComponent, fetchRegistry } from "../utils/registry.ts";
+import { fetchComponent, fetchRegistry, resolveComponents } from "../utils/registry.ts";
 import { syncTheme } from "../utils/theme.ts";
 import { THEME_CSS } from "../utils/themes.ts";
 
@@ -32,10 +32,9 @@ export async function add(componentNames: string[], options: AddOptions) {
 
   // Validate all components exist
   const notFound: string[] = [];
-  const componentDefs = componentNames.map((name) => {
+  componentNames.forEach((name) => {
     const def = registry.components.find((c) => c.name === name);
     if (!def) notFound.push(name);
-    return def;
   });
 
   if (notFound.length > 0) {
@@ -47,6 +46,7 @@ export async function add(componentNames: string[], options: AddOptions) {
     });
     process.exit(1);
   }
+  const componentDefs = resolveComponents(registry, componentNames);
 
   // Check the React floor. Deliberately a check and not an install: the files
   // are still written, because the consumer may be about to upgrade React and a
@@ -106,18 +106,22 @@ export async function add(componentNames: string[], options: AddOptions) {
   // Fetch and write all component files
   const componentsDir = path.join(process.cwd(), config.components);
   const allWritten: string[] = [];
+  const allOverwritten: string[] = [];
+  const allBackups: string[] = [];
   const allSkipped: string[] = [];
   const allUnchanged: string[] = [];
 
   for (const def of componentDefs) {
     if (!def) continue;
     const files = await fetchComponent(def);
-    const { written, skipped, unchanged } = await writeComponentFiles(
+    const { written, overwritten, backups, skipped, unchanged } = await writeComponentFiles(
       componentsDir,
       files,
       options.overwrite,
     );
     allWritten.push(...written);
+    allOverwritten.push(...overwritten);
+    allBackups.push(...backups);
     allSkipped.push(...skipped);
     allUnchanged.push(...unchanged);
   }
@@ -131,7 +135,7 @@ export async function add(componentNames: string[], options: AddOptions) {
   if (allSkipped.length > 0) {
     console.log(
       styleText("yellow", "ℹ"),
-      `Skipped ${allSkipped.length} file(s): (use --overwrite to take the latest)`,
+      `Skipped ${allSkipped.length} file(s): review local edits before replacing them.`,
     );
     allSkipped.forEach((f) => console.log(`  - ${f}`));
     console.log(
@@ -146,8 +150,16 @@ export async function add(componentNames: string[], options: AddOptions) {
   }
 
   console.log();
-  console.log("Added:");
-  allWritten.forEach((f) => console.log(styleText("cyan", `  ${f}`)));
+  const added = allWritten.filter((file) => !allOverwritten.includes(file));
+  for (const [label, files] of [
+    ["Added:", added],
+    ["Overwrote:", allOverwritten],
+    ["Backups:", allBackups],
+  ] as const) {
+    if (!files.length) continue;
+    console.log(label);
+    files.forEach((file) => console.log(styleText("cyan", `  ${file}`)));
+  }
 
   // Sync theme tokens
   if (config.css) {

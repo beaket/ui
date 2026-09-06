@@ -3,6 +3,7 @@ import {
   FETCH_TIMEOUT_MS,
   fetchComponent,
   fetchRegistry,
+  resolveComponents,
   type ComponentDefinition,
 } from "./registry.ts";
 
@@ -49,6 +50,23 @@ const buttonDef: ComponentDefinition = {
   registryDependencies: [],
   files: ["components/button.tsx"],
 };
+
+it("resolves transitive, shared and cyclic dependencies once and rejects missing entries", () => {
+  const table = { ...buttonDef, name: "table", registryDependencies: ["button"] };
+  const dataTable = { ...buttonDef, name: "data-table", registryDependencies: ["table", "button"] };
+  const registry = { components: [buttonDef, table, dataTable] };
+  expect(
+    resolveComponents(registry, ["data-table", "table"]).map((component) => component.name),
+  ).toEqual(["data-table", "table", "button"]);
+  expect(
+    resolveComponents({ components: [{ ...buttonDef, registryDependencies: ["button"] }] }, [
+      "button",
+    ]),
+  ).toHaveLength(1);
+  expect(() => resolveComponents({ components: [dataTable] }, ["data-table"])).toThrow(
+    "Component not found: table",
+  );
+});
 
 describe("fetchRegistry", () => {
   it("aborts after the timeout with a message naming the timeout", async () => {

@@ -1,6 +1,6 @@
 import { spawn } from "child_process";
-import { existsSync } from "node:fs";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { constants, existsSync } from "node:fs";
+import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "path";
 import prompts from "prompts";
 import { normalize } from "./diff.ts";
@@ -8,6 +8,8 @@ import type { ComponentFile } from "./registry.ts";
 
 export interface WriteResult {
   written: string[];
+  overwritten: string[];
+  backups: string[];
   skipped: string[];
   /** Files already identical to upstream — left untouched, no prompt. */
   unchanged: string[];
@@ -39,6 +41,8 @@ export async function writeComponentFiles(
   overwrite: boolean = false,
 ): Promise<WriteResult> {
   const written: string[] = [];
+  const overwritten: string[] = [];
+  const backups: string[] = [];
   const skipped: string[] = [];
   const unchanged: string[] = [];
 
@@ -72,6 +76,8 @@ export async function writeComponentFiles(
           continue;
         }
       }
+      backups.push(await backupFile(targetPath));
+      overwritten.push(targetPath);
     }
 
     await mkdir(path.dirname(targetPath), { recursive: true });
@@ -79,7 +85,20 @@ export async function writeComponentFiles(
     written.push(targetPath);
   }
 
-  return { written, skipped, unchanged };
+  return { written, overwritten, backups, skipped, unchanged };
+}
+
+/** Never replace an earlier backup; abort the write if the backup fails. */
+export async function backupFile(targetPath: string): Promise<string> {
+  for (let index = 0; ; index += 1) {
+    const backup = `${targetPath}.bak${index ? `.${index}` : ""}`;
+    try {
+      await copyFile(targetPath, backup, constants.COPYFILE_EXCL);
+      return backup;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+    }
+  }
 }
 
 export async function installDependencies(deps: string[]): Promise<void> {

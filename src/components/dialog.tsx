@@ -6,6 +6,9 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
+// Module-local type for bundlers that replace NODE_ENV without Node globals.
+declare const process: { env: { NODE_ENV?: string } };
+
 export interface DialogProps {
   /**
    * When true, prevents closing the dialog via ESC key or clicking outside.

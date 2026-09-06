@@ -3,7 +3,7 @@ import { readdir, readFile, writeFile } from "node:fs/promises";
 import { styleText } from "node:util";
 import path from "path";
 import prompts from "prompts";
-import { writeConfig, type BeaketConfig } from "../utils/config.ts";
+import { getConfig, writeConfig, type BeaketConfig } from "../utils/config.ts";
 import { replaceThemeInCss } from "../utils/theme.ts";
 import { THEME_CSS, VALID_THEMES } from "../utils/themes.ts";
 
@@ -252,6 +252,16 @@ export async function init(options: InitOptions) {
       `Invalid theme "${options.theme}". Choose from: ${VALID_THEMES.join(", ")}`,
     );
     process.exit(1);
+  }
+
+  const existingConfig = await getConfig();
+  if (existingConfig) {
+    console.log("Beaket UI is already initialized. Existing configuration and CSS were preserved.");
+    console.log(
+      `To sync or switch themes, run: npx @beaket/ui theme${options.theme ? ` --theme ${options.theme}` : ""}`,
+    );
+    if (options.theme && options.theme !== (existingConfig.theme || "solace")) process.exitCode = 1;
+    return;
   }
 
   const detectedComponentsPath = await detectAliasPath();
