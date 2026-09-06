@@ -5,10 +5,6 @@ import { twMerge } from "tailwind-merge";
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 export interface AvatarProps extends React.ComponentProps<typeof AvatarPrimitive.Root> {
-  /**
-   * Additional CSS classes to apply to the avatar container
-   */
-  className?: string;
   /** Add offset shadow to the avatar */
   shadow?: boolean;
 }

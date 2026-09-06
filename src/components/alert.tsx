@@ -1,4 +1,3 @@
-import { cva, type VariantProps } from "class-variance-authority";
 import { type ClassValue, clsx } from "clsx";
 import { AlertCircle, AlertTriangle, Info, Lightbulb, Shield } from "lucide-react";
 import { Children, isValidElement } from "react";
@@ -6,26 +5,19 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-const alertVariants = cva(
-  "relative w-full border px-4 py-3 text-sm grid grid-cols-[calc(var(--spacing)*4)_1fr] gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5",
-  {
-    variants: {
-      variant: {
-        note: "bg-bg-raised text-fg border-info-solid [&>svg]:text-info-solid [&_[data-slot=alert-description]]:text-fg-muted",
-        tip: "bg-bg-raised text-fg border-success-solid [&>svg]:text-success-solid [&_[data-slot=alert-description]]:text-fg-muted",
-        important:
-          "bg-bg-raised text-fg border-accent-solid [&>svg]:text-accent-solid [&_[data-slot=alert-description]]:text-fg-muted",
-        warning:
-          "bg-bg-raised text-fg border-warning-fg [&>svg]:text-warning-fg [&_[data-slot=alert-description]]:text-fg-muted",
-        caution:
-          "bg-bg-raised text-fg border-danger-solid [&>svg]:text-danger-solid [&_[data-slot=alert-description]]:text-fg-muted",
-      },
-    },
-    defaultVariants: {
-      variant: "note",
-    },
-  },
-);
+const alertBase =
+  "relative w-full border px-4 py-3 text-sm grid grid-cols-[calc(var(--spacing)*4)_1fr] gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5";
+
+const variantClasses = {
+  note: "bg-bg-raised text-fg border-info-solid [&>svg]:text-info-solid [&_[data-slot=alert-description]]:text-fg-muted",
+  tip: "bg-bg-raised text-fg border-success-solid [&>svg]:text-success-solid [&_[data-slot=alert-description]]:text-fg-muted",
+  important:
+    "bg-bg-raised text-fg border-accent-solid [&>svg]:text-accent-solid [&_[data-slot=alert-description]]:text-fg-muted",
+  warning:
+    "bg-bg-raised text-fg border-warning-fg [&>svg]:text-warning-fg [&_[data-slot=alert-description]]:text-fg-muted",
+  caution:
+    "bg-bg-raised text-fg border-danger-solid [&>svg]:text-danger-solid [&_[data-slot=alert-description]]:text-fg-muted",
+} as const;
 
 const variantIcons = {
   note: Info,
@@ -43,8 +35,7 @@ const variantTitles = {
   caution: "Caution",
 } as const;
 
-export interface AlertProps
-  extends Omit<React.ComponentProps<"div">, "title">, VariantProps<typeof alertVariants> {
+export interface AlertProps extends Omit<React.ComponentProps<"div">, "title"> {
   /** note | tip | important | warning | caution. Semantic variant that controls color and icon */
   variant?: "note" | "tip" | "important" | "warning" | "caution";
   /**
@@ -89,14 +80,14 @@ function hasParts(children: React.ReactNode): boolean {
 }
 
 function AlertRoot({ className, variant = "note", title, children, ...props }: AlertProps) {
-  const Icon = variantIcons[variant!];
+  const Icon = variantIcons[variant];
   const composed = hasParts(children);
 
   return (
     <div
       data-slot="alert"
       role="alert"
-      className={cn(alertVariants({ variant }), className)}
+      className={cn(alertBase, variantClasses[variant], className)}
       {...props}
     >
       <Icon aria-hidden="true" />
@@ -110,7 +101,7 @@ function AlertRoot({ className, variant = "note", title, children, ...props }: A
       ) : (
         <>
           {/* §2 sugar over the parts, byte-identical to the old output. */}
-          <AlertTitle>{title || variantTitles[variant!]}</AlertTitle>
+          <AlertTitle>{title || variantTitles[variant]}</AlertTitle>
           {children && <AlertDescription>{children}</AlertDescription>}
         </>
       )}

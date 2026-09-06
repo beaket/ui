@@ -6,10 +6,6 @@ const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 export interface TextareaProps extends React.ComponentProps<"textarea"> {
   /**
-   * Additional CSS classes to apply to the textarea
-   */
-  className?: string;
-  /**
    * Automatically resize the textarea based on content
    * @default true
    */

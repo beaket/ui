@@ -26,7 +26,7 @@ import { parseTable, serializeDelimiter, serializeRow } from "./table-model";
 // Preventing table churn: even when cell editing changes the table source, the widget DOM is not recreated;
 // it's updated in place via updateDOM() — keeping the subview from being destroyed during editing is the key.
 
-export const cellSync = Annotation.define<"from-cell" | "from-main">();
+const cellSync = Annotation.define<"from-cell" | "from-main">();
 
 interface ActiveCell {
   tableFrom: number;
@@ -58,7 +58,7 @@ function sameCell(a: ActiveCell | null, b: ActiveCell | null): boolean {
   return a.tableFrom === b.tableFrom && a.row === b.row && a.col === b.col;
 }
 
-export function clearActiveCell(view: EditorView): void {
+function clearActiveCell(view: EditorView): void {
   if (view.state.field(activeCellField)) {
     view.dispatch({ effects: setActiveCellEffect.of(null) });
   }
