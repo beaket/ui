@@ -1,3 +1,5 @@
+"use client";
+
 import { Slot } from "@radix-ui/react-slot";
 import { type ClassValue, clsx } from "clsx";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -422,6 +424,8 @@ function PaginationEllipsis({
     </Comp>
   );
 }
+
+export { PaginationEllipsis, PaginationItem, PaginationNext, PaginationPrevious };
 
 export const Pagination = Object.assign(PaginationRoot, {
   Item: PaginationItem,

@@ -1,3 +1,5 @@
+"use client";
+
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { type ClassValue, clsx } from "clsx";
 import { X } from "lucide-react";
@@ -173,6 +175,8 @@ function DialogClose({
 }: React.ComponentProps<typeof DialogPrimitive.Close>) {
   return <DialogPrimitive.Close data-slot="dialog-close-action" {...props} asChild={asChild} />;
 }
+
+export { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger };
 
 export const Dialog = Object.assign(DialogRoot, {
   Trigger: DialogTrigger,

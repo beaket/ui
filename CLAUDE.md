@@ -72,7 +72,7 @@ export function ComponentName({ className, ...props }: React.ComponentProps<"div
 }
 ```
 
-**Compound pattern** for sub-components: `Dialog.Title`, `Dialog.Footer` — not individually exported.
+**Compound pattern** for sub-components: `Dialog.Title`, `Dialog.Footer`. Also export each part by name (`DialogTitle`, `DialogFooter`) for React Server Components; attached properties do not cross client-module boundaries (#923 supersedes #871).
 
 **Controlled/uncontrolled**: Support both via internal state + `open`/`onOpenChange` props. Warn in dev if `open` provided without `onOpenChange`.
 
