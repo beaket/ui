@@ -167,6 +167,10 @@ export async function compareComponent(
         );
       file.baseline = baseline.content;
       file.analysis = await analyzeThreeWay(baseline.content, local ?? "", upstream.content);
+    } else if (local === null) {
+      // An absent, untracked file can be added without replacing local work.
+      file.baseline = "";
+      file.analysis = await analyzeThreeWay("", "", upstream.content);
     }
     files.push(file);
   }

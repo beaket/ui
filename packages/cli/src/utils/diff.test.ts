@@ -231,4 +231,12 @@ it("uses three states to distinguish local edits, clean merges and actual confli
   expect(conflict.conflicts).toBe(1);
   expect(conflict.localLines).toBe(2);
   expect(conflict.upstreamLines).toBe(2);
+  const separated = "first\n1\n2\n3\n4\n5\n6\n7\n8\nlast\n";
+  const twoConflicts = await analyzeThreeWay(
+    separated,
+    separated.replace("first", "local first").replace("last", "local last"),
+    separated.replace("first", "upstream first").replace("last", "upstream last"),
+  );
+  expect(twoConflicts.status).toBe("conflicting");
+  expect(twoConflicts.conflicts).toBe(2);
 });

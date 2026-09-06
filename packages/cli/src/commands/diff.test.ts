@@ -64,7 +64,14 @@ it("reports machine-readable diff outcomes without changing consumer files", asy
     await diff(undefined, { registryRef: ref });
     expect(process.exitCode).toBe(1);
     removed = false;
+    upstream = base;
+    definition.files.push("components/button.parts.tsx");
+    await diff("button", { registryRef: ref });
+    expect(process.exitCode).toBe(1);
+    expect(await readFile(targetPath, "utf8")).toBe(base);
+    definition.files.pop();
     await writeFile(configPath, JSON.stringify({ components: "." }));
+    upstream = "changed without a baseline";
     await diff("button", { registryRef: ref });
     expect(process.exitCode).toBe(3);
   } finally {
