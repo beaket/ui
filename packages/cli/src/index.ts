@@ -37,6 +37,7 @@ program
 program
   .command("theme")
   .description("Sync theme CSS tokens to your project")
+  .option("-o, --overwrite", "Replace theme tokens without prompting (saves a backup)")
   .option("--theme <preset>", "Switch theme: solace, porcelain, tobacco, marigold, or eucalyptus")
   .action(theme);
 

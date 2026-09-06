@@ -22,6 +22,19 @@ export interface ComponentFile {
   content: string;
 }
 
+export function resolveComponents(registry: Registry, names: string[]): ComponentDefinition[] {
+  const resolved = new Map<string, ComponentDefinition>();
+  function visit(name: string) {
+    if (resolved.has(name)) return;
+    const definition = registry.components.find((component) => component.name === name);
+    if (!definition) throw new Error(`Component not found: ${name}`);
+    resolved.set(name, definition);
+    for (const dependency of definition.registryDependencies) visit(dependency);
+  }
+  names.forEach(visit);
+  return [...resolved.values()];
+}
+
 // GitHub raw URL base - update this to your repo
 const GITHUB_RAW_BASE = "https://raw.githubusercontent.com/beaket/ui/main";
 

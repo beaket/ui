@@ -4,6 +4,7 @@ import { styleText } from "node:util";
 import path from "path";
 import prompts from "prompts";
 import type { BeaketConfig } from "./config.ts";
+import { backupFile } from "./files.ts";
 
 const THEME_START = "/* beaket:theme:start */";
 const THEME_END = "/* beaket:theme:end */";
@@ -91,7 +92,7 @@ export async function syncTheme(
   // Check if theme is already up to date
   if (existingTheme !== null && existingTheme.trim() === themeCss.trim()) {
     console.log(styleText("green", "✔"), "Theme tokens are up to date.");
-    return false;
+    return true;
   }
 
   if (existingTheme === null) {
@@ -107,8 +108,8 @@ export async function syncTheme(
     const { confirm } = await prompts({
       type: "confirm",
       name: "confirm",
-      message: `Theme tokens in ${config.css} are outdated. Update to latest ${themeName}?`,
-      initial: true,
+      message: `Replace theme tokens in ${config.css} with ${themeName}? Local token edits will be replaced (a backup is saved).`,
+      initial: false,
     });
     if (!confirm) {
       console.log(styleText("yellow", "ℹ"), "Skipped theme update.");
@@ -117,6 +118,7 @@ export async function syncTheme(
   }
 
   const { css } = replaceThemeInCss(existingCss, themeCss);
+  await backupFile(cssPath);
   await writeFile(cssPath, css);
   console.log(styleText("green", "✔"), `Updated ${themeName} theme tokens in ${config.css}`);
   return true;

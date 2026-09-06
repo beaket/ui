@@ -90,7 +90,7 @@ export async function diff(componentName: string | undefined) {
     console.log("  •", "hand-merge what you want to keep, or");
     console.log(
       "  •",
-      "take the latest with",
+      "discard local edits (a backup is saved) with",
       styleText("cyan", `npx @beaket/ui add ${componentName} --overwrite`),
     );
     console.log();
@@ -151,8 +151,7 @@ export async function diff(componentName: string | undefined) {
   );
   console.log("  Review one with", styleText("cyan", "npx @beaket/ui diff <component>"));
   console.log(
-    "  Update with     ",
-    styleText("cyan", `npx @beaket/ui add ${outdated.map((r) => r.name).join(" ")} --overwrite`),
+    "  Hand-merge the changes you want. --overwrite discards local edits and saves a backup.",
   );
   console.log();
 }

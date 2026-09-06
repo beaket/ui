@@ -6,6 +6,9 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
+// Module-local type for bundlers that replace NODE_ENV without Node globals.
+declare const process: { env: { NODE_ENV?: string } };
+
 export interface SheetProps {
   /**
    * When true, prevents closing the sheet via ESC key or clicking outside.

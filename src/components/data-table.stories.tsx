@@ -61,9 +61,9 @@ const columns: ColumnDef<User>[] = [
   },
 ];
 
-const meta: Meta<typeof DataTable<User, unknown>> = {
+const meta: Meta<typeof DataTable<User>> = {
   title: "UI/DataTable",
-  component: DataTable<User, unknown>,
+  component: DataTable<User>,
   tags: ["autodocs"],
   parameters: {
     docs: {

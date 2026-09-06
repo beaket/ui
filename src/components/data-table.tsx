@@ -73,7 +73,7 @@ export type Cell<TData extends RowData, TValue extends CellData = unknown> = Tan
 
 export type Row<TData extends RowData> = TanStackRow<typeof dataTableFeatures, TData>;
 
-export interface DataTableProps<TData extends RowData, TValue extends CellData> {
+export interface DataTableProps<TData extends RowData> {
   /** Column definitions using TanStack Table's ColumnDef — see https://tanstack.com/table/latest/docs/guide/column-defs */
   columns: ColumnDef<TData>[];
   /** Array of data to display */
@@ -417,7 +417,7 @@ function DataTablePagination({ className, ...props }: React.ComponentProps<"div"
  * `.Pagination` yourself. `getRowClassName`, `onRowMouseEnter` and
  * `onRowMouseLeave` are then just props on your own `<DataTable.Row>`.
  */
-function DataTableRoot<TData extends RowData, TValue extends CellData>({
+function DataTableRoot<TData extends RowData>({
   columns,
   data,
   searchable = false,
@@ -439,7 +439,7 @@ function DataTableRoot<TData extends RowData, TValue extends CellData>({
   onRowMouseEnter,
   onRowMouseLeave,
   children,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<ColumnVisibilityState>(
