@@ -1,4 +1,4 @@
-import { Command } from "commander";
+import { Command, Option } from "commander";
 import { add } from "./commands/add.ts";
 import { diff } from "./commands/diff.ts";
 import { init } from "./commands/init.ts";
@@ -26,13 +26,17 @@ program
   .description("Add components to your project")
   .argument("<components...>", "Component names to add")
   .option("-o, --overwrite", "Overwrite existing files")
+  .addOption(new Option("--registry-ref <ref>", "Registry tag or commit").conflicts("latest"))
+  .addOption(new Option("--latest", "Use the current main registry").conflicts("registryRef"))
   .action(add);
 
 program
   .command("diff")
   .description("Check installed components for upstream style updates")
   .argument("[component]", "Component to diff against the registry (omit to check all)")
-  .action((component?: string) => diff(component));
+  .addOption(new Option("--registry-ref <ref>", "Registry tag or commit").conflicts("latest"))
+  .addOption(new Option("--latest", "Use the current main registry").conflicts("registryRef"))
+  .action(diff);
 
 program
   .command("theme")
@@ -41,4 +45,7 @@ program
   .option("--theme <preset>", "Switch theme: solace, porcelain, tobacco, marigold, or eucalyptus")
   .action(theme);
 
-program.parse();
+program.parseAsync().catch((error: unknown) => {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exitCode = 3;
+});

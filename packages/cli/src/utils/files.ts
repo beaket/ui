@@ -3,7 +3,7 @@ import { constants, existsSync } from "node:fs";
 import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "path";
 import prompts from "prompts";
-import { normalize } from "./diff.ts";
+import { normalize, toLocalRelativePath } from "./diff.ts";
 import type { ComponentFile } from "./registry.ts";
 
 export interface WriteResult {
@@ -48,7 +48,7 @@ export async function writeComponentFiles(
 
   for (const file of files) {
     // Transform file path: components/button.tsx -> button.tsx
-    const relativePath = file.path.replace(/^components\//, "");
+    const relativePath = toLocalRelativePath(file.path);
     const targetPath = path.join(baseDir, relativePath);
 
     // Check if file exists

@@ -54,6 +54,16 @@ are left alone; changed files prompt before they are overwritten.
 Every replacement saves the previous file as `.bak`, then `.bak.1`, `.bak.2`, and
 so on. Review the diff or hand-merge customizations before choosing to overwrite.
 
+`add` and `diff` use the registry tag matching the CLI version (`@beaket/ui@X.Y.Z`).
+Pass `--registry-ref <tag|sha>` to choose a version, or `--latest` to explicitly use
+the current commit on `main`. The two options cannot be combined. Historical
+releases 2.8.0 and 3.0.0 have no tags; select a tagged release or explicitly opt into
+`--latest` when a tag is missing. The CLI never silently falls back to `main`.
+
+Commit `beaket.ui.json`: its `installed` entries record the registry ref, SHA-256
+content hash and CLI version for each copied file. Skipped local edits retain their
+previous baseline. Upgrading the CLI itself does not update copied components.
+
 ## diff
 
 ```bash
@@ -61,9 +71,22 @@ npx @beaket/ui diff
 npx @beaket/ui diff button
 ```
 
-Checks copied components against the current registry without changing files.
-Use it before overwriting a customized component: a difference can be either an
-upstream update or your own edit.
+Compares the installed baseline, your local copy and the target registry without
+changing files. A single-component diff shows upstream edits and local edits
+separately. When both sides changed, Git's merge algorithm detects conflicts;
+Git must be installed for that comparison. Line counts count additions and
+removals; conflict counts describe conflicting regions, not individual lines.
+
+| Exit code | Meaning                                          |
+| --------- | ------------------------------------------------ |
+| 0         | Clean, or only your local customizations changed |
+| 1         | Upstream changes can be merged                   |
+| 2         | Upstream and local changes conflict              |
+| 3         | Missing baseline or an operational error         |
+
+Older installs have no baseline: differing files get an explicit unknown-baseline
+result and a two-way diff. Do not overwrite a customized file just to establish a
+baseline. Review and hand-merge first. Automatic merging is not implemented.
 
 ## theme
 

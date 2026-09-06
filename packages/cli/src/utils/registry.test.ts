@@ -1,15 +1,40 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  DEFAULT_REGISTRY_REF,
   FETCH_TIMEOUT_MS,
   fetchComponent,
   fetchRegistry,
   resolveComponents,
+  resolveRegistryRef,
   type ComponentDefinition,
 } from "./registry.ts";
 
 afterEach(() => {
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
   vi.useRealTimers();
+});
+
+it("pins the default tag and resolves moving refs to one immutable commit", async () => {
+  expect(await resolveRegistryRef()).toBe(DEFAULT_REGISTRY_REF);
+  const sha = "a".repeat(40);
+  const fetch = vi.fn().mockResolvedValue(new Response(JSON.stringify({ sha })));
+  vi.stubGlobal("fetch", fetch);
+  expect(await resolveRegistryRef({ latest: true })).toBe(sha);
+  expect(fetch.mock.calls[0][0]).toContain("/commits/main");
+  await expect(resolveRegistryRef({ latest: true, registryRef: "v1" })).rejects.toThrow("either");
+  await expect(resolveRegistryRef({ registryRef: "../main" })).rejects.toThrow("Invalid");
+});
+
+it("fetches registry and component bytes from the same explicit ref", async () => {
+  const fetch = vi.fn().mockImplementation(() => Promise.resolve(new Response("{}")));
+  vi.stubGlobal("fetch", fetch);
+  await fetchRegistry("@beaket/ui@3.1.0");
+  await fetchComponent(buttonDef, "@beaket/ui@3.1.0");
+  expect(fetch.mock.calls.map(([url]) => url)).toEqual([
+    "https://raw.githubusercontent.com/beaket/ui/@beaket/ui@3.1.0/registry/registry.json",
+    "https://raw.githubusercontent.com/beaket/ui/@beaket/ui@3.1.0/src/components/button.tsx",
+  ]);
 });
 
 // A fetch that never resolves on its own but rejects with an AbortError once

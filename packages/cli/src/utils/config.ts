@@ -1,12 +1,23 @@
+import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "path";
+
+export interface InstalledFile {
+  ref: string;
+  hash: string;
+  cliVersion: string;
+}
+
+export const contentHash = (content: string): string =>
+  createHash("sha256").update(content).digest("hex");
 
 export interface BeaketConfig {
   $schema?: string;
   components: string;
   css?: string;
   theme?: string;
+  installed?: Record<string, Record<string, InstalledFile>>;
 }
 
 const CONFIG_FILE = "beaket.ui.json";
