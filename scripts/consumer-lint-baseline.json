@@ -1,0 +1,17 @@
+{
+  "alert.tsx": 3,
+  "select.tsx": 10,
+  "navigation.tsx": 4,
+  "tooltip.tsx": 1,
+  "card.tsx": 8,
+  "dialog.tsx": 7,
+  "table.tsx": 9,
+  "avatar.tsx": 3,
+  "pagination.tsx": 6,
+  "dropdown-menu.tsx": 14,
+  "radio.tsx": 2,
+  "tabs.tsx": 4,
+  "breadcrumb.tsx": 6,
+  "sheet.tsx": 7,
+  "data-table.tsx": 8
+}
