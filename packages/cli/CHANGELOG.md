@@ -1,5 +1,67 @@
 # @beaket/ui
 
+## 4.0.0
+
+### Major Changes
+
+- [#906](https://github.com/beaket/ui/pull/906) [`0d51ce4`](https://github.com/beaket/ui/commit/0d51ce4be915e49140a026db2389d27717ce681b) Thanks [@jihnma](https://github.com/jihnma)! - Breaking: `Tooltip` no longer mounts its own `TooltipProvider`
+
+  `Tooltip` wrapped every instance in its own `TooltipPrimitive.Provider`, so a
+  `TooltipProvider` placed around a group was shadowed by the inner one and its
+  `delayDuration` could never reach a tooltip. The provider is now what it is in
+  Radix — required, and the single place the delay is configured.
+
+  ```diff
+  - <Tooltip delayDuration={700}>…</Tooltip>
+  - <Tooltip delayDuration={700}>…</Tooltip>
+  + <TooltipProvider delayDuration={700}>
+  +   <Tooltip>…</Tooltip>
+  +   <Tooltip>…</Tooltip>
+  + </TooltipProvider>
+  ```
+
+  Every `Tooltip` must now sit inside a `TooltipProvider`; Radix throws otherwise.
+  Mount one near the root of your app. `delayDuration` stays available on a single
+  `Tooltip` as a per-tooltip override of the provider's value, and the provider
+  still defaults to `0`.
+
+### Minor Changes
+
+- [#949](https://github.com/beaket/ui/pull/949) [`44a97c6`](https://github.com/beaket/ui/commit/44a97c6e9ee5dc43ee4b3caefd90677d93cd768b) Thanks [@jihnma](https://github.com/jihnma)! - Pin registry downloads to the CLI release tag. Use --registry-ref to select a tag or commit, or --latest to explicitly resolve main to a commit. Missing release tags fail with explicit fallback guidance instead of silently fetching main.
+
+  Record the registry ref, SHA-256 hash and CLI version for each installed file in beaket.ui.json, preserving existing baselines when local changes are skipped. Diff compares the recorded baseline, local source and target release, verifies baseline hashes, and separates local customizations from upstream changes. Exit codes are 0 for clean/local-only, 1 for mergeable updates, 2 for conflicts, and 3 for unknown baselines or errors. Comparing changes on both sides requires Git. Overwrite remains an explicit replacement with backups; automatic merging is deferred.
+
+### Patch Changes
+
+- [#947](https://github.com/beaket/ui/pull/947) [`5ff6181`](https://github.com/beaket/ui/commit/5ff6181bafd2445bb28a94f676835769c50c0ee5) Thanks [@jihnma](https://github.com/jihnma)! - Type development warnings without requiring Node globals in browser projects, remove DataTable's unused generic, and generate documented React requirements from the registry. Remove the deprecated baseUrl option from installation instructions.
+
+- [#906](https://github.com/beaket/ui/pull/906) [`0d51ce4`](https://github.com/beaket/ui/commit/0d51ce4be915e49140a026db2389d27717ce681b) Thanks [@jihnma](https://github.com/jihnma)! - Remove `className` redeclarations from six component prop types
+
+  `AvatarProps`, `CheckboxProps`, `RadioGroupProps`, `RadioItemProps`,
+  `SwitchProps`, and `TextareaProps` each redeclared `className?: string` inside an
+  interface already extending a props type that provides it. It reached no
+  consumer and no docs table — the props generator excludes `className`. Types are
+  unchanged. `CheckboxProps`, `RadioGroupProps`, and `RadioItemProps` are now type
+  aliases, matching `LabelProps`.
+
+  `PaginationBaseProps` and `DataTableProps` keep theirs: neither extends a DOM
+  props type, so the declaration is the only source.
+
+- [#906](https://github.com/beaket/ui/pull/906) [`0d51ce4`](https://github.com/beaket/ui/commit/0d51ce4be915e49140a026db2389d27717ce681b) Thanks [@jihnma](https://github.com/jihnma)! - `alert`, `badge`, and `switch` no longer depend on `class-variance-authority`
+
+  Each used `cva` for a single flat variant map with no compound variants — a
+  lookup keyed by one prop. `alert.tsx` already spelled the same lookup twice as a
+  plain object (`variantIcons`, `variantTitles`) directly beneath the `cva` call.
+  The three now use a plain object too, so `ui add alert|badge|switch` installs one
+  package fewer. `button` and `card` keep `cva`, where two axes and compound
+  variants earn it.
+
+  Rendered class strings are unchanged. `AlertProps` and `SwitchProps` drop the
+  `VariantProps<…>` they extended, which restated literal unions the interfaces
+  already declare.
+
+- [#947](https://github.com/beaket/ui/pull/947) [`5ff6181`](https://github.com/beaket/ui/commit/5ff6181bafd2445bb28a94f676835769c50c0ee5) Thanks [@jihnma](https://github.com/jihnma)! - Preserve local files in numbered backups before overwriting, label overwritten files explicitly, and recommend reviewing diffs before discarding customizations. Resolve transitive registry dependencies when adding a component. Theme updates now ask before replacing tokens, and re-running init preserves existing configuration and directs theme switches to the theme command.
+
 ## 3.1.0
 
 ### Minor Changes
