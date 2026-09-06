@@ -1,0 +1,46 @@
+name: Consumer templates
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    outputs:
+      components: ${{ steps.catalog.outputs.components }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - id: catalog
+        run: node -e 'console.log("components=" + JSON.stringify(require("./registry/registry.json").components.map(c => c.name)))' >> "$GITHUB_OUTPUT"
+
+  vite:
+    needs: catalog
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        template: [react-ts]
+        component: ${{ fromJSON(needs.catalog.outputs.components) }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm --filter @beaket/ui build
+      - name: Install one component into the unmodified stock template
+        run: node scripts/test-vite-consumer.mjs "$COMPONENT" "$TEMPLATE"
+        env:
+          COMPONENT: ${{ matrix.component }}
+          TEMPLATE: ${{ matrix.template }}
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: consumer-lint-${{ matrix.component }}
+          path: test-results/consumer-*.json
