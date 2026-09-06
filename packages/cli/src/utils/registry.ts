@@ -35,8 +35,32 @@ export function resolveComponents(registry: Registry, names: string[]): Componen
   return [...resolved.values()];
 }
 
-// GitHub raw URL base - update this to your repo
-const GITHUB_RAW_BASE = "https://raw.githubusercontent.com/beaket/ui/main";
+declare const __VERSION__: string;
+export const CLI_VERSION = typeof __VERSION__ === "undefined" ? "0.0.0" : __VERSION__;
+export const DEFAULT_REGISTRY_REF = `@beaket/ui@${CLI_VERSION}`;
+const GITHUB_RAW_BASE = "https://raw.githubusercontent.com/beaket/ui";
+
+export interface RegistryOptions {
+  registryRef?: string;
+  latest?: boolean;
+}
+
+export async function resolveRegistryRef(options: RegistryOptions = {}): Promise<string> {
+  if (options.latest && options.registryRef)
+    throw new Error("Use either --latest or --registry-ref, not both.");
+  const ref = options.latest ? "main" : options.registryRef || DEFAULT_REGISTRY_REF;
+  if (!/^[\w@./-]+$/.test(ref) || ref.split("/").includes(".."))
+    throw new Error("Invalid registry ref.");
+  if (/^[a-f0-9]{40}$/i.test(ref) || ref.startsWith("@beaket/ui@")) return ref;
+  // A moving branch must become a commit before its files or baseline are fetched.
+  const url = `https://api.github.com/repos/beaket/ui/commits/${encodeURIComponent(ref)}`;
+  const commit = await fetchWithTimeout(
+    url,
+    async (response) => (await response.json()) as { sha: string },
+  );
+  if (!/^[a-f0-9]{40}$/i.test(commit.sha)) throw new Error(`Could not resolve registry ref ${ref}`);
+  return commit.sha;
+}
 
 // Node's fetch has no built-in timeout; without one a slow or unreachable CDN
 // hangs the CLI until the OS-level TCP timeout fires (minutes).
@@ -75,23 +99,28 @@ function describeFetchError(error: unknown): string {
   return String(error);
 }
 
-export async function fetchRegistry(): Promise<Registry> {
-  const url = `${GITHUB_RAW_BASE}/registry/registry.json`;
+export async function fetchRegistry(ref = DEFAULT_REGISTRY_REF): Promise<Registry> {
+  const url = `${GITHUB_RAW_BASE}/${ref}/registry/registry.json`;
 
   try {
     return await fetchWithTimeout(url, async (res) => (await res.json()) as Registry);
   } catch (error) {
     throw new Error(
-      `Failed to fetch registry from ${url}: ${describeFetchError(error)}. Make sure the repository is public.`,
+      `Failed to fetch registry from ${url}: ${describeFetchError(error)}. Make sure the repository is public. If this release tag is missing, use --latest explicitly or --registry-ref <tag|sha>.`,
     );
   }
 }
 
-export async function fetchComponent(componentDef: ComponentDefinition): Promise<ComponentFile[]> {
+export async function fetchComponent(
+  componentDef: ComponentDefinition,
+  ref = DEFAULT_REGISTRY_REF,
+): Promise<ComponentFile[]> {
   const files: ComponentFile[] = [];
 
   for (const filePath of componentDef.files) {
-    const url = `${GITHUB_RAW_BASE}/src/${filePath}`;
+    if (!/^components\/[\w-]+(?:\.[\w-]+)*\.tsx$/.test(filePath))
+      throw new Error(`Invalid component file path: ${filePath}`);
+    const url = `${GITHUB_RAW_BASE}/${ref}/src/${filePath}`;
 
     try {
       const content = await fetchWithTimeout(url, (res) => res.text());

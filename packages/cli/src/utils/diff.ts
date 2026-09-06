@@ -1,6 +1,9 @@
+import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import { readFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path from "path";
+import { contentHash, type InstalledFile } from "./config.ts";
 import { fetchComponent, type ComponentDefinition } from "./registry.ts";
 
 /**
@@ -31,6 +34,59 @@ export interface FileComparison {
   status: FileStatus;
   local: string | null;
   upstream: string;
+  baseline?: string;
+  analysis?: ThreeWayAnalysis;
+}
+
+export interface ThreeWayAnalysis {
+  status: "clean" | "local-only" | "mergeable" | "conflicting";
+  upstreamLines: number;
+  localLines: number;
+  conflicts: number;
+}
+
+export async function analyzeThreeWay(
+  base: string,
+  local: string,
+  upstream: string,
+): Promise<ThreeWayAnalysis> {
+  const normalizedBase = normalize(base);
+  const normalizedLocal = normalize(local);
+  const normalizedUpstream = normalize(upstream);
+  const changedLines = (after: string) =>
+    diffLines(normalizedBase, after).filter((line) => line.type !== "context").length;
+  const result: ThreeWayAnalysis = {
+    status: "clean",
+    upstreamLines: changedLines(normalizedUpstream),
+    localLines: changedLines(normalizedLocal),
+    conflicts: 0,
+  };
+  if (normalizedLocal === normalizedUpstream) return result;
+  if (normalizedBase === normalizedUpstream) return { ...result, status: "local-only" };
+  if (normalizedBase === normalizedLocal) return { ...result, status: "mergeable" };
+
+  const directory = await mkdtemp(path.join(tmpdir(), "beaket-diff-"));
+  try {
+    const files = ["local", "base", "upstream"].map((name) => path.join(directory, name));
+    await Promise.all(
+      [normalizedLocal, normalizedBase, normalizedUpstream].map((content, index) =>
+        writeFile(files[index], content),
+      ),
+    );
+    // Use Git's merge algorithm; print-only mode never changes the consumer's files.
+    const merge = spawnSync("git", ["merge-file", "--stdout", "--diff3", "--", ...files], {
+      encoding: "utf8",
+    });
+    if (merge.error || merge.status === null || merge.status > 127)
+      throw new Error(`Three-way diff needs Git: ${merge.error?.message ?? merge.stderr}`);
+    return {
+      ...result,
+      status: merge.status ? "conflicting" : "mergeable",
+      conflicts: merge.status,
+    };
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
 }
 
 export interface ComponentComparison {
@@ -77,23 +133,35 @@ export async function isComponentInstalled(
 export async function compareComponent(
   def: ComponentDefinition,
   componentsDir: string,
+  ref?: string,
+  installed?: Record<string, InstalledFile>,
 ): Promise<ComponentComparison> {
-  const upstreamFiles = await fetchComponent(def);
+  const upstreamFiles = await fetchComponent(def, ref);
   const files: FileComparison[] = [];
 
   for (const upstream of upstreamFiles) {
     const rel = toLocalRelativePath(upstream.path);
     const localPath = path.join(componentsDir, rel);
 
-    if (!existsSync(localPath)) {
-      files.push({ path: rel, status: "missing", local: null, upstream: upstream.content });
-      continue;
-    }
-
-    const local = await readFile(localPath, "utf-8");
+    const local = existsSync(localPath) ? await readFile(localPath, "utf-8") : null;
     const status: FileStatus =
-      normalize(local) === normalize(upstream.content) ? "same" : "different";
-    files.push({ path: rel, status, local, upstream: upstream.content });
+      local === null
+        ? "missing"
+        : normalize(local) === normalize(upstream.content)
+          ? "same"
+          : "different";
+    const file: FileComparison = { path: rel, status, local, upstream: upstream.content };
+    const recorded = installed?.[upstream.path];
+    if (recorded) {
+      const [baseline] = await fetchComponent({ ...def, files: [upstream.path] }, recorded.ref);
+      if (contentHash(baseline.content) !== recorded.hash)
+        throw new Error(
+          `Baseline hash mismatch for ${upstream.path} at ${recorded.ref}; refusing to guess.`,
+        );
+      file.baseline = baseline.content;
+      file.analysis = await analyzeThreeWay(baseline.content, local ?? "", upstream.content);
+    }
+    files.push(file);
   }
 
   return { name: def.name, status: deriveComponentStatus(files), files };

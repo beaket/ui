@@ -1,17 +1,24 @@
 import { styleText } from "node:util";
 import path from "path";
-import { getConfig } from "../utils/config.ts";
+import { contentHash, getConfig, writeConfig } from "../utils/config.ts";
 import {
   DependencyInstallError,
   installDependencies,
   writeComponentFiles,
 } from "../utils/files.ts";
 import { reactFloorWarning, readInstalledReact } from "../utils/react-version.ts";
-import { fetchComponent, fetchRegistry, resolveComponents } from "../utils/registry.ts";
+import {
+  CLI_VERSION,
+  fetchComponent,
+  fetchRegistry,
+  resolveComponents,
+  resolveRegistryRef,
+  type RegistryOptions,
+} from "../utils/registry.ts";
 import { syncTheme } from "../utils/theme.ts";
 import { THEME_CSS } from "../utils/themes.ts";
 
-interface AddOptions {
+interface AddOptions extends RegistryOptions {
   overwrite?: boolean;
 }
 
@@ -27,7 +34,8 @@ export async function add(componentNames: string[], options: AddOptions) {
   }
 
   // Fetch registry
-  const registry = await fetchRegistry();
+  const ref = await resolveRegistryRef(options);
+  const registry = await fetchRegistry(ref);
   console.log(styleText("green", "✔"), "Checking registry.");
 
   // Validate all components exist
@@ -113,7 +121,7 @@ export async function add(componentNames: string[], options: AddOptions) {
 
   for (const def of componentDefs) {
     if (!def) continue;
-    const files = await fetchComponent(def);
+    const files = await fetchComponent(def, ref);
     const { written, overwritten, backups, skipped, unchanged } = await writeComponentFiles(
       componentsDir,
       files,
@@ -124,6 +132,19 @@ export async function add(componentNames: string[], options: AddOptions) {
     allBackups.push(...backups);
     allSkipped.push(...skipped);
     allUnchanged.push(...unchanged);
+    for (const file of files) {
+      const target = path.join(componentsDir, file.path.replace(/^components\//, ""));
+      if (!written.includes(target) && !unchanged.includes(target)) continue;
+      config.installed ??= {};
+      config.installed[def.name] ??= {};
+      config.installed[def.name][file.path] = {
+        ref,
+        hash: contentHash(file.content),
+        cliVersion: CLI_VERSION,
+      };
+    }
+    // Persist each successful component, including no-op installs; never relabel skipped edits.
+    await writeConfig(config);
   }
 
   // Files already matching upstream — reassure rather than warn.

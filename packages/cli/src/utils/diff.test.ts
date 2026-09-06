@@ -2,7 +2,9 @@ import { mkdtemp, writeFile } from "node:fs/promises";
 import os from "os";
 import path from "path";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { contentHash } from "./config.ts";
 import {
+  analyzeThreeWay,
   collapseContext,
   compareComponent,
   deriveComponentStatus,
@@ -158,6 +160,25 @@ describe("compareComponent", () => {
     );
   }
 
+  it("verifies the recorded baseline hash before classifying local edits", async () => {
+    const dir = await tempDir();
+    await writeFile(path.join(dir, "button.tsx"), "custom");
+    stubFetchContent("base");
+    const recorded = {
+      [buttonDef.files[0]]: {
+        ref: "@beaket/ui@3.1.0",
+        hash: contentHash("base"),
+        cliVersion: "3.1.0",
+      },
+    };
+    const comparison = await compareComponent(buttonDef, dir, "@beaket/ui@3.1.0", recorded);
+    expect(comparison.files[0].analysis?.status).toBe("local-only");
+    recorded[buttonDef.files[0]].hash = contentHash("wrong");
+    await expect(compareComponent(buttonDef, dir, "@beaket/ui@3.1.0", recorded)).rejects.toThrow(
+      "Baseline hash mismatch",
+    );
+  });
+
   it("reports not-installed when the file is absent locally", async () => {
     const dir = await tempDir();
     stubFetchContent("export const Button = 1;");
@@ -185,4 +206,25 @@ describe("compareComponent", () => {
     expect(cmp.files[0].local).toBe("old style");
     expect(cmp.files[0].upstream).toBe("new style");
   });
+});
+
+it("uses three states to distinguish local edits, clean merges and actual conflicts", async () => {
+  const base = "one\ntwo\nthree\nfour\nfive\n";
+  expect((await analyzeThreeWay(base, base, base)).status).toBe("clean");
+  expect((await analyzeThreeWay(base, "custom", base)).status).toBe("local-only");
+  expect((await analyzeThreeWay(base, base, "upstream")).status).toBe("mergeable");
+  expect((await analyzeThreeWay(base, "same edit", "same edit")).status).toBe("clean");
+  expect(
+    (await analyzeThreeWay(base, base.replace("one", "local"), base.replace("five", "upstream")))
+      .status,
+  ).toBe("mergeable");
+  const conflict = await analyzeThreeWay(
+    base,
+    base.replace("one", "local"),
+    base.replace("one", "upstream"),
+  );
+  expect(conflict.status).toBe("conflicting");
+  expect(conflict.conflicts).toBe(1);
+  expect(conflict.localLines).toBe(2);
+  expect(conflict.upstreamLines).toBe(2);
 });
