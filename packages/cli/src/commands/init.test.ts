@@ -1,8 +1,10 @@
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { detectAliasPath, detectCssPath } from "./init.ts";
+import { requireTypeScript } from "../utils/typescript.ts";
+import { add } from "./add.ts";
+import { detectAliasPath, detectCssPath, init } from "./init.ts";
 
 vi.mock("../utils/themes.ts", () => ({ THEME_CSS: {}, VALID_THEMES: [] }));
 
@@ -22,11 +24,47 @@ async function makeProject(files: Record<string, string>): Promise<string> {
 }
 
 afterEach(async () => {
+  vi.restoreAllMocks();
   await Promise.all(
     temporaryDirectories
       .splice(0)
       .map((directory) => rm(directory, { recursive: true, force: true })),
   );
+});
+
+it("rejects plain-JS init and legacy add without touching files", async () => {
+  const pkg = '{"name":"javascript-app"}';
+  const project = await makeProject({
+    "package.json": pkg,
+    "style.css": "body { color: red; }",
+    "app.jsx": "export default () => null;",
+  });
+  vi.spyOn(process, "cwd").mockReturnValue(project);
+  vi.spyOn(console, "log").mockImplementation(() => {});
+  await expect(init({ yes: true })).rejects.toThrow("requires TypeScript");
+  expect((await readdir(project)).sort()).toEqual(["app.jsx", "package.json", "style.css"]);
+  await writeFile(path.join(project, "beaket.ui.json"), '{"components":"ui"}');
+  await expect(add(["button"], {})).rejects.toThrow(
+    "plain JavaScript/.jsx output is not supported",
+  );
+  expect((await readdir(project)).sort()).toEqual([
+    "app.jsx",
+    "beaket.ui.json",
+    "package.json",
+    "style.css",
+  ]);
+  expect(await readFile(path.join(project, "package.json"), "utf8")).toBe(pkg);
+});
+
+it("requires both TypeScript and a config while accepting referenced-config projects", async () => {
+  const project = await makeProject({
+    "package.json": '{"devDependencies":{"typescript":"6.0.3"}}',
+  });
+  await expect(requireTypeScript(project)).rejects.toThrow("tsconfig");
+  await writeFile(path.join(project, "tsconfig.app.json"), "{}");
+  await expect(requireTypeScript(project)).resolves.toBeUndefined();
+  await writeFile(path.join(project, "package.json"), "{}");
+  await expect(requireTypeScript(project)).rejects.toThrow("requires TypeScript");
 });
 
 describe("init path detection", () => {

@@ -6,6 +6,7 @@ import prompts from "prompts";
 import { contentHash, getConfig, writeConfig, type BeaketConfig } from "../utils/config.ts";
 import { extractThemeBlock, replaceThemeInCss } from "../utils/theme.ts";
 import { THEME_CSS, VALID_THEMES } from "../utils/themes.ts";
+import { requireTypeScript } from "../utils/typescript.ts";
 
 interface TsConfig {
   compilerOptions?: {
@@ -264,6 +265,7 @@ export async function init(options: InitOptions) {
     return;
   }
 
+  await requireTypeScript();
   const detectedComponentsPath = await detectAliasPath();
   const detectedCssPath = await detectCssPath();
 
