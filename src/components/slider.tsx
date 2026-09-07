@@ -87,7 +87,7 @@ export function SliderThumb({ className, ...props }: SliderThumbProps) {
       className={cn(
         "border-border-strong bg-bg-input relative block size-5 border before:absolute before:inset-[-13px] before:content-['']",
         "hover:shadow-offset-action focus-visible:outline-border-focus cursor-grab focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-x-px active:translate-y-px active:cursor-grabbing active:shadow-none",
-        "data-[disabled]:border-border-muted data-[disabled]:bg-bg-disabled data-[disabled]:cursor-not-allowed data-[disabled]:border-dashed data-[disabled]:shadow-none",
+        "data-[disabled]:border-border-muted data-[disabled]:bg-bg-disabled data-[disabled]:translate-none data-[disabled]:cursor-not-allowed data-[disabled]:border-dashed data-[disabled]:shadow-none",
         className,
       )}
       {...props}
