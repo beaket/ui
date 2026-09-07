@@ -42,12 +42,12 @@ it("rejects plain-JS init and legacy add without touching files", async () => {
   vi.spyOn(process, "cwd").mockReturnValue(project);
   vi.spyOn(console, "log").mockImplementation(() => {});
   await expect(init({ yes: true })).rejects.toThrow("requires TypeScript");
-  expect(await readdir(project)).toEqual(["app.jsx", "package.json", "style.css"]);
+  expect((await readdir(project)).sort()).toEqual(["app.jsx", "package.json", "style.css"]);
   await writeFile(path.join(project, "beaket.ui.json"), '{"components":"ui"}');
   await expect(add(["button"], {})).rejects.toThrow(
     "plain JavaScript/.jsx output is not supported",
   );
-  expect(await readdir(project)).toEqual([
+  expect((await readdir(project)).sort()).toEqual([
     "app.jsx",
     "beaket.ui.json",
     "package.json",
