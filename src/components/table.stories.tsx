@@ -55,6 +55,34 @@ export const MobileOverflow: Story = {
     );
   },
 };
+
+export const AccessibleScrollName: Story = {
+  render: () => (
+    <>
+      <h2 id="invoice-heading">Invoices</h2>
+      <Table aria-labelledby="invoice-heading">
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>INV001</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
+      <Table aria-labelledby="invoice-heading" scrollLabel="More invoices">
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>INV002</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
+    </>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getAllByRole("table", { name: "Invoices" })).toHaveLength(2);
+    await expect(canvas.getByRole("region", { name: "Invoices", exact: true })).toBeVisible();
+    await expect(canvas.getByRole("region", { name: "More invoices" })).toBeVisible();
+  },
+};
 type Story = StoryObj<typeof meta>;
 
 // Sample data

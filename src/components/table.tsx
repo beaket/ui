@@ -16,6 +16,7 @@ function TableRoot({ className, shadow, scrollLabel, ...props }: TableProps) {
       data-slot="table-scroll"
       role="region"
       aria-label={scrollLabel ?? props["aria-label"] ?? "Table"}
+      aria-labelledby={scrollLabel === undefined ? props["aria-labelledby"] : undefined}
       // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users need to focus this region to scroll wide tables.
       tabIndex={0}
       className={cn(
