@@ -38,8 +38,8 @@ export const FilterPanel: StoryObj = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     for (const control of [canvas.getByRole("checkbox"), ...canvas.getAllByRole("radio")]) {
-      await expect(control.getBoundingClientRect().height).toBe(20);
-      await expect(control.getBoundingClientRect().width).toBe(20);
+      await expect(control.getBoundingClientRect().height).toBe(24);
+      await expect(control.getBoundingClientRect().width).toBe(24);
     }
     const switches = canvas.getAllByRole("switch");
     for (const [index, control] of switches.entries()) {
@@ -64,7 +64,9 @@ export const FilterPanel: StoryObj = {
       await expect(parseFloat(hit.height)).toBeGreaterThanOrEqual(44);
       const box = control.getBoundingClientRect();
       // Confirm the expanded top edge participates in real browser hit testing.
-      await expect(document.elementFromPoint(box.x + box.width / 2, box.y - 11)).toBe(control);
+      await expect(
+        document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2 - 21),
+      ).toBe(control);
     }
   },
 };
