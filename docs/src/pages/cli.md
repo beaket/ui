@@ -101,3 +101,11 @@ Changed tokens prompt for confirmation (default: No). `-o` / `--overwrite` skips
 the prompt; replacements save a numbered backup of the stylesheet. Declining a
 theme switch preserves both the configuration and CSS. Overrides outside the
 managed markers survive a sync.
+
+`theme --diff` previews managed-token changes; `theme --dry-run` previews the
+operation. Neither writes CSS, configuration or backups, even with `--overwrite`.
+The managed block has a `DO NOT EDIT` header and a stored `themeHash` in
+`beaket.ui.json`; a mismatch warns that it was hand-edited. Put custom values
+in the override stub outside the markers, retaining its selectors for light,
+system-dark and forced-dark modes. See [Themes](/ui/themes) for the `data-theme`
+contract, selector specificity and reduced-motion behavior.

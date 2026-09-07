@@ -41,6 +41,8 @@ program
 program
   .command("theme")
   .description("Sync theme CSS tokens to your project")
+  .option("--diff", "Preview token changes without writing files")
+  .option("--dry-run", "Preview the theme operation without writing files")
   .option("-o, --overwrite", "Replace theme tokens without prompting (saves a backup)")
   .option("--theme <preset>", "Switch theme: solace, porcelain, tobacco, marigold, or eucalyptus")
   .action(theme);

@@ -1,11 +1,13 @@
 import { styleText } from "node:util";
-import { getConfig, writeConfig } from "../utils/config.ts";
+import { getConfig } from "../utils/config.ts";
 import { syncTheme } from "../utils/theme.ts";
 import { THEME_CSS, VALID_THEMES } from "../utils/themes.ts";
 
 interface ThemeOptions {
   theme?: string;
   overwrite?: boolean;
+  diff?: boolean;
+  dryRun?: boolean;
 }
 
 export async function theme(options: ThemeOptions) {
@@ -30,11 +32,10 @@ export async function theme(options: ThemeOptions) {
     config.theme = options.theme;
   }
 
-  const synced = await syncTheme(config, THEME_CSS, { overwrite: options.overwrite });
+  const synced = await syncTheme(config, THEME_CSS, options);
 
   // Persist theme change to config only after successful sync
   if (options.theme && synced) {
-    await writeConfig(config);
     console.log(styleText("green", "✔"), `Switched to ${options.theme} theme.`);
   }
 

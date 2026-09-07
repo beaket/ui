@@ -3,8 +3,8 @@ import { readdir, readFile, writeFile } from "node:fs/promises";
 import { styleText } from "node:util";
 import path from "path";
 import prompts from "prompts";
-import { getConfig, writeConfig, type BeaketConfig } from "../utils/config.ts";
-import { replaceThemeInCss } from "../utils/theme.ts";
+import { contentHash, getConfig, writeConfig, type BeaketConfig } from "../utils/config.ts";
+import { extractThemeBlock, replaceThemeInCss } from "../utils/theme.ts";
 import { THEME_CSS, VALID_THEMES } from "../utils/themes.ts";
 
 interface TsConfig {
@@ -345,6 +345,8 @@ export async function init(options: InitOptions) {
       ) {
         const { css } = replaceThemeInCss(cssContent, selectedCss);
         await writeFile(cssPath, css);
+        config.themeHash = contentHash(extractThemeBlock(css)!);
+        await writeConfig(config);
         console.log(styleText("green", "✔"), `Added CSS variables to ${response.css}`);
         console.log(styleText("green", "✔"), `Using ${response.theme} theme`);
       } else {

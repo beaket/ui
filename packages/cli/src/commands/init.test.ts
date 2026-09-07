@@ -1,8 +1,10 @@
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { detectAliasPath, detectCssPath } from "./init.ts";
+
+vi.mock("../utils/themes.ts", () => ({ THEME_CSS: {}, VALID_THEMES: [] }));
 
 const temporaryDirectories: string[] = [];
 

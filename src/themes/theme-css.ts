@@ -61,3 +61,13 @@ export function paletteVariants(css: string): {
     dark: darkMatch ? declarations(darkMatch[1]) : null,
   };
 }
+
+/** Consumer CSS: no attribute follows the OS; light/dark explicitly override it. */
+export function threeStatePalette(css: string): string {
+  const { light, dark } = paletteVariants(css);
+  if (!light.size || !dark?.size) throw new Error("Theme needs light and dark palettes");
+  const block = (values: Map<string, string>, scheme: string) =>
+    `color-scheme: ${scheme};\n${[...values].map(([name, value]) => `  ${name}: ${value};`).join("\n")}`;
+  const darkBlock = block(dark, "dark");
+  return `:root {\n  ${block(light, "light")}\n}\n\n@media (prefers-color-scheme: dark) {\n  :root:not([data-theme="light"]) {\n  ${darkBlock}\n  }\n}\n\n:root[data-theme="dark"] {\n  ${darkBlock}\n}\n`;
+}

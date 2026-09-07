@@ -4,6 +4,7 @@ import CSS_MARIGOLD from "../../../../src/themes/marigold.css";
 import CSS_PORCELAIN from "../../../../src/themes/porcelain.css";
 import CSS_SEMANTIC from "../../../../src/themes/semantic.css";
 import CSS_SOLACE from "../../../../src/themes/solace.css";
+import { threeStatePalette } from "../../../../src/themes/theme-css.ts";
 import CSS_TOBACCO from "../../../../src/themes/tobacco.css";
 
 // The foundation and semantic layers are authored once; each injected theme
@@ -11,7 +12,7 @@ import CSS_TOBACCO from "../../../../src/themes/tobacco.css";
 // self-sufficient. 27 palette values feed the semantic layer; tone 8–10 are
 // reserved for neutral-ramp compatibility and future deep-ink roles.
 const withFoundation = (palette: string): string =>
-  `${CSS_FOUNDATION}\n${CSS_SEMANTIC}\n${palette}`;
+  `${CSS_FOUNDATION}\n${CSS_SEMANTIC}\n${threeStatePalette(palette)}`;
 
 export const THEME_CSS: Record<string, string> = {
   solace: withFoundation(CSS_SOLACE),

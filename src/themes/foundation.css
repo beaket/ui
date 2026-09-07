@@ -1,6 +1,7 @@
 /*
  * Beaket UI Design System — Foundation tokens
- * Shared type, spacing, border, and radius values used by components. This
+ * Shared type, border, and radius values used by components. Spacing uses
+ * Tailwind's default 4px utility scale. This
  * layer is theme-independent and is installed with the semantic palette.
  */
 
@@ -33,20 +34,22 @@
   --font-semibold: 600;
   --font-bold: 700;
 
-  /* 7px base unit spacing scale */
-  --space-0: 0;
-  --space-1: 0.175rem; /* 2.8px - micro */
-  --space-2: 0.35rem; /* 5.6px - tight */
-  --space-3: 0.4375rem; /* 7px - base */
-  --space-4: 0.7rem; /* 11.2px - comfortable */
-  --space-5: 0.875rem; /* 14px - standard */
-  --space-6: 1.75rem; /* 28px - large */
-  --space-7: 2.625rem; /* 42px - section */
-  --space-8: 3.5rem; /* 56px - page */
-
   /* Borders and radii */
   --border-width-thin: 1px;
   --border-width-medium: 2px;
   --radius-none: 0;
   --radius-full: 9999px; /* Used by Radio */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
 }

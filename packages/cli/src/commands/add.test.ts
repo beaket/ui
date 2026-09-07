@@ -6,6 +6,8 @@ import { expect, it, vi } from "vitest";
 import { contentHash } from "../utils/config.ts";
 import { add } from "./add.ts";
 
+vi.mock("../utils/themes.ts", () => ({ THEME_CSS: {} }));
+
 it("records successful and unchanged installs but preserves the baseline of skipped edits", async () => {
   const directory = await mkdtemp(path.join(os.tmpdir(), "beaket-install-"));
   vi.spyOn(process, "cwd").mockReturnValue(directory);

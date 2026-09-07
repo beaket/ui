@@ -44,13 +44,28 @@ npx @beaket/ui theme --theme tobacco`} lang="bash" />
 
 <h3>How it works</h3>
 
-<p>The CSS written by the CLI contains both light and dark values. Dark mode activates via <code>@media (prefers-color-scheme: dark)</code>, following the user's OS setting. The semantic layer never changes — shadows and knockouts auto-flip through token references.</p>
+<p>The CSS written by the CLI contains both light and dark values. With no <code>data-theme</code> attribute on <code>&lt;html&gt;</code>, <code>@media (prefers-color-scheme: dark)</code> follows the OS. Set <code>data-theme="light"</code> or <code>data-theme="dark"</code> to force a scheme; remove the attribute for system mode. Your app owns persistence and applying the attribute before first paint, for example through a cookie read by your server layout.</p>
+
+<CodeBlock code={`document.documentElement.dataset.theme = "dark";
+document.documentElement.dataset.theme = "light";
+delete document.documentElement.dataset.theme; // system`} lang="js" />
+
+<h2>Customize safely</h2>
+
+<p>The marked block is managed: <code>theme</code> regenerates it. Put brand overrides in the generated stub after <code>beaket:theme:end</code>. Keep its explicit light, system-dark and forced-dark selectors: plain <code>:root</code> has lower specificity than the generated dark selectors. The stub is emitted once and preserved on later syncs.</p>
+
+<CodeBlock code={`npx @beaket/ui theme --theme tobacco --diff
+npx @beaket/ui theme --theme tobacco --dry-run
+# Review, then apply (confirmation defaults to No)
+npx @beaket/ui theme --theme tobacco`} lang="bash" />
+
+<p>Both preview flags leave CSS, config and backups untouched. A stored managed-block hash detects local edits; replacement saves a numbered backup. <code>--overwrite</code> explicitly skips confirmation. Generated CSS also honors <code>prefers-reduced-motion</code>, shortening animations and transitions, including pseudo-elements. Spacing uses Tailwind's existing 4px utility scale, not a separate custom scale.</p>
 
 <h2>Docs preview controls</h2>
 
 <p>The theme picker in this documentation site is a local preview implementation, not an <code>@beaket/ui</code> CSS API. It reads <code>theme</code> from the URL and <code>beaket-theme</code> / <code>beaket-color-scheme</code> from this site's <code>localStorage</code>, then injects the generated token values onto the document before paint. Those keys affect this documentation site only; importing a package palette does not read them.</p>
 
-<p>For consumer-controlled color schemes, own that CSS in your application. The package currently ships OS-driven <code>prefers-color-scheme</code> behavior only; it does not provide a class, data attribute, or <code>localStorage</code> toggle contract.</p>
+<p>The consumer contract is the root <code>data-theme</code> attribute in CLI-generated CSS, not this site's storage keys. Raw source palettes remain the light/dark authoring inputs.</p>
 
 </Layout>
 
