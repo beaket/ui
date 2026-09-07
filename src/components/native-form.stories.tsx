@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, userEvent, waitFor, within } from "storybook/test";
+import { expect, screen, userEvent, waitFor, within } from "storybook/test";
 import { Checkbox } from "./checkbox";
 import { RadioGroup } from "./radio";
 import { Select } from "./select";
@@ -43,8 +43,8 @@ export const FormDataContract: StoryObj = {
       alerts: "yes",
       account: "personal",
     });
-    await userEvent.click(canvas.getByRole("combobox", { name: "Category" }));
-    await userEvent.click(await within(document.body).findByRole("option", { name: "Travel" }));
+    await userEvent.click(screen.getByRole("combobox", { name: "Category" }));
+    await userEvent.click(await screen.findByRole("option", { name: "Travel" }));
     await userEvent.click(canvas.getByRole("checkbox", { name: "Keep receipts" }));
     await userEvent.click(canvas.getByRole("switch", { name: "Enable alerts" }));
     await userEvent.click(canvas.getByRole("radio", { name: "Business" }));
