@@ -79,7 +79,7 @@ export const AccessibleScrollName: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getAllByRole("table", { name: "Invoices" })).toHaveLength(2);
-    await expect(canvas.getByRole("region", { name: "Invoices", exact: true })).toBeVisible();
+    await expect(canvas.getByRole("region", { name: "Invoices" })).toBeVisible();
     await expect(canvas.getByRole("region", { name: "More invoices" })).toBeVisible();
   },
 };
