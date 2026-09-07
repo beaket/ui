@@ -25,6 +25,27 @@ Creates `beaket.ui.json` with the component directory, CSS file, and selected th
 It also writes the complete design-system foundation into the CSS file: type,
 spacing, borders, radii, semantic tokens, and the selected palette.
 
+Before writing, `init` checks installed Tailwind v4, the selected CSS import,
+Tailwind's Vite/PostCSS plugin, and whether Vite's resolved aliases match the
+detected TypeScript source alias. Missing or unverified setup ends with
+**Initialized with setup warnings**, not a ready message. Warnings do not prevent
+copying components: their internal imports are relative. Next.js uses TypeScript
+paths natively; other bundlers need a manual check.
+
+If TypeScript paths exist but Vite's alias is missing, interactive `init` offers
+to enable native `resolve.tsconfigPaths` in Vite 8+. It edits only literal
+`export default { ... }` / `defineConfig({ ... })` configurations after explicit
+confirmation, and saves a numbered backup first. Dynamic configs, conflicting
+aliases, and older Vite versions get manual instructions. `--yes` never rewrites
+toolchain configuration. Missing TypeScript paths also require a manual edit;
+existing compiler options remain untouched.
+
+Plugin detection recognizes resolved Vite plugins and common literal PostCSS
+configurations (ESM default object/variable or CommonJS object). Dynamic PostCSS
+configuration may report an unverified warning. These checks do not replace
+running your application's build. See [Installation](/ui/installation) for both
+Tailwind plugin options.
+
 | Option           | Description                                                           |
 | ---------------- | --------------------------------------------------------------------- |
 | `-y`, `--yes`    | Skip prompts, use detected defaults and the solace theme              |
