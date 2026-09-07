@@ -15,6 +15,7 @@ const meta: Meta<typeof Button> = {
       control: "select",
       options: [
         "primary",
+        "danger",
         "destructive",
         "outline",
         "secondary",

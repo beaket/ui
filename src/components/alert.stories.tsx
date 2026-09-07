@@ -9,7 +9,17 @@ const meta: Meta<typeof Alert> = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["note", "tip", "important", "warning", "caution"],
+      options: [
+        "info",
+        "success",
+        "accent",
+        "warning",
+        "danger",
+        "note",
+        "tip",
+        "important",
+        "caution",
+      ],
       description: "Visual style variant with associated icon and color",
     },
     title: {
