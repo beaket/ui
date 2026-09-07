@@ -30,16 +30,21 @@ claim WCAG certification or complete WCAG conformance.
 
 ## Exceptions
 
+Select and DropdownMenu no longer suppress `aria-hidden-focus`. The browser
+gate also scans their opened overlays against the full document in light and
+dark schemes, including 23 background controls and a nested submenu. It checks
+repeat open/close cycles, focus restoration, and preservation of existing inert
+regions. See `tests/overlays.a11y.spec.ts`; its axe attachments retain incomplete
+results as well as violations.
+
 Exceptions are temporary, rule-specific, and recorded in this table before
 they are merged. Every entry must name the exact rule and affected story or
 flow, an owner, an expiry date, and an issue that removes it. Broad DOM
 exclusions, tag-wide suppressions, and an open-ended baseline are prohibited.
 
-| Rule and scope                                                                                                           | Reason                                                                                                                                                                        | Owner     | Expires    | Removal issue |
-| ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- | ------------- |
-| `aria-hidden-focus` in `Select/InteractionTest`                                                                          | The current portal interaction test temporarily disables this rule while its focus contract is specified.                                                                     | `@jihnma` | 2026-10-02 | #820          |
-| `aria-hidden-focus` in `Select/StatePrecedenceTest`, `DropdownMenu/TriggerOpenState`, and `DropdownMenu/InteractionTest` | Radix portals hide Storybook's focused canvas root while their focus contract is specified.                                                                                   | `@jihnma` | 2026-10-02 | #820          |
-| `nested-interactive` in `Overview/AllComponents`                                                                         | `DataTable`'s `onRowClick` makes each row a `role="button"` around the row's own checkbox. The defect is in that prop's markup; this page is only the first scan to reach it. | `@jihnma` | 2026-12-05 | #903          |
+| Rule and scope                                   | Reason                                                                                                                                                                        | Owner     | Expires    | Removal issue |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- | ------------- |
+| `nested-interactive` in `Overview/AllComponents` | `DataTable`'s `onRowClick` makes each row a `role="button"` around the row's own checkbox. The defect is in that prop's markup; this page is only the first scan to reach it. | `@jihnma` | 2026-12-05 | #903          |
 
 When an exception expires, the scan fails until the rule is fixed or a new,
 reviewed exception replaces it. New exceptions must not weaken unrelated

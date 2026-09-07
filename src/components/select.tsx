@@ -1,6 +1,9 @@
+"use client";
+
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { type ClassValue, clsx } from "clsx";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
+import { useEffect, useImperativeHandle, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
@@ -59,13 +62,34 @@ function SelectTrigger({ className, size = "default", children, ...props }: Sele
 
 function SelectContent({
   className,
+  ref,
   children,
   position = "popper",
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Content>) {
+  const [content, setContent] = useState<HTMLDivElement | null>(null);
+  useImperativeHandle(ref, () => content!, [content]);
+  useEffect(() => {
+    if (!content) return;
+    // Radix hides the background from AT but leaves it focusable. Restore inert
+    // when Radix releases its own marker, not when one of several overlays closes.
+    for (const element of content.ownerDocument.querySelectorAll<HTMLElement>(
+      '[data-aria-hidden="true"][aria-hidden="true"]',
+    )) {
+      if (element.inert || element.contains(content)) continue;
+      element.inert = true;
+      const observer = new MutationObserver(() => {
+        if (element.hasAttribute("data-aria-hidden")) return;
+        element.inert = false;
+        observer.disconnect();
+      });
+      observer.observe(element, { attributes: true, attributeFilter: ["data-aria-hidden"] });
+    }
+  }, [content]);
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
+        ref={setContent}
         data-slot="select-content"
         className={cn(
           "shadow-offset-overlay border-border-strong bg-bg-overlay relative z-50 max-h-96 min-w-[8rem] overflow-hidden border",

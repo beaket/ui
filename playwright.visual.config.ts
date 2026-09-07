@@ -2,7 +2,7 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "tests",
-  testMatch: /.*\.visual\.spec\.ts/,
+  testMatch: /.*\.(visual|a11y)\.spec\.ts/,
   outputDir: "test-results/visual",
   snapshotPathTemplate: "{testDir}/__screenshots__/{testFilePath}/{arg}{ext}",
   webServer: [
