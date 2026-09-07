@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/navigation";
 import { NavigationProgress } from "@/components/ui/navigation-progress";
 import { Pagination, PaginationItem } from "@/components/ui/pagination";
+import { Progress, ProgressIndicator } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio";
 import {
   Select,
@@ -45,6 +46,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetClose, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Slider, SliderRange, SliderThumb, SliderTrack } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import {
   Table,
@@ -152,6 +154,15 @@ export default function Page() {
         </SheetClose>
       </Sheet>
       <Skeleton className="h-4 w-32" />
+      <Progress value={40} aria-label="Upload">
+        <ProgressIndicator />
+      </Progress>
+      <Slider defaultValue={[40]}>
+        <SliderTrack>
+          <SliderRange />
+        </SliderTrack>
+        <SliderThumb aria-label="Volume" />
+      </Slider>
       <Switch aria-label="Notifications" />
       <Table>
         <TableHeader>

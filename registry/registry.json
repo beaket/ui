@@ -353,6 +353,32 @@
       }
     },
     {
+      "name": "progress",
+      "description": "Determinate and indeterminate task progress",
+      "dependencies": ["@radix-ui/react-progress", "clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/progress.tsx"],
+      "docs": {
+        "title": "Progress",
+        "tagline": "Task completion with a neutral ink fill; not a measurement meter.",
+        "sections": ["AllStates"],
+        "previewStory": "Default"
+      }
+    },
+    {
+      "name": "slider",
+      "description": "Single-value and range slider with keyboard and touch input",
+      "dependencies": ["@radix-ui/react-slider", "clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/slider.tsx"],
+      "docs": {
+        "title": "Slider",
+        "tagline": "An adjustable instrument with keyboard, touch and multi-thumb support.",
+        "sections": ["AllStates"],
+        "previewStory": "Default"
+      }
+    },
+    {
       "name": "navigation-progress",
       "description": "Indeterminate progress bar for page navigation",
       "dependencies": ["clsx", "tailwind-merge"],
