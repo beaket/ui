@@ -81,7 +81,7 @@ if (!solaceDark) throw new Error("Solace does not expose a dark palette");
 describe("theme palette contract", () => {
   const semantic = declarations(semanticCss);
 
-  it("documents the shipped OS-driven CSS contract separately from the docs preview", () => {
+  it("documents consumer preferences separately from the docs preview", () => {
     // The shipped contract is that the CLI writes the tokens into the consumer's
     // own CSS file. It stopped being a pair of `@import` lines in 2e9f99a, when
     // `init` began installing the foundation inline — this assertion followed
@@ -89,6 +89,8 @@ describe("theme palette contract", () => {
     expect(themesPage).toContain("writes the foundation, semantic layer, and selected palette");
     expect(themesPage).toContain("npx @beaket/ui init --theme");
     expect(themesPage).toContain("@media (prefers-color-scheme: dark)");
+    expect(themesPage).toContain('data-theme="light"');
+    expect(themesPage).toContain('data-theme="dark"');
     expect(themesPage).toContain("Docs preview controls");
     expect(themesPage).toContain("local preview implementation");
     expect(themesPage).toContain("beaket-theme");

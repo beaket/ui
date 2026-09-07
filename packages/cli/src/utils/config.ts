@@ -17,6 +17,7 @@ export interface BeaketConfig {
   components: string;
   css?: string;
   theme?: string;
+  themeHash?: string;
   installed?: Record<string, Record<string, InstalledFile>>;
 }
 

@@ -79,7 +79,9 @@ describe("wrapThemeCss", () => {
     expect(result).toContain("--signal-info-alt-on: var(--tone-0)");
     expect(result).toContain("--text-sm: 0.8125rem");
     expect(result).toContain("--font-sans:");
-    expect(result).toContain("--space-8: 3.5rem");
+    expect(result).not.toContain("--space-");
+    expect(result).toContain("prefers-reduced-motion: reduce");
+    expect(result).toContain("DO NOT EDIT");
     expect(result).toContain("--radius-full: 9999px");
     expect(result).not.toContain("--surface-brand");
     expect(result).not.toContain("--shadow-size-active");
@@ -94,6 +96,8 @@ describe("replaceThemeInCss", () => {
 
     expect(replaced).toBe(true);
     expect(css).toContain("--color-ink: #0a0d12");
+    expect(css.indexOf("beaket:overrides")).toBeGreaterThan(css.indexOf(THEME_END));
+    expect(replaceThemeInCss(css, updatedTheme).css.match(/beaket:overrides/g)).toHaveLength(1);
     expect(css).not.toContain("--color-ink: #080b10");
     expect(css).toContain('@import "tailwindcss"');
     expect(css).toContain(THEME_START);

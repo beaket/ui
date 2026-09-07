@@ -12,7 +12,8 @@ export interface NavigationProgressProps extends React.ComponentProps<"div"> {
  * Indeterminate progress bar for page navigation.
  * Framework-agnostic — receives loading state via props.
  *
- * Requires the following CSS in your stylesheet:
+ * `npx @beaket/ui init` installs the animation CSS below automatically.
+ * Only add it manually when copying this component without running init:
  * ```css
  * @theme {
  *   --animate-navigation-progress: navigation-progress 1s ease-in-out infinite;
