@@ -8,7 +8,15 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
+export interface PaginationLabels {
+  navigation?: string;
+  previous?: string;
+  next?: string;
+}
+
 export interface PaginationBaseProps {
+  /** Accessible names; omitted labels retain their English defaults. */
+  labels?: PaginationLabels;
   /**
    * Current page number (1-indexed)
    */
@@ -86,6 +94,7 @@ export interface PaginationComposedProps extends PaginationBaseProps {
 export type PaginationProps = PaginationLinkProps | PaginationButtonProps | PaginationComposedProps;
 
 interface PaginationContextValue {
+  labels?: PaginationLabels;
   page: number;
   totalPages: number;
   mode: "button" | "link";
@@ -176,7 +185,7 @@ function getPageNumbers(
  * with `Pagination.Previous`, `.Item`, `.Ellipsis` and `.Next`.
  */
 function PaginationRoot(props: PaginationProps) {
-  const { page, totalPages, className, maxPageButtons = 5 } = props;
+  const { page, totalPages, className, maxPageButtons = 5, labels } = props;
   const { children, buildPageUrl, onPageChange } = props;
   const mode: "button" | "link" =
     props.mode === "button" || (!buildPageUrl && !!onPageChange) ? "button" : "link";
@@ -184,8 +193,8 @@ function PaginationRoot(props: PaginationProps) {
   const context = useMemo(
     // Memoized by hand: React Compiler runs in the consumer's build, which we
     // do not control (F3).
-    () => ({ page, totalPages, mode, buildPageUrl, onPageChange }),
-    [page, totalPages, mode, buildPageUrl, onPageChange],
+    () => ({ page, totalPages, mode, buildPageUrl, onPageChange, labels }),
+    [page, totalPages, mode, buildPageUrl, onPageChange, labels],
   );
 
   // The sugar layer lays out a whole strip, so an empty one is nothing. A
@@ -197,7 +206,7 @@ function PaginationRoot(props: PaginationProps) {
       <nav
         data-slot="pagination"
         className={cn("flex items-center justify-center", className)}
-        aria-label="Pagination"
+        aria-label={labels?.navigation ?? "Pagination"}
       >
         <div data-slot="pagination-strip" className="flex items-center">
           {children ?? (
@@ -374,7 +383,7 @@ function PaginationPrevious(props: PaginationCellProps) {
     <PaginationStep
       context={context}
       slot="pagination-prev"
-      label="Previous page"
+      label={context.labels?.previous ?? "Previous page"}
       icon={<ChevronLeft className="h-4 w-4" />}
       enabled={context.page > 1}
       targetPage={context.page - 1}
@@ -389,7 +398,7 @@ function PaginationNext(props: PaginationCellProps) {
     <PaginationStep
       context={context}
       slot="pagination-next"
-      label="Next page"
+      label={context.labels?.next ?? "Next page"}
       icon={<ChevronRight className="h-4 w-4" />}
       enabled={context.page < context.totalPages}
       targetPage={context.page + 1}

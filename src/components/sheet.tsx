@@ -11,7 +11,11 @@ const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 // Module-local type for bundlers that replace NODE_ENV without Node globals.
 declare const process: { env: { NODE_ENV?: string } };
 
-export interface SheetProps {
+export interface SheetProps extends React.ComponentProps<typeof DialogPrimitive.Content> {
+  /** Width preset for left/right sheets; className can override it. Defaults to md. */
+  size?: "sm" | "md" | "lg" | "xl" | "full";
+  /** Accessible name of the built-in close button. */
+  closeLabel?: string;
   /**
    * When true, prevents closing the sheet via ESC key or clicking outside.
    */
@@ -57,8 +61,8 @@ export interface SheetProps {
 }
 
 const sidePositions = {
-  right: "inset-y-0 right-0 h-full w-3/4 sm:max-w-md",
-  left: "inset-y-0 left-0 h-full w-3/4 sm:max-w-md",
+  right: "inset-y-0 right-0 h-full w-3/4",
+  left: "inset-y-0 left-0 h-full w-3/4",
   top: "inset-x-0 top-0 w-full",
   bottom: "inset-x-0 bottom-0 w-full",
 };
@@ -68,6 +72,14 @@ const sidePositionsFullScreen = {
   left: "inset-y-0 left-0 h-full w-full",
   top: "inset-x-0 top-0 w-full",
   bottom: "inset-x-0 bottom-0 w-full",
+};
+
+const sheetSizes = {
+  sm: "sm:max-w-sm",
+  md: "sm:max-w-md",
+  lg: "sm:max-w-lg",
+  xl: "sm:max-w-xl",
+  full: "w-full sm:max-w-none",
 };
 
 const sideAnimations = {
@@ -100,6 +112,12 @@ function SheetRoot({
   onOpenChange,
   side = "right",
   fullScreen = false,
+  size = "md",
+  className,
+  closeLabel = "Close sheet",
+  onInteractOutside,
+  onEscapeKeyDown,
+  ...contentProps
 }: SheetProps) {
   // Radix's Root already implements controlled/uncontrolled, so `open` and
   // `onOpenChange` go straight to it. The only thing left of the hand-rolled
@@ -137,21 +155,30 @@ function SheetRoot({
           className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 bg-bg-emphasis/50 fixed inset-0 z-40"
         />
         <DialogPrimitive.Content
+          {...contentProps}
           data-slot="sheet-content"
           className={cn(
             "shadow-offset-overlay border-border bg-bg-overlay fixed z-50 gap-4 border p-4",
             fullScreen ? sidePositionsFullScreen[side] : sidePositions[side],
             sideAnimations[side],
+            !fullScreen && (side === "left" || side === "right") && sheetSizes[size],
+            className,
           )}
-          onInteractOutside={preventClose ? (e) => e.preventDefault() : undefined}
-          onEscapeKeyDown={preventClose ? (e) => e.preventDefault() : undefined}
+          onInteractOutside={(event) => {
+            onInteractOutside?.(event);
+            if (preventClose) event.preventDefault();
+          }}
+          onEscapeKeyDown={(event) => {
+            onEscapeKeyDown?.(event);
+            if (preventClose) event.preventDefault();
+          }}
         >
           {content}
           {!hideCloseButton && (
             <DialogPrimitive.Close
               data-slot="sheet-close"
               className="text-fg-muted hover:text-fg focus-visible:outline-border-focus absolute top-4 right-4 transition-colors before:absolute before:inset-[-14px] before:content-[''] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none"
-              aria-label="Close sheet"
+              aria-label={closeLabel}
             >
               <X className="size-4" aria-hidden="true" />
             </DialogPrimitive.Close>

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, within } from "storybook/test";
 import { Table } from "./table";
 
 const meta: Meta<typeof Table> = {
@@ -16,6 +17,44 @@ const meta: Meta<typeof Table> = {
 };
 
 export default meta;
+
+export const MobileOverflow: Story = {
+  render: () => (
+    <div style={{ width: 390, maxWidth: "100%" }}>
+      <Table aria-label="Wide mobile table">
+        <Table.Header>
+          <Table.Row>
+            <Table.Head>Invoice reference</Table.Head>
+            <Table.Head>Customer email address</Table.Head>
+            <Table.Head>Payment method</Table.Head>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>INV-2026-0000001</Table.Cell>
+            <Table.Cell>customer@example.com</Table.Cell>
+            <Table.Cell>International bank transfer</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const table = within(canvasElement).getByRole("table");
+    const scroll = table.parentElement!;
+    await expect(scroll).toHaveAttribute("data-slot", "table-scroll");
+    await expect(scroll.clientWidth).toBeLessThanOrEqual(390);
+    await expect(scroll.scrollWidth).toBeGreaterThan(scroll.clientWidth);
+    scroll.focus();
+    await expect(scroll).toHaveFocus();
+    scroll.scrollLeft = 100;
+    await expect(scroll.scrollLeft).toBeGreaterThan(0);
+    const document = canvasElement.ownerDocument;
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
+      document.documentElement.clientWidth,
+    );
+  },
+};
 type Story = StoryObj<typeof meta>;
 
 // Sample data

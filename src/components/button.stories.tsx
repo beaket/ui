@@ -38,6 +38,15 @@ const meta: Meta<typeof Button> = {
 };
 
 export default meta;
+
+export const LocalizedLoading: Story = {
+  args: { loading: true, loadingLabel: "Chargement", children: "Enregistrer" },
+  play: async ({ canvasElement }) => {
+    await expect(
+      within(canvasElement).getByRole("status", { name: "Chargement" }),
+    ).toBeInTheDocument();
+  },
+};
 type Story = StoryObj<typeof Button>;
 
 // The interactive playground — pick any variant/size/state via Controls.

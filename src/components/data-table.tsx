@@ -41,7 +41,7 @@ import {
 import { twMerge } from "tailwind-merge";
 import { Checkbox } from "./checkbox";
 import { Input } from "./input";
-import { Pagination } from "./pagination";
+import { Pagination, type PaginationLabels } from "./pagination";
 import { Table } from "./table";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
@@ -75,7 +75,22 @@ export type Cell<TData extends RowData, TValue extends CellData = unknown> = Tan
 
 export type Row<TData extends RowData> = TanStackRow<typeof dataTableFeatures, TData>;
 
+export interface DataTableLabels {
+  selectAll?: string;
+  selectRow?: string;
+  search?: string;
+  pagination?: PaginationLabels;
+  summary?: (counts: {
+    from: number;
+    to: number;
+    total: number;
+    selected: number;
+  }) => React.ReactNode;
+}
+
 export interface DataTableProps<TData extends RowData> {
+  /** Accessible names and pagination summary; omitted labels retain English defaults. */
+  labels?: DataTableLabels;
   /** Column definitions using TanStack Table's ColumnDef — see https://tanstack.com/table/latest/docs/guide/column-defs */
   columns: ColumnDef<TData>[];
   /** Array of data to display */
@@ -131,6 +146,7 @@ export interface DataTableProps<TData extends RowData> {
 export type DataTableInstance<TData extends RowData> = ReactTable<typeof dataTableFeatures, TData>;
 
 interface DataTableContextValue<TData extends RowData = RowData> {
+  labels?: DataTableLabels;
   table: DataTableInstance<TData>;
   compact: boolean;
   selectable: boolean;
@@ -169,7 +185,7 @@ function DataTableToolbar({
   searchPlaceholder = "Search...",
   ...props
 }: DataTableToolbarProps) {
-  const { globalFilter, setGlobalFilter } = useDataTableContext("DataTable.Toolbar");
+  const { globalFilter, setGlobalFilter, labels } = useDataTableContext("DataTable.Toolbar");
 
   return (
     <div
@@ -189,7 +205,7 @@ function DataTableToolbar({
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
             className="pl-9"
-            aria-label="Search"
+            aria-label={labels?.search ?? "Search"}
           />
         </div>
       )}
@@ -212,7 +228,7 @@ function DataTableTable({ className, children, ...props }: React.ComponentProps<
 }
 
 function DataTableHead({ className, ...props }: React.ComponentProps<"thead">) {
-  const { table, selectable } = useDataTableContext("DataTable.Head");
+  const { table, selectable, labels } = useDataTableContext("DataTable.Head");
 
   return (
     <Table.Header data-slot="data-table-header" className={className} {...props}>
@@ -228,7 +244,7 @@ function DataTableHead({ className, ...props }: React.ComponentProps<"thead">) {
                     "indeterminate")
                 }
                 onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
+                aria-label={labels?.selectAll ?? "Select all"}
               />
             </Table.Head>
           )}
@@ -311,7 +327,7 @@ function DataTableRow<TData extends RowData>({
   children,
   ...props
 }: DataTableRowProps<TData>) {
-  const { compact, selectable } = useDataTableContext<TData>("DataTable.Row");
+  const { compact, selectable, labels } = useDataTableContext<TData>("DataTable.Row");
 
   return (
     <Table.Row
@@ -331,7 +347,7 @@ function DataTableRow<TData extends RowData>({
               <Checkbox
                 checked={row.getIsSelected()}
                 onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
+                aria-label={labels?.selectRow ?? "Select row"}
               />
             </Table.Cell>
           )}
@@ -382,10 +398,12 @@ function DataTableEmpty({
 }
 
 function DataTablePagination({ className, ...props }: React.ComponentProps<"div">) {
-  const { table, selectable } = useDataTableContext("DataTable.Pagination");
+  const { table, selectable, labels } = useDataTableContext("DataTable.Pagination");
   const filteredCount = table.getFilteredRowModel().rows.length;
   const { pageIndex, pageSize } = table.state.pagination;
   const selectedCount = table.getFilteredSelectedRowModel().rows.length;
+  const from = filteredCount === 0 ? 0 : pageIndex * pageSize + 1;
+  const to = Math.min((pageIndex + 1) * pageSize, filteredCount);
 
   return (
     <div
@@ -394,12 +412,23 @@ function DataTablePagination({ className, ...props }: React.ComponentProps<"div"
       {...props}
     >
       <div data-slot="data-table-summary" className="text-fg-muted text-sm">
-        Showing {filteredCount === 0 ? 0 : pageIndex * pageSize + 1} to{" "}
-        {Math.min((pageIndex + 1) * pageSize, filteredCount)} of {filteredCount} results
-        {selectable && selectedCount > 0 && ` (${selectedCount} selected)`}
+        {labels?.summary ? (
+          labels.summary({
+            from,
+            to,
+            total: filteredCount,
+            selected: selectable ? selectedCount : 0,
+          })
+        ) : (
+          <>
+            Showing {from} to {to} of {filteredCount} results
+            {selectable && selectedCount > 0 && ` (${selectedCount} selected)`}
+          </>
+        )}
       </div>
 
       <Pagination
+        labels={labels?.pagination}
         mode="button"
         page={pageIndex + 1}
         totalPages={table.getPageCount()}
@@ -420,6 +449,7 @@ function DataTablePagination({ className, ...props }: React.ComponentProps<"div"
  * `onRowMouseLeave` are then just props on your own `<DataTable.Row>`.
  */
 function DataTableRoot<TData extends RowData>({
+  labels,
   columns,
   data,
   searchable = false,
@@ -506,8 +536,9 @@ function DataTableRoot<TData extends RowData>({
       columnCount: columns.length + (selectable ? 1 : 0),
       globalFilter,
       setGlobalFilter,
+      labels,
     }),
-    [table, compact, selectable, columns.length, globalFilter],
+    [table, compact, selectable, columns.length, globalFilter, labels],
   );
 
   const rows = table.getRowModel().rows;

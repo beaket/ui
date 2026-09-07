@@ -76,6 +76,37 @@ const meta: Meta<typeof DataTable<User>> = {
 };
 
 export default meta;
+
+export const LocalizedLabels: Story = {
+  render: () => (
+    <DataTable
+      columns={[{ accessorKey: "name", header: "Nom" }]}
+      data={[{ name: "Alice" }, { name: "Bob" }]}
+      selectable
+      searchable
+      paginated
+      pageSize={1}
+      labels={{
+        selectAll: "Tout sélectionner",
+        selectRow: "Sélectionner la ligne",
+        search: "Rechercher",
+        pagination: { navigation: "Pages", previous: "Précédent", next: "Suivant" },
+        summary: ({ from, to, total, selected }) => `${from}–${to} sur ${total} (${selected})`,
+      }}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("searchbox", { name: "Rechercher" })).toBeInTheDocument();
+    await expect(canvas.getByRole("checkbox", { name: "Tout sélectionner" })).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole("checkbox", { name: "Sélectionner la ligne" }));
+    await expect(canvas.getByText("1–1 sur 2 (1)")).toBeInTheDocument();
+    await expect(canvas.getByRole("navigation", { name: "Pages" })).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole("button", { name: "Suivant" }));
+    await expect(canvas.getByText("2–2 sur 2 (1)")).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Précédent" })).toBeInTheDocument();
+  },
+};
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
