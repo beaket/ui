@@ -38,11 +38,9 @@ export const KeyboardAndRange: Story = {
     second.focus();
     await userEvent.keyboard("{End}");
     await expect(second).toHaveAttribute("aria-valuenow", "100");
-    const rect = second.getBoundingClientRect();
     const hit = getComputedStyle(second, "::before");
-    await expect(rect.height - parseFloat(hit.top) - parseFloat(hit.bottom)).toBeGreaterThanOrEqual(
-      44,
-    );
+    await expect(parseFloat(hit.width)).toBeGreaterThanOrEqual(44);
+    await expect(parseFloat(hit.height)).toBeGreaterThanOrEqual(44);
   },
 };
 export const OrientationAndForm: Story = {
