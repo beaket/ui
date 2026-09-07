@@ -151,6 +151,30 @@ export const WithSubmenus: Story = {
   ),
 };
 
+export const NonModalIsolation: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <>
+      <button>Background action</button>
+      <DropdownMenu modal={false}>
+        <DropdownMenu.Trigger>Non-modal menu</DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.Item>Profile</DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu>
+    </>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Non-modal menu" }));
+    await screen.findByRole("menu");
+    const background = canvas.getByRole("button", { name: "Background action" });
+    await expect(background.closest("[inert]")).toBeNull();
+    background.focus();
+    await expect(background).toHaveFocus();
+  },
+};
+
 function CheckboxItemsExample() {
   const [showStatusBar, setShowStatusBar] = useState(true);
   const [showActivityBar, setShowActivityBar] = useState(false);
@@ -307,9 +331,6 @@ export const AllStates = () => (
 // The trigger is neutral at rest and grows an accent edge while the menu is
 // open (still pressable, now the active owner). Compare the two states.
 export const TriggerOpenState: Story = {
-  parameters: {
-    a11y: { config: { rules: [{ id: "aria-hidden-focus", enabled: false }] } },
-  },
   render: () => (
     <div className="flex items-start gap-16">
       <DropdownMenu>
@@ -368,9 +389,6 @@ function InteractionExample() {
 
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    a11y: { config: { rules: [{ id: "aria-hidden-focus", enabled: false }] } },
-  },
   render: () => <InteractionExample />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

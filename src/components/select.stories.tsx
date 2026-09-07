@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, fn, userEvent, within } from "storybook/test";
+import { expect, fn, userEvent, waitFor, within } from "storybook/test";
+import { Dialog } from "./dialog";
 import { Label } from "./label";
 import { Select } from "./select";
 
@@ -62,6 +63,43 @@ export const WithGroups: Story = {
       </Select>
     </div>
   ),
+};
+
+export const NestedOverlayIsolation: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <Dialog trigger={<button>Open parent</button>}>
+      <Dialog.Header>
+        <Dialog.Title>Parent dialog</Dialog.Title>
+        <Dialog.Description>Choose a fruit inside this dialog.</Dialog.Description>
+      </Dialog.Header>
+      <Select>
+        <Select.Trigger aria-label="Nested fruit">
+          <Select.Value placeholder="Choose" />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Item value="apple">Apple</Select.Item>
+        </Select.Content>
+      </Select>
+    </Dialog>
+  ),
+  play: async ({ canvasElement }) => {
+    const parentTrigger = within(canvasElement).getByRole("button", { name: "Open parent" });
+    await userEvent.click(parentTrigger);
+    const body = within(document.body);
+    const trigger = await body.findByRole("combobox", { name: "Nested fruit" });
+    trigger.focus();
+    await userEvent.keyboard("{Enter}");
+    await body.findByRole("listbox");
+    await waitFor(() => expect(parentTrigger.closest("[inert]")).not.toBeNull());
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(trigger).toHaveFocus());
+    // Closing the inner overlay must not release the outer dialog's background.
+    await expect(parentTrigger.closest("[inert]")).not.toBeNull();
+    await userEvent.click(body.getByRole("button", { name: "Close dialog" }));
+    await waitFor(() => expect(parentTrigger).toHaveFocus());
+    await expect(parentTrigger.closest("[inert]")).toBeNull();
+  },
 };
 
 export const AllStates: Story = {
@@ -135,13 +173,6 @@ export const LongList: Story = {
 
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    a11y: {
-      config: {
-        rules: [{ id: "aria-hidden-focus", enabled: false }],
-      },
-    },
-  },
   args: {
     onValueChange: fn(),
   },
@@ -202,9 +233,6 @@ export const InteractionTest: Story = {
 // once because they describe different targets in different channels.
 export const StatePrecedenceTest: Story = {
   tags: ["!autodocs"],
-  parameters: {
-    a11y: { config: { rules: [{ id: "aria-hidden-focus", enabled: false }] } },
-  },
   render: () => (
     <div className="max-w-sm">
       <Select defaultValue="apple">

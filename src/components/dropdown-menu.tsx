@@ -1,6 +1,9 @@
+"use client";
+
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { type ClassValue, clsx } from "clsx";
 import { Check, ChevronRight, Circle } from "lucide-react";
+import { useEffect, useImperativeHandle, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
@@ -27,12 +30,33 @@ function DropdownMenuTrigger({
 
 function DropdownMenuContent({
   className,
+  ref,
   sideOffset = 4,
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {
+  const [content, setContent] = useState<HTMLDivElement | null>(null);
+  useImperativeHandle(ref, () => content!, [content]);
+  useEffect(() => {
+    if (!content) return;
+    // Radix hides the background from AT but leaves it focusable. Restore inert
+    // when Radix releases its own marker, not when one of several overlays closes.
+    for (const element of content.ownerDocument.querySelectorAll<HTMLElement>(
+      '[data-aria-hidden="true"][aria-hidden="true"]',
+    )) {
+      if (element.inert || element.contains(content)) continue;
+      element.inert = true;
+      const observer = new MutationObserver(() => {
+        if (element.hasAttribute("data-aria-hidden")) return;
+        element.inert = false;
+        observer.disconnect();
+      });
+      observer.observe(element, { attributes: true, attributeFilter: ["data-aria-hidden"] });
+    }
+  }, [content]);
   return (
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Content
+        ref={setContent}
         data-slot="dropdown-menu-content"
         sideOffset={sideOffset}
         className={cn(
