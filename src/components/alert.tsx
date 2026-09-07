@@ -36,8 +36,9 @@ const variantTitles = {
 } as const;
 
 export interface AlertProps extends Omit<React.ComponentProps<"div">, "title"> {
-  /** note | tip | important | warning | caution. Semantic variant that controls color and icon */
-  variant?: "note" | "tip" | "important" | "warning" | "caution";
+  /** Semantic roles: info, success, accent, warning, danger. GitHub callout names remain aliases. */
+  variant?:
+    "note" | "tip" | "important" | "warning" | "caution" | "info" | "success" | "accent" | "danger";
   /**
    * Title text for the alert. If not provided, displays the variant name capitalized.
    */
@@ -79,7 +80,17 @@ function hasParts(children: React.ReactNode): boolean {
   );
 }
 
-function AlertRoot({ className, variant = "note", title, children, ...props }: AlertProps) {
+function AlertRoot({ className, variant: role = "note", title, children, ...props }: AlertProps) {
+  const variant =
+    role === "info"
+      ? "note"
+      : role === "success"
+        ? "tip"
+        : role === "accent"
+          ? "important"
+          : role === "danger"
+            ? "caution"
+            : role;
   const Icon = variantIcons[variant];
   const composed = hasParts(children);
 

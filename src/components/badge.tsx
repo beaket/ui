@@ -4,8 +4,17 @@ import { twMerge } from "tailwind-merge";
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 export interface BadgeProps extends Omit<React.ComponentProps<"span">, "children"> {
-  /** default | secondary | success | error | info | outline | warning | code. Badge style variant */
-  variant?: "default" | "secondary" | "success" | "error" | "info" | "outline" | "warning" | "code";
+  /** Badge style. Prefer danger for the semantic role; error remains an alias. */
+  variant?:
+    | "default"
+    | "secondary"
+    | "success"
+    | "danger"
+    | "error"
+    | "info"
+    | "outline"
+    | "warning"
+    | "code";
   /** Visible label or content. A badge must not communicate its state through color alone. */
   children: React.ReactNode;
 }
@@ -14,7 +23,7 @@ export function Badge({ className, variant = "default", ...props }: BadgeProps) 
   return (
     <span
       data-slot="badge"
-      className={cn(badgeBase, variantClasses[variant], className)}
+      className={cn(badgeBase, variantClasses[variant === "danger" ? "error" : variant], className)}
       {...props}
     />
   );
