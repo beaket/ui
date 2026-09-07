@@ -18,6 +18,24 @@ const meta: Meta<typeof Badge> = {
 export default meta;
 type Story = StoryObj<typeof Badge>;
 
+export const DangerAlias: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <div className="flex gap-2">
+      <Badge variant="danger" data-testid="role">
+        Danger
+      </Badge>
+      <Badge variant="error" data-testid="legacy">
+        Legacy
+      </Badge>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByTestId("role").className).toBe(canvas.getByTestId("legacy").className);
+  },
+};
+
 // The interactive playground — pick any variant via Controls. Every variant is
 // shown together in the AllVariants composition below (also the docs preview).
 export const Default: Story = {

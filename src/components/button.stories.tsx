@@ -49,6 +49,24 @@ export const LocalizedLoading: Story = {
 };
 type Story = StoryObj<typeof Button>;
 
+export const DangerAlias: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <div className="flex gap-2">
+      <Button variant="danger" data-testid="role">
+        Danger
+      </Button>
+      <Button variant="destructive" data-testid="legacy">
+        Legacy
+      </Button>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByTestId("role").className).toBe(canvas.getByTestId("legacy").className);
+  },
+};
+
 // The interactive playground — pick any variant/size/state via Controls.
 // Per-variant/size/state examples live in the AllVariants/AllSizes/AllStates
 // compositions below (also what the docs site renders).

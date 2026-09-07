@@ -30,6 +30,39 @@ const meta: Meta<typeof Alert> = {
 export default meta;
 type Story = StoryObj<typeof Alert>;
 
+const aliases = [
+  ["danger", "caution"],
+  ["info", "note"],
+  ["success", "tip"],
+  ["accent", "important"],
+] as const;
+export const SemanticAliases: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <div className="space-y-4">
+      {aliases.map(([role, legacy]) => (
+        <div key={role}>
+          <Alert variant={role} data-testid={role}>
+            Same content
+          </Alert>
+          <Alert variant={legacy} data-testid={legacy}>
+            Same content
+          </Alert>
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    for (const [role, legacy] of aliases) {
+      const current = canvas.getByTestId(role);
+      const previous = canvas.getByTestId(legacy);
+      await expect(current.className).toBe(previous.className);
+      await expect(current.innerHTML).toBe(previous.innerHTML);
+    }
+  },
+};
+
 // The interactive playground — pick any variant and a custom title via Controls.
 // Every variant lives in AllVariants; custom titles and rich content in AllStates.
 export const Default: Story = {

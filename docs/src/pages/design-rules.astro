@@ -67,6 +67,24 @@ import { AccentStateDemo } from '../components/accent-state-demo';
 
 <h2>One pattern, everywhere</h2>
 
+<h3>Semantic variant names</h3>
+
+<p>Prefer <code>danger</code> for a destructive action or error state in Button, Badge and Alert. Existing names remain supported aliases with identical styling. Alert keeps its GitHub callout vocabulary, icons and default titles; use a custom title when the application needs different wording.</p>
+
+<table>
+  <thead><tr><th>Component</th><th>Canonical role</th><th>Existing alias</th></tr></thead>
+  <tbody>
+    <tr><td>Button</td><td><code>danger</code></td><td><code>destructive</code></td></tr>
+    <tr><td>Badge</td><td><code>danger</code></td><td><code>error</code></td></tr>
+    <tr><td>Alert</td><td><code>danger</code></td><td><code>caution</code></td></tr>
+    <tr><td>Alert</td><td><code>info</code></td><td><code>note</code></td></tr>
+    <tr><td>Alert</td><td><code>success</code></td><td><code>tip</code></td></tr>
+    <tr><td>Alert</td><td><code>accent</code></td><td><code>important</code></td></tr>
+  </tbody>
+</table>
+
+<p><code>warning</code> is already shared, as are <code>success</code> on Button and Badge and <code>info</code> on Badge. Aliases do not introduce new color styles: not every component exposes all six token roles, and Button's neutral <code>primary</code> is not an accent fill.</p>
+
 <p>Pressables share <code>outline-2 outline-border-focus outline-offset-2</code> for keyboard focus; writing fields use the cap-off edge. Disabled controls share <code>border-dashed border-border-muted bg-bg-disabled text-fg-disabled</code>. Preserve the channel and precedence when composing or customizing components.</p>
 
 <h2>Own it, keep it right</h2>

@@ -9,9 +9,17 @@ import { twMerge } from "tailwind-merge";
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 export interface ButtonProps extends React.ComponentProps<"button"> {
-  /** primary | secondary | destructive | outline | ghost | link | success | warning. Button style variant */
+  /** Button style. Prefer danger for the semantic role; destructive remains an alias. */
   variant?:
-    "primary" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "success" | "warning";
+    | "primary"
+    | "danger"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link"
+    | "success"
+    | "warning";
   /** sm | md | lg | icon. Button size */
   size?: "sm" | "md" | "lg" | "icon";
   /**
@@ -51,7 +59,10 @@ export function Button({
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size }), className)}
+      className={cn(
+        buttonVariants({ variant: variant === "danger" ? "destructive" : variant, size }),
+        className,
+      )}
       type={!asChild ? (type ?? "button") : undefined}
       disabled={!asChild ? disabled || isLoading : undefined}
       {...props}
