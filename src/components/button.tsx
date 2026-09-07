@@ -20,6 +20,8 @@ export interface ButtonProps extends React.ComponentProps<"button"> {
    * form's own pending state. Set it explicitly to override that either way.
    */
   loading?: boolean;
+  /** Accessible name of the loading spinner. Defaults to Loading. */
+  loadingLabel?: string;
   /** Merges props onto the immediate child element instead of rendering a button */
   asChild?: boolean;
 }
@@ -29,6 +31,7 @@ export function Button({
   variant,
   size = "md",
   loading,
+  loadingLabel = "Loading",
   disabled,
   children,
   asChild = false,
@@ -59,7 +62,7 @@ export function Button({
         <>
           {isLoading && (
             <span aria-live="polite">
-              <Spinner />
+              <Spinner label={loadingLabel} />
             </span>
           )}
           {children}
@@ -121,9 +124,9 @@ const buttonVariants = cva(
   },
 );
 
-function Spinner() {
+function Spinner({ label }: { label: string }) {
   return (
-    <svg className="animate-spin" viewBox="0 0 24 24" role="status" aria-label="Loading">
+    <svg className="animate-spin" viewBox="0 0 24 24" role="status" aria-label={label}>
       <circle
         cx="12"
         cy="12"

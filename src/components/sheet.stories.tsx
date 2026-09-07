@@ -30,6 +30,33 @@ const meta: Meta<typeof Sheet> = {
 };
 
 export default meta;
+
+export const ContentOverrides: Story = {
+  render: () => (
+    <Sheet
+      size="xl"
+      className="sm:max-w-3xl"
+      closeLabel="Fermer"
+      data-testid="custom-sheet"
+      onEscapeKeyDown={(event) => event.preventDefault()}
+      trigger={<Button>Open custom sheet</Button>}
+    >
+      <Sheet.Title>Custom sheet</Sheet.Title>
+      <Sheet.Description>Content props and labels stay in the app's control.</Sheet.Description>
+    </Sheet>
+  ),
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Open custom sheet" }));
+    const content = await screen.findByRole("dialog");
+    await expect(content).toHaveAttribute("data-testid", "custom-sheet");
+    await expect(content).toHaveClass("sm:max-w-3xl");
+    await expect(content).not.toHaveClass("sm:max-w-xl");
+    await userEvent.keyboard("{Escape}");
+    await expect(content).toBeInTheDocument();
+    await userEvent.click(within(content).getByRole("button", { name: "Fermer" }));
+    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  },
+};
 type Story = StoryObj<typeof Sheet>;
 
 export const Default: Story = {

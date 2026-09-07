@@ -6,19 +6,30 @@ const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 export interface TableProps extends React.ComponentProps<"table"> {
   /** Add offset shadow to the table */
   shadow?: boolean;
+  /** Accessible name of the keyboard-scrollable region. Defaults to the table label or Table. */
+  scrollLabel?: string;
 }
 
-function TableRoot({ className, shadow, ...props }: TableProps) {
+function TableRoot({ className, shadow, scrollLabel, ...props }: TableProps) {
   return (
-    <table
-      data-slot="table"
+    <div
+      data-slot="table-scroll"
+      role="region"
+      aria-label={scrollLabel ?? props["aria-label"] ?? "Table"}
+      aria-labelledby={scrollLabel === undefined ? props["aria-labelledby"] : undefined}
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users need to focus this region to scroll wide tables.
+      tabIndex={0}
       className={cn(
-        "w-full caption-bottom text-sm tabular-nums",
+        "focus-visible:outline-border-focus w-full min-w-0 overflow-x-auto focus-visible:outline-2",
         shadow && "shadow-offset",
-        className,
       )}
-      {...props}
-    />
+    >
+      <table
+        data-slot="table"
+        className={cn("w-full caption-bottom text-sm tabular-nums", className)}
+        {...props}
+      />
+    </div>
   );
 }
 

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, userEvent, within } from "storybook/test";
+import { useState } from "react";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 import { Navigation } from "./navigation";
 
 const meta: Meta<typeof Navigation> = {
@@ -9,6 +10,98 @@ const meta: Meta<typeof Navigation> = {
 };
 
 export default meta;
+
+export const PrefixMatching: Story = {
+  render: () => {
+    const [value, setValue] = useState("/transactions/new");
+    const [showNew, setShowNew] = useState(true);
+    return (
+      <div>
+        <button onClick={() => setValue("/transactions-old")}>Similar segment</button>
+        <button onClick={() => setValue("/transactions/123")}>Transaction detail</button>
+        <button
+          onClick={() => {
+            setValue("/transactions/new");
+            setShowNew(false);
+          }}
+        >
+          Remove deepest link
+        </button>
+        <Navigation value={value} match="prefix">
+          <Navigation.List>
+            <Navigation.Item>
+              <Navigation.Link href="/" value="/">
+                Home
+              </Navigation.Link>
+            </Navigation.Item>
+            <Navigation.Item>
+              <Navigation.Link href="/transactions" value="/transactions">
+                Transactions
+              </Navigation.Link>
+            </Navigation.Item>
+            {showNew && (
+              <Navigation.Item>
+                <Navigation.Link href="/transactions/new" value="/transactions/new">
+                  New transaction
+                </Navigation.Link>
+              </Navigation.Item>
+            )}
+            <Navigation.Item>
+              <Navigation.Link href="/transactions/123" value="/transactions/123" active={false}>
+                Explicitly inactive
+              </Navigation.Link>
+            </Navigation.Item>
+          </Navigation.List>
+        </Navigation>
+        <Navigation
+          aria-label="Custom matching"
+          value="CUSTOM"
+          isActive={(pathname, linkValue) => pathname.toLowerCase() === linkValue}
+        >
+          <Navigation.Link href="/custom" value="custom">
+            Custom route
+          </Navigation.Link>
+        </Navigation>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const nav = canvas.getByRole("navigation", { name: "Main" });
+    await waitFor(() =>
+      expect(within(nav).getByRole("link", { name: "New transaction" })).toHaveAttribute(
+        "aria-current",
+        "page",
+      ),
+    );
+    await expect(nav.querySelectorAll('[aria-current="page"]')).toHaveLength(1);
+    await expect(canvas.getByRole("link", { name: "Custom route" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    await userEvent.click(canvas.getByRole("button", { name: "Similar segment" }));
+    await expect(within(nav).getByRole("link", { name: "Home" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    await userEvent.click(canvas.getByRole("button", { name: "Transaction detail" }));
+    await expect(within(nav).getByRole("link", { name: "Transactions" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    await expect(
+      within(nav).getByRole("link", { name: "Explicitly inactive" }),
+    ).not.toHaveAttribute("aria-current");
+    await userEvent.click(canvas.getByRole("button", { name: "Remove deepest link" }));
+    await waitFor(() =>
+      expect(within(nav).getByRole("link", { name: "Transactions" })).toHaveAttribute(
+        "aria-current",
+        "page",
+      ),
+    );
+    await expect(nav.querySelectorAll('[aria-current="page"]')).toHaveLength(1);
+  },
+};
 type Story = StoryObj<typeof Navigation>;
 
 export const Default: Story = {

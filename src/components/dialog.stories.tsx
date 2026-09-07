@@ -28,6 +28,35 @@ const meta: Meta<typeof Dialog> = {
 };
 
 export default meta;
+
+export const ContentOverrides: Story = {
+  render: () => (
+    <Dialog
+      size="xl"
+      className="sm:max-w-3xl"
+      closeLabel="Fermer"
+      data-testid="custom-dialog"
+      onEscapeKeyDown={(event) => event.preventDefault()}
+      trigger={<Button>Open custom dialog</Button>}
+    >
+      <Dialog.Title>Custom dialog</Dialog.Title>
+      <Dialog.Description>Content props and labels stay in the app's control.</Dialog.Description>
+    </Dialog>
+  ),
+  play: async ({ canvasElement }) => {
+    await userEvent.click(
+      within(canvasElement).getByRole("button", { name: "Open custom dialog" }),
+    );
+    const content = await screen.findByRole("dialog");
+    await expect(content).toHaveAttribute("data-testid", "custom-dialog");
+    await expect(content).toHaveClass("sm:max-w-3xl");
+    await expect(content).not.toHaveClass("sm:max-w-4xl");
+    await userEvent.keyboard("{Escape}");
+    await expect(content).toBeInTheDocument();
+    await userEvent.click(within(content).getByRole("button", { name: "Fermer" }));
+    await expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  },
+};
 type Story = StoryObj<typeof Dialog>;
 
 export const Default: Story = {

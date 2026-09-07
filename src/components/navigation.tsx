@@ -2,33 +2,67 @@
 
 import { Slot } from "@radix-ui/react-slot";
 import { type ClassValue, clsx } from "clsx";
-import { createContext, useContext } from "react";
+import { createContext, useCallback, useContext, useEffect, useId, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-// The current page is one answer, not one answer per link. The root holds it;
-// `Navigation.Link` compares its own `value` and derives `active` itself.
-//
-// Optional by construction: the default is `undefined`, so a `Navigation.Link`
-// used with an explicit `active` — inside a root that sets no `value`, or
-// outside a root entirely — keeps working exactly as before. That is why this
-// accessor does not throw the way §1.4's rule 2 asks: throwing here would
-// *require more* of existing callers, which Part 3's growth rule forbids.
-// The value is a primitive, so there is nothing to memoize by hand (§1.4 rule 3
-// is about object values).
-const NavigationValueContext = createContext<string | undefined>(undefined);
+interface NavigationContextValue {
+  value?: string;
+  match: "exact" | "prefix";
+  matchedValue?: string;
+  isActive?: (pathname: string, value: string) => boolean;
+  register: (id: string, value: string) => () => void;
+}
 
+const NavigationValueContext = createContext<NavigationContextValue | undefined>(undefined);
+// Optional: explicit active links continue to work without a root.
 const useNavigationValue = () => useContext(NavigationValueContext);
+const routePath = (value: string) => value.split(/[?#]/, 1)[0].replace(/\/+$/, "") || "/";
 
 export interface NavigationProps extends React.ComponentProps<"nav"> {
   /** The current page's value. `Navigation.Link` compares its own `value` to it. */
   value?: string;
+  /** Exact by default. Prefix selects the longest segment-boundary match after links mount. */
+  match?: "exact" | "prefix";
+  /** Custom router matching. Explicit active on a link still wins. */
+  isActive?: (pathname: string, value: string) => boolean;
 }
 
-function NavigationRoot({ className, value, ...props }: NavigationProps) {
+function NavigationRoot({
+  className,
+  value,
+  match = "exact",
+  isActive,
+  ...props
+}: NavigationProps) {
+  const [links, setLinks] = useState(() => new Map<string, string>());
+  const register = useCallback((id: string, linkValue: string) => {
+    setLinks((previous) => new Map(previous).set(id, linkValue));
+    return () =>
+      setLinks((previous) => {
+        const next = new Map(previous);
+        next.delete(id);
+        return next;
+      });
+  }, []);
+  const context = useMemo(() => {
+    let matchedValue: string | undefined;
+    if (match === "prefix" && value !== undefined) {
+      const pathname = routePath(value);
+      for (const candidate of links.values()) {
+        const prefix = routePath(candidate);
+        if (
+          (pathname === prefix || pathname.startsWith(prefix === "/" ? "/" : `${prefix}/`)) &&
+          (matchedValue === undefined || prefix.length > routePath(matchedValue).length)
+        )
+          matchedValue = candidate;
+      }
+    }
+    return { value, match, matchedValue, isActive, register };
+  }, [value, match, links, isActive, register]);
   return (
-    <NavigationValueContext.Provider value={value}>
+    <NavigationValueContext.Provider value={context}>
       <nav data-slot="navigation" aria-label="Main" className={cn("", className)} {...props} />
     </NavigationValueContext.Provider>
   );
@@ -79,8 +113,22 @@ function NavigationLink({
   children,
   ...props
 }: NavigationLinkProps) {
-  const currentValue = useNavigationValue();
-  const isActive = active ?? (value !== undefined && value === currentValue);
+  const context = useNavigationValue();
+  const id = useId();
+  const register = context?.register;
+  const registerPrefix = context?.match === "prefix" && !context.isActive && active === undefined;
+  useEffect(() => {
+    if (registerPrefix && value !== undefined) return register?.(id, value);
+  }, [registerPrefix, register, id, value]);
+  const isActive =
+    active ??
+    (value !== undefined &&
+      context?.value !== undefined &&
+      (context.isActive
+        ? context.isActive(context.value, value)
+        : context.match === "prefix"
+          ? context.matchedValue === value
+          : context.value === value));
   const Comp = asChild ? Slot : "a";
 
   return (

@@ -11,7 +11,11 @@ const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 // Module-local type for bundlers that replace NODE_ENV without Node globals.
 declare const process: { env: { NODE_ENV?: string } };
 
-export interface DialogProps {
+export interface DialogProps extends React.ComponentProps<typeof DialogPrimitive.Content> {
+  /** Content width preset; className can override it. Defaults to md. */
+  size?: "sm" | "md" | "lg" | "xl" | "full";
+  /** Accessible name of the built-in close button. */
+  closeLabel?: string;
   /**
    * When true, prevents closing the dialog via ESC key or clicking outside.
    * Users must use the close button or action buttons to dismiss the dialog.
@@ -61,6 +65,14 @@ function DialogTrigger({
   return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} asChild={asChild} />;
 }
 
+const dialogSizes = {
+  sm: "sm:max-w-sm",
+  md: "sm:max-w-lg",
+  lg: "sm:max-w-2xl",
+  xl: "sm:max-w-4xl",
+  full: "sm:max-w-[calc(100%-2rem)]",
+};
+
 function DialogRoot({
   children,
   trigger,
@@ -68,6 +80,12 @@ function DialogRoot({
   hideCloseButton = false,
   open,
   onOpenChange,
+  className,
+  size = "md",
+  closeLabel = "Close dialog",
+  onInteractOutside,
+  onEscapeKeyDown,
+  ...contentProps
 }: DialogProps) {
   // Radix's Root already implements controlled/uncontrolled, so `open` and
   // `onOpenChange` go straight to it. The only thing left of the hand-rolled
@@ -105,17 +123,28 @@ function DialogRoot({
           className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 bg-bg-emphasis/50 fixed inset-0 z-40"
         />
         <DialogPrimitive.Content
+          {...contentProps}
           data-slot="dialog-content"
-          className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 shadow-offset-overlay border-border bg-bg-overlay fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 border p-6 sm:max-w-lg"
-          onInteractOutside={preventClose ? (e) => e.preventDefault() : undefined}
-          onEscapeKeyDown={preventClose ? (e) => e.preventDefault() : undefined}
+          className={cn(
+            "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 shadow-offset-overlay border-border bg-bg-overlay fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 border p-6",
+            dialogSizes[size],
+            className,
+          )}
+          onInteractOutside={(event) => {
+            onInteractOutside?.(event);
+            if (preventClose) event.preventDefault();
+          }}
+          onEscapeKeyDown={(event) => {
+            onEscapeKeyDown?.(event);
+            if (preventClose) event.preventDefault();
+          }}
         >
           {content}
           {!hideCloseButton && (
             <DialogPrimitive.Close
               data-slot="dialog-close"
               className="text-fg-muted hover:text-fg focus-visible:outline-border-focus absolute top-4 right-4 transition-colors before:absolute before:inset-[-14px] before:content-[''] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none"
-              aria-label="Close dialog"
+              aria-label={closeLabel}
             >
               <X className="size-4" aria-hidden="true" />
             </DialogPrimitive.Close>
