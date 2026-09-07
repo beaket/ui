@@ -185,7 +185,7 @@ _Axis A — parts, and the state behind them:_
 - The root is whatever owns state and material. Parts carry layout only.
 - Name parts for their role, not their tag: `Card.Section`, `Table.Head`, `Breadcrumb.Page`.
 - **Every part must be optional.** If the root is broken without it, it is not a part — it belongs in the root. (`Card`'s own source comment states this: parts are "optional layout helpers, never the required anatomy.")
-- One export per file: the component, plus its props type. Parts are not exported individually.
+- Export the component, its props types, and each public part by name. Keep `Object.assign` for client-side ergonomics; use named parts across React Server Component boundaries. This additive platform fix (#923) supersedes #871's single-export rule.
 
 **Today** — all three of these are now settled; the epic's notes are kept because they are the evidence the rules were derived from.
 

@@ -117,6 +117,17 @@ function TableCaption({ className, ...props }: React.ComponentProps<"caption">) 
   );
 }
 
+export {
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableSectionHeader,
+};
+
 export const Table = Object.assign(TableRoot, {
   Header: TableHeader,
   Body: TableBody,

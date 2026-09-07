@@ -1,3 +1,5 @@
+"use client";
+
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { type ClassValue, clsx } from "clsx";
 import { Activity, createContext, useContext, useState } from "react";
@@ -130,6 +132,8 @@ function TabsContent({
     </TabsPrimitive.Content>
   );
 }
+
+export { TabsContent, TabsList, TabsTrigger };
 
 export const Tabs = Object.assign(TabsRoot, {
   List: TabsList,

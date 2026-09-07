@@ -1,3 +1,5 @@
+"use client";
+
 import { Slot } from "@radix-ui/react-slot";
 import { type ClassValue, clsx } from "clsx";
 import { createContext, useContext } from "react";
@@ -118,6 +120,8 @@ function NavigationLink({
     </Comp>
   );
 }
+
+export { NavigationItem, NavigationLink, NavigationList };
 
 export const Navigation = Object.assign(NavigationRoot, {
   List: NavigationList,

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   columnFilteringFeature,
   columnSizingFeature,
@@ -567,6 +569,16 @@ function DataTableRoot<TData extends RowData>({
     </DataTableContext.Provider>
   );
 }
+
+export {
+  DataTableBody,
+  DataTableEmpty,
+  DataTableHead,
+  DataTablePagination,
+  DataTableRow,
+  DataTableTable,
+  DataTableToolbar,
+};
 
 export const DataTable = Object.assign(DataTableRoot, {
   Toolbar: DataTableToolbar,

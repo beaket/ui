@@ -48,6 +48,8 @@ function RadioGroupItem({ className, ...props }: RadioItemProps) {
   );
 }
 
+export { RadioGroupItem };
+
 export const RadioGroup = Object.assign(RadioGroupRoot, {
   Item: RadioGroupItem,
 });

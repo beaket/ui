@@ -89,6 +89,8 @@ function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
   );
 }
 
+export { BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator };
+
 export const Breadcrumb = Object.assign(BreadcrumbRoot, {
   List: BreadcrumbList,
   Item: BreadcrumbItem,

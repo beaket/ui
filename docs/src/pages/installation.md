@@ -61,9 +61,53 @@ Finally, configure the matching TypeScript alias:
 
 ### Next.js
 
-Apps created with the default `@/*` alias work without extra configuration.
-Make sure Tailwind CSS 4 is already installed and that your global CSS file is
-loaded by the app.
+Keep the default `@/*` alias, Tailwind CSS 4, and the global CSS import in your
+App Router layout. Hook-based components already declare `"use client"`; your
+page can stay a Server Component.
+
+In a server page, import compound parts **by name**. Attached properties such
+as `Tabs.List` do not cross a client-module boundary:
+
+```tsx
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
+export default function Page() {
+  return (
+    <Tabs defaultValue="account">
+      <TabsList>
+        <TabsTrigger value="account">Account</TabsTrigger>
+      </TabsList>
+      <TabsContent value="account">Account settings</TabsContent>
+    </Tabs>
+  );
+}
+```
+
+Run `npx @beaket/ui add tabs` for this example. `Tabs.List` and the other
+compound forms still work inside Client Components. Event handlers and
+function props (for example, DataTable cell renderers or Pagination's
+`buildPageUrl`) belong in a Client Component too. For Dialog and Sheet in a
+server page, use `trigger={<Button>Open</Button>}` with named content parts.
+
+### PostCSS alternative
+
+Tailwind's PostCSS plugin is supported too. On Vite, use it **instead of**
+`@tailwindcss/vite`; keep the React plugin and both alias configurations above.
+Next.js projects created with Tailwind already include this PostCSS setup.
+
+```bash
+npm install tailwindcss @tailwindcss/postcss postcss
+```
+
+```js
+// postcss.config.mjs
+export default {
+  plugins: { "@tailwindcss/postcss": {} },
+};
+```
+
+Keep `@import "tailwindcss";` in your global CSS and import that stylesheet
+from your app entry or layout. See the [Tailwind PostCSS setup](https://tailwindcss.com/docs/installation/using-postcss).
 
 ## Initialize
 
@@ -90,7 +134,8 @@ npx @beaket/ui add button
 ```
 
 With the Vite setup above, the default destination is `src/components/ui/`, so
-you can import a component like this:
+you can import a component like this. This import requires the matching
+TypeScript **and bundler** aliases from [Vite setup](#vite), or Next.js's default alias:
 
 ```tsx
 import { Button } from "@/components/ui/button";

@@ -175,6 +175,18 @@ function SelectScrollDownButton({
 }
 
 // Compound component pattern
+export {
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectScrollDownButton,
+  SelectScrollUpButton,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+};
+
 export const Select = Object.assign(SelectRoot, {
   Group: SelectGroup,
   Value: SelectValue,

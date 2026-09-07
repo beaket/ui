@@ -213,6 +213,7 @@ function generateProps() {
     }
 
     const source = sourceFile.text;
+    const { root: rootFuncName, subs } = getCompoundMappings(source);
 
     // Step 1: Use react-docgen-typescript for directly exported components
     const docs = parser.parse(filePath);
@@ -221,6 +222,9 @@ function generateProps() {
 
     if (docs.length > 0) {
       for (const doc of docs) {
+        // Named part aliases share the same API as compound parts. The AST pass
+        // below documents them once, with their part prefix and defaults intact.
+        if (subs.has(doc.displayName)) continue;
         const dotIndex = doc.displayName.indexOf(".");
         let prefix = "";
         if (dotIndex !== -1) {
@@ -242,8 +246,6 @@ function generateProps() {
     }
 
     // Step 2: Use TS compiler API for compound components not found by react-docgen
-    const { root: rootFuncName, subs } = getCompoundMappings(source);
-
     if (subs.size > 0) {
       ts.forEachChild(sourceFile, (node) => {
         if (!ts.isFunctionDeclaration(node) || !node.name) return;

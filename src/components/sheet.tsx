@@ -1,3 +1,5 @@
+"use client";
+
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { type ClassValue, clsx } from "clsx";
 import { X } from "lucide-react";
@@ -209,6 +211,8 @@ function SheetClose({
 }: React.ComponentProps<typeof DialogPrimitive.Close>) {
   return <DialogPrimitive.Close data-slot="sheet-close-action" {...props} asChild={asChild} />;
 }
+
+export { SheetClose, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger };
 
 export const Sheet = Object.assign(SheetRoot, {
   Trigger: SheetTrigger,

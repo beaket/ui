@@ -61,6 +61,8 @@ function TooltipContent({
 
 export { TooltipProvider };
 
+export { TooltipContent, TooltipTrigger };
+
 export const Tooltip = Object.assign(TooltipRoot, {
   Trigger: TooltipTrigger,
   Content: TooltipContent,
