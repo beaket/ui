@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -28,6 +30,8 @@ jobs:
       components: ${{ steps.catalog.outputs.components }}
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - id: catalog
         run: node -e 'console.log("components=" + JSON.stringify(require("./registry/registry.json").components.map(c => c.name)))' >> "$GITHUB_OUTPUT"
 
@@ -41,6 +45,8 @@ jobs:
         component: ${{ fromJSON(needs.catalog.outputs.components) }}
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
