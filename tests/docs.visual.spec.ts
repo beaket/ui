@@ -4,6 +4,8 @@ const routes = [
   "/ui/",
   "/ui/installation",
   "/ui/cli",
+  "/ui/updating",
+  "/ui/migration",
   "/ui/design-rules",
   "/ui/tokens",
   "/ui/themes",
