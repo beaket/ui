@@ -22,6 +22,19 @@ export interface ComponentFile {
   content: string;
 }
 
+export function printCatalog(registry: Registry, query = ""): void {
+  const needle = query.toLowerCase();
+  const components = registry.components
+    .filter(({ name, description }) =>
+      `${name} ${description ?? ""}`.toLowerCase().includes(needle),
+    )
+    .sort((a, b) => a.name.localeCompare(b.name));
+  console.log(components.length ? "Available components:" : `No components match "${query}".`);
+  for (const { name, description } of components) {
+    console.log(`  - ${name}${description ? ` — ${description}` : ""}`);
+  }
+}
+
 export function resolveComponents(registry: Registry, names: string[]): ComponentDefinition[] {
   const resolved = new Map<string, ComponentDefinition>();
   function visit(name: string) {

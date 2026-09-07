@@ -11,12 +11,14 @@ import {
   CLI_VERSION,
   fetchComponent,
   fetchRegistry,
+  printCatalog,
   resolveComponents,
   resolveRegistryRef,
   type RegistryOptions,
 } from "../utils/registry.ts";
 import { syncTheme } from "../utils/theme.ts";
 import { THEME_CSS } from "../utils/themes.ts";
+import { requireTypeScript } from "../utils/typescript.ts";
 
 interface AddOptions extends RegistryOptions {
   overwrite?: boolean;
@@ -33,6 +35,8 @@ export async function add(componentNames: string[], options: AddOptions) {
     process.exit(1);
   }
 
+  await requireTypeScript();
+
   // Fetch registry
   const ref = await resolveRegistryRef(options);
   const registry = await fetchRegistry(ref);
@@ -48,10 +52,7 @@ export async function add(componentNames: string[], options: AddOptions) {
   if (notFound.length > 0) {
     console.log(styleText("red", "Error:"), `Component(s) not found: ${notFound.join(", ")}`);
     console.log();
-    console.log("Available components:");
-    registry.components.forEach((c) => {
-      console.log(`  - ${c.name}`);
-    });
+    printCatalog(registry);
     process.exit(1);
   }
   const componentDefs = resolveComponents(registry, componentNames);

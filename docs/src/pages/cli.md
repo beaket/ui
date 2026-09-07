@@ -7,6 +7,10 @@ title: CLI
 
 ## init
 
+`init` and `add` require TypeScript (declared in the project or resolved from a
+workspace toolchain) and a `tsconfig*.json` file. Plain-JavaScript/.jsx output is
+not supported; missing requirements stop the command before it changes files.
+
 ```bash
 npx @beaket/ui init
 ```
@@ -34,6 +38,18 @@ See [Themes](/ui/themes) for an interactive preview.
 
 Re-running `init` preserves existing configuration and CSS. To switch an initialized
 project, use `theme --theme <name>` instead.
+
+## list
+
+```bash
+npx @beaket/ui list
+npx @beaket/ui list table
+```
+
+Lists names and descriptions from the registry without initializing or changing
+a project. The optional query is a case-insensitive substring of either field.
+Like `add`, it defaults to the CLI's matching release registry; use
+`--registry-ref <tag|sha>` or `--latest` to inspect a different version.
 
 ## add
 

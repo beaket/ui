@@ -37,6 +37,11 @@ it("records successful and unchanged installs but preserves the baseline of skip
   const componentPath = path.join(directory, "ui/button.tsx");
   const readConfig = async () => JSON.parse(await readFile(configPath, "utf8"));
   try {
+    await writeFile(
+      path.join(directory, "package.json"),
+      JSON.stringify({ devDependencies: { typescript: "6.0.3" } }),
+    );
+    await writeFile(path.join(directory, "tsconfig.json"), "{}");
     await writeFile(configPath, JSON.stringify({ components: "ui" }));
     const firstRef = "a".repeat(40);
     await add(["button"], { registryRef: firstRef });

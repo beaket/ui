@@ -8,7 +8,7 @@ CLI="node $(pwd)/packages/cli/dist/index.js"
 TEMP_DIR=$(mktemp -d)
 cd "$TEMP_DIR"
 
-echo '{"name":"test"}' > package.json
+echo '{"name":"test","devDependencies":{"typescript":"6.0.3"}}' > package.json
 echo '{"compilerOptions":{"paths":{"@/*":["./*"]}}}' > tsconfig.json
 
 # Test init
