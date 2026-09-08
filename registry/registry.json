@@ -7,6 +7,7 @@
       "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/blockquote.tsx"],
+      "testFiles": ["components/blockquote.test.tsx"],
       "docs": {
         "title": "Blockquote",
         "tagline": "A styled quotation block with optional author and source attribution.",
@@ -20,6 +21,7 @@
       "dependencies": ["@radix-ui/react-slot", "clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/breadcrumb.tsx"],
+      "testFiles": ["components/breadcrumb.test.tsx"],
       "docs": {
         "title": "Breadcrumb",
         "tagline": "A navigation trail showing the user's location within a site hierarchy.",
@@ -33,6 +35,7 @@
       "dependencies": ["@radix-ui/react-slot", "clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/navigation.tsx"],
+      "testFiles": ["components/navigation.test.tsx"],
       "docs": {
         "title": "Navigation",
         "tagline": "A primary navigation component with active state indicators.",
@@ -46,6 +49,7 @@
       "dependencies": ["clsx", "lucide-react", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/alert.tsx"],
+      "testFiles": ["components/alert.test.tsx"],
       "docs": {
         "title": "Alert",
         "tagline": "A callout for displaying important information with semantic variants.",
@@ -59,6 +63,7 @@
       "dependencies": ["@radix-ui/react-avatar", "clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/avatar.tsx"],
+      "testFiles": ["components/avatar.test.tsx"],
       "docs": {
         "title": "Avatar",
         "tagline": "A visual representation of a user with image and fallback support.",
@@ -72,6 +77,7 @@
       "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/badge.tsx"],
+      "testFiles": ["components/badge.test.tsx"],
       "docs": {
         "title": "Badge",
         "tagline": "A compact label for status indicators, categories, and counts.",
@@ -90,6 +96,7 @@
       ],
       "registryDependencies": [],
       "files": ["components/button.tsx"],
+      "testFiles": ["components/button.test.tsx"],
       "docs": {
         "title": "Button",
         "tagline": "Clickable button with multiple variants and sizes.",
@@ -104,6 +111,7 @@
       "dependencies": ["@radix-ui/react-checkbox", "clsx", "lucide-react", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/checkbox.tsx"],
+      "testFiles": ["components/checkbox.test.tsx"],
       "docs": {
         "title": "Checkbox",
         "tagline": "A control for boolean input with checked and unchecked states.",
@@ -118,6 +126,7 @@
       "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/input.tsx"],
+      "testFiles": ["components/input.test.tsx"],
       "docs": {
         "title": "Input",
         "tagline": "A text input field for capturing user data.",
@@ -132,6 +141,7 @@
       "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/label.tsx"],
+      "testFiles": ["components/label.test.tsx"],
       "docs": {
         "title": "Label",
         "tagline": "A semantic label for form controls with proper accessibility.",
@@ -146,6 +156,7 @@
       "dependencies": ["@radix-ui/react-slot", "clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/field.tsx"],
+      "testFiles": ["components/field.test.tsx"],
       "docs": {
         "title": "Field",
         "tagline": "Arrange labels and messages freely. Your app owns validation; Field connects the result to the control.",
@@ -159,6 +170,7 @@
       "dependencies": ["@radix-ui/react-radio-group", "clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/radio.tsx"],
+      "testFiles": ["components/radio.test.tsx"],
       "docs": {
         "title": "Radio",
         "tagline": "A control for selecting one option from a set of choices.",
@@ -173,6 +185,7 @@
       "dependencies": ["@radix-ui/react-select", "clsx", "lucide-react", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/select.tsx"],
+      "testFiles": ["components/select.test.tsx"],
       "docs": {
         "title": "Select",
         "tagline": "A dropdown for selecting from a list of options.",
@@ -186,6 +199,7 @@
       "dependencies": ["@radix-ui/react-switch", "clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/switch.tsx"],
+      "testFiles": ["components/switch.test.tsx"],
       "docs": {
         "title": "Switch",
         "tagline": "A toggle for binary on/off states.",
@@ -199,6 +213,7 @@
       "dependencies": ["@radix-ui/react-dialog", "clsx", "lucide-react", "tailwind-merge"],
       "registryDependencies": ["button"],
       "files": ["components/dialog.tsx"],
+      "testFiles": ["components/dialog.test.tsx"],
       "docs": {
         "title": "Dialog",
         "tagline": "A modal dialog for confirmations, forms, and alerts.",
@@ -212,6 +227,7 @@
       "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/table.tsx"],
+      "testFiles": ["components/table.test.tsx"],
       "docs": {
         "title": "Table",
         "tagline": "A semantic HTML table with styled components.",
@@ -231,6 +247,7 @@
       ],
       "registryDependencies": [],
       "files": ["components/card.tsx"],
+      "testFiles": ["components/card.test.tsx"],
       "docs": {
         "title": "Card",
         "tagline": "A surface, not a template \u2014 pour any content into a quiet, drawn frame.",
@@ -245,6 +262,7 @@
       "dependencies": ["@radix-ui/react-tabs", "clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/tabs.tsx"],
+      "testFiles": ["components/tabs.test.tsx"],
       "docs": {
         "title": "Tabs",
         "tagline": "A set of layered sections of content that display one panel at a time.",
@@ -259,6 +277,7 @@
       "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/textarea.tsx"],
+      "testFiles": ["components/textarea.test.tsx"],
       "docs": {
         "title": "Textarea",
         "tagline": "A multi-line text input that automatically grows with content.",
@@ -273,6 +292,7 @@
       "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/separator.tsx"],
+      "testFiles": ["components/separator.test.tsx"],
       "docs": {
         "title": "Separator",
         "tagline": "A visual divider that separates content into distinct sections.",
@@ -287,6 +307,7 @@
       "dependencies": ["@radix-ui/react-tooltip", "clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/tooltip.tsx"],
+      "testFiles": ["components/tooltip.test.tsx"],
       "docs": {
         "title": "Tooltip",
         "tagline": "A popup that displays information related to an element on hover.",
@@ -300,6 +321,7 @@
       "dependencies": ["@radix-ui/react-dropdown-menu", "clsx", "lucide-react", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/dropdown-menu.tsx"],
+      "testFiles": ["components/dropdown-menu.test.tsx"],
       "docs": {
         "title": "DropdownMenu",
         "tagline": "A menu of actions or options triggered by a button.",
@@ -313,6 +335,7 @@
       "dependencies": ["@radix-ui/react-dialog", "clsx", "lucide-react", "tailwind-merge"],
       "registryDependencies": ["button"],
       "files": ["components/sheet.tsx"],
+      "testFiles": ["components/sheet.test.tsx"],
       "docs": {
         "title": "Sheet",
         "tagline": "A slide-out panel that can appear from any edge of the screen.",
@@ -326,6 +349,7 @@
       "dependencies": ["@radix-ui/react-slot", "clsx", "lucide-react", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/pagination.tsx"],
+      "testFiles": ["components/pagination.test.tsx"],
       "docs": {
         "title": "Pagination",
         "tagline": "A navigation component for paginated content with ellipsis support.",
@@ -341,6 +365,7 @@
       "dependencies": ["@tanstack/react-table", "clsx", "tailwind-merge", "lucide-react"],
       "registryDependencies": ["table", "button", "input", "checkbox", "pagination"],
       "files": ["components/data-table.tsx"],
+      "testFiles": ["components/data-table.test.tsx"],
       "docs": {
         "title": "DataTable",
         "tagline": "A powerful data table with sorting, filtering, pagination, and selection.",
@@ -356,6 +381,7 @@
       "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/skeleton.tsx"],
+      "testFiles": ["components/skeleton.test.tsx"],
       "docs": {
         "title": "Skeleton",
         "tagline": "An animated placeholder for content that is loading.",
@@ -371,6 +397,7 @@
       "dependencies": ["@radix-ui/react-progress", "clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/progress.tsx"],
+      "testFiles": ["components/progress.test.tsx"],
       "docs": {
         "title": "Progress",
         "tagline": "Task completion with a neutral ink fill; not a measurement meter.",
@@ -384,6 +411,7 @@
       "dependencies": ["@radix-ui/react-slider", "clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/slider.tsx"],
+      "testFiles": ["components/slider.test.tsx"],
       "docs": {
         "title": "Slider",
         "tagline": "An adjustable instrument with keyboard, touch and multi-thumb support.",
@@ -397,6 +425,7 @@
       "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": ["components/navigation-progress.tsx"],
+      "testFiles": ["components/navigation-progress.test.tsx"],
       "docs": {
         "title": "NavigationProgress",
         "tagline": "An indeterminate progress bar shown during page navigation.",

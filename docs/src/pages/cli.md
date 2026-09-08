@@ -82,14 +82,17 @@ npx @beaket/ui add alert button label
 Copies component files and their transitive registry dependencies to your project,
 and installs their npm dependencies (`clsx`, `tailwind-merge`, Radix primitives, etc.) automatically.
 
-| Option              | Description                               |
-| ------------------- | ----------------------------------------- |
-| `-o`, `--overwrite` | Discard local edits after saving a backup |
+| Option              | Description                                         |
+| ------------------- | --------------------------------------------------- |
+| `-o`, `--overwrite` | Discard local edits after saving a backup           |
+| `--with-tests`      | Add component smoke tests and the `tsx` test runner |
 
 When a file already exists, `add` compares it with the registry. Matching files
 are left alone; changed files prompt before they are overwritten.
 Every replacement saves the previous file as `.bak`, then `.bak.1`, `.bak.2`, and
 so on. Review the diff or hand-merge customizations before choosing to overwrite.
+
+`--with-tests` is opt-in so normal installs stay small. It copies Node-based smoke tests for every selected component and installs `tsx` as a dev dependency. Run them with `npx tsx --test <components-dir>/**/*.test.tsx`.
 
 `add` and `diff` use the registry tag matching the CLI version (`@beaket/ui@X.Y.Z`).
 Pass `--registry-ref <tag|sha>` to choose a version, or `--latest` to explicitly use

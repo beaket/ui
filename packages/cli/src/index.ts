@@ -27,6 +27,7 @@ program
   .description("Add components to your project")
   .argument("<components...>", "Component names to add")
   .option("-o, --overwrite", "Overwrite existing files")
+  .option("--with-tests", "Add opt-in component tests and the tsx test runner")
   .addOption(new Option("--registry-ref <ref>", "Registry tag or commit").conflicts("latest"))
   .addOption(new Option("--latest", "Use the current main registry").conflicts("registryRef"))
   .action(add);

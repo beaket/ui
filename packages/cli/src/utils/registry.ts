@@ -4,6 +4,8 @@ export interface ComponentDefinition {
   dependencies: string[];
   registryDependencies: string[];
   files: string[];
+  /** Optional consumer tests, installed only with `add --with-tests`. */
+  testFiles?: string[];
   /**
    * Minimum React this component needs, when it is higher than the registry's.
    * A floor is a check, not an install — see `utils/react-version.ts`.

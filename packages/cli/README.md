@@ -50,11 +50,14 @@ Add [components](https://beaket.github.io/ui/components) to your project. Depend
 npx @beaket/ui add <components...> [options]
 ```
 
-| Option            | Description              |
-| ----------------- | ------------------------ |
-| `-o, --overwrite` | Overwrite existing files |
+| Option            | Description                                         |
+| ----------------- | --------------------------------------------------- |
+| `-o, --overwrite` | Overwrite existing files                            |
+| `--with-tests`    | Add component smoke tests and the `tsx` test runner |
 
 When a component already exists, `add` compares your copy against the latest registry version: files that already match are left untouched, and only files that differ prompt to overwrite — so you know your copy is out of sync, not just that a file is present.
+
+`--with-tests` keeps the default install lean. It adds each selected component's Node test and `tsx` as a dev dependency; run them with `npx tsx --test <components-dir>/**/*.test.tsx`.
 
 ### `diff`
 

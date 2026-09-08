@@ -123,10 +123,11 @@ export async function backupFile(targetPath: string): Promise<string> {
   }
 }
 
-export async function installDependencies(deps: string[]): Promise<void> {
+export async function installDependencies(deps: string[], dev = false): Promise<void> {
   const packageManager = await detectPackageManager();
   const installCmd = packageManager === "npm" ? "install" : "add";
-  const args = [installCmd, ...deps];
+  const devFlag = dev ? (packageManager === "bun" ? "-d" : "-D") : undefined;
+  const args = [installCmd, ...(devFlag ? [devFlag] : []), ...deps];
   const command = [packageManager, ...args].join(" ");
 
   return new Promise((resolve, reject) => {
