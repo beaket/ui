@@ -15,5 +15,6 @@
   "sheet.tsx": 7,
   "data-table.tsx": 8,
   "progress.tsx": 1,
-  "slider.tsx": 1
+  "slider.tsx": 1,
+  "field.tsx": 1
 }

@@ -141,6 +141,19 @@
       }
     },
     {
+      "name": "field",
+      "description": "Composable label, control, hint and error associations for native and Radix fields",
+      "dependencies": ["@radix-ui/react-slot", "clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": ["components/field.tsx"],
+      "docs": {
+        "title": "Field",
+        "tagline": "Arrange labels and messages freely. Your app owns validation; Field connects the result to the control.",
+        "sections": ["AllStates"],
+        "previewStory": "Default"
+      }
+    },
+    {
       "name": "radio",
       "description": "Radio group component for single-choice selection",
       "dependencies": ["@radix-ui/react-radio-group", "clsx", "tailwind-merge"],

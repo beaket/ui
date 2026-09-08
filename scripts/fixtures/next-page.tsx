@@ -24,6 +24,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Field, FieldControl, FieldError, FieldHint, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -111,6 +112,14 @@ export default function Page() {
         </DropdownMenuContent>
       </DropdownMenu>
       <div>
+        <Field invalid>
+          <FieldLabel>Email</FieldLabel>
+          <FieldControl>
+            <Input type="email" />
+          </FieldControl>
+          <FieldHint>Account notifications.</FieldHint>
+          <FieldError>Email is required.</FieldError>
+        </Field>
         <Label htmlFor="name">Name</Label>
         <Input id="name" />
       </div>
