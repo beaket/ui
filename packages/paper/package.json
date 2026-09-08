@@ -1,6 +1,6 @@
 {
   "name": "@beaket/paper",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Markdown-first, CJK-first Live Preview editor. Framework-agnostic core + thin React wrapper.",
   "type": "module",
   "exports": {
