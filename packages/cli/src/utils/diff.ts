@@ -93,6 +93,35 @@ export async function analyzeThreeWay(
   }
 }
 
+/** Merge without touching consumer files; callers decide whether the result is safe to write. */
+export async function mergeThreeWay(
+  base: string,
+  local: string,
+  upstream: string,
+): Promise<{ content: string; conflicts: number }> {
+  const directory = await mkdtemp(path.join(tmpdir(), "beaket-merge-"));
+  try {
+    const files = ["local", "base", "upstream"].map((name) => path.join(directory, name));
+    await Promise.all(
+      [normalize(local), normalize(base), normalize(upstream)].map((content, index) =>
+        writeFile(files[index], content),
+      ),
+    );
+    const merge = spawnSync("git", ["merge-file", "--stdout", "--diff3", "--", ...files], {
+      encoding: "utf8",
+    });
+    if (merge.error || merge.status === null || merge.status > 127)
+      throw new Error(`Three-way merge needs Git: ${merge.error?.message ?? merge.stderr}`);
+    const content =
+      merge.status === 0 && upstream.endsWith("\n") && !merge.stdout.endsWith("\n")
+        ? `${merge.stdout}\n`
+        : merge.stdout;
+    return { content, conflicts: merge.status };
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+}
+
 export interface ComponentComparison {
   name: string;
   status: ComponentStatus;

@@ -27,3 +27,64 @@ it("preserves every overwritten revision without replacing earlier backups", asy
     await rm(directory, { recursive: true, force: true });
   }
 });
+
+it("merges independent upstream and local edits from a recorded base", async () => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "beaket-merge-"));
+  const target = path.join(directory, "button.tsx");
+  const base = "first\nsecond\nthird\n";
+  try {
+    await writeFile(target, base.replace("first", "local"));
+    const result = await writeComponentFiles(
+      directory,
+      [{ path: "components/button.tsx", content: base.replace("third", "upstream") }],
+      true,
+      { "components/button.tsx": base },
+    );
+    expect(await readFile(target, "utf8")).toBe("local\nsecond\nupstream\n");
+    expect(await readFile(`${target}.bak`, "utf8")).toBe("local\nsecond\nthird\n");
+    expect(result.conflicts).toEqual([]);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+it("keeps local edits without a write when upstream matches the recorded base", async () => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "beaket-merge-"));
+  const target = path.join(directory, "button.tsx");
+  const base = "upstream\n";
+  try {
+    await writeFile(target, "local\n");
+    const result = await writeComponentFiles(
+      directory,
+      [{ path: "components/button.tsx", content: base }],
+      true,
+      { "components/button.tsx": base },
+    );
+    expect(await readFile(target, "utf8")).toBe("local\n");
+    expect(result.preserved).toEqual([target]);
+    expect(result.backups).toEqual([]);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+it("refuses conflicting edits without creating a backup", async () => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "beaket-merge-"));
+  const target = path.join(directory, "button.tsx");
+  const base = "value\n";
+  try {
+    await writeFile(target, "local\n");
+    const result = await writeComponentFiles(
+      directory,
+      [{ path: "components/button.tsx", content: "upstream\n" }],
+      true,
+      { "components/button.tsx": base },
+    );
+    expect(await readFile(target, "utf8")).toBe("local\n");
+    expect(result.conflicts).toHaveLength(1);
+    expect(result.conflicts[0]?.hunk).toContain("<<<<<<<");
+    expect(result.backups).toEqual([]);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});

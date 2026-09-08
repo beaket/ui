@@ -118,24 +118,39 @@ export async function add(componentNames: string[], options: AddOptions) {
   const allOverwritten: string[] = [];
   const allBackups: string[] = [];
   const allSkipped: string[] = [];
+  const allPreserved: string[] = [];
+  const allConflicts: Array<{ path: string; hunk: string }> = [];
   const allUnchanged: string[] = [];
 
   for (const def of componentDefs) {
     if (!def) continue;
     const files = await fetchComponent(def, ref);
-    const { written, overwritten, backups, skipped, unchanged } = await writeComponentFiles(
-      componentsDir,
-      files,
-      options.overwrite,
-    );
+    const baselines: Record<string, string> = {};
+    if (options.overwrite) {
+      for (const file of files) {
+        const recorded = config.installed?.[def.name]?.[file.path];
+        if (!recorded) continue;
+        const [baseline] = await fetchComponent({ ...def, files: [file.path] }, recorded.ref);
+        if (contentHash(baseline.content) !== recorded.hash)
+          throw new Error(
+            `Baseline hash mismatch for ${file.path} at ${recorded.ref}; refusing to merge.`,
+          );
+        baselines[file.path] = baseline.content;
+      }
+    }
+    const { written, overwritten, backups, skipped, preserved, conflicts, unchanged } =
+      await writeComponentFiles(componentsDir, files, options.overwrite, baselines);
     allWritten.push(...written);
     allOverwritten.push(...overwritten);
     allBackups.push(...backups);
     allSkipped.push(...skipped);
+    allPreserved.push(...preserved);
+    allConflicts.push(...conflicts);
     allUnchanged.push(...unchanged);
     for (const file of files) {
       const target = path.join(componentsDir, file.path.replace(/^components\//, ""));
-      if (!written.includes(target) && !unchanged.includes(target)) continue;
+      if (!written.includes(target) && !unchanged.includes(target) && !preserved.includes(target))
+        continue;
       config.installed ??= {};
       config.installed[def.name] ??= {};
       config.installed[def.name][file.path] = {
@@ -164,6 +179,25 @@ export async function add(componentNames: string[], options: AddOptions) {
       styleText("dim", "  See what changed with"),
       styleText("cyan", "npx @beaket/ui diff <component>"),
     );
+  }
+
+  if (allPreserved.length > 0) {
+    console.log(
+      styleText("green", "✔"),
+      `Kept ${allPreserved.length} local file(s); upstream is unchanged.`,
+    );
+  }
+
+  if (allConflicts.length > 0) {
+    process.exitCode = Math.max(Number(process.exitCode ?? 0), 2);
+    console.log(
+      styleText("red", "!"),
+      `Could not merge ${allConflicts.length} file(s); nothing was overwritten.`,
+    );
+    for (const conflict of allConflicts) {
+      console.log(styleText("cyan", `  ${conflict.path}`));
+      console.log(conflict.hunk);
+    }
   }
 
   if (allWritten.length === 0) {

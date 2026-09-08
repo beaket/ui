@@ -3,7 +3,7 @@ import { constants, existsSync } from "node:fs";
 import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "path";
 import prompts from "prompts";
-import { normalize, toLocalRelativePath } from "./diff.ts";
+import { mergeThreeWay, normalize, toLocalRelativePath } from "./diff.ts";
 import type { ComponentFile } from "./registry.ts";
 
 export interface WriteResult {
@@ -11,6 +11,10 @@ export interface WriteResult {
   overwritten: string[];
   backups: string[];
   skipped: string[];
+  /** Local edits kept because the recorded upstream base has not changed. */
+  preserved: string[];
+  /** Conflicting three-way merges are printed, never written. */
+  conflicts: Array<{ path: string; hunk: string }>;
   /** Files already identical to upstream — left untouched, no prompt. */
   unchanged: string[];
 }
@@ -39,11 +43,14 @@ export async function writeComponentFiles(
   baseDir: string,
   files: ComponentFile[],
   overwrite: boolean = false,
+  baselines: Record<string, string> = {},
 ): Promise<WriteResult> {
   const written: string[] = [];
   const overwritten: string[] = [];
   const backups: string[] = [];
   const skipped: string[] = [];
+  const preserved: string[] = [];
+  const conflicts: Array<{ path: string; hunk: string }> = [];
   const unchanged: string[] = [];
 
   for (const file of files) {
@@ -52,6 +59,7 @@ export async function writeComponentFiles(
     const targetPath = path.join(baseDir, relativePath);
 
     // Check if file exists
+    let content = file.content;
     if (existsSync(targetPath)) {
       const local = await readFile(targetPath, "utf-8");
       const differs = normalize(local) !== normalize(file.content);
@@ -76,16 +84,30 @@ export async function writeComponentFiles(
           continue;
         }
       }
+      const baseline = baselines[file.path];
+      if (baseline !== undefined) {
+        const merge = await mergeThreeWay(baseline, local, file.content);
+        if (merge.conflicts) {
+          const hunks = merge.content.match(/<<<<<<<[\s\S]*?>>>>>>>[^\n]*/g) ?? [merge.content];
+          conflicts.push({ path: targetPath, hunk: hunks.join("\n") });
+          continue;
+        }
+        content = merge.content;
+        if (normalize(content) === normalize(local)) {
+          preserved.push(targetPath);
+          continue;
+        }
+      }
       backups.push(await backupFile(targetPath));
       overwritten.push(targetPath);
     }
 
     await mkdir(path.dirname(targetPath), { recursive: true });
-    await writeFile(targetPath, file.content);
+    await writeFile(targetPath, content);
     written.push(targetPath);
   }
 
-  return { written, overwritten, backups, skipped, unchanged };
+  return { written, overwritten, backups, skipped, preserved, conflicts, unchanged };
 }
 
 /** Never replace an earlier backup; abort the write if the backup fails. */

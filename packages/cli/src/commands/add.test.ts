@@ -12,7 +12,9 @@ it("records successful and unchanged installs but preserves the baseline of skip
   const directory = await mkdtemp(path.join(os.tmpdir(), "beaket-install-"));
   vi.spyOn(process, "cwd").mockReturnValue(directory);
   vi.spyOn(console, "log").mockImplementation(() => {});
-  let upstream = "first release";
+  const firstRef = "a".repeat(40);
+  const firstUpstream = "one\ntwo\nthree\n";
+  let upstream = firstUpstream;
   vi.stubGlobal(
     "fetch",
     vi.fn(
@@ -29,7 +31,9 @@ it("records successful and unchanged installs but preserves the baseline of skip
                   },
                 ],
               })
-            : upstream,
+            : url.includes(`/${firstRef}/src/`)
+              ? firstUpstream
+              : upstream,
         ),
     ),
   );
@@ -43,23 +47,23 @@ it("records successful and unchanged installs but preserves the baseline of skip
     );
     await writeFile(path.join(directory, "tsconfig.json"), "{}");
     await writeFile(configPath, JSON.stringify({ components: "ui" }));
-    const firstRef = "a".repeat(40);
     await add(["button"], { registryRef: firstRef });
     const baseline = (await readConfig()).installed.button["components/button.tsx"];
     expect(baseline.ref).toBe(firstRef);
     expect(baseline.hash).toBe(contentHash(upstream));
     expect(baseline.cliVersion).toBeDefined();
-    await writeFile(componentPath, "custom branding");
-    upstream = "second release";
+    await writeFile(componentPath, upstream.replace("one", "custom branding"));
+    upstream = upstream.replace("three", "second release");
     prompts.inject([false]);
     await add(["button"], { registryRef: "b".repeat(40) });
     expect((await readConfig()).installed.button["components/button.tsx"]).toEqual(baseline);
-    expect(await readFile(componentPath, "utf8")).toBe("custom branding");
+    expect(await readFile(componentPath, "utf8")).toBe("custom branding\ntwo\nthree\n");
     await add(["button"], { registryRef: "b".repeat(40), overwrite: true });
     expect((await readConfig()).installed.button["components/button.tsx"].hash).toBe(
       contentHash(upstream),
     );
-    await add(["button"], { registryRef: "c".repeat(40) });
+    expect(await readFile(componentPath, "utf8")).toBe("custom branding\ntwo\nsecond release\n");
+    await add(["button"], { registryRef: "c".repeat(40), overwrite: true });
     expect((await readConfig()).installed.button["components/button.tsx"].ref).toBe("c".repeat(40));
   } finally {
     vi.restoreAllMocks();
