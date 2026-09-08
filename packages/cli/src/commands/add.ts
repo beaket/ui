@@ -22,6 +22,7 @@ import { requireTypeScript } from "../utils/typescript.ts";
 
 interface AddOptions extends RegistryOptions {
   overwrite?: boolean;
+  withTests?: boolean;
 }
 
 export async function add(componentNames: string[], options: AddOptions) {
@@ -112,6 +113,21 @@ export async function add(componentNames: string[], options: AddOptions) {
     }
   }
 
+  if (options.withTests) {
+    try {
+      console.log("  Installing test runner…");
+      await installDependencies(["tsx"], true);
+      console.log(styleText("green", "✔"), "Installed test runner.");
+    } catch (error) {
+      if (!(error instanceof DependencyInstallError)) throw error;
+      console.log(
+        styleText("yellow", "ℹ"),
+        `Could not install ${error.command}; add tsx manually.`,
+      );
+      process.exitCode = 1;
+    }
+  }
+
   // Fetch and write all component files
   const componentsDir = path.join(process.cwd(), config.components);
   const allWritten: string[] = [];
@@ -124,7 +140,10 @@ export async function add(componentNames: string[], options: AddOptions) {
 
   for (const def of componentDefs) {
     if (!def) continue;
-    const files = await fetchComponent(def, ref);
+    const files = await fetchComponent(
+      { ...def, files: options.withTests ? [...def.files, ...(def.testFiles ?? [])] : def.files },
+      ref,
+    );
     const baselines: Record<string, string> = {};
     if (options.overwrite) {
       for (const file of files) {
@@ -224,4 +243,11 @@ export async function add(componentNames: string[], options: AddOptions) {
   }
 
   console.log();
+
+  if (options.withTests) {
+    console.log(
+      styleText("dim", "  Run tests with"),
+      styleText("cyan", `npx tsx --test ${config.components}/**/*.test.tsx`),
+    );
+  }
 }

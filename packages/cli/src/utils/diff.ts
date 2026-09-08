@@ -169,8 +169,12 @@ export async function compareComponent(
   ref?: string,
   installed?: Record<string, InstalledFile>,
 ): Promise<ComponentComparison> {
-  const upstreamFiles = await fetchComponent(def, ref);
-  const removedFiles = Object.keys(installed ?? {}).filter((file) => !def.files.includes(file));
+  // Optional tests only participate after this consumer has installed them.
+  // Otherwise `diff` would falsely report every opt-in test as missing.
+  const trackedTests = (def.testFiles ?? []).filter((file) => installed?.[file]);
+  const currentFiles = [...def.files, ...trackedTests];
+  const upstreamFiles = await fetchComponent({ ...def, files: currentFiles }, ref);
+  const removedFiles = Object.keys(installed ?? {}).filter((file) => !currentFiles.includes(file));
   upstreamFiles.push(...removedFiles.map((file) => ({ path: file, content: "" })));
   const files: FileComparison[] = [];
 
