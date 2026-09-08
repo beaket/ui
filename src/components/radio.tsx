@@ -23,7 +23,7 @@ function RadioGroupItem({ className, ...props }: RadioItemProps) {
     <RadioGroupPrimitive.Item
       data-slot="radio-item"
       className={cn(
-        "group peer border-border-strong relative size-4 shrink-0 rounded-full border before:absolute before:inset-[-14px] before:content-['']",
+        "group peer border-border-strong relative size-6 shrink-0 rounded-full border before:absolute before:inset-[-11px] before:content-['']",
         // Instrument grammar: the chassis is neutral at rest and reveals a thin
         // action edge on hover. A checked radio can't be unchecked, so it gets
         // no press affordance.
