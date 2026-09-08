@@ -4,21 +4,29 @@ import { styleText } from "node:util";
 import path from "path";
 import prompts from "prompts";
 import { contentHash, getConfig, writeConfig, type BeaketConfig } from "../utils/config.ts";
+import { checkSetup } from "../utils/setup.ts";
 import { extractThemeBlock, replaceThemeInCss } from "../utils/theme.ts";
 import { THEME_CSS, VALID_THEMES } from "../utils/themes.ts";
 import { requireTypeScript } from "../utils/typescript.ts";
 
 interface TsConfig {
   compilerOptions?: {
+    baseUrl?: string;
     paths?: Record<string, string[]>;
   };
   references?: Array<{ path?: string } | string>;
 }
 
-function componentPathFromAlias(paths?: Record<string, string[]>): string | undefined {
+export interface DetectedAlias {
+  name: string;
+  directory: string;
+  components: string;
+}
+
+function componentPathFromAlias(paths?: Record<string, string[]>): DetectedAlias | undefined {
   if (!paths) return undefined;
 
-  let componentAliasPath: string | undefined;
+  let componentAliasPath: DetectedAlias | undefined;
   for (const [alias, targets] of Object.entries(paths)) {
     // A single wildcard alias maps an import root to a source directory, e.g.
     // "@/*" -> "./src/*" or "~/*" -> "./app/*".
@@ -30,11 +38,15 @@ function componentPathFromAlias(paths?: Record<string, string[]>): string | unde
 
     const prefix = target.replace(/^\.\//, "").replace(/\/?\*$/, "");
     if (prefix.endsWith("/components") || prefix === "components") {
-      componentAliasPath = prefix ? `${prefix}/ui` : "ui";
+      componentAliasPath = { name: aliasRoot, directory: prefix, components: `${prefix}/ui` };
       continue;
     }
 
-    return prefix ? `${prefix}/components/ui` : "components/ui";
+    return {
+      name: aliasRoot,
+      directory: prefix,
+      components: prefix ? `${prefix}/components/ui` : "components/ui",
+    };
   }
 
   return componentAliasPath;
@@ -109,15 +121,24 @@ function parseTsConfig(content: string): TsConfig {
   return JSON.parse(removeTrailingCommas(withoutComments)) as TsConfig;
 }
 
-async function readTsConfig(configPath: string, visited: Set<string>): Promise<string | undefined> {
+async function readTsConfig(
+  configPath: string,
+  visited: Set<string>,
+): Promise<DetectedAlias | undefined> {
   const resolvedPath = path.resolve(configPath);
   if (visited.has(resolvedPath) || !existsSync(resolvedPath)) return undefined;
   visited.add(resolvedPath);
 
   try {
     const tsconfig = parseTsConfig(await readFile(resolvedPath, "utf-8"));
+    const base = path.resolve(path.dirname(resolvedPath), tsconfig.compilerOptions?.baseUrl ?? ".");
     const componentPath = componentPathFromAlias(tsconfig.compilerOptions?.paths);
-    if (componentPath) return componentPath;
+    if (componentPath)
+      return {
+        ...componentPath,
+        directory: path.resolve(base, componentPath.directory),
+        components: path.resolve(base, componentPath.components),
+      };
 
     for (const reference of tsconfig.references ?? []) {
       const referencePath = typeof reference === "string" ? reference : reference.path;
@@ -135,12 +156,17 @@ async function readTsConfig(configPath: string, visited: Set<string>): Promise<s
   }
 }
 
-export async function detectAliasPath(cwd = process.cwd()): Promise<string> {
+export async function detectAlias(cwd = process.cwd()): Promise<DetectedAlias | undefined> {
   // Check the root configs, then follow project references (used by React Router).
   for (const configFile of ["tsconfig.json", "tsconfig.app.json"]) {
     const componentPath = await readTsConfig(path.join(cwd, configFile), new Set());
     if (componentPath) return componentPath;
   }
+}
+
+export async function detectAliasPath(cwd = process.cwd()): Promise<string> {
+  const alias = await detectAlias(cwd);
+  if (alias) return path.relative(cwd, alias.components);
 
   // Fallback: detect from package.json
   const pkgPath = path.join(cwd, "package.json");
@@ -321,6 +347,8 @@ export async function init(options: InitOptions) {
     };
   }
 
+  const setupWarnings = await checkSetup(await detectAlias(), Boolean(options.yes), response.css);
+
   // Write beaket.ui.json
   const config: BeaketConfig = {
     components: response.components,
@@ -362,7 +390,11 @@ export async function init(options: InitOptions) {
   }
 
   console.log();
-  console.log(styleText("green", "Done!"), "Beaket UI is ready.");
+  console.log(
+    setupWarnings
+      ? styleText("yellow", "Initialized with setup warnings.")
+      : styleText("green", "Done! Beaket UI is ready."),
+  );
   console.log();
   console.log("Add components:");
   console.log(styleText("cyan", "  npx @beaket/ui add button"));
