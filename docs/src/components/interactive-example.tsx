@@ -16,6 +16,8 @@ import SelectDefault from "../../../src/examples/select/default";
 import SelectWithGroups from "../../../src/examples/select/with-groups";
 import SheetAllStates from "../../../src/examples/sheet/all-states";
 import SheetDefault from "../../../src/examples/sheet/default";
+import SliderAllStates from "../../../src/examples/slider/all-states";
+import SliderDefault from "../../../src/examples/slider/default";
 import SwitchAllStates from "../../../src/examples/switch/all-states";
 import SwitchOnOff from "../../../src/examples/switch/on-off";
 import SwitchSizes from "../../../src/examples/switch/sizes";
@@ -54,6 +56,8 @@ const interactiveExamples = {
   "select/WithGroups": SelectWithGroups,
   "sheet/AllStates": SheetAllStates,
   "sheet/Default": SheetDefault,
+  "slider/AllStates": SliderAllStates,
+  "slider/Default": SliderDefault,
   "switch/AllStates": SwitchAllStates,
   "switch/OnOff": SwitchOnOff,
   "switch/Sizes": SwitchSizes,

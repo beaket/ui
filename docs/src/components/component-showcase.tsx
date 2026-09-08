@@ -83,10 +83,24 @@ export function ComponentShowcase({ components }: ComponentShowcaseProps) {
             <div
               className={`-m-1 min-h-0 flex-1 p-1 ${overflowClass} [&_[data-slot=input-wrapper]]:w-full [&_[data-slot=input]]:w-full [&_[data-slot=select]]:w-full [&_ul]:justify-start [&>*]:m-0`}
             >
-              <StoryPreview
-                componentName={component.name}
-                storyName={component.docs.previewStory}
-              />
+              {component.name === "slider" ? (
+                // Radix hides thumbs until mount. This linked, noninteractive grid
+                // needs a static specimen, not hydration of every component.
+                <div aria-hidden="true" className="relative flex min-h-11 items-center">
+                  <div className="border-border-strong bg-bg-input h-2 w-full border">
+                    <div className="bg-bg-emphasis h-full w-2/5" />
+                  </div>
+                  <div
+                    data-slot="slider-specimen-thumb"
+                    className="border-border-strong bg-bg-input absolute left-2/5 size-5 -translate-x-1/2 border"
+                  />
+                </div>
+              ) : (
+                <StoryPreview
+                  componentName={component.name}
+                  storyName={component.docs.previewStory}
+                />
+              )}
             </div>
           </div>
         );
