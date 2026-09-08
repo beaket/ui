@@ -29,7 +29,7 @@ export function Checkbox({ className, ...props }: CheckboxProps) {
     >
       <CheckboxPrimitive.Indicator
         data-slot="checkbox-indicator"
-        className="flex items-center justify-center text-current transition-transform duration-100 group-active:translate-x-px group-active:translate-y-px"
+        className="flex items-center justify-center text-current transition-transform duration-100 group-enabled:group-active:translate-x-px group-enabled:group-active:translate-y-px"
       >
         <Check className="size-3 group-data-[state=indeterminate]:hidden" />
         <Minus className="hidden size-3 group-data-[state=indeterminate]:block" />
