@@ -2,7 +2,17 @@
 
 import { Slot, Slottable } from "@radix-ui/react-slot";
 import { type ClassValue, clsx } from "clsx";
-import { createContext, useContext, useId, useLayoutEffect, useMemo, useState } from "react";
+import {
+  Children,
+  cloneElement,
+  createContext,
+  isValidElement,
+  useContext,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
@@ -20,8 +30,46 @@ function useFieldContext(part: string) {
   return context;
 }
 
-// Register mounted parts, including those behind wrappers and conditional branches.
-// Unlike a child scan, this also removes references when a message unmounts.
+function hasContent(children: React.ReactNode) {
+  return children != null && children !== false && children !== "";
+}
+
+function prepareFieldParts(children: React.ReactNode, invalid: boolean, controlId: string) {
+  const associations: Associations = { label: [], description: [] };
+  const counts: Record<keyof Associations, number> = { label: 0, description: 0 };
+  const visit = (nodes: React.ReactNode): React.ReactNode => {
+    const mapped = Children.map(nodes, (node) => {
+      if (!isValidElement<{ children?: React.ReactNode; id?: string }>(node)) return node;
+      if (node.type === FieldRoot) return node;
+
+      const kind =
+        node.type === FieldLabel
+          ? "label"
+          : node.type === FieldHint || node.type === FieldError
+            ? "description"
+            : undefined;
+      const visible =
+        node.type === FieldLabel ||
+        (node.type === FieldError
+          ? invalid && hasContent(node.props.children)
+          : hasContent(node.props.children));
+      if (kind && visible) {
+        const id = node.props.id ?? `${controlId}-${kind}-${counts[kind]++}`;
+        associations[kind].push(id);
+        return cloneElement(node, { id });
+      }
+
+      return node.props.children === undefined
+        ? node
+        : cloneElement(node, undefined, visit(node.props.children));
+    });
+    return Children.count(nodes) === 1 ? (mapped?.[0] ?? null) : mapped;
+  };
+  return { associations, children: visit(children) };
+}
+
+// Direct parts are collected during render for SSR. This effect only covers
+// parts hidden inside an opaque wrapper, and removes dynamic parts on unmount.
 function useFieldPart(part: string, kind: keyof Associations, active: boolean, id?: string) {
   const context = useFieldContext(part);
   const generatedId = useId();
@@ -29,7 +77,9 @@ function useFieldPart(part: string, kind: keyof Associations, active: boolean, i
   const { setAssociations } = context;
   useLayoutEffect(() => {
     if (!active) return;
-    setAssociations((current) => ({ ...current, [kind]: [...current[kind], partId] }));
+    setAssociations((current) =>
+      current[kind].includes(partId) ? current : { ...current, [kind]: [...current[kind], partId] },
+    );
     return () =>
       setAssociations((current) => ({
         ...current,
@@ -66,7 +116,20 @@ function FieldRoot({
   const generatedId = useId();
   const controlId = providedId ?? generatedId;
   const invalid = providedInvalid ?? Boolean(error);
-  const [associations, setAssociations] = useState<Associations>({ label: [], description: [] });
+  const content = [
+    label != null && <FieldLabel key="label">{label}</FieldLabel>,
+    <Slottable key="control">
+      {typeof children === "function" ? (
+        <FieldControl>{children(controlId)}</FieldControl>
+      ) : (
+        children
+      )}
+    </Slottable>,
+    hint != null && <FieldHint key="hint">{hint}</FieldHint>,
+    error != null && <FieldError key="error">{error}</FieldError>,
+  ];
+  const prepared = prepareFieldParts(content, invalid, controlId);
+  const [associations, setAssociations] = useState<Associations>(() => prepared.associations);
   const context = useMemo(
     () => ({ controlId, invalid, associations, setAssociations }),
     [controlId, invalid, associations],
@@ -80,16 +143,7 @@ function FieldRoot({
         className={cn("flex flex-col gap-2", className)}
         {...props}
       >
-        {label != null && <FieldLabel>{label}</FieldLabel>}
-        <Slottable>
-          {typeof children === "function" ? (
-            <FieldControl>{children(controlId)}</FieldControl>
-          ) : (
-            children
-          )}
-        </Slottable>
-        {hint != null && <FieldHint>{hint}</FieldHint>}
-        {error != null && <FieldError>{error}</FieldError>}
+        {prepared.children}
       </Comp>
     </FieldContext.Provider>
   );
@@ -138,7 +192,7 @@ export interface FieldHintProps extends React.ComponentProps<"p"> {
   asChild?: boolean;
 }
 export function FieldHint({ asChild, id, className, children, ...props }: FieldHintProps) {
-  const visible = children != null && children !== false && children !== "";
+  const visible = hasContent(children);
   const { partId } = useFieldPart("Field.Hint", "description", visible, id);
   const Comp = asChild ? Slot : "p";
   return visible ? (
@@ -158,7 +212,7 @@ export interface FieldErrorProps extends React.ComponentProps<"p"> {
 }
 export function FieldError({ asChild, id, className, children, ...props }: FieldErrorProps) {
   const { invalid } = useFieldContext("Field.Error");
-  const visible = invalid && children != null && children !== false && children !== "";
+  const visible = invalid && hasContent(children);
   const { partId } = useFieldPart("Field.Error", "description", visible, id);
   const Comp = asChild ? Slot : "p";
   return visible ? (

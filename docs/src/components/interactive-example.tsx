@@ -5,6 +5,8 @@ import DialogAllStates from "../../../src/examples/dialog/all-states";
 import DialogDefault from "../../../src/examples/dialog/default";
 import DropdownMenuAllStates from "../../../src/examples/dropdown-menu/all-states";
 import DropdownMenuDefault from "../../../src/examples/dropdown-menu/default";
+import FieldAllStates from "../../../src/examples/field/all-states";
+import FieldDefault from "../../../src/examples/field/default";
 import InputAffixes from "../../../src/examples/input/affixes";
 import InputAllStates from "../../../src/examples/input/all-states";
 import InputAllTypes from "../../../src/examples/input/all-types";
@@ -45,6 +47,8 @@ const interactiveExamples = {
   "dialog/Default": DialogDefault,
   "dropdown-menu/AllStates": DropdownMenuAllStates,
   "dropdown-menu/Default": DropdownMenuDefault,
+  "field/AllStates": FieldAllStates,
+  "field/Default": FieldDefault,
   "input/AllStates": InputAllStates,
   "input/AllTypes": InputAllTypes,
   "input/Affixes": InputAffixes,

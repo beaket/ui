@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
+import { renderToString } from "react-dom/server";
 import { expect, screen, userEvent, waitFor, within } from "storybook/test";
 import AllStatesExample from "../examples/field/all-states";
 import DefaultExample from "../examples/field/default";
@@ -151,5 +152,31 @@ export const DynamicDescriptions: Story = {
     await expect(control).toHaveAccessibleDescription("Private address. External instructions.");
     const ids = [...canvasElement.querySelectorAll("[id]")].map((node) => node.id);
     await expect(new Set(ids).size).toBe(ids.length);
+  },
+};
+
+export const SsrAssociations: Story = {
+  tags: ["!autodocs"],
+  render: () => <div data-testid="ssr-host" />,
+  play: async ({ canvasElement }) => {
+    const tree = (
+      <Field invalid>
+        <Field.Label>Email</Field.Label>
+        <Field.Control>
+          <Input />
+        </Field.Control>
+        <Field.Hint>Account email.</Field.Hint>
+        <Field.Error>Email is required.</Field.Error>
+      </Field>
+    );
+    const host = within(canvasElement).getByTestId("ssr-host");
+    host.innerHTML = renderToString(tree);
+
+    const control = host.querySelector("[data-slot='field-control']");
+    const label = host.querySelector("[data-slot='field-label']");
+    const hint = host.querySelector("[data-slot='field-hint']");
+    const error = host.querySelector("[data-slot='field-error']");
+    expect(control).toHaveAttribute("aria-labelledby", label?.id);
+    expect(control).toHaveAttribute("aria-describedby", `${hint?.id} ${error?.id}`);
   },
 };
