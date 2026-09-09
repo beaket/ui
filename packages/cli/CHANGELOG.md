@@ -1,5 +1,98 @@
 # @beaket/ui
 
+## 4.0.0
+
+### Major Changes
+
+- [#906](https://github.com/beaket/ui/pull/906) [`0d51ce4`](https://github.com/beaket/ui/commit/0d51ce4be915e49140a026db2389d27717ce681b) Thanks [@jihnma](https://github.com/jihnma)! - Breaking: `Tooltip` no longer mounts its own `TooltipProvider`
+
+  `Tooltip` wrapped every instance in its own `TooltipPrimitive.Provider`, so a
+  `TooltipProvider` placed around a group was shadowed by the inner one and its
+  `delayDuration` could never reach a tooltip. The provider is now what it is in
+  Radix — required, and the single place the delay is configured.
+
+  ```diff
+  - <Tooltip delayDuration={700}>…</Tooltip>
+  - <Tooltip delayDuration={700}>…</Tooltip>
+  + <TooltipProvider delayDuration={700}>
+  +   <Tooltip>…</Tooltip>
+  +   <Tooltip>…</Tooltip>
+  + </TooltipProvider>
+  ```
+
+  Every `Tooltip` must now sit inside a `TooltipProvider`; Radix throws otherwise.
+  Mount one near the root of your app. `delayDuration` stays available on a single
+  `Tooltip` as a per-tooltip override of the provider's value, and the provider
+  still defaults to `0`.
+
+### Minor Changes
+
+- [#954](https://github.com/beaket/ui/pull/954) [`025f5c8`](https://github.com/beaket/ui/commit/025f5c88adf658cee81f7aeb96a5b10acdd725d8) Thanks [@jihnma](https://github.com/jihnma)! - Add `ui list [query]` to discover registry components with descriptions before initializing a project. Support the same explicit registry-ref/latest options as add and diff. Enforce the documented TypeScript-only contract before init or add writes files; plain-JavaScript projects receive actionable guidance instead of silently acquiring unconfigured TSX.
+
+- [#952](https://github.com/beaket/ui/pull/952) [`e7eede1`](https://github.com/beaket/ui/commit/e7eede16aa3e85c4511b3aeaefa8514b6cf6de7f) Thanks [@jihnma](https://github.com/jihnma)! - Contain Table overflow with a keyboard-accessible scroll container. Expose Dialog and Sheet content props, sizing and close labels, Button loading labels, and DataTable/Pagination localization without editing installed source.
+
+  Add Navigation longest-prefix matching with route-segment boundaries and a custom matching callback, preserving exact matching and explicit active overrides.
+
+- [#960](https://github.com/beaket/ui/pull/960) [`b6ad115`](https://github.com/beaket/ui/commit/b6ad115e2d689bbb75f31b979c2a04d5213acd43) Thanks [@jihnma](https://github.com/jihnma)! - Add Field with composable Label, Control, Hint and Error parts plus optional render-function sugar. Share generated IDs and validation state across native and Radix controls, track mounted descriptions, and leave validation and layout policy to the application.
+
+- [#951](https://github.com/beaket/ui/pull/951) [`8325a00`](https://github.com/beaket/ui/commit/8325a0038e42dfd99f075ee957d8f669ed1b1e0b) Thanks [@jihnma](https://github.com/jihnma)! - Generate light, dark and system theme preferences with persistent override examples. Add managed-block hashes, edit warnings and read-only theme previews. Honor reduced motion globally, remove unused 7px spacing tokens in favor of existing Tailwind spacing, and clarify generated CSS ownership.
+
+- [#950](https://github.com/beaket/ui/pull/950) [`3fbca06`](https://github.com/beaket/ui/commit/3fbca06400b9d46574c8bf28432499f0dda6ea48) Thanks [@jihnma](https://github.com/jihnma)! - Mark hook-based components as client modules and export all compound parts by name for Next.js App Router server pages. Existing compound APIs remain supported inside client components.
+
+- [#966](https://github.com/beaket/ui/pull/966) [`fd212f3`](https://github.com/beaket/ui/commit/fd212f30d77e8f7441ce207f713e16161f98634a) Thanks [@jihnma](https://github.com/jihnma)! - feat(cli): add component smoke tests with `add --with-tests`
+
+- [#957](https://github.com/beaket/ui/pull/957) [`f417f8b`](https://github.com/beaket/ui/commit/f417f8b19e2e6d4340717585e5f58aa6f54f5d37) Thanks [@jihnma](https://github.com/jihnma)! - Add Radix-backed Progress for determinate/indeterminate task progress and Slider for single/multiple values, keyboard input, native forms, RTL and vertical layouts. Both expose named and compound parts plus a short default composition. Tracks use neutral ink-and-border styling; slider thumbs preserve a 44px hit area and keyboard focus. Progress is not a measurement meter.
+
+- [#949](https://github.com/beaket/ui/pull/949) [`44a97c6`](https://github.com/beaket/ui/commit/44a97c6e9ee5dc43ee4b3caefd90677d93cd768b) Thanks [@jihnma](https://github.com/jihnma)! - Pin registry downloads to the CLI release tag. Use --registry-ref to select a tag or commit, or --latest to explicitly resolve main to a commit. Missing release tags fail with explicit fallback guidance instead of silently fetching main.
+
+  Record the registry ref, SHA-256 hash and CLI version for each installed file in beaket.ui.json, preserving existing baselines when local changes are skipped. Diff compares the recorded baseline, local source and target release, verifies baseline hashes, and separates local customizations from upstream changes. Exit codes are 0 for clean/local-only, 1 for mergeable updates, 2 for conflicts, and 3 for unknown baselines or errors. Comparing changes on both sides requires Git. Overwrite remains an explicit replacement with backups; automatic merging is deferred.
+
+- [#955](https://github.com/beaket/ui/pull/955) [`aad0a34`](https://github.com/beaket/ui/commit/aad0a340af4afd1ae96ea90cd782cc884fc42a9c) Thanks [@jihnma](https://github.com/jihnma)! - Add the canonical danger variant to Button, Badge and Alert without removing destructive, error or caution. Alert also accepts info, success and accent as aliases for note, tip and important. Existing styles, icons, callout titles and defaults are unchanged. No new color scale or renamed consumer API.
+
+- [#963](https://github.com/beaket/ui/pull/963) [`dd9d9b4`](https://github.com/beaket/ui/commit/dd9d9b4216d35c1fdc804a7a4bd49698f248dd47) Thanks [@jihnma](https://github.com/jihnma)! - feat(cli): merge recorded local component edits during add --overwrite
+
+### Patch Changes
+
+- [#956](https://github.com/beaket/ui/pull/956) [`dcf571d`](https://github.com/beaket/ui/commit/dcf571d5f90e1cde92e939d59ab519913ac35906) Thanks [@jihnma](https://github.com/jihnma)! - Document the copied-source update lifecycle and migration from native HTML. Explain version-pinned diffs, numbered backups, wrapper-first customization, theme ownership, named server-component imports, Select sentinels, native form submission, route matching and mobile table scrolling. Add a browser check for the documented Radix FormData behavior.
+
+- [#947](https://github.com/beaket/ui/pull/947) [`5ff6181`](https://github.com/beaket/ui/commit/5ff6181bafd2445bb28a94f676835769c50c0ee5) Thanks [@jihnma](https://github.com/jihnma)! - Type development warnings without requiring Node globals in browser projects, remove DataTable's unused generic, and generate documented React requirements from the registry. Remove the deprecated baseUrl option from installation instructions.
+
+- [#959](https://github.com/beaket/ui/pull/959) [`91f7def`](https://github.com/beaket/ui/commit/91f7defeca8a75dceb41f7870e2bde1ac4c195d4) Thanks [@jihnma](https://github.com/jihnma)! - Align Checkbox and Radio at 24px and give Switch distinct 16/20/24px heights with proportional thumbs. Preserve fixed chassis and inner-part press travel. Correct border-aware hit expanders to measure at least 44px rather than the previous 42px.
+
+- [#953](https://github.com/beaket/ui/pull/953) [`56188fb`](https://github.com/beaket/ui/commit/56188fb1040f610845a48d61f5f9ca2508e5b8a7) Thanks [@jihnma](https://github.com/jihnma)! - Make Radix-hidden backgrounds inert while Select and modal DropdownMenu overlays are open. This absorbs the aria-hidden-focus audit defect still present in @radix-ui/react-select 2.3.7 and @radix-ui/react-dropdown-menu 2.1.24. Native inert is required; existing inert regions are preserved. Background focusability is restored when Radix releases the last overlay's hiding marker. No axe rule suppression is needed for these overlays.
+
+- [#906](https://github.com/beaket/ui/pull/906) [`0d51ce4`](https://github.com/beaket/ui/commit/0d51ce4be915e49140a026db2389d27717ce681b) Thanks [@jihnma](https://github.com/jihnma)! - Remove `className` redeclarations from six component prop types
+
+  `AvatarProps`, `CheckboxProps`, `RadioGroupProps`, `RadioItemProps`,
+  `SwitchProps`, and `TextareaProps` each redeclared `className?: string` inside an
+  interface already extending a props type that provides it. It reached no
+  consumer and no docs table — the props generator excludes `className`. Types are
+  unchanged. `CheckboxProps`, `RadioGroupProps`, and `RadioItemProps` are now type
+  aliases, matching `LabelProps`.
+
+  `PaginationBaseProps` and `DataTableProps` keep theirs: neither extends a DOM
+  props type, so the declaration is the only source.
+
+- [#906](https://github.com/beaket/ui/pull/906) [`0d51ce4`](https://github.com/beaket/ui/commit/0d51ce4be915e49140a026db2389d27717ce681b) Thanks [@jihnma](https://github.com/jihnma)! - `alert`, `badge`, and `switch` no longer depend on `class-variance-authority`
+
+  Each used `cva` for a single flat variant map with no compound variants — a
+  lookup keyed by one prop. `alert.tsx` already spelled the same lookup twice as a
+  plain object (`variantIcons`, `variantTitles`) directly beneath the `cva` call.
+  The three now use a plain object too, so `ui add alert|badge|switch` installs one
+  package fewer. `button` and `card` keep `cva`, where two axes and compound
+  variants earn it.
+
+  Rendered class strings are unchanged. `AlertProps` and `SwitchProps` drop the
+  `VariantProps<…>` they extended, which restated literal unions the interfaces
+  already declare.
+
+- [#947](https://github.com/beaket/ui/pull/947) [`5ff6181`](https://github.com/beaket/ui/commit/5ff6181bafd2445bb28a94f676835769c50c0ee5) Thanks [@jihnma](https://github.com/jihnma)! - Preserve local files in numbered backups before overwriting, label overwritten files explicitly, and recommend reviewing diffs before discarding customizations. Resolve transitive registry dependencies when adding a component. Theme updates now ask before replacing tokens, and re-running init preserves existing configuration and directs theme switches to the theme command.
+
+- [#961](https://github.com/beaket/ui/pull/961) [`8fac889`](https://github.com/beaket/ui/commit/8fac889c6d613ce08342876e18aa4d077cc2eddb) Thanks [@jihnma](https://github.com/jihnma)! - Check bundler aliases and Tailwind v4/plugin setup during init instead of reporting
+  an unverified project as ready. Offer a backed-up, confirmed Vite 8 native paths
+  edit for simple configs; preserve toolchain files under --yes and print manual
+  instructions for unsupported or conflicting configurations.
+
 ## 3.1.0
 
 ### Minor Changes

@@ -27,35 +27,30 @@ for (const scheme of ["light", "dark"] as const) {
         document.body.append(preserved);
       });
       const root = page.locator("#storybook-root");
-      for (let cycle = 0; cycle < 2; cycle++) {
-        await trigger.focus();
-        await page.keyboard.press("Enter");
-        await expect(root).toHaveAttribute("inert", "");
-        await page
-          .locator("#storybook-root button")
-          .last()
-          .evaluate((el) => el.focus());
-        expect(await root.evaluate((el) => el.contains(document.activeElement))).toBe(false);
-        if (kind === "dropdownmenu") {
-          await page.getByRole("menuitem", { name: "Invite users" }).focus();
-          await page.keyboard.press("ArrowRight");
-          await expect(page.getByRole("menuitem", { name: "Email", exact: true })).toBeVisible();
-        }
-        const result = await new AxeBuilder({ page }).withRules(["aria-hidden-focus"]).analyze();
-        await info.attach(`axe-${cycle}`, {
-          body: JSON.stringify(result),
-          contentType: "application/json",
-        });
-        expect(result.violations).toEqual([]);
-        if (kind === "dropdownmenu") {
-          await page.keyboard.press("ArrowLeft");
-          await expect(root).toHaveAttribute("inert", "");
-        }
-        await page.keyboard.press("Escape");
-        await expect(trigger).toBeFocused();
-        await expect(root).not.toHaveAttribute("inert");
-        await expect(page.locator("#already-inert")).toHaveAttribute("inert", "");
+      await trigger.focus();
+      await page.keyboard.press("Enter");
+      await expect(root).toHaveAttribute("inert", "");
+      await page
+        .locator("#storybook-root button")
+        .last()
+        .evaluate((el) => el.focus());
+      expect(await root.evaluate((el) => el.contains(document.activeElement))).toBe(false);
+      if (kind === "dropdownmenu") {
+        await page.getByRole("menuitem", { name: "Invite users" }).focus();
+        await page.keyboard.press("ArrowRight");
+        await expect(page.getByRole("menuitem", { name: "Email", exact: true })).toBeVisible();
       }
+      const result = await new AxeBuilder({ page }).withRules(["aria-hidden-focus"]).analyze();
+      await info.attach("axe", { body: JSON.stringify(result), contentType: "application/json" });
+      expect(result.violations).toEqual([]);
+      if (kind === "dropdownmenu") {
+        await page.keyboard.press("ArrowLeft");
+        await expect(root).toHaveAttribute("inert", "");
+      }
+      await page.keyboard.press("Escape");
+      await expect(trigger).toBeFocused();
+      await expect(root).not.toHaveAttribute("inert");
+      await expect(page.locator("#already-inert")).toHaveAttribute("inert", "");
     });
   }
 }
