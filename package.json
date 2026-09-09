@@ -48,6 +48,7 @@
     "@storybook/addon-vitest": "10.6.0",
     "@storybook/react-vite": "10.6.0",
     "@tailwindcss/vite": "4.3.3",
+    "@types/node": "^26.5.0",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.7",
     "@typescript-eslint/parser": "^8.69.0",
