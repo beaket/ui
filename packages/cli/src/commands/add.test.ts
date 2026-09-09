@@ -125,8 +125,11 @@ it("adds and records opt-in test files", async () => {
       ref,
       hash: contentHash(testFile),
     });
-    expect(vi.mocked(installDependencies)).toHaveBeenCalledWith(["tsx"], true);
+    expect(vi.mocked(installDependencies)).toHaveBeenCalledWith(["tsx", "@types/node"], true);
     const localTest = path.join(directory, "ui/button.test.tsx");
+    expect(await readFile(path.join(directory, "beaket.ui.test.json"), "utf8")).toContain(
+      '"jsx": "react-jsx"',
+    );
     await writeFile(localTest, testFile.replace('"button"', '"custom button"'));
     latestTest = testFile.replace("// tail", "// upstream");
     await add(["button"], { registryRef: nextRef, withTests: true, overwrite: true });

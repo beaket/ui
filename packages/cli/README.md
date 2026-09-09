@@ -57,7 +57,7 @@ npx @beaket/ui add <components...> [options]
 
 When a component already exists, `add` compares your copy against the latest registry version: files that already match are left untouched, and only files that differ prompt to overwrite — so you know your copy is out of sync, not just that a file is present.
 
-`--with-tests` keeps the default install lean. It adds each selected component's Node test and `tsx` as a dev dependency; run them with `npx tsx --test <components-dir>/**/*.test.tsx`.
+`--with-tests` keeps the default install lean. It adds each selected component's Node test, `tsx`, and `@types/node` as dev dependencies, then creates `beaket.ui.test.json` for the automatic JSX runtime; run them with `npx tsx --tsconfig beaket.ui.test.json --test <components-dir>/**/*.test.tsx`.
 
 ### `diff`
 
