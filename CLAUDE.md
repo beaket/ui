@@ -85,6 +85,6 @@ When creating a component, you **must** create all of:
 - [ ] `src/components/[name].tsx` — Component with `data-slot`, `cn`, design tokens
 - [ ] `src/components/[name].stories.tsx` — Storybook with `tags: ["autodocs"]` + interaction tests via `play` function
 - [ ] `registry/registry.json` — Register with dependencies and docs sections
-- [ ] `.changeset/*.md` — Package name must be `@beaket/ui` (minor for new/feature, patch for fix). **NEVER use `major` — see `docs/git-rules.md`**
+- [ ] `.changeset/*.md` — Package name must be `@beaket/ui`; a new component is `minor`, while any other release type follows `docs/git-rules.md`. `major` requires explicit maintainer approval.
 
 **Testing portals**: Use `screen` (not `canvasElement`) for Dialog, Popover, etc. Don't mock `onOpenChange` with `fn()`.
