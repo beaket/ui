@@ -65,16 +65,16 @@ describe("wrapThemeCss", () => {
     const result = wrapThemeCss(currentTheme);
 
     expect(result.match(/--surface-[0-2]\s*:/g)).toHaveLength(6);
-    expect(result).toContain("--surface-0: #f3f3ef");
-    expect(result).toContain("--surface-1: #f9f9f5");
-    expect(result).toContain("--surface-2: #fffffb");
-    expect(result).toContain("--tone-0: #f3f3ef");
-    expect(result).toContain("--tone-3: #a7a8a7");
-    expect(result).toContain("--tone-6: #686b6e");
+    expect(result).toContain("--surface-0: #fcfcfa");
+    expect(result).toContain("--surface-1: #f9f9f9");
+    expect(result).toContain("--surface-2: #f5f5f5");
+    expect(result).toContain("--tone-0: #fcfcfa");
+    expect(result).toContain("--tone-3: #aaaaaa");
+    expect(result).toContain("--tone-6: #666666");
     expect(result).toContain("@media (prefers-color-scheme: dark)");
-    expect(result).toContain("--surface-0: #0b0e14");
-    expect(result).toContain("--tone-11: #f3f1e8");
-    expect(result).toContain("--signal-success: #3f8a55");
+    expect(result).toContain("--surface-0: #101010");
+    expect(result).toContain("--tone-11: #f5f5f5");
+    expect(result).toContain("--signal-success: #00452d");
     expect(result).toContain("--signal-info-alt: #005f72");
     expect(result).toContain("--signal-info-alt-on: var(--tone-0)");
     expect(result).toContain("--text-sm: 0.8125rem");
@@ -111,9 +111,9 @@ describe("replaceThemeInCss", () => {
     const { css, replaced } = replaceThemeInCss(existing, currentTheme);
 
     expect(replaced).toBe(true);
-    expect(css).toContain("--surface-0: #f3f3ef");
-    expect(css).toContain("--tone-3: #a7a8a7");
-    expect(css).toContain("--tone-6: #686b6e");
+    expect(css).toContain("--surface-0: #fcfcfa");
+    expect(css).toContain("--tone-3: #aaaaaa");
+    expect(css).toContain("--tone-6: #666666");
     expect(css).not.toContain("--surface-brand");
     expect(css).not.toContain("--shadow-size-active");
   });

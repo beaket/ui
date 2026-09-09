@@ -23,14 +23,14 @@ function RadioGroupItem({ className, ...props }: RadioItemProps) {
     <RadioGroupPrimitive.Item
       data-slot="radio-item"
       className={cn(
-        "group peer border-border-strong relative size-6 shrink-0 rounded-full border before:absolute before:inset-[-11px] before:content-['']",
+        "group peer border-border relative size-6 shrink-0 rounded-full border before:absolute before:inset-[-11px] before:content-['']",
         // Instrument grammar: the chassis is neutral at rest and reveals a thin
         // action edge on hover. A checked radio can't be unchecked, so it gets
         // no press affordance.
         "bg-bg-input enabled:data-[state=unchecked]:hover:shadow-offset-action cursor-pointer transition-[background-color,box-shadow] duration-100",
         "enabled:data-[state=unchecked]:hover:bg-bg-hover enabled:data-[state=unchecked]:active:bg-bg-active",
         "focus-visible:outline-border-focus focus-visible:outline-2 focus-visible:outline-offset-2",
-        "data-[state=checked]:border-border-strong data-[state=checked]:cursor-default",
+        "data-[state=checked]:border-border data-[state=checked]:cursor-default",
         "disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:hover:border-border-muted disabled:cursor-not-allowed disabled:border-dashed disabled:shadow-none",
         "disabled:data-[state=checked]:border-border-muted",
         "aria-[invalid=true]:border-danger-solid aria-[invalid=true]:focus-visible:outline-danger-solid",
