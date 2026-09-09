@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import * as React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Input } from "./input";
 
