@@ -88,13 +88,13 @@ See `CLAUDE.md` § CSS tokens — the two-layer system (68 shared semantic names
 
 ## Where to make changes
 
-| Goal                            | Where                                                                        |
-| ------------------------------- | ---------------------------------------------------------------------------- |
-| New component                   | `src/components/` + follow Required Checklist                                |
-| Fix existing component          | `src/components/[name].tsx` + changeset (patch)                              |
-| Add a dependency to a component | `src/components/[name].tsx` + update `registry/registry.json` `dependencies` |
-| CLI command change              | `packages/cli/src/commands/` + changeset                                     |
-| Theme / token change            | `src/themes/[theme].css` + `utils/themes.ts` (bundled copy)                  |
-| Registry entry only             | `registry/registry.json` (no component code change)                          |
-| Docs site                       | `docs/` — Astro pages, no changeset needed                                   |
-| Paper editor                    | See `packages/paper/docs/CONTEXT.md`                                         |
+| Goal                            | Where                                                                         |
+| ------------------------------- | ----------------------------------------------------------------------------- |
+| New component                   | `src/components/` + follow Required Checklist                                 |
+| Fix existing component          | `src/components/[name].tsx` + changeset; use `docs/git-rules.md` for its type |
+| Add a dependency to a component | `src/components/[name].tsx` + update `registry/registry.json` `dependencies`  |
+| CLI command change              | `packages/cli/src/commands/` + changeset                                      |
+| Theme / token change            | `src/themes/[theme].css` + `utils/themes.ts` (bundled copy)                   |
+| Registry entry only             | `registry/registry.json` (no component code change)                           |
+| Docs site                       | `docs/` — Astro pages, no changeset needed                                    |
+| Paper editor                    | See `packages/paper/docs/CONTEXT.md`                                          |
