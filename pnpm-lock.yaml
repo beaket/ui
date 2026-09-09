@@ -123,7 +123,7 @@ overrides:
   fast-uri: '>=3.1.2'
 
 patchedDependencies:
-  '@changesets/cli@3.0.1': b9a9b30836fc3f86c1febfb49ade57aa2026178f83a44bd4033194fbc3175877
+  '@changesets/cli@3.0.1': 85ea7c8e12cb6c267b68b460997f8c922a33e62fbba85496b4ed12782617db30
 
 importers:
 
@@ -189,7 +189,7 @@ importers:
         version: 1.0.1
       '@changesets/cli':
         specifier: ^3.0.0
-        version: 3.0.1(patch_hash=b9a9b30836fc3f86c1febfb49ade57aa2026178f83a44bd4033194fbc3175877)
+        version: 3.0.1(patch_hash=85ea7c8e12cb6c267b68b460997f8c922a33e62fbba85496b4ed12782617db30)
       '@playwright/test':
         specifier: ^1.62.1
         version: 1.63.0
@@ -6648,7 +6648,7 @@ snapshots:
       '@changesets/get-github-info': 1.0.1
       '@changesets/types': 7.0.0
 
-  '@changesets/cli@3.0.1(patch_hash=b9a9b30836fc3f86c1febfb49ade57aa2026178f83a44bd4033194fbc3175877)':
+  '@changesets/cli@3.0.1(patch_hash=85ea7c8e12cb6c267b68b460997f8c922a33e62fbba85496b4ed12782617db30)':
     dependencies:
       '@changesets/apply-release-plan': 8.0.0
       '@changesets/assemble-release-plan': 7.0.0
