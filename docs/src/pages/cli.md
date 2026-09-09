@@ -92,7 +92,7 @@ are left alone; changed files prompt before they are overwritten.
 Every replacement saves the previous file as `.bak`, then `.bak.1`, `.bak.2`, and
 so on. Review the diff or hand-merge customizations before choosing to overwrite.
 
-`--with-tests` is opt-in so normal installs stay small. It copies Node-based smoke tests for every selected component and installs `tsx` as a dev dependency. Run them with `npx tsx --test <components-dir>/**/*.test.tsx`.
+`--with-tests` is opt-in so normal installs stay small. It copies Node-based smoke tests for every selected component, installs `tsx` and `@types/node` as dev dependencies, and creates `beaket.ui.test.json` for the automatic JSX runtime. Run them with `npx tsx --tsconfig beaket.ui.test.json --test <components-dir>/**/*.test.tsx`.
 
 `add` and `diff` use the registry tag matching the CLI version (`@beaket/ui@X.Y.Z`).
 Pass `--registry-ref <tag|sha>` to choose a version, or `--latest` to explicitly use

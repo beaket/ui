@@ -1,3 +1,4 @@
+import { writeFile } from "node:fs/promises";
 import { styleText } from "node:util";
 import path from "path";
 import { contentHash, getConfig, writeConfig } from "../utils/config.ts";
@@ -23,6 +24,21 @@ import { requireTypeScript } from "../utils/typescript.ts";
 interface AddOptions extends RegistryOptions {
   overwrite?: boolean;
   withTests?: boolean;
+}
+
+const TEST_TSCONFIG = "beaket.ui.test.json";
+const TEST_TSCONFIG_CONTENT = `${JSON.stringify(
+  { compilerOptions: { jsx: "react-jsx", types: ["node"] } },
+  null,
+  2,
+)}\n`;
+
+async function ensureTestTsconfig(): Promise<void> {
+  try {
+    await writeFile(path.join(process.cwd(), TEST_TSCONFIG), TEST_TSCONFIG_CONTENT, { flag: "wx" });
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+  }
 }
 
 export async function add(componentNames: string[], options: AddOptions) {
@@ -116,7 +132,7 @@ export async function add(componentNames: string[], options: AddOptions) {
   if (options.withTests) {
     try {
       console.log("  Installing test runner…");
-      await installDependencies(["tsx"], true);
+      await installDependencies(["tsx", "@types/node"], true);
       console.log(styleText("green", "✔"), "Installed test runner.");
     } catch (error) {
       if (!(error instanceof DependencyInstallError)) throw error;
@@ -126,6 +142,7 @@ export async function add(componentNames: string[], options: AddOptions) {
       );
       process.exitCode = 1;
     }
+    await ensureTestTsconfig();
   }
 
   // Fetch and write all component files
@@ -247,7 +264,10 @@ export async function add(componentNames: string[], options: AddOptions) {
   if (options.withTests) {
     console.log(
       styleText("dim", "  Run tests with"),
-      styleText("cyan", `npx tsx --test ${config.components}/**/*.test.tsx`),
+      styleText(
+        "cyan",
+        `npx tsx --tsconfig ${TEST_TSCONFIG} --test ${config.components}/**/*.test.tsx`,
+      ),
     );
   }
 }
