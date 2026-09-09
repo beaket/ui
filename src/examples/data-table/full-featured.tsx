@@ -75,7 +75,6 @@ const args = {
   pageSize: 5,
   className: "[&_td]:!py-0.5",
   selectable: true,
-  onRowClick: () => {},
   onSelectionChange: () => {},
 };
 

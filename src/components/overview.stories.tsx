@@ -156,13 +156,6 @@ export const AccessibleStates: StoryObj = {
 // --- the kitchen sink ------------------------------------------------------
 
 export const AllComponents: StoryObj = {
-  parameters: {
-    // `data-table/full-featured` demos `onRowClick`, which makes each `<tr>` a
-    // `role="button"` wrapping the row's own checkbox — axe's nested-interactive.
-    // It is a defect in that prop's markup, not in this page, and this page is
-    // the first surface that runs axe over the published examples.
-    a11y: { config: { rules: [{ id: "nested-interactive", enabled: false }] } },
-  },
   render: () => (
     <div className="bg-bg text-fg min-h-screen space-y-8 p-6">
       <header className="space-y-1">
