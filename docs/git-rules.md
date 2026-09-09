@@ -16,6 +16,8 @@ The public contract is the documented CLI interface, the component source and ty
 
 For an initial-development `0.y.z` package, SemVer permits API changes; use `minor` for an incompatible public-contract change and never hide it in a `patch`.
 
+Every external API change is a breaking change, regardless of whether its release type is `patch`, `minor`, or `major`. Its changeset description must start with **`Breaking change:`** and include migration instructions.
+
 ### Major changes require explicit approval
 
 **Major version bumps are restricted** and require explicit maintainer approval. Classify the change correctly first: do not submit an intended `major` as a `minor` placeholder. Without approval, stop for direction or keep the API and deprecate it in a `minor` release.
@@ -48,7 +50,7 @@ ALLOW_MAJOR=1 git commit -m "feat!: remove deprecated API"
 - Package name must be one of the published workspace packages: `@beaket/ui` (the CLI in `packages/cli`) or `@beaket/paper` (the editor in `packages/paper`). Match the changeset to the package you actually changed.
 - One changeset per logical change
 - Write clear, user-facing descriptions (these appear in the changelog)
-- Include migration instructions for any breaking change
+- Every external API change must start its description with **`Breaking change:`** and include migration instructions, regardless of release type
 
 ## Architecture Decision Records
 
