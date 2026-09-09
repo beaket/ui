@@ -57,7 +57,7 @@ export function SliderTrack({ className, ...props }: SliderTrackProps) {
     <SliderPrimitive.Track
       data-slot="slider-track"
       className={cn(
-        "border-border-strong bg-bg-input data-[disabled]:border-border-muted data-[disabled]:bg-bg-disabled relative grow overflow-hidden border data-[disabled]:border-dashed data-[orientation=horizontal]:h-2 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-2",
+        "border-border bg-bg-input data-[disabled]:border-border-muted data-[disabled]:bg-bg-disabled relative grow overflow-hidden border data-[disabled]:border-dashed data-[orientation=horizontal]:h-2 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-2",
         className,
       )}
       {...props}
@@ -85,7 +85,7 @@ export function SliderThumb({ className, ...props }: SliderThumbProps) {
     <SliderPrimitive.Thumb
       data-slot="slider-thumb"
       className={cn(
-        "border-border-strong bg-bg-input relative block size-5 border before:absolute before:inset-[-13px] before:content-['']",
+        "border-border bg-bg-input relative block size-5 border before:absolute before:inset-[-13px] before:content-['']",
         "hover:shadow-offset-action focus-visible:outline-border-focus cursor-grab focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-x-px active:translate-y-px active:cursor-grabbing active:shadow-none",
         "data-[disabled]:border-border-muted data-[disabled]:bg-bg-disabled data-[disabled]:translate-none data-[disabled]:cursor-not-allowed data-[disabled]:border-dashed data-[disabled]:shadow-none",
         className,

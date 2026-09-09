@@ -13,7 +13,7 @@ export interface InputProps extends Omit<React.ComponentProps<"input">, "prefix"
 const inputBaseStyles = [
   "h-9 w-full px-3 text-sm",
   "bg-bg-input text-fg",
-  "border border-border-strong",
+  "border border-border",
   "placeholder:text-fg-subtle",
   // The caret is the pen — the one vivid voice lives where the next letter lands.
   "caret-accent-solid selection:bg-accent-bg",

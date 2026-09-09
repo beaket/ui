@@ -126,22 +126,22 @@ describe("theme palette contract", () => {
       Object.fromEntries([...palette].filter(([token]) => token.startsWith("--signal-")));
 
     expect(signals(solaceLight)).toEqual({
-      "--signal-danger": "#a44735",
-      "--signal-warning": "#d18b3f",
-      "--signal-success": "#3f8a55",
+      "--signal-danger": "#a13d52",
+      "--signal-warning": "#e0a52f",
+      "--signal-success": "#00452d",
       "--signal-info": "#53628f",
       "--signal-info-alt": "#005f72",
       "--signal-accent": "#2b5bff",
       "--signal-danger-on": "var(--tone-0)",
-      "--signal-success-on": "var(--tone-11)",
+      "--signal-success-on": "var(--tone-0)",
       "--signal-warning-on": "var(--tone-11)",
       "--signal-info-on": "var(--tone-0)",
       "--signal-info-alt-on": "var(--tone-0)",
       "--signal-accent-on": "var(--tone-0)",
     });
     expect(signals(solaceDark)).toEqual({
-      "--signal-danger": "#e47463",
-      "--signal-warning": "#d99a50",
+      "--signal-danger": "#dc7184",
+      "--signal-warning": "#e4b650",
       "--signal-success": "#45aa88",
       "--signal-info": "#7190d6",
       "--signal-info-alt": "#48a4af",
@@ -174,15 +174,15 @@ describe("theme palette contract", () => {
     }
   });
 
-  it("keeps Solace light surfaces ordered and visibly separated", () => {
+  it("keeps Solace light surfaces neutral, receding, and visibly separated", () => {
     const surfaces = surfaceColors(solaceLight);
     const lightness = surfaces.map(relativeLuminance);
 
-    expect(lightness[1]).toBeGreaterThan(lightness[0]);
-    expect(lightness[2]).toBeGreaterThan(lightness[1]);
-    expect(contrastRatio(surfaces[0], surfaces[1])).toBeGreaterThanOrEqual(1.05);
-    expect(contrastRatio(surfaces[1], surfaces[2])).toBeGreaterThanOrEqual(1.05);
-    expect(contrastRatio(surfaces[0], surfaces[2])).toBeGreaterThanOrEqual(1.1);
+    expect(lightness[1]).toBeLessThan(lightness[0]);
+    expect(lightness[2]).toBeLessThan(lightness[1]);
+    expect(contrastRatio(surfaces[0], surfaces[1])).toBeGreaterThanOrEqual(1.02);
+    expect(contrastRatio(surfaces[1], surfaces[2])).toBeGreaterThanOrEqual(1.03);
+    expect(contrastRatio(surfaces[0], surfaces[2])).toBeGreaterThanOrEqual(1.06);
     expect(solaceLight.get("--tone-0")).toBe(solaceLight.get("--surface-0"));
   });
 

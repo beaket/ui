@@ -34,7 +34,7 @@ function SelectTrigger({ className, size = "default", children, ...props }: Sele
       data-size={size}
       className={cn(
         "flex w-full items-center justify-between gap-2",
-        "border-border-strong bg-bg-input text-fg border px-3 py-2 text-sm",
+        "border-border bg-bg-input text-fg border px-3 py-2 text-sm",
         // Field that opens: the trigger opens a menu (a pressable — it keeps the
         // keyboard ring) but it's field-surfaced, not a Button, so it stays quiet
         // at rest like its field neighbors (no standing edge, no hover growth) and
