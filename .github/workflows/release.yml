@@ -41,7 +41,9 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
-        run: pnpm install
+        # Reapply patchedDependencies instead of reusing a stale patched CLI
+        # artifact from the pnpm store; `changeset publish` imports that module.
+        run: pnpm install --force
 
       - name: Create Release Pull Request or Publish
         id: changesets
