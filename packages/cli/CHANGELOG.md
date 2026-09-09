@@ -1,5 +1,13 @@
 # @beaket/ui
 
+## 4.0.1
+
+### Patch Changes
+
+- [#969](https://github.com/beaket/ui/pull/969) [`9d7020f`](https://github.com/beaket/ui/commit/9d7020f9e83ae711c695153b27d9840ca3a13359) Thanks [@jihnma](https://github.com/jihnma)! - Fix opt-in component smoke tests when run with `tsx` in projects using the automatic JSX runtime.
+
+- [#971](https://github.com/beaket/ui/pull/971) [`373ff8b`](https://github.com/beaket/ui/commit/373ff8b086b0bc1d7485b4f96bca97059454a89f) Thanks [@jihnma](https://github.com/jihnma)! - Install Node type definitions for opt-in component smoke tests in projects that restrict ambient types.
+
 ## 4.0.0
 
 ### Major Changes
