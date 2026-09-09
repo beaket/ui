@@ -2,13 +2,23 @@
 
 ## Versioning Policy
 
-### NEVER use `major` in changesets without explicit approval
+This project follows [Semantic Versioning](https://semver.org/) for its published packages. Classify a change by its released public contract, not by whether the implementation was a “fix.”
 
-This project uses [Changesets](https://github.com/changesets/changesets) for versioning. **Major version bumps are restricted** and must be explicitly approved by a maintainer.
+### Public contract and changeset type
 
-- **`patch`** — Bug fixes, typos, minor adjustments. Use freely.
-- **`minor`** — New features, new components, non-breaking enhancements. Use freely.
-- **`major`** — **BLOCKED by default.** Breaking changes, removed APIs, renamed exports.
+The public contract is the documented CLI interface, the component source and types installed by `ui add`, and the documented exports of published packages. Internal refactors and docs-only changes do not change this contract.
+
+| Change                                                                    | Changeset |
+| ------------------------------------------------------------------------- | --------- |
+| Restores defective behavior without reducing the released public contract | `patch`   |
+| Adds backward-compatible functionality or deprecates a public API         | `minor`   |
+| Removes, renames, narrows, or otherwise makes a public API incompatible   | `major`   |
+
+For an initial-development `0.y.z` package, SemVer permits API changes; use `minor` for an incompatible public-contract change and never hide it in a `patch`.
+
+### Major changes require explicit approval
+
+**Major version bumps are restricted** and require explicit maintainer approval. Classify the change correctly first: do not submit an intended `major` as a `minor` placeholder. Without approval, stop for direction or keep the API and deprecate it in a `minor` release.
 
 ### Why?
 
@@ -16,10 +26,10 @@ A major version bump signals breaking changes to every consumer of this library.
 
 ### How to release a major version
 
-1. Discuss with maintainers first
-2. Create the changeset with `minor` initially
-3. A maintainer will change it to `major` and add `ALLOW_MAJOR=1` to the commit message to bypass the pre-commit hook
-4. The release PR will then bump the major version
+1. Discuss with maintainers first.
+2. Add a `major` changeset with migration instructions.
+3. Set `ALLOW_MAJOR=1` while committing to bypass the pre-commit hook.
+4. The release PR will then bump the major version.
 
 ### Pre-commit hook
 

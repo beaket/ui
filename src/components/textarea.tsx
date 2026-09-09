@@ -84,7 +84,7 @@ export function Textarea({
       ref={mergedRef}
       data-slot="textarea"
       className={cn(
-        "border-border-strong bg-bg-input text-fg w-full border px-3 py-2 text-sm",
+        "border-border bg-bg-input text-fg w-full border px-3 py-2 text-sm",
         "placeholder:text-fg-subtle",
         "caret-accent-solid selection:bg-accent-bg",
         // Cap-off: same field grammar as Input — quiet at rest, static action

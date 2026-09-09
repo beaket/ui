@@ -1,5 +1,11 @@
 # @beaket/ui
 
+## 4.0.2
+
+### Patch Changes
+
+- [#976](https://github.com/beaket/ui/pull/976) [`df7567e`](https://github.com/beaket/ui/commit/df7567e67fe5632cd069ed58884ef70166b088d4) Thanks [@jihnma](https://github.com/jihnma)! - Refine Solace's neutral palette, status signals, and component borders.
+
 ## 4.0.1
 
 ### Patch Changes

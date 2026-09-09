@@ -12,14 +12,14 @@ export function Checkbox({ className, ...props }: CheckboxProps) {
     <CheckboxPrimitive.Root
       data-slot="checkbox"
       className={cn(
-        "group peer border-border-strong relative size-6 shrink-0 border before:absolute before:inset-[-11px] before:content-['']",
+        "group peer border-border relative size-6 shrink-0 border before:absolute before:inset-[-11px] before:content-['']",
         // Instrument grammar: the chassis is neutral at rest. Hover reveals a
         // thin action edge; press physics belong to the indicator, not the box.
         "bg-bg-input enabled:hover:shadow-offset-action cursor-pointer transition-[background-color,box-shadow] duration-100",
         "enabled:data-[state=unchecked]:hover:bg-bg-hover enabled:data-[state=unchecked]:active:bg-bg-active",
         "focus-visible:outline-border-focus focus-visible:outline-2 focus-visible:outline-offset-2",
-        "data-[state=checked]:border-border-strong data-[state=checked]:bg-bg-emphasis data-[state=checked]:text-fg-on-emphasis enabled:data-[state=checked]:hover:bg-bg-emphasis-hover",
-        "data-[state=indeterminate]:border-border-strong data-[state=indeterminate]:bg-bg-emphasis data-[state=indeterminate]:text-fg-on-emphasis enabled:data-[state=indeterminate]:hover:bg-bg-emphasis-hover",
+        "data-[state=checked]:border-border data-[state=checked]:bg-bg-emphasis data-[state=checked]:text-fg-on-emphasis enabled:data-[state=checked]:hover:bg-bg-emphasis-hover",
+        "data-[state=indeterminate]:border-border data-[state=indeterminate]:bg-bg-emphasis data-[state=indeterminate]:text-fg-on-emphasis enabled:data-[state=indeterminate]:hover:bg-bg-emphasis-hover",
         "disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:hover:border-border-muted disabled:cursor-not-allowed disabled:border-dashed disabled:shadow-none",
         "disabled:data-[state=checked]:border-border-muted disabled:data-[state=checked]:bg-bg-disabled disabled:data-[state=checked]:text-fg-disabled",
         "aria-[invalid=true]:border-danger-solid aria-[invalid=true]:focus-visible:outline-danger-solid",

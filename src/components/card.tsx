@@ -14,34 +14,31 @@ const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 // dedupe custom shadow utilities against one another, so the grey shade (per
 // elevation) and the pressable accent edge are assigned through mutually
 // exclusive compound variants rather than layered and overridden.
-const cardVariants = cva(
-  "border border-border-muted bg-bg-raised text-fg flex flex-col gap-4 p-5",
-  {
-    variants: {
-      elevation: {
-        flat: "",
-        shade: "",
-        overlay: "bg-bg-overlay",
-      },
-      interactive: {
-        true: "cursor-pointer transition-[box-shadow,translate] duration-100 active:translate-x-px active:translate-y-px focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2",
-        false: "",
-      },
+const cardVariants = cva("border border-border bg-bg-raised text-fg flex flex-col gap-4 p-5", {
+  variants: {
+    elevation: {
+      flat: "",
+      shade: "",
+      overlay: "bg-bg-overlay",
     },
-    compoundVariants: [
-      // Passive surface — the quiet grey shade, one drawn level per elevation.
-      { interactive: false, elevation: "shade", class: "shadow-offset" },
-      { interactive: false, elevation: "overlay", class: "shadow-offset-overlay" },
-      // Pressable — neutral at rest, then a thin accent edge on hover. Focus owns
-      // the outer outline and pressing drops the card onto the revealed edge.
-      {
-        interactive: true,
-        class: "hover:shadow-offset-action active:shadow-none",
-      },
-    ],
-    defaultVariants: { elevation: "shade", interactive: false },
+    interactive: {
+      true: "cursor-pointer transition-[box-shadow,translate] duration-100 active:translate-x-px active:translate-y-px focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2",
+      false: "",
+    },
   },
-);
+  compoundVariants: [
+    // Passive surface — the quiet grey shade, one drawn level per elevation.
+    { interactive: false, elevation: "shade", class: "shadow-offset" },
+    { interactive: false, elevation: "overlay", class: "shadow-offset-overlay" },
+    // Pressable — neutral at rest, then a thin accent edge on hover. Focus owns
+    // the outer outline and pressing drops the card onto the revealed edge.
+    {
+      interactive: true,
+      class: "hover:shadow-offset-action active:shadow-none",
+    },
+  ],
+  defaultVariants: { elevation: "shade", interactive: false },
+});
 
 export interface CardRootProps extends React.ComponentProps<"div"> {
   /** flat | shade | overlay. How the surface lifts off the page — the drawn grey offset shade by default */
