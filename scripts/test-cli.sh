@@ -17,12 +17,12 @@ test -f beaket.ui.json
 ! grep -q '"\$schema"' beaket.ui.json
 
 # Test single component add
-$CLI add button
+$CLI add button --latest
 test -f components/ui/button.tsx
 grep -q "clsx" package.json
 
 # Test multiple components add
-$CLI add alert label input
+$CLI add alert label input --latest
 test -f components/ui/alert.tsx
 test -f components/ui/label.tsx
 test -f components/ui/input.tsx
