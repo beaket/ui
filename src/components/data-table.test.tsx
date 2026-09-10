@@ -13,3 +13,15 @@ test("DataTable renders supplied rows", () => {
     /Ada/,
   );
 });
+
+test("DataTable leaves selectable rows non-interactive", () => {
+  const markup = renderToStaticMarkup(
+    <DataTable
+      data={[{ name: "Ada" }]}
+      columns={[{ accessorKey: "name", header: "Name" }]}
+      selectable
+    />,
+  );
+
+  assert.doesNotMatch(markup, /<tr[^>]*\s(?:role|tabindex)=/);
+});

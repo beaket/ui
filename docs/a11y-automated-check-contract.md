@@ -42,9 +42,7 @@ they are merged. Every entry must name the exact rule and affected story or
 flow, an owner, an expiry date, and an issue that removes it. Broad DOM
 exclusions, tag-wide suppressions, and an open-ended baseline are prohibited.
 
-| Rule and scope                                   | Reason                                                                                                                                                                        | Owner     | Expires    | Removal issue |
-| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- | ------------- |
-| `nested-interactive` in `Overview/AllComponents` | `DataTable`'s `onRowClick` makes each row a `role="button"` around the row's own checkbox. The defect is in that prop's markup; this page is only the first scan to reach it. | `@jihnma` | 2026-12-05 | #903          |
+There are no current exceptions.
 
 When an exception expires, the scan fails until the rule is fixed or a new,
 reviewed exception replaces it. New exceptions must not weaken unrelated

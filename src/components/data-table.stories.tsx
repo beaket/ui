@@ -216,7 +216,7 @@ export const AllFeatures = () => (
 // One consolidated test folding the five former per-behavior tests. Every
 // feature is on one table, exercised in an order chosen to avoid coupling:
 // pagination, then sorting (returns to unsorted), then selection, then search
-// (auto-resets to page 1 and clears), then row click.
+// (auto-resets to page 1 and clears).
 const interactionUsers: User[] = [
   ...users,
   { id: "6", name: "Frank Moore", email: "frank@example.com", role: "Viewer", status: "inactive" },
@@ -405,7 +405,7 @@ export const EmptyStateDataSlotTest: Story = {
 
 // §11 — a logic component must be deep behind a narrow interface. The root
 // builds the TanStack instance and hands it back; the parts read it. Every one
-// of the 20 config props is then either a part or the consumer's own markup.
+// of the configuration props is then either a part or the consumer's own markup.
 export const ComposedPartsTest: Story = {
   tags: ["!autodocs"],
   render: () => (

@@ -107,8 +107,6 @@ export interface DataTableProps<TData extends RowData> {
   emptyMessage?: string;
   /** Custom empty state component */
   emptyState?: React.ReactNode;
-  /** Row click handler */
-  onRowClick?: (row: TData) => void;
   /** Additional CSS class for the table container */
   className?: string;
   /** Enable column sorting (default: true) */
@@ -442,7 +440,7 @@ function DataTablePagination({ className, ...props }: React.ComponentProps<"div"
  * A data table component built on TanStack Table.
  * Features sorting, filtering, pagination, and row selection.
  *
- * The 20 configuration props below are sugar (§2) over the parts: pass children
+ * The configuration props below are sugar (§2) over the parts: pass children
  * — or a function receiving the TanStack instance — to arrange
  * `DataTable.Toolbar`, `.Table`, `.Head`, `.Body`, `.Row`, `.Empty` and
  * `.Pagination` yourself. `getRowClassName`, `onRowMouseEnter` and
@@ -458,7 +456,6 @@ function DataTableRoot<TData extends RowData>({
   pageSize = 10,
   emptyMessage = "No data available",
   emptyState,
-  onRowClick,
   className,
   enableSorting = true,
   enableFiltering = true,
@@ -565,26 +562,9 @@ function DataTableRoot<TData extends RowData>({
                     <DataTableRow
                       key={row.id}
                       row={row}
-                      onClick={() => onRowClick?.(row.original)}
-                      onKeyDown={
-                        onRowClick
-                          ? (e) => {
-                              if (e.key === "Enter" || e.key === " ") {
-                                e.preventDefault();
-                                onRowClick(row.original);
-                              }
-                            }
-                          : undefined
-                      }
-                      tabIndex={onRowClick ? 0 : undefined}
-                      role={onRowClick ? "button" : undefined}
                       onMouseEnter={() => onRowMouseEnter?.(row.original)}
                       onMouseLeave={() => onRowMouseLeave?.(row.original)}
-                      className={cn(
-                        onRowClick &&
-                          "focus-visible:outline-border-focus cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-[-2px]",
-                        getRowClassName?.(row.original),
-                      )}
+                      className={getRowClassName?.(row.original)}
                     />
                   ))
                 ) : (
