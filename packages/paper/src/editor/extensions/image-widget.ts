@@ -14,8 +14,8 @@ import { guardedDecorations } from "./composing-guard";
 // guardedDecorations (ViewPlugin) provides the composing guard, so StateField/atomicRanges/coordsAt
 // are not needed.
 //
-// Scope (first pass): displaying web URLs only. Local file drop/upload (ingest) is separate work
-// (PLAN-images.md Phase B).
+// Any URL already in markdown, including a consumer-provided or in-session blob: URL, renders here.
+// Ingest is handled separately by imageDrop (ADR-0011).
 
 export interface ParsedImage {
   alt: string;
