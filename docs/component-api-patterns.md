@@ -214,7 +214,7 @@ This supersedes the blunter "composition over configuration". The blunt version 
 
 **Rule** — ship the compositional path first. Add sugar afterwards, only if it collapses a genuinely common case, and only where removing the sugar would still leave the component fully usable.
 
-**Today** — every §2 violation the epic found now has a compositional core underneath its sugar. `Dialog.Trigger` / `Sheet.Trigger` (#885) sit beneath the `trigger` prop; `Alert.Title` / `Alert.Description` (#880) beneath `title`; Pagination's parts (#879) beneath its `mode` union; DataTable's parts (#881) beneath its 19 configuration props. In every case the old prop kept working and became the shortcut, which is the shape this section asks for.
+**Today** — every §2 violation the epic found now has a compositional core underneath its sugar. `Dialog.Trigger` / `Sheet.Trigger` (#885) sit beneath the `trigger` prop; `Alert.Title` / `Alert.Description` (#880) beneath `title`; Pagination's parts (#879) beneath its `mode` union; DataTable's parts (#881) beneath its 19 configuration props. The legacy props remain shortcuts except `onRowClick`, which was removed because row-level interactivity was inaccessible.
 
 ## §3 The Slot Pattern — `asChild`, never an `as` prop
 
