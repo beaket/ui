@@ -6,7 +6,7 @@ import { EditorView } from "@codemirror/view";
 // (ADR-0007 conduit philosophy). When the consumer returns a URL via onInsertImage(resolver),
 // `![alt](url)` is inserted. Without a resolver, the default: render in-session via a blob: URL
 // (URL.createObjectURL). This matches the in-memory sandbox nature — it's honest that it breaks on
-// refresh. (PLAN-images.md Phase B agreement)
+// refresh. (ADR-0011)
 
 /** Convert a file into a URL (or the src of a markdown fragment) to place into the document. May be async (upload). */
 export type ImageResolver = (file: File) => string | Promise<string>;

@@ -259,6 +259,27 @@ describe("createHighlightController — IME guard", () => {
     expect(v.state.field(highlightField).decorations.size).toBe(1); // applied after settling
   });
 
+  it("maps existing marks during composition and holds re-resolution until it ends", async () => {
+    const v = mount("The quick brown fox");
+    const ctl = createHighlightController(v);
+    ctl.setHighlights([{ id: "q1", anchor: { quote: "quick", offset: 4 } }]);
+    (v as unknown as { inputState: { composing: number } }).inputState.composing = 1;
+    v.dispatch({ changes: { from: 0, insert: "PRE " }, userEvent: "input.type" });
+    expect(rangesOf(v.state.field(highlightField).decorations)).toEqual([
+      { from: 8, to: 13, id: "q1" },
+    ]);
+    ctl.setHighlights([{ id: "b1", anchor: { quote: "brown", offset: 10 } }]);
+    expect(rangesOf(v.state.field(highlightField).decorations)).toEqual([
+      { from: 8, to: 13, id: "q1" },
+    ]);
+    (v as unknown as { inputState: { composing: number } }).inputState.composing = -1;
+    v.contentDOM.dispatchEvent(new CompositionEvent("compositionend", { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 20));
+    expect(rangesOf(v.state.field(highlightField).decorations)).toEqual([
+      { from: 14, to: 19, id: "b1" },
+    ]);
+  });
+
   it("does not apply held changes after dispose", async () => {
     const v = mount("The quick brown fox");
     (v as unknown as { inputState: { composing: number } }).inputState.composing = 1;
