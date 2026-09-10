@@ -1,5 +1,11 @@
 # @beaket/ui
 
+## 4.1.0
+
+### Minor Changes
+
+- [#974](https://github.com/beaket/ui/pull/974) [`5b1be75`](https://github.com/beaket/ui/commit/5b1be755e3bbc6aa1d8d87601a02b44cf09fc573) Thanks [@jihnma](https://github.com/jihnma)! - **Breaking change:** Remove `DataTable`'s inaccessible `onRowClick` prop. Compose `DataTable.Row` with a cell-level link or button instead.
+
 ## 4.0.2
 
 ### Patch Changes
