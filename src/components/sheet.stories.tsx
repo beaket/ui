@@ -12,7 +12,7 @@ const meta: Meta<typeof Sheet> = {
     side: {
       control: "select",
       options: ["left", "right", "top", "bottom"],
-      description: "Side from which the sheet slides in",
+      description: "Edge the sheet is anchored to",
     },
     preventClose: {
       control: "boolean",
