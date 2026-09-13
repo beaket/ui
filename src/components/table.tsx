@@ -20,7 +20,7 @@ function TableRoot({ className, shadow, scrollLabel, ...props }: TableProps) {
       // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users need to focus this region to scroll wide tables.
       tabIndex={0}
       className={cn(
-        "focus-visible:outline-border-focus w-full min-w-0 overflow-x-auto focus-visible:outline-2",
+        "focus-visible:outline-border-focus w-full min-w-0 overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2",
         shadow && "shadow-offset",
       )}
     >

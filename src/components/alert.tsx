@@ -6,17 +6,17 @@ import { twMerge } from "tailwind-merge";
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 const alertBase =
-  "relative w-full border px-4 py-3 text-sm grid grid-cols-[calc(var(--spacing)*4)_1fr] gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5";
+  "relative w-full border px-4 py-3 text-sm grid grid-cols-[calc(var(--spacing)*4)_1fr] gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 bg-bg-raised text-fg [&_[data-slot=alert-description]]:text-fg-muted";
 
+// Raised paper, never a tinted well: the role colors the 1px rule and the glyph
+// and nothing else. Warning borrows `warning-fg` because the ochre solid is too
+// light to hold a hairline on paper.
 const variantClasses = {
-  note: "bg-bg-raised text-fg border-info-solid [&>svg]:text-info-solid [&_[data-slot=alert-description]]:text-fg-muted",
-  tip: "bg-bg-raised text-fg border-success-solid [&>svg]:text-success-solid [&_[data-slot=alert-description]]:text-fg-muted",
-  important:
-    "bg-bg-raised text-fg border-accent-solid [&>svg]:text-accent-solid [&_[data-slot=alert-description]]:text-fg-muted",
-  warning:
-    "bg-bg-raised text-fg border-warning-fg [&>svg]:text-warning-fg [&_[data-slot=alert-description]]:text-fg-muted",
-  caution:
-    "bg-bg-raised text-fg border-danger-solid [&>svg]:text-danger-solid [&_[data-slot=alert-description]]:text-fg-muted",
+  note: "border-info-solid [&>svg]:text-info-solid",
+  tip: "border-success-solid [&>svg]:text-success-solid",
+  important: "border-accent-solid [&>svg]:text-accent-solid",
+  warning: "border-warning-fg [&>svg]:text-warning-fg",
+  caution: "border-danger-solid [&>svg]:text-danger-solid",
 } as const;
 
 const variantIcons = {

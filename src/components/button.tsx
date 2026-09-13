@@ -97,7 +97,7 @@ const buttonVariants = cva(
     "disabled:shadow-none disabled:cursor-not-allowed disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled",
     "focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2",
     "[&_svg]:size-4",
-    "transition-[box-shadow,translate,border-color] duration-100",
+    "transition-[box-shadow,translate,border-color,background-color] duration-100",
   ].join(" "),
   {
     variants: {

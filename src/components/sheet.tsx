@@ -49,7 +49,7 @@ export interface SheetProps extends React.ComponentProps<typeof DialogPrimitive.
   onOpenChange?: (open: boolean) => void;
 
   /**
-   * left | right | top | bottom. Side from which the sheet slides in
+   * left | right | top | bottom. Edge the sheet is anchored to
    */
   side?: "left" | "right" | "top" | "bottom";
 
@@ -80,15 +80,6 @@ const sheetSizes = {
   lg: "sm:max-w-lg",
   xl: "sm:max-w-xl",
   full: "w-full sm:max-w-none",
-};
-
-const sideAnimations = {
-  right:
-    "data-[state=open]:animate-in data-[state=open]:slide-in-from-right data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right",
-  left: "data-[state=open]:animate-in data-[state=open]:slide-in-from-left data-[state=closed]:animate-out data-[state=closed]:slide-out-to-left",
-  top: "data-[state=open]:animate-in data-[state=open]:slide-in-from-top data-[state=closed]:animate-out data-[state=closed]:slide-out-to-top",
-  bottom:
-    "data-[state=open]:animate-in data-[state=open]:slide-in-from-bottom data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom",
 };
 
 /**
@@ -152,15 +143,14 @@ function SheetRoot({
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay
           data-slot="sheet-overlay"
-          className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 bg-bg-emphasis/50 fixed inset-0 z-40"
+          className="bg-bg-emphasis/50 fixed inset-0 z-40"
         />
         <DialogPrimitive.Content
           {...contentProps}
           data-slot="sheet-content"
           className={cn(
-            "shadow-offset-overlay border-border bg-bg-overlay fixed z-50 gap-4 border p-4",
+            "shadow-offset-overlay border-border bg-bg-overlay fixed z-50 flex flex-col gap-4 border p-6",
             fullScreen ? sidePositionsFullScreen[side] : sidePositions[side],
-            sideAnimations[side],
             !fullScreen && (side === "left" || side === "right") && sheetSizes[size],
             className,
           )}
@@ -177,7 +167,7 @@ function SheetRoot({
           {!hideCloseButton && (
             <DialogPrimitive.Close
               data-slot="sheet-close"
-              className="text-fg-muted hover:text-fg focus-visible:outline-border-focus absolute top-4 right-4 transition-colors before:absolute before:inset-[-14px] before:content-[''] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none"
+              className="text-fg-muted hover:text-fg focus-visible:outline-border-focus absolute top-4 right-4 transition-colors duration-100 before:absolute before:inset-[-14px] before:content-[''] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none"
               aria-label={closeLabel}
             >
               <X className="size-4" aria-hidden="true" />
@@ -216,7 +206,7 @@ function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sheet-header"
-      className={cn("mb-4 flex flex-col gap-2 text-left", className)}
+      className={cn("flex flex-col gap-2 text-left", className)}
       {...props}
     />
   );

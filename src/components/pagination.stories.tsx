@@ -236,7 +236,7 @@ export const ComposedPartsTest: Story = {
 
     await expect(
       canvasElement.querySelector('[data-slot="pagination-ellipsis"]'),
-    ).toHaveTextContent("...");
+    ).toHaveTextContent("…");
   },
 };
 

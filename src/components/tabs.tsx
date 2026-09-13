@@ -68,7 +68,7 @@ function TabsTrigger({ className, ...props }: React.ComponentProps<typeof TabsPr
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "group relative isolate flex h-8 items-center justify-center gap-1.5 border px-3.5 text-sm font-medium whitespace-nowrap",
+        "group relative isolate flex h-8 items-center justify-center gap-1.5 border px-3.5 text-sm whitespace-nowrap",
         "border-border-muted text-fg -ml-px first:ml-0",
         "before:absolute before:inset-[-8px] before:content-['']",
         "focus-visible:outline-border-focus focus-visible:z-[2] focus-visible:outline-2 focus-visible:outline-offset-2",
