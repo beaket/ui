@@ -1,6 +1,6 @@
 # Component API Patterns
 
-**The API-shape counterpart to `CLAUDE.md` (design rules) and `.impeccable.md` (design context).** Those decide what a component _looks like_. This decides what it _is shaped like_ as an API — and, more importantly, **which changes it can survive**.
+**The API-shape counterpart to `DESIGN.md` (the visual system) and `PRODUCT.md` (product truth).** Those decide what a component _looks like_ and why it exists. This decides what it _is shaped like_ as an API — and, more importantly, **which changes it can survive**.
 
 Maintainer doc. Lives outside the npm tarball and outside Astro routing (`docs/src/pages/`), like `git-rules.md`. No changeset needed to edit it.
 
@@ -260,7 +260,7 @@ _Term: **styling hooks** — the design-systems name for internals a component d
 
 > **POINT: the consumer's class always wins; and any utility `tailwind-merge` doesn't know must be selected, never stacked.**
 
-Every component ends with `cn(<internal classes>, className)`, so `tailwind-merge` lets the consumer override. This is `.impeccable.md` Principle 4 — _opinionated defaults, flexible overrides_ — expressed in code.
+Every component ends with `cn(<internal classes>, className)`, so `tailwind-merge` lets the consumer override. This is `PRODUCT.md` § Product Principles — _opinionated defaults, flexible overrides_ — expressed in code.
 
 **The invariant that is easy to break:** `tailwind-merge` does not know our custom utilities (`shadow-offset`, `shadow-offset-action`, `shadow-offset-overlay`) and **cannot dedupe them against each other**. Two in one class list both apply, and the result is not the design.
 

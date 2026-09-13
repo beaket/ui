@@ -1,6 +1,6 @@
 # `@beaket/ui` — orientation map
 
-**Read this before editing the monorepo.** This is the _what / where_ map for maintainers and agents — a standalone complement to `CLAUDE.md` (design rules + component authoring checklist). Changeset-exempt: lives outside every npm tarball and the docs site. For the editor package, see `packages/paper/docs/CONTEXT.md`.
+**Read this before editing the monorepo.** This is the _what / where_ map for maintainers and agents — a standalone complement to `DESIGN.md` (the visual system) and `CLAUDE.md` (component authoring checklist). Changeset-exempt: lives outside every npm tarball and the docs site. For the editor package, see `packages/paper/docs/CONTEXT.md`.
 
 ## Two kinds of packages
 
@@ -27,7 +27,7 @@ Each `.tsx` file is copied verbatim into the consumer's project by the CLI — t
 
 ### Invariants, template, checklist
 
-Owned by `CLAUDE.md` (Design Rules · Component Template · Required Checklist) — read them there. Not duplicated here: the copies drifted from the source twice (token count, theme count) before being removed.
+The visual system is owned by `DESIGN.md` at the repo root; the component template and Required Checklist are owned by `CLAUDE.md`. Read them there. Not duplicated here: the copies drifted from the source twice (token count, theme count) before being removed.
 
 ## `registry/registry.json`
 
