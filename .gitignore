@@ -18,3 +18,17 @@ storybook-static
 
 # Claude
 .claude/
+
+# design-sync (claude.ai/design): generated + verification state.
+# Durable, committed: config.json, NOTES.md, conventions.md, previews/, overrides/
+.design-sync/sb-reference/
+.design-sync/learnings/
+.design-sync/.cache/
+.design-sync/node_modules
+.design-sync/*.log
+.ds-sync/
+ds-bundle/
+
+# impeccable: PRODUCT.md / DESIGN.md / .impeccable/design.json are durable and committed.
+# Per-developer only: hook consent + private rule suppressions.
+.impeccable/config.local.json
