@@ -34,7 +34,10 @@ function SelectTrigger({ className, size = "default", children, ...props }: Sele
       data-size={size}
       className={cn(
         "flex w-full items-center justify-between gap-2",
-        "border-border bg-bg-input text-fg border px-3 py-2 text-sm",
+        "border-border bg-bg-input text-fg border px-3 text-sm",
+        // The shared height ladder — 36px beside Input and a default Button,
+        // 32px beside a small one — so a row of mixed controls aligns on both edges.
+        size === "sm" ? "h-8" : "h-9",
         // Field that opens: the trigger opens a menu (a pressable — it keeps the
         // keyboard ring) but it's field-surfaced, not a Button, so it stays quiet
         // at rest like its field neighbors (no standing edge, no hover growth) and
@@ -101,7 +104,7 @@ function SelectContent({
         {...props}
       >
         <SelectScrollUpButton />
-        <SelectPrimitive.Viewport className="max-h-radix-select-content-available-height p-1">
+        <SelectPrimitive.Viewport className="max-h-(--radix-select-content-available-height) p-1">
           {children}
         </SelectPrimitive.Viewport>
         <SelectScrollDownButton />
@@ -114,7 +117,7 @@ function SelectLabel({ className, ...props }: React.ComponentProps<typeof Select
   return (
     <SelectPrimitive.Label
       data-slot="select-label"
-      className={cn("text-fg-muted px-2 py-1.5 text-xs font-semibold", className)}
+      className={cn("text-fg-muted px-2 py-1.5 text-xs font-medium", className)}
       {...props}
     />
   );

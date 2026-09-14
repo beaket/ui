@@ -195,7 +195,7 @@ function DataTableToolbar({
         <div data-slot="data-table-search" className="relative max-w-sm flex-1">
           <Search
             data-slot="data-table-search-icon"
-            className="text-fg-muted absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
+            className="text-fg-muted absolute top-1/2 left-3 size-4 -translate-y-1/2"
           />
           <Input
             type="search"
@@ -285,16 +285,16 @@ function DataTableHead({ className, ...props }: React.ComponentProps<"thead">) {
                     {canSort && (
                       <div
                         data-slot="data-table-sort-indicator"
-                        className="flex h-4 w-4 items-center justify-center"
+                        className="flex size-4 items-center justify-center"
                       >
                         {sortDirection === "asc" ? (
-                          <ArrowUp data-slot="data-table-sort-icon" className="h-4 w-4" />
+                          <ArrowUp data-slot="data-table-sort-icon" className="size-4" />
                         ) : sortDirection === "desc" ? (
-                          <ArrowDown data-slot="data-table-sort-icon" className="h-4 w-4" />
+                          <ArrowDown data-slot="data-table-sort-icon" className="size-4" />
                         ) : (
                           <ArrowUpDown
                             data-slot="data-table-sort-icon"
-                            className="text-fg-muted h-4 w-4"
+                            className="text-fg-muted size-4"
                           />
                         )}
                       </div>

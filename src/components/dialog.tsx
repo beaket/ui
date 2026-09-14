@@ -120,13 +120,13 @@ function DialogRoot({
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay
           data-slot="dialog-overlay"
-          className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 bg-bg-emphasis/50 fixed inset-0 z-40"
+          className="bg-bg-emphasis/50 fixed inset-0 z-40"
         />
         <DialogPrimitive.Content
           {...contentProps}
           data-slot="dialog-content"
           className={cn(
-            "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 shadow-offset-overlay border-border bg-bg-overlay fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 border p-6",
+            "shadow-offset-overlay border-border bg-bg-overlay fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 border p-6",
             dialogSizes[size],
             className,
           )}
@@ -143,7 +143,7 @@ function DialogRoot({
           {!hideCloseButton && (
             <DialogPrimitive.Close
               data-slot="dialog-close"
-              className="text-fg-muted hover:text-fg focus-visible:outline-border-focus absolute top-4 right-4 transition-colors before:absolute before:inset-[-14px] before:content-[''] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none"
+              className="text-fg-muted hover:text-fg focus-visible:outline-border-focus absolute top-4 right-4 transition-colors duration-100 before:absolute before:inset-[-14px] before:content-[''] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none"
               aria-label={closeLabel}
             >
               <X className="size-4" aria-hidden="true" />
