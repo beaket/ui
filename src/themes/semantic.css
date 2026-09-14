@@ -210,6 +210,7 @@
 
   /* Animations */
   --animate-navigation-progress: navigation-progress 1s ease-in-out infinite;
+  --animate-skeleton-pulse: skeleton-pulse 2s ease-in-out infinite;
 }
 
 @keyframes navigation-progress {
@@ -218,5 +219,18 @@
   }
   100% {
     transform: translateX(400%);
+  }
+}
+
+/* A loading placeholder breathes in ink, not in light: the block moves one
+   step along the neutral ramp and back. Opacity would dim the page showing
+   through it, which is the one thing this system never does. */
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    background-color: var(--color-bg-hover);
+  }
+  50% {
+    background-color: var(--color-bg-active);
   }
 }
