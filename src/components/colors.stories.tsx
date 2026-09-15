@@ -12,7 +12,7 @@ import {
 /**
  * Two layers:
  * - A theme authors 30 palette values (surface / tone / signal / knockout / shadow).
- *   Components consume 27; tone 8–10 preserve the 12-step ramp for future roles.
+ *   Components consume 28; tone 8–9 preserve the 12-step ramp for future roles.
  * - The semantic names below are authored once and shared by every theme —
  *   components only ever use these.
  * Swatches render from the live CSS variables, so this page always shows the
@@ -121,7 +121,7 @@ function Colors() {
         <div className="border-border mb-8 border-b pb-4">
           <h1 className="text-fg text-2xl font-bold">Color Tokens</h1>
           <p className="text-fg-muted mt-1 text-sm">
-            Two layers. A theme authors 30 palette values and nothing else; 27 feed the semantic
+            Two layers. A theme authors 30 palette values and nothing else; 28 feed the semantic
             names components actually use. Tone 8–10 are reserved for ramp compatibility.
           </p>
         </div>
@@ -199,7 +199,7 @@ function Colors() {
         <section className="mb-8">
           <SectionTitle>Palette — authored by the theme</SectionTitle>
           <p className="text-fg-subtle mb-3 text-xs">
-            The 30 values a theme supplies. Components never use these directly; tone 8–10 are
+            The 30 values a theme supplies. Components never use these directly; tone 8–9 are
             reserved for 12-step ramp compatibility and future deep-ink roles.
           </p>
           <div className="text-fg mb-1 text-xs font-semibold">Tone ramp</div>
@@ -316,7 +316,7 @@ const meta: Meta<typeof Colors> = {
     docs: {
       description: {
         component:
-          "Two-layer color system: a theme authors 30 palette values; 27 feed the shared semantic names, while tone 8–10 are reserved. Components only use the semantic layer.",
+          "Two-layer color system: a theme authors 30 palette values; 28 feed the shared semantic names, while tone 8–9 are reserved. Components only use the semantic layer.",
       },
     },
   },

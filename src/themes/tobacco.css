@@ -16,8 +16,9 @@
   --surface-1: #fbf7f4;
   --surface-2: #fefbf7;
 
-  /* Tone — 0 is paper, 11 the ink; the hue runs through the whole ramp so a
-     background never reads as detached from the colour sitting on it. */
+  /* Tone — 0 is the page (it equals surface-0), 11 the ink; the hue runs
+     through the whole ramp, so a background never reads as detached from
+     the colour sitting on it. */
   --tone-0: #f6f3f0;
   --tone-1: #dddad7;
   --tone-2: #bfbbb8;
@@ -63,8 +64,9 @@
     --surface-1: #262019;
     --surface-2: #302923;
 
-    /* Tone — 0 is the page, 11 the paper; the hue runs through the whole ramp so a
-       background never reads as detached from the colour sitting on it. */
+    /* Tone — 0 is the page (it equals surface-0), 11 the paper; the hue runs
+       through the whole ramp, so a background never reads as detached from
+       the colour sitting on it. */
     --tone-0: #1b150e;
     --tone-1: #312a23;
     --tone-2: #48413a;

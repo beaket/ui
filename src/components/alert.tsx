@@ -13,7 +13,7 @@ const alertBase =
 // 2px because this is the same engagement mark the menu already draws on the
 // row you are about to act on — a box around a notice repeated the surface's
 // own boundary and made every alert shout at container weight. Warning borrows
-// `warning-fg` because the ochre solid measures 2.13:1 on paper and cannot hold
+// `warning-fg` because the ochre solid measures 1.76:1 on paper and cannot hold
 // a rule on its own.
 const variantClasses = {
   note: "border-info-solid [&>svg]:text-info-solid",

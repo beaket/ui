@@ -274,34 +274,45 @@ ladder only existed on paper.
   the focus outline, the caret in a writing field, the leading rule on the menu
   row you would act on, link text, and the faint lens fill under the current
   navigation cell. It is never a fill for a resting control and never decoration.
-- **Lens Wash** (`accent-bg-subtle`): the faintest accent wash (8% into paper).
-  Fills the current cell of a navigation strip or tab row, under a two-tone rim.
-- **Menu Wash** (`accent-bg`): the accent tint (17% into paper) behind the
+- **Lens Wash** (`accent-bg-subtle`): the faintest accent wash (8% into
+  `tone-0`, the page). Fills the current cell of a navigation strip or tab row,
+  under a two-tone rim.
+- **Menu Wash** (`accent-bg`): the accent tint (17% into `tone-0`) behind the
   currently navigated menu or select row, always paired with a 2px inset
   leading rule and ink-colored text.
 
 ### Secondary
 
-- **Graphite Ink** (`bg-emphasis` / `fg` / `border-strong`): the deepest step of
-  the neutral ramp, and the system's emphasis material. It is simultaneously the
-  body text color, the strong border color, and the primary button's fill —
-  that identity is the point. Primary emphasis is ink alone; accent joins it
-  only under hover, open ownership, or keyboard focus.
+- **Graphite Ink** (`bg-emphasis` / `border-strong`, `#16151d`): the deepest step
+  of the neutral ramp (`tone-11`), and the system's emphasis material — the strong
+  border color and the primary button's fill are one and the same ink. Primary
+  emphasis is ink alone; accent joins it only under hover, open ownership, or
+  keyboard focus.
+- **Body Ink** (`fg`, `#24232a`): one step in from the deepest (`tone-10`).
+  Running text is set a step short of full emphasis so a paragraph does not read
+  at the same pressure as a primary button — the two were the same value until
+  this revision, and the page read as pre-contrasted. It still measures 15.18:1
+  on the stock, far above the 4.5:1 floor.
 
 ### Tertiary
 
-Five status inks, each shipped with its own knockout foreground. They are
-muted on purpose — meaning without emphasis.
+Five status inks, each shipped with its own knockout foreground. Every one of
+them sits **below the accent in chroma** — that is what "meaning without
+emphasis" means here, and it is the measurable form of the One Vivid Voice Rule.
+In Solace light the accent carries 0.195 and no signal exceeds 0.160.
 
-- **Oxblood** (`danger-solid`): destructive actions, invalid fields, destructive
-  menu rows.
-- **Deep Pine** (`success-solid`): confirmation and successful state.
-- **Ochre** (`warning-solid`): caution. The only signal whose knockout is ink
-  rather than paper, because the ochre is light enough to need it. It measures
-  2.13:1 against raised paper, so it may fill a shape but must never be the only
-  thing drawing a boundary — Alert's warning rule uses `warning-fg` instead.
-- **Slate Blue** (`info-solid`) and **Teal** (`info-alt-solid`): neutral
-  information, and a second information voice when two must be distinguished.
+- **Crimson** (`danger-solid`, `#961733`): destructive actions, invalid fields,
+  destructive menu rows.
+- **Pine** (`success-solid`, `#498c67`): confirmation and successful state.
+- **Ochre** (`warning-solid`, `#ddb54c`): caution. The only signal whose knockout
+  is ink rather than paper, because the ochre is light enough to need it. It
+  measures 1.76:1 against raised paper, so it may fill a shape but must never be
+  the only thing drawing a boundary — Alert's warning rule uses `warning-fg`
+  (5.57:1) instead.
+- **Plum** (`info-solid`, `#643d75`) and **Teal** (`info-alt-solid`, `#3c9baa`):
+  neutral information, and a second information voice when two must be
+  distinguished. Plum is deliberately not a blue: the accent already owns the
+  blue band, and an informational blue beside it would read as actionable.
 
 **Every role carries the same seven slots**, so a role is swappable wholesale:
 `-solid`, `-fg-on-solid`, `-solid-hover`, `-solid-active`, `-fg`, `-bg`,
@@ -309,20 +320,31 @@ muted on purpose — meaning without emphasis.
 
 ### Neutral
 
-Two axes share one origin. The **tone ramp** descends twelve steps from paper
-into ink and supplies every stroke, every type color, and every knockout. The
-**surface ladder** rises from the page toward white and supplies the three
-container fills. Components read roles, not steps.
+Two axes share one origin. The **tone ramp** runs twelve steps from the page
+into the ink and supplies every stroke, every type color, and every knockout.
+The **surface ladder** steps _away from the page_ in three fills and supplies
+every container. Components read roles, not steps.
 
-- **Stock** (`bg`, `#f6f6f6`): the page itself — what everything is printed on.
-- **Paper** (`bg-raised`, `#fdfdfb`; `bg-input`, `#fdfdfb`): the raised sheet,
-  and the writable surface. These are the same value in Solace light but not the
-  same token: `bg-raised` is `--surface-1`, `bg-input` is `--tone-0`. The ramp
-  stays anchored on paper — the sheet — while the ladder is anchored on the
-  stock. In Solace dark the two diverge the other way (`tone-0` equals
-  `surface-0`, so a writable field sits flush with the page there).
-- **Overlay Paper** (`bg-overlay`, `#ffffff`): dialogs, sheets, menus, select
-  panels, and a card at `overlay` elevation. The top of the ladder.
+**A ladder step is separation, not lift.** Which way it travels is a per-theme
+decision — in Solace, Porcelain and Marigold light the sheets step _darker_ than
+the page; in Tobacco and Eucalyptus light, and in every dark scheme, they step
+lighter. The invariant is only that each step moves further from the page. What
+says "raised" is never the fill: it is the drawn shade (see Elevation & Depth).
+Requiring the ladder to climb toward white is what used to force a light
+scheme's page down toward grey, so there would be room above it; freeing the
+direction is what let every page move back up to near-white.
+
+- **Stock** (`bg`, `#fdfcfa`): the page itself — what everything is printed on.
+- **Writable Paper** (`bg-input`, `#fdfcfa`): the writable surface, and the
+  ramp's anchor. `bg-input` is `--tone-0`, and `--tone-0` equals `--surface-0` in
+  **all five palettes and both schemes** — one origin, two axes — so a writing
+  field always sits flush with the page and is bounded by its stroke, not its
+  fill.
+- **Paper** (`bg-raised`, `#f4f3f2`): the separated sheet — cards, table rows,
+  alerts. One ladder step off the page, and a different token from `bg-input`
+  (`--surface-1` vs `--tone-0`), which is why the two no longer share a value.
+- **Overlay Paper** (`bg-overlay`, `#ecebea`): dialogs, sheets, menus, select
+  panels, and a card at `overlay` elevation. The far end of the ladder.
 - **Pressed Paper** (`bg-hover`, `bg-active`, `bg-disabled`): the neutral
   hover and press fills, and the disabled well.
 - **Hairline** (`border`): the ordinary border that bounds a control — one step
@@ -370,19 +392,22 @@ variation.
 **The Palette-Swap Rule.** Components consume only the 69 semantic names (64
 color + 5 shadow). A theme authors 30 palette values (`--surface-0…2`,
 `--tone-0…11`, `--signal-*`, `--signal-*-on`, `--shadow-size`, `--shadow-color`,
-`--shadow-color-overlay`) and nothing else; 27 of those are functional
-dependencies and `--tone-8…10` are reserved ramp slots. Writing `--tone-4` or a
+`--shadow-color-overlay`) and nothing else; 28 of those are functional
+dependencies and `--tone-8` and `--tone-9` are the reserved ramp slots —
+`--tone-10` left reserve in this revision when `fg` moved onto it. Writing `--tone-4` or a
 raw hex inside a component is the one unforgivable color error: it breaks every
 theme at once. Dark mode is the same mechanism — a palette swap under
 `prefers-color-scheme: dark`, not a separate set of component rules.
 
 **Contrast coverage is partial, and stated as such.** The shipped contrast
 policy covers type on its fill. It does _not_ cover the selection fill, the
-structural boundaries between surface steps, or role boundaries. Measured and
-unresolved: the navigation/tab selection plate is ~1.11:1 in light and ~1.01:1
-in dark; `warning-solid` used as a boundary is 2.13:1; `border-subtle` on raised
-paper is 1.58:1, which is correct for a seam and insufficient for anything
-load-bearing.
+structural boundaries between surface steps, or role boundaries. Measured on the
+shipped Solace palette and unresolved: the navigation/tab selection plate is
+1.12:1 in light and 1.10:1 in dark; the menu wash (`accent-bg`) on an overlay
+panel is 1.11:1 in light and **1.01:1 in dark**, where it is effectively
+invisible and the 2px inset leading rule is doing all the work; `warning-solid`
+used as a boundary is 1.76:1; `border-subtle` on raised paper is 1.71:1, which
+is correct for a seam and insufficient for anything load-bearing.
 
 ## Typography
 
@@ -535,27 +560,32 @@ already said so — which is why Solace draws it at 2px in both schemes. Depth i
 also semantic: the shadow's ink says what kind of thing is raised. A grey shade
 means "this is a surface." An accent edge means "this responds to you."
 
-Offset size is a theme decision, not a component one: Porcelain draws at 1px,
-Solace, Tobacco and Eucalyptus at 2px, Marigold at 3px. The same component
-therefore feels differently pressed under a different palette, which is intended.
+Offset size is a theme decision, not a component one — `--shadow-size` is a
+palette value, and every shadow in the system is derived from it, including the
+grown edge (`calc(var(--shadow-size) + 1px)`). All five shipped palettes
+currently set it to 2px in both schemes; a palette that wanted its components to
+feel differently pressed would change that one value and nothing else.
 
 ### Shadow Vocabulary
 
 Values are Solace; `--shadow-size` and the two shade greys are per-theme.
 
-- **Surface shade** (`box-shadow: 2px 2px 0 0 #c4c4c4`): raised surfaces — a
-  card at its default elevation, a table with `shadow`. Static.
-- **Overlay shade** (`box-shadow: 2px 2px 0 0 #a0a0a0`): dialogs, sheets, menus,
+- **Surface shade** (`box-shadow: 2px 2px 0 0 #bfbdb9`): raised surfaces — a
+  card at its default elevation, a table with `shadow`. Static. The shade is not
+  a neutral grey: it carries the palette's own hue, so it reads as this paper's
+  shadow rather than a borrowed one.
+- **Overlay shade** (`box-shadow: 2px 2px 0 0 #a19e98`): dialogs, sheets, menus,
   select and dropdown panels, and a card at `overlay` elevation. A darker grey
   for a higher layer. Static.
-- **Action edge** (`box-shadow: 2px 2px 0 0 #2b5bff`): revealed on hover under
+- **Action edge** (`box-shadow: 2px 2px 0 0 #2657d0`): revealed on hover under
   an edged pressable, held statically by an engaged writing field, and taken by
   an interactive card's shade on hover.
-- **Grown action edge** (`box-shadow: 3px 3px 0 0 #2b5bff`): held by a trigger
+- **Grown action edge** (`box-shadow: 3px 3px 0 0 #2657d0`): held by a trigger
   for as long as it owns an open overlay. Open mirrors hover, one step louder.
-- **Danger edge** (`box-shadow: 2px 2px 0 0 #a13d52`): replaces the action edge
+  The 3px is derived, not authored — `calc(var(--shadow-size) + 1px)`.
+- **Danger edge** (`box-shadow: 2px 2px 0 0 #961733`): replaces the action edge
   on an invalid field under focus.
-- **Menu leading rule** (`box-shadow: inset 2px 0 0 0 #2b5bff`): the inset
+- **Menu leading rule** (`box-shadow: inset 2px 0 0 0 #2657d0`): the inset
   accent rule down the leading edge of the currently navigated menu or select
   row. 2px, because it marks engagement rather than mere proximity.
 
@@ -702,8 +732,9 @@ channel.
 - **Read-only:** sits flush with the page (`bg-bg`) with a `border-muted`
   stroke, and takes the grey surface shade on focus instead of the accent edge.
   A writable field is a fresh sheet laid on the page; a read-only one is printed
-  into it. Softening the border alone left the two states measurably identical
-  in fill and only 2.26:1 apart in stroke.
+  into it. Softening the border alone was not enough: one ramp step of stroke is
+  a difference you can measure and not one you can see, so the fill has to move
+  too.
 - **Error / Disabled:** `aria-invalid` swaps the border to the danger solid and
   the focus edge to the danger edge. Disabled follows the universal dashed
   pattern.
@@ -810,7 +841,7 @@ the inner key moves.
   description drops to `fg-muted`. 2px because this is the same engagement mark
   the menu draws on the row you are about to act on. Warning is the one variant
   that borrows `warning-fg` rather than `warning-solid`, because the ochre solid
-  measures 2.13:1 on paper and cannot hold a rule on its own.
+  measures 1.76:1 on paper and cannot hold a rule on its own.
 - **Role tints** (`{role}-bg` + `{role}-border` + `{role}-fg`) exist in the
   token layer but stay deliberately scarce in the shipped set: the accent wash
   behind a navigated menu row, the danger wash behind a destructive one, and
@@ -870,8 +901,8 @@ outline around an open-owner edge or a selected fill.
 key — a check, a dot, a thumb, a label — travels the 1px under a press.
 
 **Open defects carried by the build, recorded so they are not inherited as
-rules.** The navigation/tab selection plate measures ~1.11:1 in light and
-~1.01:1 in dark, and its two-tone rim inverts in dark — reading as lit from the
+rules.** The navigation/tab selection plate measures 1.12:1 in light and
+1.10:1 in dark, and its two-tone rim inverts in dark — reading as lit from the
 lower right, which Drawn-Not-Lit forbids. It is unfixed because a correct fix
 needs per-scheme highlight and shade palette tokens across all five themes, not
 a component patch. Switch's disabled thumb and disabled track both resolve to

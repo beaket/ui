@@ -11,13 +11,14 @@
  */
 
 :root {
-  /* Surface — toned stock, then sheets laid on it; the top sheet stops short of pure white */
+  /* Surface — bright stock, then sheets set into it; a ladder step is separation, and the drawn shade is what says raised */
   --surface-0: #faf9fc;
   --surface-1: #f1eff5;
   --surface-2: #e9e8ed;
 
-  /* Tone — 0 is paper, 11 the ink; the hue runs through the whole ramp so a
-     background never reads as detached from the colour sitting on it. */
+  /* Tone — 0 is the page (it equals surface-0), 11 the ink; the hue runs
+     through the whole ramp, so a background never reads as detached from
+     the colour sitting on it. */
   --tone-0: #faf9fc;
   --tone-1: #dbdade;
   --tone-2: #bdbbc1;
@@ -63,8 +64,9 @@
     --surface-1: #231f2a;
     --surface-2: #2d2834;
 
-    /* Tone — 0 is the page, 11 the paper; the hue runs through the whole ramp so a
-       background never reads as detached from the colour sitting on it. */
+    /* Tone — 0 is the page (it equals surface-0), 11 the paper; the hue runs
+       through the whole ramp, so a background never reads as detached from
+       the colour sitting on it. */
     --tone-0: #18141f;
     --tone-1: #2d2934;
     --tone-2: #44404b;

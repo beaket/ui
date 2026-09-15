@@ -42,7 +42,7 @@
           "#24232a",
           "#16151d"
         ],
-        "purpose": "The raised sheet — cards, table rows, alerts. Rises off the stock; carries no border of its own."
+        "purpose": "The separated sheet — cards, table rows, alerts. One ladder step off the page (darker than it in Solace light; which way the ladder travels is a per-theme decision). It carries no border of its own: the drawn shade is what says raised."
       },
       "bg-overlay": {
         "role": "neutral",
@@ -62,7 +62,7 @@
           "#24232a",
           "#16151d"
         ],
-        "purpose": "Top of the ladder: dialogs, sheets, menus, select panels, an interactive card under hover."
+        "purpose": "The far end of the ladder: dialogs, sheets, menus, select panels, an interactive card under hover."
       },
       "bg-input": {
         "role": "neutral",
@@ -82,7 +82,7 @@
           "#24232a",
           "#16151d"
         ],
-        "purpose": "tone-0, the ramp's anchor and every knockout. Same value as bg-raised in Solace light, a different token: the ramp is anchored on paper, the ladder on the stock. In dark it equals the page."
+        "purpose": "tone-0, the ramp's anchor and every knockout. In Solace it equals surface-0 in both schemes — one origin, two axes — so a writing field sits flush with the page and is bounded by its stroke, not its fill. It is a different token from bg-raised, and since this revision a different value."
       },
       "bg-emphasis": {
         "role": "secondary",
@@ -102,7 +102,7 @@
           "#24232a",
           "#16151d"
         ],
-        "purpose": "The deepest ramp step and the emphasis material — body text, strong borders, and the primary button fill are one and the same ink."
+        "purpose": "The deepest ramp step (tone-11) and the emphasis material: strong borders and the primary button fill are one and the same ink. Body text is no longer part of that identity — fg moved to tone-10 in this revision so a paragraph does not read at primary-button pressure."
       },
       "fg-muted": {
         "role": "neutral",
@@ -182,7 +182,7 @@
           "#24232a",
           "#16151d"
         ],
-        "purpose": "Pressure three, added in this revision: a divider inside a surface. Its only consumer in the shipped set is the table row rule — Separator and the dropdown/select menu rules still draw at border-muted. 1.58:1 on raised paper, correct for a seam and insufficient for anything load-bearing."
+        "purpose": "Pressure three, added in this revision: a divider inside a surface. Its only consumer in the shipped set is the table row rule — Separator and the dropdown/select menu rules still draw at border-muted. 1.71:1 on raised paper, correct for a seam and insufficient for anything load-bearing."
       },
       "border-strong": {
         "role": "neutral",
@@ -223,7 +223,7 @@
       "accent-bg": {
         "role": "primary",
         "displayName": "Menu Wash",
-        "canonical": "color-mix(in oklab, #2b5bff 17%, #fdfdfb)",
+        "canonical": "color-mix(in oklab, #2657d0 17%, #fdfcfa)",
         "tonalRamp": [
           "oklch(15% 0.248 265.6)",
           "oklch(26% 0.248 265.6)",
@@ -239,7 +239,7 @@
       "accent-bg-subtle": {
         "role": "primary",
         "displayName": "Lens Wash",
-        "canonical": "color-mix(in oklab, #2b5bff 8%, #fdfdfb)",
+        "canonical": "color-mix(in oklab, #2657d0 8%, #fdfcfa)",
         "tonalRamp": [
           "oklch(15% 0.248 265.6)",
           "oklch(26% 0.248 265.6)",
@@ -250,11 +250,11 @@
           "oklch(84% 0.248 265.6)",
           "oklch(95% 0.248 265.6)"
         ],
-        "purpose": "The lens plate under the current navigation cell or tab. Measures ~1.11:1 light and ~1.01:1 dark — a recorded gap, not a target."
+        "purpose": "The lens plate under the current navigation cell or tab. Measures 1.12:1 light and 1.10:1 dark — a recorded gap, not a target."
       },
       "danger-solid": {
         "role": "tertiary",
-        "displayName": "Oxblood",
+        "displayName": "Crimson",
         "canonical": "#961733",
         "tonalRamp": [
           "oklch(15% 0.133 10.4)",
@@ -270,7 +270,7 @@
       },
       "success-solid": {
         "role": "tertiary",
-        "displayName": "Deep Pine",
+        "displayName": "Pine",
         "canonical": "#498c67",
         "tonalRamp": [
           "oklch(15% 0.075 162.2)",
@@ -298,12 +298,12 @@
           "oklch(84% 0.143 79.9)",
           "oklch(95% 0.143 79.9)"
         ],
-        "purpose": "Caution, and the only signal knocked out in ink. 2.13:1 on paper — may fill a shape, must never be the only thing drawing a boundary."
+        "purpose": "Caution, and the only signal knocked out in ink. 1.76:1 on paper — may fill a shape, must never be the only thing drawing a boundary."
       },
       "warning-fg": {
         "role": "tertiary",
         "displayName": "Deep Ochre",
-        "canonical": "color-mix(in oklab, #e0a52f 50%, #111318)",
+        "canonical": "color-mix(in oklab, #ddb54c 50%, #16151d)",
         "tonalRamp": [
           "oklch(15% 0.143 79.9)",
           "oklch(26% 0.143 79.9)",
@@ -318,7 +318,7 @@
       },
       "info-solid": {
         "role": "tertiary",
-        "displayName": "Slate Blue",
+        "displayName": "Plum",
         "canonical": "#643d75",
         "tonalRamp": [
           "oklch(15% 0.074 269.5)",
@@ -378,32 +378,32 @@
     "shadows": [
       {
         "name": "offset",
-        "value": "2px 2px 0 0 #c4c4c4",
+        "value": "2px 2px 0 0 #bfbdb9",
         "purpose": "Surface shade. A raised card, a table with `shadow`. Static. Now the load-bearing signal that a surface is raised, since surfaces dropped their borders."
       },
       {
         "name": "offset-overlay",
-        "value": "2px 2px 0 0 #a0a0a0",
+        "value": "2px 2px 0 0 #a19e98",
         "purpose": "Overlay shade. Dialogs, sheets, menus, select panels, a card at `overlay` elevation. Darker grey for a higher layer. Static."
       },
       {
         "name": "offset-action",
-        "value": "2px 2px 0 0 #2b5bff",
+        "value": "2px 2px 0 0 #2657d0",
         "purpose": "Action edge. Revealed on hover under an edged pressable, held statically by an engaged writing field, and taken by an interactive card's shade on hover."
       },
       {
         "name": "offset-action-hover",
-        "value": "3px 3px 0 0 #2b5bff",
+        "value": "3px 3px 0 0 #2657d0",
         "purpose": "Grown action edge. Held while a trigger owns an open overlay — open mirrors hover, one step louder."
       },
       {
         "name": "offset-action-danger",
-        "value": "2px 2px 0 0 #a13d52",
+        "value": "2px 2px 0 0 #961733",
         "purpose": "Danger edge. Replaces the action edge on an invalid field under focus."
       },
       {
         "name": "menu-leading-rule",
-        "value": "inset 2px 0 0 0 #2b5bff",
+        "value": "inset 2px 0 0 0 #2657d0",
         "purpose": "The inset accent rule on the currently navigated menu or select row. 2px marks engagement rather than proximity; Alert's role rule is the same 2px mark drawn as a left border."
       },
       {
@@ -469,7 +469,7 @@
       "refersTo": "button-primary",
       "description": "Ink fill is the whole persistent emphasis signal; accent arrives only on engage.",
       "html": "<button class='ds-btn-primary'>Save changes</button>",
-      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; font-weight: 500; cursor: pointer; transition: box-shadow 100ms, translate 100ms, border-color 100ms, background-color 100ms; background: var(--color-bg-emphasis, #111318); color: var(--color-fg-on-emphasis, #fdfdfb); border: 1px solid var(--color-border-strong, #111318); } .ds-btn-primary:hover { background: color-mix(in oklab, var(--color-accent-solid, #2b5bff) 24%, var(--color-bg-emphasis, #111318)); box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2b5bff); } .ds-btn-primary:focus-visible { outline: 2px solid var(--color-border-focus, #2b5bff); outline-offset: 2px; } .ds-btn-primary:active { box-shadow: none; translate: 1px 1px; background: color-mix(in oklab, var(--color-accent-solid, #2b5bff) 14%, var(--color-bg-emphasis, #111318)); }"
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; font-weight: 500; cursor: pointer; transition: box-shadow 100ms, translate 100ms, border-color 100ms, background-color 100ms; background: var(--color-bg-emphasis, #16151d); color: var(--color-fg-on-emphasis, #fdfcfa); border: 1px solid var(--color-border-strong, #16151d); } .ds-btn-primary:hover { background: color-mix(in oklab, var(--color-accent-solid, #2657d0) 24%, var(--color-bg-emphasis, #16151d)); box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2657d0); } .ds-btn-primary:focus-visible { outline: 2px solid var(--color-border-focus, #2657d0); outline-offset: 2px; } .ds-btn-primary:active { box-shadow: none; translate: 1px 1px; background: color-mix(in oklab, var(--color-accent-solid, #2657d0) 14%, var(--color-bg-emphasis, #16151d)); }"
     },
     {
       "name": "Outline Button",
@@ -477,7 +477,7 @@
       "refersTo": "button-outline",
       "description": "Airy at rest. On engage the edge grows instead of a fill appearing; the press keeps a faint grey settle.",
       "html": "<button class='ds-btn-outline'>Preview</button>",
-      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; font-weight: 500; cursor: pointer; transition: box-shadow 100ms, translate 100ms, border-color 100ms, background-color 100ms; background: transparent; color: var(--color-fg, #111318); border: 1px solid var(--color-border, #8c8c8c); } .ds-btn-outline:hover { box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2b5bff); } .ds-btn-outline:focus-visible { outline: 2px solid var(--color-border-focus, #2b5bff); outline-offset: 2px; } .ds-btn-outline:active { box-shadow: none; translate: 1px 1px; background: var(--color-bg-active, #cbcbcb); }"
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; font-weight: 500; cursor: pointer; transition: box-shadow 100ms, translate 100ms, border-color 100ms, background-color 100ms; background: transparent; color: var(--color-fg, #24232a); border: 1px solid var(--color-border, #868688); } .ds-btn-outline:hover { box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2657d0); } .ds-btn-outline:focus-visible { outline: 2px solid var(--color-border-focus, #2657d0); outline-offset: 2px; } .ds-btn-outline:active { box-shadow: none; translate: 1px 1px; background: var(--color-bg-active, #bcbcbc); }"
     },
     {
       "name": "Ghost Button",
@@ -485,7 +485,7 @@
       "refersTo": "button-ghost",
       "description": "Not an edged pressable. Its only hover signal is the grey fill, and it never translates on press.",
       "html": "<button class='ds-btn-ghost'>Cancel</button>",
-      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; font-weight: 500; cursor: pointer; transition: box-shadow 100ms, translate 100ms, border-color 100ms, background-color 100ms; background: transparent; color: var(--color-fg, #111318); border: 0; } .ds-btn-ghost:hover { background: var(--color-bg-hover, #ededed); } .ds-btn-ghost:focus-visible { outline: 2px solid var(--color-border-focus, #2b5bff); outline-offset: 2px; } .ds-btn-ghost:active { background: var(--color-bg-active, #cbcbcb); }"
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; font-weight: 500; cursor: pointer; transition: box-shadow 100ms, translate 100ms, border-color 100ms, background-color 100ms; background: transparent; color: var(--color-fg, #24232a); border: 0; } .ds-btn-ghost:hover { background: var(--color-bg-hover, #dbdada); } .ds-btn-ghost:focus-visible { outline: 2px solid var(--color-border-focus, #2657d0); outline-offset: 2px; } .ds-btn-ghost:active { background: var(--color-bg-active, #bcbcbc); }"
     },
     {
       "name": "Text Input",
@@ -493,7 +493,7 @@
       "refersTo": "input",
       "description": "A fresh sheet laid on the stock. Quiet at rest; focus caps off with a static accent edge that leaves when the pen lifts. No ring.",
       "html": "<input class='ds-input' type='text' placeholder='Project name' />",
-      "css": ".ds-input { display: block; width: 100%; height: 36px; padding: 0 12px; border-radius: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; background: var(--color-bg-input, #fdfdfb); color: var(--color-fg, #111318); border: 1px solid var(--color-border, #8c8c8c); caret-color: var(--color-accent-solid, #2b5bff); transition: box-shadow 100ms, border-color 100ms; } .ds-input::placeholder { color: var(--color-fg-subtle, #666666); } .ds-input:focus { outline: none; box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2b5bff); } .ds-input:read-only { background: var(--color-bg, #f6f6f6); border-color: var(--color-border-muted, #aaaaaa); } .ds-input:read-only:focus { box-shadow: var(--shadow-offset, 2px 2px 0 0 #c4c4c4); }"
+      "css": ".ds-input { display: block; width: 100%; height: 36px; padding: 0 12px; border-radius: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; background: var(--color-bg-input, #fdfcfa); color: var(--color-fg, #24232a); border: 1px solid var(--color-border, #868688); caret-color: var(--color-accent-solid, #2657d0); transition: box-shadow 100ms, border-color 100ms; } .ds-input::placeholder { color: var(--color-fg-subtle, #636367); } .ds-input:focus { outline: none; box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2657d0); } .ds-input:read-only { background: var(--color-bg, #fdfcfa); border-color: var(--color-border-muted, #a1a0a2); } .ds-input:read-only:focus { box-shadow: var(--shadow-offset, 2px 2px 0 0 #bfbdb9); }"
     },
     {
       "name": "Card",
@@ -501,7 +501,7 @@
       "refersTo": "card",
       "description": "A sheet laid on the page, not a box drawn on it: no resting stroke, read by fill step plus the drawn shade.",
       "html": "<div class='ds-card'><h4 class='ds-card-title'>Offset, not blur</h4><p class='ds-card-desc'>Elevation is the trace a raised object leaves on paper.</p></div>",
-      "css": ".ds-card { display: flex; flex-direction: column; gap: 16px; padding: 20px; border-radius: 0; border: 0; background: var(--color-bg-raised, #fdfdfb); color: var(--color-fg, #111318); box-shadow: var(--shadow-offset, 2px 2px 0 0 #c4c4c4); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; } .ds-card-title { margin: 0; font-size: 0.875rem; font-weight: 600; line-height: 1.25; } .ds-card-desc { margin: 0; font-size: 0.875rem; line-height: 1.55; color: var(--color-fg-muted, #535353); }"
+      "css": ".ds-card { display: flex; flex-direction: column; gap: 16px; padding: 20px; border-radius: 0; border: 0; background: var(--color-bg-raised, #f4f3f2); color: var(--color-fg, #24232a); box-shadow: var(--shadow-offset, 2px 2px 0 0 #bfbdb9); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; } .ds-card-title { margin: 0; font-size: 0.875rem; font-weight: 600; line-height: 1.25; } .ds-card-desc { margin: 0; font-size: 0.875rem; line-height: 1.55; color: var(--color-fg-muted, #525257); }"
     },
     {
       "name": "Interactive Card",
@@ -509,14 +509,14 @@
       "refersTo": "card",
       "description": "The one crossing of the Shadow-Is-Voice rule: it rests as a raised sheet and changes voice on hover — fill lifts a ladder step, shade turns accent.",
       "html": "<a class='ds-card-interactive' href='#'><h4 class='ds-card-title'>Open the registry</h4><p class='ds-card-desc'>Hover lifts the fill; the shade turns accent.</p></a>",
-      "css": ".ds-card-interactive { display: flex; flex-direction: column; gap: 16px; padding: 20px; border-radius: 0; border: 0; text-decoration: none; cursor: pointer; background: var(--color-bg-raised, #fdfdfb); color: var(--color-fg, #111318); box-shadow: var(--shadow-offset, 2px 2px 0 0 #c4c4c4); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; transition: box-shadow 100ms, translate 100ms, background-color 100ms; } .ds-card-interactive:hover { background: var(--color-bg-overlay, #ffffff); box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2b5bff); } .ds-card-interactive:focus-visible { outline: 2px solid var(--color-border-focus, #2b5bff); outline-offset: 2px; } .ds-card-interactive:active { box-shadow: none; translate: 1px 1px; }"
+      "css": ".ds-card-interactive { display: flex; flex-direction: column; gap: 16px; padding: 20px; border-radius: 0; border: 0; text-decoration: none; cursor: pointer; background: var(--color-bg-raised, #f4f3f2); color: var(--color-fg, #24232a); box-shadow: var(--shadow-offset, 2px 2px 0 0 #bfbdb9); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; transition: box-shadow 100ms, translate 100ms, background-color 100ms; } .ds-card-interactive:hover { background: var(--color-bg-overlay, #ecebea); box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2657d0); } .ds-card-interactive:focus-visible { outline: 2px solid var(--color-border-focus, #2657d0); outline-offset: 2px; } .ds-card-interactive:active { box-shadow: none; translate: 1px 1px; }"
     },
     {
       "name": "Alert",
       "kind": "custom",
-      "description": "A 2px leading role rule and a colored glyph on raised paper — never a box, never a tinted well. Warning borrows warning-fg because the ochre solid is 2.13:1.",
+      "description": "A 2px leading role rule and a colored glyph on raised paper — never a box, never a tinted well. Warning borrows warning-fg because the ochre solid is 1.76:1.",
       "html": "<div class='ds-alert'><svg class='ds-alert-icon' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' aria-hidden='true'><circle cx='12' cy='12' r='10'/><path d='M12 16v-4M12 8h.01'/></svg><div class='ds-alert-title'>Note</div><div class='ds-alert-desc'>Surfaces are read by fill step and shade, not by a frame.</div></div>",
-      "css": ".ds-alert { display: grid; grid-template-columns: 16px 1fr; column-gap: 12px; row-gap: 2px; align-items: start; padding: 12px 16px; border: 0; border-left: 2px solid var(--color-info-solid, #53628f); border-radius: 0; background: var(--color-bg-raised, #fdfdfb); color: var(--color-fg, #111318); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; } .ds-alert-icon { width: 16px; height: 16px; translate: 0 2px; color: var(--color-info-solid, #53628f); } .ds-alert-title { grid-column-start: 2; font-weight: 500; } .ds-alert-desc { grid-column-start: 2; color: var(--color-fg-muted, #535353); }"
+      "css": ".ds-alert { display: grid; grid-template-columns: 16px 1fr; column-gap: 12px; row-gap: 2px; align-items: start; padding: 12px 16px; border: 0; border-left: 2px solid var(--color-info-solid, #643d75); border-radius: 0; background: var(--color-bg-raised, #f4f3f2); color: var(--color-fg, #24232a); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; } .ds-alert-icon { width: 16px; height: 16px; translate: 0 2px; color: var(--color-info-solid, #643d75); } .ds-alert-title { grid-column-start: 2; font-weight: 500; } .ds-alert-desc { grid-column-start: 2; color: var(--color-fg-muted, #525257); }"
     },
     {
       "name": "Checkbox",
@@ -524,7 +524,7 @@
       "refersTo": "checkbox",
       "description": "A 16px instrument: the chassis holds still, the glyph travels 1px. Sits under the cap height of a 14px Korean label.",
       "html": "<label class='ds-cb-wrap'><span class='ds-cb' role='checkbox' aria-checked='true' tabindex='0'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' aria-hidden='true'><path d='M20 6 9 17l-5-5'/></svg></span><span class='ds-cb-label'>Ship it</span></label>",
-      "css": ".ds-cb-wrap { display: inline-flex; align-items: center; gap: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; color: var(--color-fg, #111318); cursor: pointer; } .ds-cb { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; flex: none; border-radius: 0; border: 1px solid var(--color-border, #8c8c8c); background: var(--color-bg-emphasis, #111318); color: var(--color-fg-on-emphasis, #fdfdfb); transition: background-color 100ms, box-shadow 100ms; } .ds-cb::before { content: ''; position: absolute; inset: -15px; } .ds-cb svg { width: 10px; height: 10px; transition: translate 100ms; } .ds-cb:hover { box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2b5bff); } .ds-cb:focus-visible { outline: 2px solid var(--color-border-focus, #2b5bff); outline-offset: 2px; } .ds-cb:active svg { translate: 1px 1px; }"
+      "css": ".ds-cb-wrap { display: inline-flex; align-items: center; gap: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; color: var(--color-fg, #24232a); cursor: pointer; } .ds-cb { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; flex: none; border-radius: 0; border: 1px solid var(--color-border, #868688); background: var(--color-bg-emphasis, #16151d); color: var(--color-fg-on-emphasis, #fdfcfa); transition: background-color 100ms, box-shadow 100ms; } .ds-cb::before { content: ''; position: absolute; inset: -15px; } .ds-cb svg { width: 10px; height: 10px; transition: translate 100ms; } .ds-cb:hover { box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2657d0); } .ds-cb:focus-visible { outline: 2px solid var(--color-border-focus, #2657d0); outline-offset: 2px; } .ds-cb:active svg { translate: 1px 1px; }"
     },
     {
       "name": "Switch",
@@ -532,7 +532,7 @@
       "refersTo": "switch",
       "description": "Defaults to sm (28x16). Checked fills the track with ink; the thumb travels, the track never drops.",
       "html": "<span class='ds-switch' role='switch' aria-checked='true' tabindex='0'><span class='ds-switch-thumb'></span></span>",
-      "css": ".ds-switch { position: relative; display: inline-flex; align-items: center; width: 28px; height: 16px; padding: 2px; flex: none; border-radius: 0; cursor: pointer; border: 1px solid var(--color-border, #8c8c8c); background: var(--color-bg-emphasis, #111318); transition: background-color 100ms, box-shadow 100ms; } .ds-switch::before { content: ''; position: absolute; inset: -15px; } .ds-switch-thumb { display: block; width: 8px; height: 8px; background: var(--color-bg-input, #fdfdfb); translate: 14px 0; transition: translate 100ms; } .ds-switch:hover { box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2b5bff); } .ds-switch:focus-visible { outline: 2px solid var(--color-border-focus, #2b5bff); outline-offset: 2px; } .ds-switch:active .ds-switch-thumb { translate: 15px 1px; }"
+      "css": ".ds-switch { position: relative; display: inline-flex; align-items: center; width: 28px; height: 16px; padding: 2px; flex: none; border-radius: 0; cursor: pointer; border: 1px solid var(--color-border, #868688); background: var(--color-bg-emphasis, #16151d); transition: background-color 100ms, box-shadow 100ms; } .ds-switch::before { content: ''; position: absolute; inset: -15px; } .ds-switch-thumb { display: block; width: 8px; height: 8px; background: var(--color-bg-input, #fdfcfa); translate: 14px 0; transition: translate 100ms; } .ds-switch:hover { box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2657d0); } .ds-switch:focus-visible { outline: 2px solid var(--color-border-focus, #2657d0); outline-offset: 2px; } .ds-switch:active .ds-switch-thumb { translate: 15px 1px; }"
     },
     {
       "name": "Navigation Strip",
@@ -540,7 +540,7 @@
       "refersTo": "tab-active",
       "description": "One fused instrument: cells share a single seam. The current cell sits under a glass lens plate — two-tone rim over the faintest accent wash — never stamped in ink.",
       "html": "<nav class='ds-nav'><ul class='ds-nav-list'><li class='ds-nav-item'><a class='ds-nav-link' href='#'>Overview</a></li><li class='ds-nav-item'><a class='ds-nav-link ds-nav-link-current' href='#' aria-current='page'>Components</a></li><li class='ds-nav-item'><a class='ds-nav-link' href='#'>Themes</a></li></ul></nav>",
-      "css": ".ds-nav-list { display: inline-flex; margin: 0; padding: 0; list-style: none; } .ds-nav-item { margin: 0; border: 1px solid var(--color-border-muted, #aaaaaa); } .ds-nav-item + .ds-nav-item { border-left: 0; } .ds-nav-link { position: relative; isolation: isolate; display: flex; align-items: center; height: 32px; padding: 0 14px; text-decoration: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; color: var(--color-fg, #111318); transition: background-color 100ms; } .ds-nav-link::before { content: ''; position: absolute; left: 0; right: 0; top: -8px; bottom: -8px; } .ds-nav-link:hover { background: var(--color-bg-hover, #ededed); } .ds-nav-link:focus-visible { outline: 2px solid var(--color-border-focus, #2b5bff); outline-offset: 2px; z-index: 2; } .ds-nav-link-current { cursor: default; } .ds-nav-link-current::after { content: ''; position: absolute; inset: 4px; z-index: -1; background: color-mix(in oklab, var(--color-accent-solid, #2b5bff) 8%, var(--color-bg-input, #fdfdfb)); border: 1px solid; border-top-color: var(--color-border-muted, #aaaaaa); border-left-color: var(--color-border-muted, #aaaaaa); border-right-color: var(--color-border-strong, #111318); border-bottom-color: var(--color-border-strong, #111318); }"
+      "css": ".ds-nav-list { display: inline-flex; margin: 0; padding: 0; list-style: none; } .ds-nav-item { margin: 0; border: 1px solid var(--color-border-muted, #a1a0a2); } .ds-nav-item + .ds-nav-item { border-left: 0; } .ds-nav-link { position: relative; isolation: isolate; display: flex; align-items: center; height: 32px; padding: 0 14px; text-decoration: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; color: var(--color-fg, #24232a); transition: background-color 100ms; } .ds-nav-link::before { content: ''; position: absolute; left: 0; right: 0; top: -8px; bottom: -8px; } .ds-nav-link:hover { background: var(--color-bg-hover, #dbdada); } .ds-nav-link:focus-visible { outline: 2px solid var(--color-border-focus, #2657d0); outline-offset: 2px; z-index: 2; } .ds-nav-link-current { cursor: default; } .ds-nav-link-current::after { content: ''; position: absolute; inset: 4px; z-index: -1; background: color-mix(in oklab, var(--color-accent-solid, #2657d0) 8%, var(--color-bg-input, #fdfcfa)); border: 1px solid; border-top-color: var(--color-border-muted, #a1a0a2); border-left-color: var(--color-border-muted, #a1a0a2); border-right-color: var(--color-border-strong, #16151d); border-bottom-color: var(--color-border-strong, #16151d); }"
     },
     {
       "name": "Menu Item",
@@ -548,14 +548,14 @@
       "refersTo": "menu-item-highlighted",
       "description": "The row you would act on takes the accent wash plus a 2px inset leading rule, with the label left in ink. Destructive rows swap the whole cue to danger.",
       "html": "<div class='ds-menu'><div class='ds-menu-item'>Duplicate</div><div class='ds-menu-item ds-menu-item-active'>Rename</div><div class='ds-menu-sep'></div><div class='ds-menu-item ds-menu-item-danger'>Delete</div></div>",
-      "css": ".ds-menu { padding: 4px; min-width: 12rem; border-radius: 0; border: 1px solid var(--color-border-strong, #111318); background: var(--color-bg-overlay, #ffffff); box-shadow: var(--shadow-offset-overlay, 2px 2px 0 0 #a0a0a0); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; } .ds-menu-item { padding: 6px 8px; color: var(--color-fg, #111318); cursor: default; } .ds-menu-item-active { background: color-mix(in oklab, var(--color-accent-solid, #2b5bff) 17%, var(--color-bg-input, #fdfdfb)); box-shadow: inset 2px 0 0 0 var(--color-accent-solid, #2b5bff); } .ds-menu-item-danger:hover { background: color-mix(in oklab, var(--color-danger-solid, #a13d52) 17%, var(--color-bg-input, #fdfdfb)); box-shadow: inset 2px 0 0 0 var(--color-danger-solid, #a13d52); } .ds-menu-sep { height: 1px; margin: 4px 0; background: var(--color-border-muted, #aaaaaa); }"
+      "css": ".ds-menu { padding: 4px; min-width: 12rem; border-radius: 0; border: 1px solid var(--color-border-strong, #16151d); background: var(--color-bg-overlay, #ecebea); box-shadow: var(--shadow-offset-overlay, 2px 2px 0 0 #a19e98); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; } .ds-menu-item { padding: 6px 8px; color: var(--color-fg, #24232a); cursor: default; } .ds-menu-item-active { background: color-mix(in oklab, var(--color-accent-solid, #2657d0) 17%, var(--color-bg-input, #fdfcfa)); box-shadow: inset 2px 0 0 0 var(--color-accent-solid, #2657d0); } .ds-menu-item-danger:hover { background: color-mix(in oklab, var(--color-danger-solid, #961733) 17%, var(--color-bg-input, #fdfcfa)); box-shadow: inset 2px 0 0 0 var(--color-danger-solid, #961733); } .ds-menu-sep { height: 1px; margin: 4px 0; background: var(--color-border-muted, #a1a0a2); }"
     },
     {
       "name": "Table",
       "kind": "custom",
       "description": "No wrapper frame. The header keeps the single near-black rule and lost its grey fill; rows are parted by seams; the footer closes on a faint hairline.",
       "html": "<table class='ds-table'><thead class='ds-thead'><tr><th class='ds-th'>Component</th><th class='ds-th'>Chassis</th></tr></thead><tbody><tr class='ds-tr'><td class='ds-td'>Checkbox</td><td class='ds-td'>16px</td></tr><tr class='ds-tr'><td class='ds-td'>Switch</td><td class='ds-td'>28x16</td></tr></tbody></table>",
-      "css": ".ds-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; color: var(--color-fg, #111318); } .ds-thead tr { border-bottom: 1px solid var(--color-border-strong, #111318); } .ds-th { height: 40px; padding: 8px 16px; text-align: left; font-weight: 600; white-space: nowrap; } .ds-tr { background: var(--color-bg-raised, #fdfdfb); border-bottom: 1px solid var(--color-border-subtle, #cbcbcb); transition: background-color 100ms; } .ds-tr:last-child { border-bottom: 0; } .ds-tr:hover { background: var(--color-bg-hover, #ededed); } .ds-td { padding: 10px 16px; vertical-align: middle; }"
+      "css": ".ds-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; color: var(--color-fg, #24232a); } .ds-thead tr { border-bottom: 1px solid var(--color-border-strong, #16151d); } .ds-th { height: 40px; padding: 8px 16px; text-align: left; font-weight: 600; white-space: nowrap; } .ds-tr { background: var(--color-bg-raised, #f4f3f2); border-bottom: 1px solid var(--color-border-subtle, #bcbcbc); transition: background-color 100ms; } .ds-tr:last-child { border-bottom: 0; } .ds-tr:hover { background: var(--color-bg-hover, #dbdada); } .ds-td { padding: 10px 16px; vertical-align: middle; }"
     },
     {
       "name": "Badge",
@@ -563,7 +563,7 @@
       "refersTo": "badge-default",
       "description": "An instrument-scale stamp: square, bounded, 12px label type. default is ink under a strong frame; role variants carry their own knockout.",
       "html": "<span class='ds-badge'>stable</span> <span class='ds-badge ds-badge-outline'>beta</span>",
-      "css": ".ds-badge { display: inline-flex; align-items: center; justify-content: center; padding: 2px 8px; border-radius: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.75rem; line-height: 1.45; font-weight: 500; background: var(--color-bg-emphasis, #111318); color: var(--color-fg-on-emphasis, #fdfdfb); border: 1px solid var(--color-border-strong, #111318); } .ds-badge-outline { background: transparent; color: var(--color-fg, #111318); border-color: var(--color-border, #8c8c8c); }"
+      "css": ".ds-badge { display: inline-flex; align-items: center; justify-content: center; padding: 2px 8px; border-radius: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.75rem; line-height: 1.45; font-weight: 500; background: var(--color-bg-emphasis, #16151d); color: var(--color-fg-on-emphasis, #fdfcfa); border: 1px solid var(--color-border-strong, #16151d); } .ds-badge-outline { background: transparent; color: var(--color-fg, #24232a); border-color: var(--color-border, #868688); }"
     }
   ],
   "narrative": {
@@ -602,7 +602,7 @@
       },
       {
         "name": "The Palette-Swap Rule",
-        "body": "Components consume only the 69 semantic names (64 color + 5 shadow). A theme authors 30 palette values (`--surface-0…2`, `--tone-0…11`, `--signal-*`, `--signal-*-on`, `--shadow-size`, `--shadow-color`, `--shadow-color-overlay`) and nothing else; 27 of those are functional dependencies and `--tone-8…10` are reserved ramp slots. Writing `--tone-4` or a raw hex inside a component is the one unforgivable color error: it breaks every theme at once. Dark mode is the same mechanism — a palette swap under `prefers-color-scheme: dark`, not a separate set of component rules.",
+        "body": "Components consume only the 69 semantic names (64 color + 5 shadow). A theme authors 30 palette values (`--surface-0…2`, `--tone-0…11`, `--signal-*`, `--signal-*-on`, `--shadow-size`, `--shadow-color`, `--shadow-color-overlay`) and nothing else; 28 of those are functional dependencies and `--tone-8` and `--tone-9` are the reserved ramp slots — `--tone-10` left reserve in this revision when `fg` moved onto it. Writing `--tone-4` or a raw hex inside a component is the one unforgivable color error: it breaks every theme at once. Dark mode is the same mechanism — a palette swap under `prefers-color-scheme: dark`, not a separate set of component rules.",
         "section": "colors"
       },
       {

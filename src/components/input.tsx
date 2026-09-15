@@ -23,9 +23,9 @@ const inputBaseStyles = [
   "focus:outline-hidden not-read-only:focus:shadow-offset-action",
   "enabled:read-only:focus:shadow-offset",
   // A writable field is a fresh sheet laid on the page; a read-only one is
-  // printed into it. Softening the border alone left the two states measurably
-  // identical in fill and 2.26:1 apart in stroke — "readable, not writable" was
-  // stated in the design and not visible in the product.
+  // printed into it. Softening the border alone left the two states identical in
+  // fill and one ramp step apart in stroke — a difference you can measure and
+  // not one you can see, so the fill has to move too.
   "enabled:read-only:border-border-muted enabled:read-only:bg-bg",
   "disabled:cursor-not-allowed disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled",
   "aria-[invalid=true]:border-danger-solid aria-[invalid=true]:not-read-only:focus:shadow-offset-action-danger",
