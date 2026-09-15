@@ -1,94 +1,104 @@
 /*
  * Beaket UI Design System — Eucalyptus palette
- * Cool-blue paper, blue-black ink — vivid, high-chroma signals.
- * 30 values: 27 feed the 68 semantic names; tone 8–10 are reserved.
+ * Cool grey, slate ink — one clear communication blue.
+ * 30 values per scheme: 28 feed the 69 semantic names; tone 8–9 are reserved.
+ *
+ * Built in OKLCH on an even lightness ramp, so every step is perceptually the
+ * same size and the neutrals carry this palette's own hue rather than a grey
+ * borrowed from somewhere else. Light and dark are separate designs, not one
+ * inverted: light is toned stock under ink, dark is a dyed well under paper,
+ * and dark carries more chroma in its neutrals because it can.
  */
 
 :root {
-  /* Surface — the page and what sits on it */
-  --surface-0: #e6ebf2;
-  --surface-1: #f8f9fc;
-  --surface-2: #ffffff;
+  /* Surface — toned stock, then sheets laid on it; the top sheet stops short of pure white */
+  --surface-0: #f4f7f9;
+  --surface-1: #f8fcfe;
+  --surface-2: #feffff;
 
-  /* Tone — 0 is paper, 11 deepest ink; 8–10 are reserved ramp slots */
-  --tone-0: #e6ebf2;
-  --tone-1: #dde2ea;
-  --tone-2: #d4dae2;
-  --tone-3: #b5bcc7;
-  --tone-4: #7f8696;
-  --tone-5: #727a8a;
-  --tone-6: #616a7b;
-  --tone-7: #454d60;
-  --tone-8: #31394e;
-  --tone-9: #21293e;
-  --tone-10: #10182d;
-  --tone-11: #10182d;
+  /* Tone — 0 is the page (it equals surface-0), 11 the ink; the hue runs
+     through the whole ramp, so a background never reads as detached from
+     the colour sitting on it. */
+  --tone-0: #f4f7f9;
+  --tone-1: #d8dbdd;
+  --tone-2: #b9bdbf;
+  --tone-3: #9ea1a4;
+  --tone-4: #838789;
+  --tone-5: #717578;
+  --tone-6: #5f6467;
+  --tone-7: #4f5356;
+  --tone-8: #3e4346;
+  --tone-9: #2f3437;
+  --tone-10: #202528;
+  --tone-11: #12171a;
 
-  /* Signal — one ink per meaning; only the accent is vivid */
-  --signal-danger: #d2171c;
-  --signal-warning: #cc6f00;
-  --signal-success: #059669;
-  --signal-info: #2260e7;
-  --signal-info-alt: #0891b2;
-  --signal-accent: #175a84;
+  /* Signal — Cool grey, slate ink — one clear communication blue. */
+  --signal-danger: #a5342b;
+  --signal-warning: #f1bf4e;
+  --signal-success: #439859;
+  --signal-info: #264f8b;
+  --signal-info-alt: #279ea4;
+  --signal-accent: #0470b6;
 
-  /* Knockout — which end of the ramp carries type on each solid */
+  /* Knockout — which end of this ramp each solid can carry */
   --signal-danger-on: var(--tone-0);
-  --signal-success-on: var(--tone-11);
   --signal-warning-on: var(--tone-11);
+  --signal-success-on: var(--tone-11);
   --signal-info-on: var(--tone-0);
   --signal-info-alt-on: var(--tone-11);
   --signal-accent-on: var(--tone-0);
 
   /* Shadow — elevation is drawn, not lit */
   --shadow-size: 2px;
-  --shadow-color: #c0cddb;
-  --shadow-color-overlay: #8295ae;
+  --shadow-color: #b9bfc2;
+  --shadow-color-overlay: #99a0a4;
 }
 
 /*
- * Eucalyptus Dark — eucalyptus inverted: blue ink on a blue-black page.
+ * Eucalyptus Dark
  */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Surface */
-    --surface-0: #0a0e1a;
-    --surface-1: #101422;
-    --surface-2: #18202e;
+    /* Surface — a dyed well, then sheets rising out of it; the page stops short of pure black */
+    --surface-0: #222527;
+    --surface-1: #2c2f31;
+    --surface-2: #34373a;
 
-    /* Tone */
-    --tone-0: #0a0e1a;
-    --tone-1: #131724;
-    --tone-2: #1b202c;
-    --tone-3: #323743;
-    --tone-4: #686e7a;
-    --tone-5: #747a86;
-    --tone-6: #828894;
-    --tone-7: #979ca8;
-    --tone-8: #b1b7c1;
-    --tone-9: #c7cdd6;
-    --tone-10: #e2e7f0;
-    --tone-11: #e2e7f0;
+    /* Tone — 0 is the page (it equals surface-0), 11 the paper; the hue runs
+       through the whole ramp, so a background never reads as detached from
+       the colour sitting on it. */
+    --tone-0: #222527;
+    --tone-1: #36393b;
+    --tone-2: #4b4e50;
+    --tone-3: #626567;
+    --tone-4: #7e8083;
+    --tone-5: #919496;
+    --tone-6: #a4a7a9;
+    --tone-7: #b5b8b9;
+    --tone-8: #c4c6c8;
+    --tone-9: #d2d4d5;
+    --tone-10: #e0e1e3;
+    --tone-11: #edeff0;
 
-    /* Signal */
-    --signal-danger: #de3e58;
-    --signal-warning: #d89420;
-    --signal-success: #14a878;
-    --signal-info: #2e5ddd;
-    --signal-info-alt: #2094c8;
-    --signal-accent: #4fb0d6;
+    /* Signal — Cool grey, slate ink — one clear communication blue. */
+    --signal-danger: #e66f62;
+    --signal-warning: #fbcd68;
+    --signal-success: #83d494;
+    --signal-info: #638fd0;
+    --signal-info-alt: #78dee3;
+    --signal-accent: #37b1ec;
 
-    /* Knockout */
+    /* Knockout — which end of this ramp each solid can carry */
     --signal-danger-on: var(--tone-0);
-    --signal-success-on: var(--tone-0);
     --signal-warning-on: var(--tone-0);
-    --signal-info-on: var(--tone-11);
+    --signal-success-on: var(--tone-0);
+    --signal-info-on: var(--tone-0);
     --signal-info-alt-on: var(--tone-0);
     --signal-accent-on: var(--tone-0);
 
-    /* Shadow */
+    /* Shadow — elevation is drawn, not lit */
     --shadow-size: 2px;
-    --shadow-color: #283444;
-    --shadow-color-overlay: #3c4858;
+    --shadow-color: #35383b;
+    --shadow-color-overlay: #4a4e51;
   }
 }

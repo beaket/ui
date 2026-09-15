@@ -28,7 +28,7 @@ export const Default: Story = {};
 
 // Compositions for docs
 export const AllStates = () => (
-  <div className="flex flex-col gap-4">
+  <div className="flex flex-col gap-7">
     <div className="flex items-center gap-2">
       <Checkbox id="normal" />
       <label htmlFor="normal" className="text-sm">
@@ -67,7 +67,7 @@ export const InteractionTest: Story = {
   tags: ["!autodocs"],
   args: { onCheckedChange: fn() },
   render: (args) => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-7">
       <Checkbox
         data-testid="enabled-checkbox"
         aria-label="Toggle me"

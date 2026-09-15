@@ -423,7 +423,11 @@ export const ComposedPartsTest: Story = {
                     row={row}
                     // getRowClassName / onRowMouseEnter / onRowMouseLeave are
                     // now just props on the consumer's own row.
-                    className={row.original.status === "inactive" ? "opacity-60" : undefined}
+                    // Quiet ink, not a faded layer. Opacity dims the surface
+                    // showing through as well as the type, which is the one
+                    // thing this system never does — and it had already put
+                    // this row under 4.5:1.
+                    className={row.original.status === "inactive" ? "text-fg-muted" : undefined}
                     data-testid={`row-${row.id}`}
                   />
                 ))

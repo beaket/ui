@@ -1,6 +1,6 @@
 /*
  * Beaket UI Design System — Semantic tokens
- * The 68 names components use (63 color + 5 shadow). Authored once — every theme shares these
+ * The 69 names components use (64 color + 5 shadow). Authored once — every theme shares these
  * definitions verbatim. A theme never touches this layer; it only supplies
  * the 30-value palette (surface / tone / signal / knockout / shadow) that
  * these definitions point at. 27 values are functional; tone 8–10 are reserved
@@ -22,9 +22,18 @@
   --color-bg-emphasis-active: color-mix(in oklab, var(--signal-accent) 14%, var(--tone-11));
 
   /* Foreground */
-  --color-fg: var(--tone-11);
+  /* Body ink sits one step above the deepest, at roughly 15:1 rather than 18:1.
+     The deepest step measured 2.6x the AAA threshold against the page and read
+     as a high-contrast accessibility mode rather than a printed page — glare,
+     not emphasis. tone-11 stays where it wins something: emphasis fills and the
+     strong border. One ink, three pressures, applies to type as well as stroke. */
+  --color-fg: var(--tone-10);
   --color-fg-muted: var(--tone-7);
   --color-fg-subtle: var(--tone-6);
+  /* Held at tone-5. A disabled label measures 3.72:1 on the disabled fill,
+     which WCAG exempts as an inactive control; moving it to tone-6 orphans a
+     ramp slot and collapses it onto fg-subtle for no real legibility win. The
+     weak part of the disabled treatment is its 2.26:1 border, not its text. */
   --color-fg-disabled: var(--tone-5);
   --color-fg-on-emphasis: var(--tone-0);
   --color-fg-link: var(--signal-accent);
@@ -32,6 +41,12 @@
   /* Border */
   --color-border: var(--tone-4);
   --color-border-muted: var(--tone-3);
+  /* The seam voice. A divider *inside* a surface — a table row, a menu rule —
+     separates two things that are already known to belong together, so it needs
+     less pressure than the border that bounds a control. Ink at three pressures
+     is still one ink; what it replaces is the habit of drawing every seam at
+     full hairline strength and then adding a frame around the group as well. */
+  --color-border-subtle: var(--tone-2);
   --color-border-strong: var(--tone-11);
   --color-border-focus: var(--signal-accent);
 
@@ -233,4 +248,16 @@
   50% {
     background-color: var(--color-bg-active);
   }
+}
+
+/*
+ * The page itself. Every surface role above is defined as a step away from this
+ * fill, so the ladder only exists once something paints it — and nothing did.
+ * That was invisible while `--color-bg` happened to be near-white and the host's
+ * default page was white; it stops being invisible the moment the page carries
+ * a tone. An element selector, so any consumer rule wins over it.
+ */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
 }

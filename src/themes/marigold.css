@@ -1,94 +1,104 @@
 /*
  * Beaket UI Design System — Marigold palette
- * Pure-grey paper and ink — the loudest signals, kept bright by design.
- * 30 values: 27 feed the 68 semantic names; tone 8–10 are reserved.
+ * Crisp white, violet-black ink — the loudest signals in the set.
+ * 30 values per scheme: 28 feed the 69 semantic names; tone 8–9 are reserved.
+ *
+ * Built in OKLCH on an even lightness ramp, so every step is perceptually the
+ * same size and the neutrals carry this palette's own hue rather than a grey
+ * borrowed from somewhere else. Light and dark are separate designs, not one
+ * inverted: light is toned stock under ink, dark is a dyed well under paper,
+ * and dark carries more chroma in its neutrals because it can.
  */
 
 :root {
-  /* Surface — the page and what sits on it */
-  --surface-0: #ebebeb;
-  --surface-1: #f8f8f8;
-  --surface-2: #ffffff;
+  /* Surface — bright stock, then sheets set into it; a ladder step is separation, and the drawn shade is what says raised */
+  --surface-0: #faf9fc;
+  --surface-1: #f1eff5;
+  --surface-2: #e9e8ed;
 
-  /* Tone — 0 is paper, 11 deepest ink; 8–10 are reserved ramp slots */
-  --tone-0: #ebebeb;
-  --tone-1: #e3e2e2;
-  --tone-2: #dadad9;
-  --tone-3: #bcbbbb;
-  --tone-4: #868686;
-  --tone-5: #7b7a7a;
-  --tone-6: #6a6969;
-  --tone-7: #4e4e4d;
-  --tone-8: #3b3b3a;
-  --tone-9: #2b2b2a;
-  --tone-10: #141313;
-  --tone-11: #0e0e0e;
+  /* Tone — 0 is the page (it equals surface-0), 11 the ink; the hue runs
+     through the whole ramp, so a background never reads as detached from
+     the colour sitting on it. */
+  --tone-0: #faf9fc;
+  --tone-1: #dbdade;
+  --tone-2: #bdbbc1;
+  --tone-3: #a29fa8;
+  --tone-4: #88848e;
+  --tone-5: #76727e;
+  --tone-6: #65606e;
+  --tone-7: #554f5f;
+  --tone-8: #453f4f;
+  --tone-9: #362f41;
+  --tone-10: #272032;
+  --tone-11: #191224;
 
-  /* Signal — one ink per meaning; only the accent is vivid */
-  --signal-danger: #f14d1d;
-  --signal-warning: #ff9500;
-  --signal-success: #00cc81;
-  --signal-info: #0055ff;
-  --signal-info-alt: #00bcd4;
-  --signal-accent: #8330d8;
+  /* Signal — Crisp white, violet-black ink — the loudest signals in the set. */
+  --signal-danger: #c42359;
+  --signal-warning: #fbc629;
+  --signal-success: #099d78;
+  --signal-info: #423eaf;
+  --signal-info-alt: #00aeae;
+  --signal-accent: #7145d2;
 
-  /* Knockout — which end of the ramp carries type on each solid */
-  --signal-danger-on: var(--tone-11);
-  --signal-success-on: var(--tone-11);
+  /* Knockout — which end of this ramp each solid can carry */
+  --signal-danger-on: var(--tone-0);
   --signal-warning-on: var(--tone-11);
+  --signal-success-on: var(--tone-11);
   --signal-info-on: var(--tone-0);
   --signal-info-alt-on: var(--tone-11);
   --signal-accent-on: var(--tone-0);
 
   /* Shadow — elevation is drawn, not lit */
-  --shadow-size: 3px;
-  --shadow-color: #121212;
-  --shadow-color-overlay: #0a0a0a;
+  --shadow-size: 2px;
+  --shadow-color: #bebdc2;
+  --shadow-color-overlay: #9f9da4;
 }
 
 /*
- * Marigold Dark — marigold inverted: the loud signals on black.
+ * Marigold Dark
  */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Surface */
-    --surface-0: #141414;
-    --surface-1: #1a1a1a;
-    --surface-2: #222222;
+    /* Surface — a dyed well, then sheets rising out of it; the page stops short of pure black */
+    --surface-0: #18141f;
+    --surface-1: #231f2a;
+    --surface-2: #2d2834;
 
-    /* Tone */
-    --tone-0: #141414;
-    --tone-1: #1c1c1b;
-    --tone-2: #242323;
-    --tone-3: #393939;
-    --tone-4: #707070;
-    --tone-5: #7a7a79;
-    --tone-6: #898989;
-    --tone-7: #a0a0a0;
-    --tone-8: #bbbaba;
-    --tone-9: #d1d1d0;
-    --tone-10: #ecebeb;
-    --tone-11: #f0f0f0;
+    /* Tone — 0 is the page (it equals surface-0), 11 the paper; the hue runs
+       through the whole ramp, so a background never reads as detached from
+       the colour sitting on it. */
+    --tone-0: #18141f;
+    --tone-1: #2d2934;
+    --tone-2: #44404b;
+    --tone-3: #5d5962;
+    --tone-4: #79767d;
+    --tone-5: #8c888e;
+    --tone-6: #9f9b9f;
+    --tone-7: #b0adae;
+    --tone-8: #c0bdbc;
+    --tone-9: #d0cdca;
+    --tone-10: #e0ded9;
+    --tone-11: #f1eee7;
 
-    /* Signal */
-    --signal-danger: #ff2a1a;
-    --signal-warning: #ff8800;
-    --signal-success: #00cc66;
-    --signal-info: #4488ff;
-    --signal-info-alt: #00ccdd;
-    --signal-accent: #bb55ff;
+    /* Signal — Crisp white, violet-black ink — the loudest signals in the set. */
+    --signal-danger: #f76689;
+    --signal-warning: #ffd25c;
+    --signal-success: #20daa7;
+    --signal-info: #747aed;
+    --signal-info-alt: #50e7e7;
+    --signal-accent: #a287fe;
 
-    /* Knockout */
+    /* Knockout — which end of this ramp each solid can carry */
     --signal-danger-on: var(--tone-0);
-    --signal-success-on: var(--tone-0);
     --signal-warning-on: var(--tone-0);
+    --signal-success-on: var(--tone-0);
     --signal-info-on: var(--tone-0);
     --signal-info-alt-on: var(--tone-0);
     --signal-accent-on: var(--tone-0);
 
-    /* Shadow */
-    --shadow-size: 3px;
-    --shadow-color: #ececec;
-    --shadow-color-overlay: #f5f5f5;
+    /* Shadow — elevation is drawn, not lit */
+    --shadow-size: 2px;
+    --shadow-color: #3a3830;
+    --shadow-color-overlay: #504d43;
   }
 }
