@@ -91,7 +91,7 @@ export function Textarea({
         // edge while engaged, grey surface shade when read-only is focused.
         "not-read-only:focus:shadow-offset-action focus:outline-hidden",
         "enabled:read-only:focus:shadow-offset",
-        "enabled:read-only:border-border-muted enabled:read-only:cursor-default",
+        "enabled:read-only:border-border-muted enabled:read-only:bg-bg enabled:read-only:cursor-default",
         "disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:cursor-not-allowed disabled:border-dashed",
         "aria-[invalid=true]:border-danger-solid aria-[invalid=true]:not-read-only:focus:shadow-offset-action-danger",
         autoResize && !resizable && "resize-none overflow-hidden",

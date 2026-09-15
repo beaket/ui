@@ -70,7 +70,7 @@ function TabsTrigger({ className, ...props }: React.ComponentProps<typeof TabsPr
       className={cn(
         "group relative isolate flex h-8 items-center justify-center gap-1.5 border px-3.5 text-sm whitespace-nowrap",
         "border-border-muted text-fg -ml-px first:ml-0",
-        "before:absolute before:inset-[-8px] before:content-['']",
+        "before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] first:before:-left-2 last:before:-right-2",
         "focus-visible:outline-border-focus focus-visible:z-[2] focus-visible:outline-2 focus-visible:outline-offset-2",
         "transition-colors duration-100",
         "data-[state=active]:after:border-t-border-muted data-[state=active]:after:border-l-border-muted data-[state=active]:after:border-r-border-strong data-[state=active]:after:border-b-border-strong data-[state=active]:after:bg-accent-bg-subtle data-[state=active]:cursor-default data-[state=active]:after:absolute data-[state=active]:after:inset-1 data-[state=active]:after:-z-[1] data-[state=active]:after:border data-[state=active]:after:content-['']",

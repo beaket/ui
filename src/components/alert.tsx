@@ -6,11 +6,15 @@ import { twMerge } from "tailwind-merge";
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 const alertBase =
-  "relative w-full border px-4 py-3 text-sm grid grid-cols-[calc(var(--spacing)*4)_1fr] gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 bg-bg-raised text-fg [&_[data-slot=alert-description]]:text-fg-muted";
+  "relative w-full border-l-2 px-4 py-3 text-sm grid grid-cols-[calc(var(--spacing)*4)_1fr] gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 bg-bg-raised text-fg [&_[data-slot=alert-description]]:text-fg-muted";
 
-// Raised paper, never a tinted well: the role colors the 1px rule and the glyph
-// and nothing else. Warning borrows `warning-fg` because the ochre solid is too
-// light to hold a hairline on paper.
+// Raised paper, never a tinted well, and no longer a box either: the role marks
+// one 2px rule down the leading edge and colors the glyph, and nothing else.
+// 2px because this is the same engagement mark the menu already draws on the
+// row you are about to act on — a box around a notice repeated the surface's
+// own boundary and made every alert shout at container weight. Warning borrows
+// `warning-fg` because the ochre solid measures 2.13:1 on paper and cannot hold
+// a rule on its own.
 const variantClasses = {
   note: "border-info-solid [&>svg]:text-info-solid",
   tip: "border-success-solid [&>svg]:text-success-solid",
@@ -49,7 +53,7 @@ function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="alert-title"
-      className={cn("col-start-2 min-h-4 font-medium tracking-tight", className)}
+      className={cn("col-start-2 min-h-4 font-medium", className)}
       {...props}
     />
   );

@@ -51,7 +51,7 @@ export const Sizes: Story = {
 
 export const AllStates: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-7">
       <div className="flex items-center gap-3">
         <Switch defaultChecked={false} aria-label="Unchecked switch" />
         <span className="text-sm">Unchecked</span>
@@ -88,7 +88,7 @@ export const WithLabel: Story = {
     const ControlledSwitch = () => {
       const [checked, setChecked] = useState(false);
       return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-7">
           <div className="flex items-center gap-3">
             <Switch id="airplane-mode" checked={checked} onCheckedChange={setChecked} />
             <Label htmlFor="airplane-mode" className="cursor-pointer">

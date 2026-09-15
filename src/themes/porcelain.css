@@ -1,94 +1,102 @@
 /*
  * Beaket UI Design System — Porcelain palette
- * Near-white paper, cool graphite ink — balanced signals; the neutral default.
- * 30 values: 27 feed the 68 semantic names; tone 8–10 are reserved.
+ * Stark white, faintly blue-cast black — a deep indigo and a brick red.
+ * 30 values per scheme: 28 feed the 69 semantic names; tone 8–9 are reserved.
+ *
+ * Built in OKLCH on an even lightness ramp, so every step is perceptually the
+ * same size and the neutrals carry this palette's own hue rather than a grey
+ * borrowed from somewhere else. Light and dark are separate designs, not one
+ * inverted: light is toned stock under ink, dark is a dyed well under paper,
+ * and dark carries more chroma in its neutrals because it can.
  */
 
 :root {
-  /* Surface — the page and what sits on it */
-  --surface-0: #eff0f1;
-  --surface-1: #f8f8f9;
-  --surface-2: #ffffff;
+  /* Surface — toned stock, then sheets laid on it; the top sheet stops short of pure white */
+  --surface-0: #fdfdfe;
+  --surface-1: #f4f4f5;
+  --surface-2: #ececed;
 
-  /* Tone — 0 is paper, 11 deepest ink; 8–10 are reserved ramp slots */
-  --tone-0: #eff0f1;
-  --tone-1: #e6e7e9;
-  --tone-2: #dddee0;
-  --tone-3: #bec0c2;
-  --tone-4: #8a8a8a;
-  --tone-5: #7b7e81;
-  --tone-6: #6a6d71;
-  --tone-7: #4d5154;
-  --tone-8: #3a3d42;
-  --tone-9: #2a2d32;
-  --tone-10: #15181d;
-  --tone-11: #05080c;
+  /* Tone — 0 is paper, 11 the ink; the hue runs through the whole ramp so a
+     background never reads as detached from the colour sitting on it. */
+  --tone-0: #fdfdfe;
+  --tone-1: #dadbdc;
+  --tone-2: #bbbcbd;
+  --tone-3: #a0a1a3;
+  --tone-4: #858688;
+  --tone-5: #737477;
+  --tone-6: #626366;
+  --tone-7: #515256;
+  --tone-8: #414246;
+  --tone-9: #313337;
+  --tone-10: #222428;
+  --tone-11: #14161a;
 
-  /* Signal — one ink per meaning; only the accent is vivid */
-  --signal-danger: #d02c2d;
-  --signal-warning: #b28200;
-  --signal-success: #0d7b64;
-  --signal-info: #1564c2;
-  --signal-info-alt: #058491;
-  --signal-accent: #1e40af;
+  /* Signal — Stark white, faintly blue-cast black — a deep indigo and a brick red. */
+  --signal-danger: #c24b40;
+  --signal-warning: #f5c165;
+  --signal-success: #489a68;
+  --signal-info: #234e82;
+  --signal-info-alt: #44b1b6;
+  --signal-accent: #172889;
 
-  /* Knockout — which end of the ramp carries type on each solid */
+  /* Knockout — which end of this ramp each solid can carry */
   --signal-danger-on: var(--tone-0);
-  --signal-success-on: var(--tone-0);
   --signal-warning-on: var(--tone-11);
+  --signal-success-on: var(--tone-11);
   --signal-info-on: var(--tone-0);
   --signal-info-alt-on: var(--tone-11);
   --signal-accent-on: var(--tone-0);
 
   /* Shadow — elevation is drawn, not lit */
-  --shadow-size: 1px;
-  --shadow-color: #c0c4ca;
-  --shadow-color-overlay: #a0a3a7;
+  --shadow-size: 2px;
+  --shadow-color: #bcbec1;
+  --shadow-color-overlay: #9c9ea3;
 }
 
 /*
- * Porcelain Dark — porcelain inverted: cool light ink on a near-black page.
+ * Porcelain Dark
  */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Surface */
-    --surface-0: #0c0e15;
-    --surface-1: #12141d;
-    --surface-2: #1a1c27;
+    /* Surface — a dyed well, then sheets rising out of it; the page stops short of pure black */
+    --surface-0: #151617;
+    --surface-1: #202123;
+    --surface-2: #2a2b2c;
 
-    /* Tone */
-    --tone-0: #0c0e15;
-    --tone-1: #15171f;
-    --tone-2: #1d1f27;
-    --tone-3: #34363e;
-    --tone-4: #686b74;
-    --tone-5: #74777f;
-    --tone-6: #85888f;
-    --tone-7: #999ca3;
-    --tone-8: #b3b7bc;
-    --tone-9: #c9cdd2;
-    --tone-10: #e1e5ea;
-    --tone-11: #e1e5ea;
+    /* Tone — 0 is the page, 11 the paper; the hue runs through the whole ramp so a
+       background never reads as detached from the colour sitting on it. */
+    --tone-0: #151617;
+    --tone-1: #2b2b2d;
+    --tone-2: #414244;
+    --tone-3: #5a5b5d;
+    --tone-4: #76777a;
+    --tone-5: #898a8c;
+    --tone-6: #9b9c9f;
+    --tone-7: #adaeb1;
+    --tone-8: #bcbec1;
+    --tone-9: #ccced1;
+    --tone-10: #dcdee2;
+    --tone-11: #edeef2;
 
-    /* Signal */
-    --signal-danger: #e53644;
-    --signal-warning: #d4a010;
-    --signal-success: #10a66e;
-    --signal-info: #1a8ed8;
-    --signal-info-alt: #1aa0b8;
-    --signal-accent: #7fa0f0;
+    /* Signal — Stark white, faintly blue-cast black — a deep indigo and a brick red. */
+    --signal-danger: #f27e70;
+    --signal-warning: #ffcf7d;
+    --signal-success: #7ed09c;
+    --signal-info: #6b84c3;
+    --signal-info-alt: #7ce1e6;
+    --signal-accent: #5379fe;
 
-    /* Knockout */
+    /* Knockout — which end of this ramp each solid can carry */
     --signal-danger-on: var(--tone-0);
-    --signal-success-on: var(--tone-0);
     --signal-warning-on: var(--tone-0);
+    --signal-success-on: var(--tone-0);
     --signal-info-on: var(--tone-0);
     --signal-info-alt-on: var(--tone-0);
     --signal-accent-on: var(--tone-0);
 
-    /* Shadow */
-    --shadow-size: 1px;
-    --shadow-color: #2a303e;
-    --shadow-color-overlay: #3e4454;
+    /* Shadow — elevation is drawn, not lit */
+    --shadow-size: 2px;
+    --shadow-color: #36383d;
+    --shadow-color-overlay: #4a4d54;
   }
 }

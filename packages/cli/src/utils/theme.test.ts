@@ -65,19 +65,19 @@ describe("wrapThemeCss", () => {
     const result = wrapThemeCss(currentTheme);
 
     expect(result.match(/--surface-[0-2]\s*:/g)).toHaveLength(6);
-    expect(result).toContain("--surface-0: #fcfcfa");
-    expect(result).toContain("--surface-1: #f9f9f9");
-    expect(result).toContain("--surface-2: #f5f5f5");
-    expect(result).toContain("--tone-0: #fcfcfa");
-    expect(result).toContain("--tone-3: #aaaaaa");
-    expect(result).toContain("--tone-6: #666666");
+    expect(result).toContain("--surface-0: #fdfcfa");
+    expect(result).toContain("--surface-1: #f4f3f2");
+    expect(result).toContain("--surface-2: #ecebea");
+    expect(result).toContain("--tone-0: #fdfcfa");
+    expect(result).toContain("--tone-3: #a1a0a2");
+    expect(result).toContain("--tone-6: #636367");
     expect(result).toContain("@media (prefers-color-scheme: dark)");
-    expect(result).toContain("--surface-0: #101010");
-    expect(result).toContain("--tone-11: #f5f5f5");
-    expect(result).toContain("--signal-success: #00452d");
-    expect(result).toContain("--signal-info-alt: #005f72");
+    expect(result).toContain("--surface-0: #0f171e");
+    expect(result).toContain("--tone-11: #f1eee9");
+    expect(result).toContain("--signal-success: #498c67");
+    expect(result).toContain("--signal-info-alt: #3c9baa");
     expect(result).toContain("--signal-info-alt-on: var(--tone-0)");
-    expect(result).toContain("--text-sm: 0.8125rem");
+    expect(result).toContain("--text-sm: 0.875rem");
     expect(result).toContain("--font-sans:");
     expect(result).not.toContain("--space-");
     expect(result).toContain("prefers-reduced-motion: reduce");
@@ -111,9 +111,9 @@ describe("replaceThemeInCss", () => {
     const { css, replaced } = replaceThemeInCss(existing, currentTheme);
 
     expect(replaced).toBe(true);
-    expect(css).toContain("--surface-0: #fcfcfa");
-    expect(css).toContain("--tone-3: #aaaaaa");
-    expect(css).toContain("--tone-6: #666666");
+    expect(css).toContain("--surface-0: #fdfcfa");
+    expect(css).toContain("--tone-3: #a1a0a2");
+    expect(css).toContain("--tone-6: #636367");
     expect(css).not.toContain("--surface-brand");
     expect(css).not.toContain("--shadow-size-active");
   });

@@ -30,8 +30,22 @@ This supersedes the project's earlier claim of "indie developers, solo founders,
 and small product teams," which was retired along with the legacy
 `.impeccable.md` design-context file on 2026-09-14.
 
-No CJK/Korean-first commitment exists for `@beaket/ui`. CJK-first is a
-`@beaket/paper` commitment and must not be assumed here.
+`@beaket/ui` is **not CJK-first** — that remains a `@beaket/paper` commitment
+and must not be assumed here — but as of 2026-09-15 it does carry a **CJK
+floor**, decided by the maintainer and now shipped: 12px is the minimum type
+step for any script, `--font-sans` and `--font-mono` name Korean and Japanese
+families rather than leaving resolution to per-platform OS fallback, and
+`:lang(ko)` sets `word-break: keep-all`.
+
+This replaces the flat "no CJK commitment" recorded on 2026-09-14, which
+described who authored the system rather than who adopts it. Success here is
+external adoption, and a library with no CJK path prices out a large share of
+the teams it is trying to win. Consumers must set `lang` on their document for
+the line-breaking rule to apply; that is a documented consumer requirement.
+
+Absent evidence, do not upgrade this to a claim of CJK _parity_: there is no
+Windows or Linux font-resolution testing, no 1× DPR verification, and no
+CJK visual-regression baseline.
 
 ## Product Purpose
 
@@ -55,7 +69,7 @@ are not:
    neighboring library that ships a neutral default surface cannot claim it
    without becoming a different product.
 2. **Two-layer theming that a fork can actually extend.** A theme author writes
-   30 palette values; components consume only the 68 shared semantic names.
+   30 palette values; components consume only the 69 shared semantic names.
    Adding a theme never touches component source — the property a
    design-system-base user needs most.
 3. **Source ownership without version chaos.** `add` resolves the registry at

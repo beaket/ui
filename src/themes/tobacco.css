@@ -1,94 +1,102 @@
 /*
  * Beaket UI Design System — Tobacco palette
- * Warm earthen paper, warm-grey ink — quiet, low-chroma signals.
- * 30 values: 27 feed the 68 semantic names; tone 8–10 are reserved.
+ * Faded ivory, black type — the one red script carries the palette.
+ * 30 values per scheme: 28 feed the 69 semantic names; tone 8–9 are reserved.
+ *
+ * Built in OKLCH on an even lightness ramp, so every step is perceptually the
+ * same size and the neutrals carry this palette's own hue rather than a grey
+ * borrowed from somewhere else. Light and dark are separate designs, not one
+ * inverted: light is toned stock under ink, dark is a dyed well under paper,
+ * and dark carries more chroma in its neutrals because it can.
  */
 
 :root {
-  /* Surface — the page and what sits on it */
-  --surface-0: #e8e7e0;
-  --surface-1: #f4f3ee;
-  --surface-2: #faf9f5;
+  /* Surface — toned stock, then sheets laid on it; the top sheet stops short of pure white */
+  --surface-0: #f6f3f0;
+  --surface-1: #fbf7f4;
+  --surface-2: #fefbf7;
 
-  /* Tone — 0 is paper, 11 deepest ink; 8–10 are reserved ramp slots */
-  --tone-0: #e8e7e0;
-  --tone-1: #dfdfd8;
-  --tone-2: #d6d5cf;
-  --tone-3: #b9b8b3;
-  --tone-4: #84837f;
-  --tone-5: #787874;
-  --tone-6: #686864;
-  --tone-7: #4c4b49;
-  --tone-8: #383836;
-  --tone-9: #282726;
-  --tone-10: #151514;
-  --tone-11: #151514;
+  /* Tone — 0 is paper, 11 the ink; the hue runs through the whole ramp so a
+     background never reads as detached from the colour sitting on it. */
+  --tone-0: #f6f3f0;
+  --tone-1: #dddad7;
+  --tone-2: #bfbbb8;
+  --tone-3: #a3a09c;
+  --tone-4: #898582;
+  --tone-5: #777470;
+  --tone-6: #66635e;
+  --tone-7: #55524e;
+  --tone-8: #45423d;
+  --tone-9: #36322e;
+  --tone-10: #27231f;
+  --tone-11: #191511;
 
-  /* Signal — one ink per meaning; only the accent is vivid */
-  --signal-danger: #c5623f;
-  --signal-warning: #ac7c00;
-  --signal-success: #4c8c60;
-  --signal-info: #3a5f9e;
-  --signal-info-alt: #388a8e;
-  --signal-accent: #6c5240;
+  /* Signal — Faded ivory, black type — the one red script carries the palette. */
+  --signal-danger: #7f0329;
+  --signal-warning: #ddc89d;
+  --signal-success: #6e896e;
+  --signal-info: #405870;
+  --signal-info-alt: #6e9c9c;
+  --signal-accent: #a8372a;
 
-  /* Knockout — which end of the ramp carries type on each solid */
-  --signal-danger-on: var(--tone-11);
-  --signal-success-on: var(--tone-11);
+  /* Knockout — which end of this ramp each solid can carry */
+  --signal-danger-on: var(--tone-0);
   --signal-warning-on: var(--tone-11);
+  --signal-success-on: var(--tone-11);
   --signal-info-on: var(--tone-0);
   --signal-info-alt-on: var(--tone-11);
   --signal-accent-on: var(--tone-0);
 
   /* Shadow — elevation is drawn, not lit */
   --shadow-size: 2px;
-  --shadow-color: #312f2c;
-  --shadow-color-overlay: #46443e;
+  --shadow-color: #c2bdb7;
+  --shadow-color-overlay: #a39d97;
 }
 
 /*
- * Tobacco Dark — tobacco inverted: warm ink on a warm-black page.
+ * Tobacco Dark
  */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Surface */
-    --surface-0: #121110;
-    --surface-1: #1a1918;
-    --surface-2: #222120;
+    /* Surface — a dyed well, then sheets rising out of it; the page stops short of pure black */
+    --surface-0: #1b150e;
+    --surface-1: #262019;
+    --surface-2: #302923;
 
-    /* Tone */
-    --tone-0: #121110;
-    --tone-1: #1b1918;
-    --tone-2: #232220;
-    --tone-3: #393835;
-    --tone-4: #706e69;
-    --tone-5: #7a7872;
-    --tone-6: #8a8882;
-    --tone-7: #a09e98;
-    --tone-8: #bab8b0;
-    --tone-9: #d0cec5;
-    --tone-10: #e7e5db;
-    --tone-11: #e7e5db;
+    /* Tone — 0 is the page, 11 the paper; the hue runs through the whole ramp so a
+       background never reads as detached from the colour sitting on it. */
+    --tone-0: #1b150e;
+    --tone-1: #312a23;
+    --tone-2: #48413a;
+    --tone-3: #615a53;
+    --tone-4: #7d766f;
+    --tone-5: #908881;
+    --tone-6: #a29b94;
+    --tone-7: #b3ada6;
+    --tone-8: #c3bcb6;
+    --tone-9: #d3ccc6;
+    --tone-10: #e3ddd7;
+    --tone-11: #f3ede8;
 
-    /* Signal */
-    --signal-danger: #d64e3d;
-    --signal-warning: #d09828;
-    --signal-success: #48a850;
-    --signal-info: #4a61b8;
-    --signal-info-alt: #28a890;
-    --signal-accent: #bda488;
+    /* Signal — Faded ivory, black type — the one red script carries the palette. */
+    --signal-danger: #d05a6a;
+    --signal-warning: #e6d2a8;
+    --signal-success: #a4c0a4;
+    --signal-info: #738ca7;
+    --signal-info-alt: #a5d5d5;
+    --signal-accent: #e87a69;
 
-    /* Knockout */
+    /* Knockout — which end of this ramp each solid can carry */
     --signal-danger-on: var(--tone-0);
-    --signal-success-on: var(--tone-0);
     --signal-warning-on: var(--tone-0);
-    --signal-info-on: var(--tone-11);
+    --signal-success-on: var(--tone-0);
+    --signal-info-on: var(--tone-0);
     --signal-info-alt-on: var(--tone-0);
     --signal-accent-on: var(--tone-0);
 
-    /* Shadow */
+    /* Shadow — elevation is drawn, not lit */
     --shadow-size: 2px;
-    --shadow-color: #c0bcb2;
-    --shadow-color-overlay: #a8a49a;
+    --shadow-color: #3d3730;
+    --shadow-color-overlay: #534b44;
   }
 }
