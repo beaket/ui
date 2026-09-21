@@ -29,7 +29,7 @@ colors:
   success-fg-on-solid: "#16151d"
   warning-solid: "#ddb54c"
   warning-fg-on-solid: "#16151d"
-  info-solid: "#643d75"
+  info-solid: "#275085"
   info-alt-solid: "#3c9baa"
   bg-emphasis-hover: "color-mix(in oklab, #2657d0 24%, #16151d)"
   bg-emphasis-active: "color-mix(in oklab, #2657d0 14%, #16151d)"
@@ -309,10 +309,14 @@ In Solace light the accent carries 0.195 and no signal exceeds 0.160.
   measures 1.76:1 against raised paper, so it may fill a shape but must never be
   the only thing drawing a boundary — Alert's warning rule uses `warning-fg`
   (5.57:1) instead.
-- **Plum** (`info-solid`, `#643d75`) and **Teal** (`info-alt-solid`, `#3c9baa`):
-  neutral information, and a second information voice when two must be
-  distinguished. Plum is deliberately not a blue: the accent already owns the
-  blue band, and an informational blue beside it would read as actionable.
+- **Prussian Blue** (`info-solid`, `#275085`) and **Teal** (`info-alt-solid`,
+  `#3c9baa`): neutral information, and a second information voice when two must
+  be distinguished. Information shares the accent's blue band and is held apart
+  by step, not by hue: it sits a lightness step deeper (L\* 0.430 against the
+  accent's 0.501) at roughly half the chroma (0.100 against 0.195). That gap is
+  wider than the one Eucalyptus already ships between its own blue accent and
+  blue info, and it is what stops an informational blue from reading as
+  actionable — the accent stays the only vivid voice.
 
 **Every role carries the same seven slots**, so a role is swappable wholesale:
 `-solid`, `-fg-on-solid`, `-solid-hover`, `-solid-active`, `-fg`, `-bg`,
