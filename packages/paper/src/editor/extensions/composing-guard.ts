@@ -19,14 +19,6 @@ export const composingWake = EditorView.domEventHandlers({
   },
 });
 
-// Dev-only tracing of the guard's defer/recompute decisions. Off by default;
-// flip `DEBUG` locally to trace the most expensive invariant (ADR-0004).
-const DEBUG = false;
-const debugLog = DEBUG
-  ? (label: string, action: "defer" | "recompute") =>
-      console.debug(`[composing-guard] ${label}: ${action}`)
-  : () => {};
-
 /**
  * Build an IME-guarded decoration provider.
  *
@@ -38,7 +30,6 @@ const debugLog = DEBUG
  * extension that wants delete-whole adds its own Backspace command (see `token-render.ts`).
  */
 export function guardedDecorations(
-  label: string,
   compute: (view: EditorView) => DecorationSet,
   options?: { atomic?: boolean },
 ): Extension {
@@ -59,10 +50,8 @@ export function guardedDecorations(
             // breaks the entire view with a "Decorations that replace line breaks ..." exception.
             this.decorations = this.decorations.map(update.changes);
             this.deferred = true;
-            debugLog(label, "defer");
           } else if (update.viewportChanged || update.selectionSet) {
             this.deferred = true;
-            debugLog(label, "defer");
           }
           return;
         }
@@ -76,7 +65,6 @@ export function guardedDecorations(
         ) {
           this.decorations = compute(update.view);
           this.deferred = false;
-          debugLog(label, "recompute");
         }
       }
     },

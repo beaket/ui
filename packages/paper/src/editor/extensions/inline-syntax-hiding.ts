@@ -58,7 +58,7 @@ function computeDecorations(view: EditorView): DecorationSet {
 
 export function inlineSyntaxHiding(): Extension {
   return [
-    guardedDecorations("inline-syntax-hiding", computeDecorations),
+    guardedDecorations(computeDecorations),
     EditorView.theme({
       ".cm-inline-code": {
         fontSize: "0.9em",

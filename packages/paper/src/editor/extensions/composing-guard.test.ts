@@ -24,7 +24,7 @@ function makeView(doc: string, compute: (view: EditorView) => DecorationSet): Ed
   const parent = document.createElement("div");
   document.body.appendChild(parent);
   view = new EditorView({
-    state: EditorState.create({ doc, extensions: [guardedDecorations("test", compute)] }),
+    state: EditorState.create({ doc, extensions: [guardedDecorations(compute)] }),
     parent,
   });
   return view;

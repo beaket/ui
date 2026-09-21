@@ -28,6 +28,14 @@ const OVERRIDES = `
 }
 `;
 
+/**
+ * Whether a stylesheet imports Tailwind. Commented-out imports do not count — a
+ * `/* @import "tailwindcss" *\/` must not pass for the real thing.
+ */
+export function importsTailwind(css: string): boolean {
+  return /@import\s+["']tailwindcss["']/.test(css.replace(/\/\*[\s\S]*?\*\//g, ""));
+}
+
 export function wrapThemeCss(css: string): string {
   return `${THEME_START}\n${THEME_HEADER}\n${css.trimEnd()}\n${THEME_END}\n`;
 }

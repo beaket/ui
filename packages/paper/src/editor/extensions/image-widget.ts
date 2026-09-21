@@ -1,8 +1,9 @@
 import { syntaxTree } from "@codemirror/language";
-import type { EditorState, Extension } from "@codemirror/state";
+import type { Extension } from "@codemirror/state";
 import type { DecorationSet } from "@codemirror/view";
 import { Decoration, EditorView, WidgetType } from "@codemirror/view";
 import { guardedDecorations } from "./composing-guard";
+import { selectionTouchesLine } from "./selection-utils";
 
 // Live Preview: a line that is entirely a single image (`![alt](url)`) is shown as a rendered
 // image when the cursor is outside that line, and exposes the `![alt](url)` source for editing
@@ -80,11 +81,6 @@ class ImageWidget extends WidgetType {
   }
 }
 
-function selectionTouchesLine(state: EditorState, pos: number): boolean {
-  const line = state.doc.lineAt(pos);
-  return state.selection.ranges.some((range) => range.from <= line.to && range.to >= line.from);
-}
-
 function computeDecorations(view: EditorView): DecorationSet {
   const { state } = view;
   const ranges: ReturnType<Decoration["range"]>[] = [];
@@ -117,7 +113,7 @@ function computeDecorations(view: EditorView): DecorationSet {
 
 export function imageWidget(): Extension {
   return [
-    guardedDecorations("image-widget", computeDecorations),
+    guardedDecorations(computeDecorations),
     EditorView.theme({
       ".cm-image-widget": {
         display: "inline-block",

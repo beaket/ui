@@ -2,6 +2,7 @@ import { writeFile } from "node:fs/promises";
 import { styleText } from "node:util";
 import path from "path";
 import { contentHash, getConfig, writeConfig } from "../utils/config.ts";
+import { toLocalRelativePath } from "../utils/diff.ts";
 import {
   DependencyInstallError,
   installDependencies,
@@ -78,11 +79,7 @@ export async function add(componentNames: string[], options: AddOptions) {
   // are still written, because the consumer may be about to upgrade React and a
   // copy-paste library has no business changing their React version.
   const installedReact = await readInstalledReact(process.cwd());
-  const floorWarning = reactFloorWarning(
-    registry.react,
-    componentDefs.filter((def) => def !== undefined),
-    installedReact,
-  );
+  const floorWarning = reactFloorWarning(registry.react, componentDefs, installedReact);
   if (floorWarning) {
     const { floor, names } = floorWarning;
     console.log();
@@ -95,14 +92,7 @@ export async function add(componentNames: string[], options: AddOptions) {
   }
 
   // Collect all unique dependencies
-  const allDependencies = new Set<string>();
-  for (const def of componentDefs) {
-    if (def) {
-      for (const dep of def.dependencies) {
-        allDependencies.add(dep);
-      }
-    }
-  }
+  const allDependencies = new Set(componentDefs.flatMap((def) => def.dependencies));
 
   // Install dependencies once
   if (allDependencies.size > 0) {
@@ -156,7 +146,6 @@ export async function add(componentNames: string[], options: AddOptions) {
   const allUnchanged: string[] = [];
 
   for (const def of componentDefs) {
-    if (!def) continue;
     const files = await fetchComponent(
       { ...def, files: options.withTests ? [...def.files, ...(def.testFiles ?? [])] : def.files },
       ref,
@@ -184,7 +173,7 @@ export async function add(componentNames: string[], options: AddOptions) {
     allConflicts.push(...conflicts);
     allUnchanged.push(...unchanged);
     for (const file of files) {
-      const target = path.join(componentsDir, file.path.replace(/^components\//, ""));
+      const target = path.join(componentsDir, toLocalRelativePath(file.path));
       if (!written.includes(target) && !unchanged.includes(target) && !preserved.includes(target))
         continue;
       config.installed ??= {};

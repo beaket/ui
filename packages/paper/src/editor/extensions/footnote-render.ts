@@ -227,9 +227,5 @@ const footnoteTheme = EditorView.theme({
 
 /** Wire footnote reference + in-place definition rendering, and the shared model field both halves read. */
 export function footnoteRender(): Extension {
-  return [
-    footnoteModelField,
-    guardedDecorations("footnote-render", computeRefDecorations),
-    footnoteTheme,
-  ];
+  return [footnoteModelField, guardedDecorations(computeRefDecorations), footnoteTheme];
 }

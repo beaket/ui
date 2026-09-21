@@ -1,10 +1,5 @@
-import { readFile } from "node:fs/promises";
 import path from "path";
-
-// A consumer's package.json may carry a BOM (Windows editors write one, and
-// `JSON.parse` rejects it). fs-extra's `readJson` stripped it; this keeps that.
-const readJson = async (file: string) =>
-  JSON.parse((await readFile(file, "utf-8")).replace(/^\uFEFF/, ""));
+import { readJson } from "./config.ts";
 
 /**
  * A React floor is a **check, not an install**. `registry.json`'s `dependencies`

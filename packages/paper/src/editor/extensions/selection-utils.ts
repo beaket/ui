@@ -14,3 +14,9 @@ import type { EditorState } from "@codemirror/state";
 export function selectionTouches(state: EditorState, from: number, to: number): boolean {
   return state.selection.ranges.some((range) => range.from <= to && range.to >= from);
 }
+
+/** `selectionTouches` for the whole line containing `pos` — the block-level reveal-on-cursor test. */
+export function selectionTouchesLine(state: EditorState, pos: number): boolean {
+  const line = state.doc.lineAt(pos);
+  return selectionTouches(state, line.from, line.to);
+}

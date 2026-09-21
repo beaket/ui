@@ -7,12 +7,10 @@ import {
   analyzeThreeWay,
   collapseContext,
   compareComponent,
-  deriveComponentStatus,
   diffLines,
   isComponentInstalled,
   normalize,
   toLocalRelativePath,
-  type FileComparison,
 } from "./diff.ts";
 import type { ComponentDefinition } from "./registry.ts";
 
@@ -52,35 +50,6 @@ describe("normalize", () => {
 
   it("keeps a real content difference", () => {
     expect(normalize("a\nb")).not.toBe(normalize("a\nc"));
-  });
-});
-
-describe("deriveComponentStatus", () => {
-  const file = (status: FileComparison["status"]): FileComparison => ({
-    path: "x.tsx",
-    status,
-    local: "",
-    upstream: "",
-  });
-
-  it("is not-installed when every file is missing", () => {
-    expect(deriveComponentStatus([file("missing"), file("missing")])).toBe("not-installed");
-  });
-
-  it("is not-installed for an empty file list", () => {
-    expect(deriveComponentStatus([])).toBe("not-installed");
-  });
-
-  it("is up-to-date when all present files match", () => {
-    expect(deriveComponentStatus([file("same"), file("same")])).toBe("up-to-date");
-  });
-
-  it("is outdated when a present file differs", () => {
-    expect(deriveComponentStatus([file("same"), file("different")])).toBe("outdated");
-  });
-
-  it("is outdated when one file of a multi-file component is new", () => {
-    expect(deriveComponentStatus([file("same"), file("missing")])).toBe("outdated");
   });
 });
 
@@ -176,7 +145,7 @@ describe("compareComponent", () => {
       },
     };
     const comparison = await compareComponent(buttonDef, dir, "@beaket/ui@3.1.0", recorded);
-    expect(comparison.files[0].analysis?.status).toBe("local-only");
+    expect(comparison[0].analysis?.status).toBe("local-only");
     recorded[buttonDef.files[0]].hash = contentHash("wrong");
     await expect(compareComponent(buttonDef, dir, "@beaket/ui@3.1.0", recorded)).rejects.toThrow(
       "Baseline hash mismatch",
@@ -187,8 +156,7 @@ describe("compareComponent", () => {
     const dir = await tempDir();
     stubFetchContent("export const Button = 1;");
     const cmp = await compareComponent(buttonDef, dir);
-    expect(cmp.status).toBe("not-installed");
-    expect(cmp.files[0].status).toBe("missing");
+    expect(cmp[0].status).toBe("missing");
   });
 
   it("reports up-to-date when local matches upstream (ignoring line endings)", async () => {
@@ -196,8 +164,7 @@ describe("compareComponent", () => {
     await writeFile(path.join(dir, "button.tsx"), "line1\r\nline2\n");
     stubFetchContent("line1\nline2");
     const cmp = await compareComponent(buttonDef, dir);
-    expect(cmp.status).toBe("up-to-date");
-    expect(cmp.files[0].status).toBe("same");
+    expect(cmp[0].status).toBe("same");
   });
 
   it("reports outdated when the local copy differs", async () => {
@@ -205,10 +172,9 @@ describe("compareComponent", () => {
     await writeFile(path.join(dir, "button.tsx"), "old style");
     stubFetchContent("new style");
     const cmp = await compareComponent(buttonDef, dir);
-    expect(cmp.status).toBe("outdated");
-    expect(cmp.files[0].status).toBe("different");
-    expect(cmp.files[0].local).toBe("old style");
-    expect(cmp.files[0].upstream).toBe("new style");
+    expect(cmp[0].status).toBe("different");
+    expect(cmp[0].local).toBe("old style");
+    expect(cmp[0].upstream).toBe("new style");
   });
 });
 
