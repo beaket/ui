@@ -1,9 +1,10 @@
 import { syntaxTree } from "@codemirror/language";
-import type { EditorState, Extension } from "@codemirror/state";
+import type { Extension } from "@codemirror/state";
 import type { DecorationSet } from "@codemirror/view";
 import { Decoration, EditorView, WidgetType } from "@codemirror/view";
 import { BQ_UNIT } from "./block-syntax-hiding";
 import { guardedDecorations } from "./composing-guard";
+import { selectionTouchesLine } from "./selection-utils";
 
 // Quote nesting clamp — mirrors block-syntax-hiding's QUOTE_MAX_DEPTH so an in-quote list's left gutter
 // tracks the (clamped) blockquote bar gutter exactly.
@@ -65,11 +66,6 @@ class CheckboxWidget extends WidgetType {
 }
 
 const bulletDeco = Decoration.replace({ widget: new BulletWidget() });
-
-function selectionTouchesLine(state: EditorState, pos: number): boolean {
-  const line = state.doc.lineAt(pos);
-  return state.selection.ranges.some((range) => range.from <= line.to && range.to >= line.from);
-}
 
 function computeDecorations(view: EditorView): DecorationSet {
   const { state } = view;
@@ -150,7 +146,7 @@ function computeDecorations(view: EditorView): DecorationSet {
 
 export function listRendering(): Extension {
   return [
-    guardedDecorations("list-rendering", computeDecorations),
+    guardedDecorations(computeDecorations),
     EditorView.theme({
       ".cm-list-bullet": { color: "var(--steel)" },
       ".cm-task-checkbox": {

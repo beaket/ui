@@ -108,7 +108,8 @@ there is no second document model. Everything else follows from this:
 
 **Tables** (structure permanently hidden; cell edited in a subview)
 
-- `extensions/table-widget.ts` — the grid widget + focused-cell subview; the big one.
+- `extensions/table-widget.ts` — the grid widget + focused-cell subview; the big one. Its column/row
+  grip menu is a `PopupMenu` (see Menus below), anchored to the grip element.
 - `extensions/table-auto-convert.ts` — entry point: type `| A | B |` + Enter → real table.
 - `extensions/paste-table-convert.ts` — entry point: paste HTML/TSV tables → markdown table.
 - `extensions/cell-inline-renderer.ts` — inline markdown rendering for non-editing cells.
@@ -134,12 +135,14 @@ there is no second document model. Everything else follows from this:
 - `extensions/highlight-layer.ts` — renders the consumer's anchor list as mark decorations;
   `setHighlightsEffect` / `setActiveHighlightEffect`; `HighlightInput`.
 
-**Menus (trigger-activated)**
+**Menus**
 
-- `extensions/menu-engine.ts` — the shared popup-menu engine (`PopupMenu`, `menuKeyBindings` /
-  `menuKeymap`, `menuTheme`): menu DOM, selected-index, keyboard nav, porcelain overlay, and
-  non-interactive header/loading rows (selection skips them). Both menus below are thin controllers
-  over it (ADR-0016). Coordinate-dependent → browser-verified, not jsdom.
+- `extensions/menu-engine.ts` — the shared popup-menu engine (`PopupMenu`, `menuKeymap`,
+  `menuTheme`): menu DOM, selected-index, keyboard nav, porcelain overlay, and non-interactive
+  header/loading/divider rows (selection skips them). All three menus are thin controllers over it
+  (ADR-0016): the two trigger-activated ones below, plus the table's grip menu, which anchors to an
+  element instead of a document position. Placement is coordinate-dependent → browser-verified; the
+  element-anchored path does mount under jsdom (`table-delete.test`, `table-menu-overflow.test`).
 - `extensions/slash-command.ts` — the `/` insert menu; declarative `slashItems` config + privileged
   built-ins (table `after`). Catalog resolves sync or **async** (once-cached, Loading row) and items
   carry an optional `group` rendered as section headers (ADR-0012 + its amendment). `resolveSlashItems`

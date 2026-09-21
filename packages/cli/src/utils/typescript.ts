@@ -1,6 +1,7 @@
-import { readFile, readdir } from "node:fs/promises";
+import { readdir } from "node:fs/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
+import { readJson } from "./config.ts";
 
 export async function requireTypeScript(cwd = process.cwd()): Promise<void> {
   const files = await readdir(cwd, { withFileTypes: true });
@@ -9,9 +10,7 @@ export async function requireTypeScript(cwd = process.cwd()): Promise<void> {
   );
   let pkg;
   try {
-    pkg = JSON.parse(
-      (await readFile(path.join(cwd, "package.json"), "utf8")).replace(/^\uFEFF/, ""),
-    );
+    pkg = await readJson(path.join(cwd, "package.json"));
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
   }

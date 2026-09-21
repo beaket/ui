@@ -46,7 +46,7 @@ export async function diff(componentName: string | undefined, options: RegistryO
       ref,
       config.installed?.[definition.name],
     );
-    for (const file of comparison.files) {
+    for (const file of comparison) {
       const analysis = file.analysis;
       const status = analysis?.status ?? (file.status === "same" ? "clean" : "unknown baseline");
       console.log(`  ${definition.name}/${file.path}: ${status}`);

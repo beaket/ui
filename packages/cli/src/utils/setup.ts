@@ -7,6 +7,7 @@ import prompts from "prompts";
 import type ts from "typescript";
 import type { DetectedAlias } from "../commands/init.ts";
 import { backupFile } from "./files.ts";
+import { importsTailwind } from "./theme.ts";
 
 type TypeScript = typeof ts;
 
@@ -164,9 +165,7 @@ export async function checkSetup(
   if (
     !css ||
     !existsSync(path.resolve(cwd, css)) ||
-    !/@import\s+["']tailwindcss["']/.test(
-      (await readFile(path.resolve(cwd, css), "utf8")).replace(/\/\*[\s\S]*?\*\//g, ""),
-    )
+    !importsTailwind(await readFile(path.resolve(cwd, css), "utf8"))
   ) {
     warn(
       'The selected CSS file does not import tailwindcss. Add @import "tailwindcss" and import that CSS in your app entry.',

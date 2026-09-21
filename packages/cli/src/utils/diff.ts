@@ -29,7 +29,6 @@ export function normalize(content: string): string {
 }
 
 export type FileStatus = "same" | "different" | "missing";
-export type ComponentStatus = "up-to-date" | "outdated" | "not-installed";
 
 export interface FileComparison {
   /** Local relative path, e.g. `button.tsx`. */
@@ -69,28 +68,9 @@ export async function analyzeThreeWay(
   if (normalizedBase === normalizedUpstream) return { ...result, status: "local-only" };
   if (normalizedBase === normalizedLocal) return { ...result, status: "mergeable" };
 
-  const directory = await mkdtemp(path.join(tmpdir(), "beaket-diff-"));
-  try {
-    const files = ["local", "base", "upstream"].map((name) => path.join(directory, name));
-    await Promise.all(
-      [normalizedLocal, normalizedBase, normalizedUpstream].map((content, index) =>
-        writeFile(files[index], content),
-      ),
-    );
-    // Use Git's merge algorithm; print-only mode never changes the consumer's files.
-    const merge = spawnSync("git", ["merge-file", "--stdout", "--diff3", "--", ...files], {
-      encoding: "utf8",
-    });
-    if (merge.error || merge.status === null || merge.status > 127)
-      throw new Error(`Three-way diff needs Git: ${merge.error?.message ?? merge.stderr}`);
-    return {
-      ...result,
-      status: merge.status ? "conflicting" : "mergeable",
-      conflicts: merge.status,
-    };
-  } finally {
-    await rm(directory, { recursive: true, force: true });
-  }
+  // Same Git merge the writing path runs; only the conflict count is read, nothing is written.
+  const { conflicts } = await mergeThreeWay(normalizedBase, normalizedLocal, normalizedUpstream);
+  return { ...result, status: conflicts ? "conflicting" : "mergeable", conflicts };
 }
 
 /** Merge without touching consumer files; callers decide whether the result is safe to write. */
@@ -122,30 +102,6 @@ export async function mergeThreeWay(
   }
 }
 
-export interface ComponentComparison {
-  name: string;
-  status: ComponentStatus;
-  files: FileComparison[];
-}
-
-/**
- * Overall status from the per-file results. A component whose files are all
- * absent isn't installed; any local file differing from (or missing against) an
- * installed component means the copy differs from the current registry. Without
- * installed-version tracking we can't tell an upstream restyle apart from a
- * local customization — both surface as "outdated", so callers must frame it as
- * a difference, not a proven update, and never overwrite blindly.
- */
-export function deriveComponentStatus(files: FileComparison[]): ComponentStatus {
-  if (files.length === 0 || files.every((f) => f.status === "missing")) {
-    return "not-installed";
-  }
-  if (files.some((f) => f.status === "different" || f.status === "missing")) {
-    return "outdated";
-  }
-  return "up-to-date";
-}
-
 /**
  * Cheap presence check (no network): a component counts as installed when at
  * least one of its files exists locally. Used to scope the `diff` overview to
@@ -168,7 +124,7 @@ export async function compareComponent(
   componentsDir: string,
   ref?: string,
   installed?: Record<string, InstalledFile>,
-): Promise<ComponentComparison> {
+): Promise<FileComparison[]> {
   // Optional tests only participate after this consumer has installed them.
   // Otherwise `diff` would falsely report every opt-in test as missing.
   const trackedTests = (def.testFiles ?? []).filter((file) => installed?.[file]);
@@ -208,7 +164,7 @@ export async function compareComponent(
     files.push(file);
   }
 
-  return { name: def.name, status: deriveComponentStatus(files), files };
+  return files;
 }
 
 export type DiffLineType = "add" | "remove" | "context";

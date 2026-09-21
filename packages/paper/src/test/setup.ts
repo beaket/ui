@@ -2,19 +2,7 @@
 // CM uses Range/ResizeObserver for layout measurement, but the decoration/transaction logic
 // works correctly even when measured values are 0 — and that logic is exactly what we want to verify.
 
-const zeroRect = {
-  x: 0,
-  y: 0,
-  top: 0,
-  bottom: 0,
-  left: 0,
-  right: 0,
-  width: 0,
-  height: 0,
-  toJSON() {
-    return this;
-  },
-} as DOMRect;
+const zeroRect = new DOMRect(0, 0, 0, 0);
 
 Range.prototype.getBoundingClientRect = () => zeroRect;
 Range.prototype.getClientRects = () =>

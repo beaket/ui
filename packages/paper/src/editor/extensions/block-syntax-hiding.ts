@@ -1,8 +1,9 @@
 import { syntaxTree } from "@codemirror/language";
-import type { EditorState, Extension } from "@codemirror/state";
+import type { Extension } from "@codemirror/state";
 import type { DecorationSet } from "@codemirror/view";
 import { Decoration, EditorView } from "@codemirror/view";
 import { guardedDecorations } from "./composing-guard";
+import { selectionTouches, selectionTouchesLine } from "./selection-utils";
 
 // Hiding structural marks of block elements. Unlike inline (per-node exposure), blocks use "is the cursor on
 // that line" as the exposure unit (Obsidian behavior).
@@ -63,11 +64,6 @@ const ATX_HEADINGS = new Set([
 const headingLineDeco = [1, 2, 3, 4, 5, 6].map((n) =>
   Decoration.line({ class: `cm-heading-line cm-h${n}` }),
 );
-
-function selectionTouchesLine(state: EditorState, pos: number): boolean {
-  const line = state.doc.lineAt(pos);
-  return state.selection.ranges.some((range) => range.from <= line.to && range.to >= line.from);
-}
 
 function computeDecorations(view: EditorView): DecorationSet {
   const { state } = view;
@@ -130,9 +126,7 @@ function computeDecorations(view: EditorView): DecorationSet {
           const firstLine = state.doc.lineAt(node.from);
           const lastLine = state.doc.lineAt(node.to);
           // The fence (``` + language) is exposed at block granularity — shown if the cursor is inside the block
-          const touched = state.selection.ranges.some(
-            (range) => range.from <= node.to && range.to >= node.from,
-          );
+          const touched = selectionTouches(state, node.from, node.to);
           for (let n = firstLine.number; n <= lastLine.number; n++) {
             const linePos = state.doc.line(n).from;
             // Only when the cursor is outside, the opening/closing fence lines become shrunk strips; the rest are code lines
@@ -168,7 +162,7 @@ function computeDecorations(view: EditorView): DecorationSet {
 
 export function blockSyntaxHiding(): Extension {
   return [
-    guardedDecorations("block-syntax-hiding", computeDecorations),
+    guardedDecorations(computeDecorations),
     EditorView.theme({
       // Blockquote color is common regardless of depth. Indentation and vertical bars are drawn by the depth classes (quoteDepthTheme).
       ".cm-line.cm-blockquote-line": {

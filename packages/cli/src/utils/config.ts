@@ -12,6 +12,13 @@ export interface InstalledFile {
 export const contentHash = (content: string): string =>
   createHash("sha256").update(content).digest("hex");
 
+/**
+ * Read and parse a JSON file, tolerating a BOM — Windows editors write one and
+ * `JSON.parse` rejects it. Every JSON read in the CLI goes through this.
+ */
+export const readJson = async (file: string) =>
+  JSON.parse((await readFile(file, "utf-8")).replace(/^\uFEFF/, ""));
+
 export interface BeaketConfig {
   $schema?: string;
   components: string;
@@ -30,8 +37,7 @@ export async function getConfig(): Promise<BeaketConfig | null> {
     return null;
   }
 
-  const content = await readFile(configPath, "utf-8");
-  return JSON.parse(content) as BeaketConfig;
+  return (await readJson(configPath)) as BeaketConfig;
 }
 
 export async function writeConfig(config: BeaketConfig): Promise<void> {

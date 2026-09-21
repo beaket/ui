@@ -5,6 +5,7 @@ import { Decoration, EditorView, ViewPlugin, WidgetType } from "@codemirror/view
 import type { SyntaxNode } from "@lezer/common";
 import { guardedDecorations } from "./composing-guard";
 import { copyText } from "./markdown-copy";
+import { selectionTouches } from "./selection-utils";
 
 // Shows a "copy code" button at the top-right of a code block (FencedCode) — copies only the code text
 // inside the block (excluding the ``` fences and language line) to the clipboard. A block-level action separate from full-document copy (markdownCopy).
@@ -112,10 +113,7 @@ function computeDecorations(view: EditorView): DecorationSet {
       enter(node) {
         if (node.name !== "FencedCode") return;
         // If the cursor is inside the block the fences unfold and the anchor shakes, so attach the button in render mode only.
-        const touched = state.selection.ranges.some(
-          (range) => range.from <= node.to && range.to >= node.from,
-        );
-        if (touched) return;
+        if (selectionTouches(state, node.from, node.to)) return;
         const codeText = findCodeText(node.node);
         if (!codeText) return;
         const code = state.doc.sliceString(codeText.from, codeText.to);
@@ -194,7 +192,7 @@ const hoverReveal = ViewPlugin.fromClass(
 
 export function codeBlockCopy(): Extension {
   return [
-    guardedDecorations("code-block-copy", computeDecorations),
+    guardedDecorations(computeDecorations),
     hoverReveal,
     EditorView.theme({
       // The reference point for the button's absolute positioning. Two classes beat baseTheme `.cm-line` (same/lower specificity).

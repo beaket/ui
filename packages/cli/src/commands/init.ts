@@ -3,9 +3,15 @@ import { readdir, readFile, writeFile } from "node:fs/promises";
 import { styleText } from "node:util";
 import path from "path";
 import prompts from "prompts";
-import { contentHash, getConfig, writeConfig, type BeaketConfig } from "../utils/config.ts";
+import {
+  contentHash,
+  getConfig,
+  readJson,
+  writeConfig,
+  type BeaketConfig,
+} from "../utils/config.ts";
 import { checkSetup } from "../utils/setup.ts";
-import { extractThemeBlock, replaceThemeInCss } from "../utils/theme.ts";
+import { extractThemeBlock, importsTailwind, replaceThemeInCss } from "../utils/theme.ts";
 import { THEME_CSS, VALID_THEMES } from "../utils/themes.ts";
 import { requireTypeScript } from "../utils/typescript.ts";
 
@@ -164,33 +170,27 @@ export async function detectAlias(cwd = process.cwd()): Promise<DetectedAlias | 
   }
 }
 
+/** Next.js uses the root alias by default and keeps its global CSS under app/. */
+async function isNextProject(cwd: string): Promise<boolean> {
+  try {
+    const pkg = await readJson(path.join(cwd, "package.json"));
+    return Boolean(pkg.dependencies?.next ?? pkg.devDependencies?.next);
+  } catch {
+    return false; // missing or unparseable package.json — assume not Next
+  }
+}
+
 export async function detectAliasPath(cwd = process.cwd()): Promise<string> {
   const alias = await detectAlias(cwd);
   if (alias) return path.relative(cwd, alias.components);
-
-  // Fallback: detect from package.json
-  const pkgPath = path.join(cwd, "package.json");
-  if (existsSync(pkgPath)) {
-    try {
-      const content = await readFile(pkgPath, "utf-8");
-      const pkg = JSON.parse(content);
-      const deps = { ...pkg.dependencies, ...pkg.devDependencies };
-      // Next.js uses root alias by default
-      if (deps.next) {
-        return "components/ui";
-      }
-    } catch {
-      // Ignore parse errors
-    }
-  }
-
+  if (await isNextProject(cwd)) return "components/ui";
   // Default to src/components/ui (Vite style)
   return "src/components/ui";
 }
 
 async function containsTailwindImport(filePath: string): Promise<boolean> {
   try {
-    return /@import\s+["']tailwindcss["']/.test(await readFile(filePath, "utf-8"));
+    return importsTailwind(await readFile(filePath, "utf-8"));
   } catch {
     return false;
   }
@@ -221,20 +221,6 @@ async function findTailwindCssFiles(directory: string): Promise<string[]> {
 }
 
 export async function detectCssPath(cwd = process.cwd()): Promise<string> {
-  const pkgPath = path.join(cwd, "package.json");
-  let nextProject = false;
-
-  if (existsSync(pkgPath)) {
-    try {
-      const content = await readFile(pkgPath, "utf-8");
-      const pkg = JSON.parse(content);
-      const deps = { ...pkg.dependencies, ...pkg.devDependencies };
-      nextProject = Boolean(deps.next);
-    } catch {
-      // Ignore parse errors
-    }
-  }
-
   const candidates = [
     "app/app.css",
     "src/app/globals.css",
@@ -259,7 +245,9 @@ export async function detectCssPath(cwd = process.cwd()): Promise<string> {
     if (await containsTailwindImport(cssFile)) return path.relative(cwd, cssFile);
   }
 
-  return existingCandidates[0] ?? (nextProject ? "app/globals.css" : "src/index.css");
+  return (
+    existingCandidates[0] ?? ((await isNextProject(cwd)) ? "app/globals.css" : "src/index.css")
+  );
 }
 
 interface InitOptions {

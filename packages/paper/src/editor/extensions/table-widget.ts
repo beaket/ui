@@ -15,6 +15,7 @@ import { Decoration, EditorView, ViewPlugin, WidgetType, keymap } from "@codemir
 import { renderCellInline } from "./cell-inline-renderer";
 import { guardedDecorations } from "./composing-guard";
 import { markdownExtension } from "./markdown";
+import { PopupMenu, type MenuClasses, type MenuRow } from "./menu-engine";
 import type { TableAlign, TableData } from "./table-model";
 import { parseTable, serializeDelimiter, serializeRow } from "./table-model";
 
@@ -110,7 +111,7 @@ function computeBrDecorations(view: EditorView): DecorationSet {
 
 /** For the editing subview: hidden <br> render (guard) + cursor atomization (exported for tests) */
 export const cellBrLineBreaks: Extension = [
-  guardedDecorations("cell-br", computeBrDecorations),
+  guardedDecorations(computeBrDecorations),
   EditorView.atomicRanges.of((view) => computeBrDecorations(view)),
 ];
 
@@ -691,97 +692,46 @@ class TableController {
   // -------------------------------------------------------------------------
   // Grip menu
 
-  private menu: HTMLElement | null = null;
-  private menuCloseListener: ((event: MouseEvent) => void) | null = null;
-  /** The grip the open menu is anchored to, so it can be re-placed from live coords on scroll (#541). */
-  private menuAnchor: HTMLElement | null = null;
-  /** Bound scroll/resize handler that keeps the menu glued to its anchor grip. */
-  private menuReposition: (() => void) | null = null;
+  private gripMenu: PopupMenu<TableMenuRow> | null = null;
 
+  /**
+   * The column/row structure menu. Uses the shared `PopupMenu` engine so the fixed-position
+   * placement, the scroll/resize glue and the close-when-the-anchor-leaves-the-scroller rule (#541,
+   * #471) live in one place rather than being restated here. Anchored to the grip element, not a
+   * document position, and closed by an outside click — it has no trigger text to close it.
+   */
   private openMenu(kind: "col" | "row", index: number, anchor: HTMLElement): void {
     // No menu actions during IME composition (CJK first-class)
     if (this.subview?.composing) return;
     this.closeMenu();
+    if (!this.mainView) return;
 
-    const items = kind === "col" ? this.columnMenuItems(index) : this.rowMenuItems(index);
-    const menu = document.createElement("div");
-    menu.className = "cm-table-menu";
-    for (const item of items) {
-      if (item === "-") {
-        const divider = document.createElement("div");
-        divider.className = "cm-table-menu-divider";
-        menu.appendChild(divider);
-        continue;
-      }
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = item.label;
-      btn.addEventListener("mousedown", (e) => e.preventDefault());
-      btn.addEventListener("click", () => {
+    const menu = new PopupMenu<TableMenuRow>(
+      this.mainView,
+      TABLE_MENU_CLASSES,
+      (row) => {
         this.closeMenu();
-        item.action();
-      });
-      menu.appendChild(btn);
-    }
-
-    // Attach to view.dom (.cm-editor, overflow:visible) with position:fixed, mirroring the slash menu —
-    // this escapes the .cm-scroller overflow box so the menu is never clipped near the scroller's
-    // right/bottom edge (#471). Position is set by positionMenu() from the grip's live viewport rect.
-    (this.mainView?.dom ?? this.wrap).appendChild(menu);
-    this.menu = menu;
-    this.menuAnchor = anchor;
-    this.positionMenu();
-
-    this.menuCloseListener = (event) => {
-      if (!menu.contains(event.target as Node)) this.closeMenu();
-    };
-    document.addEventListener("mousedown", this.menuCloseListener, true);
-    // Keep the menu glued to the grip on scroll/resize, closing it once the grip scrolls out of the
-    // editor viewport (#541). capture:true catches the inner .cm-scroller's non-bubbling scroll.
-    this.menuReposition = () => this.positionMenu();
-    window.addEventListener("scroll", this.menuReposition, { capture: true, passive: true });
-    window.addEventListener("resize", this.menuReposition);
-  }
-
-  /**
-   * Re-place the menu from the anchor grip's live rect, or close it if the grip has been detached or
-   * scrolled out of the editor's scroll viewport (#541). Skipped during IME composition so the close
-   * branch never fires mid-compose (CJK first-class, #483); it self-corrects on the next event.
-   */
-  private positionMenu(): void {
-    if (!this.menu || !this.menuAnchor || this.subview?.composing) return;
-    const anchorRect = this.menuAnchor.getBoundingClientRect();
-    const scroller = this.mainView?.scrollDOM.getBoundingClientRect();
-    // Close once the grip scrolls out of the scroller viewport — vertically or horizontally
-    // (.cm-scroller scrolls sideways for wide tables), else the fixed menu floats over empty chrome.
-    if (
-      !this.menuAnchor.isConnected ||
-      (scroller &&
-        (anchorRect.bottom < scroller.top ||
-          anchorRect.top > scroller.bottom ||
-          anchorRect.right < scroller.left ||
-          anchorRect.left > scroller.right))
-    ) {
-      this.closeMenu();
-      return;
-    }
-    this.menu.style.left = `${anchorRect.left}px`;
-    this.menu.style.top = `${anchorRect.bottom + 4}px`;
+        row.action?.();
+      },
+      {
+        selectFirst: false,
+        closeOnOutsideClick: true,
+        // Typing happens in the cell subview, not the main view — that is what must not be
+        // interrupted mid-compose (#483).
+        composing: () => this.subview?.composing ?? false,
+      },
+    );
+    const items = kind === "col" ? this.columnMenuItems(index) : this.rowMenuItems(index);
+    menu.open(
+      anchor,
+      items.map((item) => (item === "-" ? { label: "", divider: true, action: () => {} } : item)),
+    );
+    this.gripMenu = menu;
   }
 
   private closeMenu(): void {
-    if (this.menuCloseListener) {
-      document.removeEventListener("mousedown", this.menuCloseListener, true);
-      this.menuCloseListener = null;
-    }
-    if (this.menuReposition) {
-      window.removeEventListener("scroll", this.menuReposition, { capture: true });
-      window.removeEventListener("resize", this.menuReposition);
-      this.menuReposition = null;
-    }
-    this.menu?.remove();
-    this.menu = null;
-    this.menuAnchor = null;
+    this.gripMenu?.close();
+    this.gripMenu = null;
   }
 
   // -------------------------------------------------------------------------
@@ -917,6 +867,19 @@ class TableController {
     ];
   }
 }
+
+/** A structure-menu row: a labelled action, or a separator rule between groups. */
+interface TableMenuRow extends MenuRow {
+  /** Absent on a separator row. */
+  action?: () => void;
+}
+
+const TABLE_MENU_CLASSES: MenuClasses = {
+  menu: "cm-table-menu",
+  selected: "cm-table-selected",
+  header: "cm-table-menu-header",
+  divider: "cm-table-menu-divider",
+};
 
 interface ControllerHost extends HTMLElement {
   __tableController?: TableController;

@@ -223,7 +223,7 @@ export function tokenRender(specs?: readonly TokenSpec[]): Extension {
   if (!specs || specs.length === 0) return [];
   return [
     tokensFacet.of(specs),
-    guardedDecorations("token-render", computeDecorations, { atomic: true }),
+    guardedDecorations(computeDecorations, { atomic: true }),
     Prec.high(
       keymap.of([
         { key: "Backspace", run: deleteTokenAt("to") },
