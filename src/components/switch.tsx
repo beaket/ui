@@ -21,7 +21,7 @@ const switchSizes = {
 } as const;
 
 const thumbBase =
-  "pointer-events-none block bg-bg-input group-disabled:bg-bg-disabled transition-transform duration-100 data-[state=unchecked]:translate-x-0 group-enabled:group-active:translate-y-px group-enabled:group-active:data-[state=unchecked]:translate-x-px";
+  "pointer-events-none block bg-bg-input group-disabled:bg-fg-disabled transition-transform duration-100 data-[state=unchecked]:translate-x-0 group-enabled:group-active:translate-y-px group-enabled:group-active:data-[state=unchecked]:translate-x-px";
 
 const thumbSizes = {
   sm: "size-2 data-[state=checked]:translate-x-[14px] group-enabled:group-active:data-[state=checked]:translate-x-[15px]",

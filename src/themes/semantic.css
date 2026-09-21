@@ -3,7 +3,7 @@
  * The 69 names components use (64 color + 5 shadow). Authored once — every theme shares these
  * definitions verbatim. A theme never touches this layer; it only supplies
  * the 30-value palette (surface / tone / signal / knockout / shadow) that
- * these definitions point at. 27 values are functional; tone 8–10 are reserved
+ * these definitions point at. 28 values are functional; tone 8–9 are reserved
  * for 12-step ramp compatibility and future deep-ink roles. The CLI includes
  * the selected palette in the managed block; place overrides after its end marker.
  */

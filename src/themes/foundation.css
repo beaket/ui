@@ -103,7 +103,14 @@
       "Microsoft YaHei", "Noto Sans SC", sans-serif;
   }
 
-  :lang(zh-Hant) {
+  /* `:lang(zh-Hant)` does not infer the script from a region-only tag, so
+     `zh-TW`, `zh-HK` and `zh-MO` would fall through to the Simplified rule
+     above and render Traditional text in Simplified glyph forms. Each region
+     is named; `:lang()` still covers their extended forms (`zh-TW-x-…`). */
+  :lang(zh-Hant),
+  :lang(zh-TW),
+  :lang(zh-HK),
+  :lang(zh-MO) {
     font-family:
       -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang TC",
       "Microsoft JhengHei", "Noto Sans TC", sans-serif;
