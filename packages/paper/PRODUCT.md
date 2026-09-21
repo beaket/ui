@@ -15,7 +15,7 @@ a record whose users, success metric, and visual system are all someone else's.
 workspace and still inherits the root record**; it needs its own file if it is
 ever worked on through this tooling. `@beaket/ui`'s Ink & Instrument
 `DESIGN.md` is **not** this package's visual authority: paper ships its own
-CodeMirror theme with no Tailwind, no `cn`, and none of the 68 semantic tokens.
+CodeMirror theme with no Tailwind, no `cn`, and none of the 69 semantic tokens.
 
 ## Platform
 

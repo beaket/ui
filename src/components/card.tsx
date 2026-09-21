@@ -5,16 +5,22 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-// A card is a surface, not a template. Its identity is the material — square
-// corners, a single-ink border, and the drawn grey offset shade that marks a
-// raised surface — never an imposed header/body/footer. Content is whatever you
-// pour in; the padding + column gap make raw children sit right with no ceremony.
+// A card is a surface, not a template — and a sheet laid on the page, not a box
+// drawn on it. Its identity is the material: square corners, the fill step that
+// lifts it off the stock, and the drawn grey offset shade that says how far.
+// Never an imposed header/body/footer; content is whatever you pour in, and the
+// padding + column gap make raw children sit right with no ceremony.
+//
+// It carries no resting stroke. A border here would only repeat what the surface
+// already said, and repeating it at every nesting level is what made a dense
+// screen unreadable. `flat` therefore means flush: on a raised parent it has no
+// mark of its own, which is what no elevation should look like.
 //
 // Exactly one shadow utility may ever land in the class list: twMerge can't
 // dedupe custom shadow utilities against one another, so the grey shade (per
 // elevation) and the pressable accent edge are assigned through mutually
 // exclusive compound variants rather than layered and overridden.
-const cardVariants = cva("border border-border bg-bg-raised text-fg flex flex-col gap-4 p-5", {
+const cardVariants = cva("bg-bg-raised text-fg flex flex-col gap-4 p-5", {
   variants: {
     elevation: {
       flat: "",
@@ -30,11 +36,13 @@ const cardVariants = cva("border border-border bg-bg-raised text-fg flex flex-co
     // Passive surface — the quiet grey shade, one drawn level per elevation.
     { interactive: false, elevation: "shade", class: "shadow-offset" },
     { interactive: false, elevation: "overlay", class: "shadow-offset-overlay" },
-    // Pressable — neutral at rest, then a thin accent edge on hover. Focus owns
-    // the outer outline and pressing drops the card onto the revealed edge.
+    // Pressable — raised at rest like any other sheet, then the shade turns
+    // accent on hover: the surface does not appear, it changes voice. Without
+    // a resting shade a borderless interactive card would be invisible until
+    // hovered. Focus owns the outer outline; pressing drops it onto the edge.
     {
       interactive: true,
-      class: "hover:shadow-offset-action active:shadow-none",
+      class: "shadow-offset hover:bg-bg-overlay hover:shadow-offset-action active:shadow-none",
     },
   ],
   defaultVariants: { elevation: "shade", interactive: false },
@@ -91,7 +99,9 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
 
 function CardTitle({ className, children, ...props }: React.ComponentProps<"h4">) {
   return (
-    <h4 data-slot="card-title" className={cn("leading-none font-semibold", className)} {...props}>
+    // leading-none clipped its own descenders — measured +1.13px of overflow on
+    // a Latin title, before any script with a deeper glyph body is considered.
+    <h4 data-slot="card-title" className={cn("leading-tight font-semibold", className)} {...props}>
       {children}
     </h4>
   );

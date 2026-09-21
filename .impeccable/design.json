@@ -1,146 +1,213 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-13T22:44:11Z",
+  "generatedAt": "2026-09-15T08:46:07.986Z",
   "title": "Design System: Beaket UI",
   "extensions": {
     "colorMeta": {
       "bg": {
         "role": "neutral",
-        "displayName": "Paper",
-        "canonical": "#fcfcfa",
+        "displayName": "Stock",
+        "canonical": "#fdfcfa",
         "tonalRamp": [
-          "#fcfcfa",
-          "#ededed",
-          "#cbcbcb",
-          "#aaaaaa",
-          "#8c8c8c",
-          "#797979",
-          "#666666",
-          "#535353",
-          "#414141",
-          "#303030",
-          "#202020",
-          "#090909"
-        ]
+          "#fdfcfa",
+          "#dbdada",
+          "#bcbcbc",
+          "#a1a0a2",
+          "#868688",
+          "#747477",
+          "#636367",
+          "#525257",
+          "#424248",
+          "#323239",
+          "#24232a",
+          "#16151d"
+        ],
+        "purpose": "The page itself — the stock everything is printed on. Painted by `body` in semantic.css; every surface role is a step away from it."
       },
       "bg-raised": {
         "role": "neutral",
-        "displayName": "Raised Paper",
-        "canonical": "#f9f9f9",
+        "displayName": "Paper",
+        "canonical": "#f4f3f2",
         "tonalRamp": [
-          "#fcfcfa",
-          "#ededed",
-          "#cbcbcb",
-          "#aaaaaa",
-          "#8c8c8c",
-          "#797979",
-          "#666666",
-          "#535353",
-          "#414141",
-          "#303030",
-          "#202020",
-          "#090909"
-        ]
+          "#fdfcfa",
+          "#dbdada",
+          "#bcbcbc",
+          "#a1a0a2",
+          "#868688",
+          "#747477",
+          "#636367",
+          "#525257",
+          "#424248",
+          "#323239",
+          "#24232a",
+          "#16151d"
+        ],
+        "purpose": "The separated sheet — cards, table rows, alerts. One ladder step off the page (darker than it in Solace light; which way the ladder travels is a per-theme decision). It carries no border of its own: the drawn shade is what says raised."
       },
       "bg-overlay": {
         "role": "neutral",
         "displayName": "Overlay Paper",
-        "canonical": "#f5f5f5",
+        "canonical": "#ecebea",
         "tonalRamp": [
-          "#fcfcfa",
-          "#ededed",
-          "#cbcbcb",
-          "#aaaaaa",
-          "#8c8c8c",
-          "#797979",
-          "#666666",
-          "#535353",
-          "#414141",
-          "#303030",
-          "#202020",
-          "#090909"
-        ]
+          "#fdfcfa",
+          "#dbdada",
+          "#bcbcbc",
+          "#a1a0a2",
+          "#868688",
+          "#747477",
+          "#636367",
+          "#525257",
+          "#424248",
+          "#323239",
+          "#24232a",
+          "#16151d"
+        ],
+        "purpose": "The far end of the ladder: dialogs, sheets, menus, select panels, an interactive card under hover."
+      },
+      "bg-input": {
+        "role": "neutral",
+        "displayName": "Writable Paper",
+        "canonical": "#fdfcfa",
+        "tonalRamp": [
+          "#fdfcfa",
+          "#dbdada",
+          "#bcbcbc",
+          "#a1a0a2",
+          "#868688",
+          "#747477",
+          "#636367",
+          "#525257",
+          "#424248",
+          "#323239",
+          "#24232a",
+          "#16151d"
+        ],
+        "purpose": "tone-0, the ramp's anchor and every knockout. In Solace it equals surface-0 in both schemes — one origin, two axes — so a writing field sits flush with the page and is bounded by its stroke, not its fill. It is a different token from bg-raised, and since this revision a different value."
       },
       "bg-emphasis": {
         "role": "secondary",
         "displayName": "Graphite Ink",
-        "canonical": "#090909",
+        "canonical": "#16151d",
         "tonalRamp": [
-          "#fcfcfa",
-          "#ededed",
-          "#cbcbcb",
-          "#aaaaaa",
-          "#8c8c8c",
-          "#797979",
-          "#666666",
-          "#535353",
-          "#414141",
-          "#303030",
-          "#202020",
-          "#090909"
-        ]
+          "#fdfcfa",
+          "#dbdada",
+          "#bcbcbc",
+          "#a1a0a2",
+          "#868688",
+          "#747477",
+          "#636367",
+          "#525257",
+          "#424248",
+          "#323239",
+          "#24232a",
+          "#16151d"
+        ],
+        "purpose": "The deepest ramp step (tone-11) and the emphasis material: strong borders and the primary button fill are one and the same ink. Body text is no longer part of that identity — fg moved to tone-10 in this revision so a paragraph does not read at primary-button pressure."
       },
       "fg-muted": {
         "role": "neutral",
         "displayName": "Quiet Ink",
-        "canonical": "#535353",
+        "canonical": "#525257",
         "tonalRamp": [
-          "#fcfcfa",
-          "#ededed",
-          "#cbcbcb",
-          "#aaaaaa",
-          "#8c8c8c",
-          "#797979",
-          "#666666",
-          "#535353",
-          "#414141",
-          "#303030",
-          "#202020",
-          "#090909"
-        ]
+          "#fdfcfa",
+          "#dbdada",
+          "#bcbcbc",
+          "#a1a0a2",
+          "#868688",
+          "#747477",
+          "#636367",
+          "#525257",
+          "#424248",
+          "#323239",
+          "#24232a",
+          "#16151d"
+        ],
+        "purpose": "Secondary type only. The ramp's middle is never used for a stroke."
       },
       "border": {
         "role": "neutral",
         "displayName": "Hairline",
-        "canonical": "#8c8c8c",
+        "canonical": "#868688",
         "tonalRamp": [
-          "#fcfcfa",
-          "#ededed",
-          "#cbcbcb",
-          "#aaaaaa",
-          "#8c8c8c",
-          "#797979",
-          "#666666",
-          "#535353",
-          "#414141",
-          "#303030",
-          "#202020",
-          "#090909"
-        ]
+          "#fdfcfa",
+          "#dbdada",
+          "#bcbcbc",
+          "#a1a0a2",
+          "#868688",
+          "#747477",
+          "#636367",
+          "#525257",
+          "#424248",
+          "#323239",
+          "#24232a",
+          "#16151d"
+        ],
+        "purpose": "Pressure two: the stroke that bounds a control. 3.05:1 on the stock."
       },
       "border-muted": {
         "role": "neutral",
         "displayName": "Faint Hairline",
-        "canonical": "#aaaaaa",
+        "canonical": "#a1a0a2",
         "tonalRamp": [
-          "#fcfcfa",
-          "#ededed",
-          "#cbcbcb",
-          "#aaaaaa",
-          "#8c8c8c",
-          "#797979",
-          "#666666",
-          "#535353",
-          "#414141",
-          "#303030",
-          "#202020",
-          "#090909"
-        ]
+          "#fdfcfa",
+          "#dbdada",
+          "#bcbcbc",
+          "#a1a0a2",
+          "#868688",
+          "#747477",
+          "#636367",
+          "#525257",
+          "#424248",
+          "#323239",
+          "#24232a",
+          "#16151d"
+        ],
+        "purpose": "Fused-strip frames, table footers, and every disabled border (always dashed)."
+      },
+      "border-subtle": {
+        "role": "neutral",
+        "displayName": "Seam",
+        "canonical": "#bcbcbc",
+        "tonalRamp": [
+          "#fdfcfa",
+          "#dbdada",
+          "#bcbcbc",
+          "#a1a0a2",
+          "#868688",
+          "#747477",
+          "#636367",
+          "#525257",
+          "#424248",
+          "#323239",
+          "#24232a",
+          "#16151d"
+        ],
+        "purpose": "Pressure three, added in this revision: a divider inside a surface. Its only consumer in the shipped set is the table row rule — Separator and the dropdown/select menu rules still draw at border-muted. 1.71:1 on raised paper, correct for a seam and insufficient for anything load-bearing."
+      },
+      "border-strong": {
+        "role": "neutral",
+        "displayName": "Ink Rule",
+        "canonical": "#16151d",
+        "tonalRamp": [
+          "#fdfcfa",
+          "#dbdada",
+          "#bcbcbc",
+          "#a1a0a2",
+          "#868688",
+          "#747477",
+          "#636367",
+          "#525257",
+          "#424248",
+          "#323239",
+          "#24232a",
+          "#16151d"
+        ],
+        "purpose": "Pressure one: a boundary that outranks the page — a table header rule, a menu panel frame, a badge."
       },
       "accent-solid": {
         "role": "primary",
         "displayName": "Ballpoint Blue",
-        "canonical": "#2b5bff",
+        "canonical": "#2657d0",
         "tonalRamp": [
           "oklch(15% 0.248 265.6)",
           "oklch(26% 0.248 265.6)",
@@ -150,12 +217,13 @@
           "oklch(72% 0.248 265.6)",
           "oklch(84% 0.248 265.6)",
           "oklch(95% 0.248 265.6)"
-        ]
+        ],
+        "purpose": "The single vivid voice. Hover and open-state edges, the focus outline, the caret, link text. Never a resting fill, never decoration."
       },
       "accent-bg": {
         "role": "primary",
         "displayName": "Menu Wash",
-        "canonical": "color-mix(in oklab, #2b5bff 17%, #fcfcfa)",
+        "canonical": "color-mix(in oklab, #2657d0 17%, #fdfcfa)",
         "tonalRamp": [
           "oklch(15% 0.248 265.6)",
           "oklch(26% 0.248 265.6)",
@@ -165,12 +233,13 @@
           "oklch(72% 0.248 265.6)",
           "oklch(84% 0.248 265.6)",
           "oklch(95% 0.248 265.6)"
-        ]
+        ],
+        "purpose": "Behind the currently navigated menu or select row, always with the 2px inset leading rule and ink type."
       },
       "accent-bg-subtle": {
         "role": "primary",
         "displayName": "Lens Wash",
-        "canonical": "color-mix(in oklab, #2b5bff 8%, #fcfcfa)",
+        "canonical": "color-mix(in oklab, #2657d0 8%, #fdfcfa)",
         "tonalRamp": [
           "oklch(15% 0.248 265.6)",
           "oklch(26% 0.248 265.6)",
@@ -180,12 +249,13 @@
           "oklch(72% 0.248 265.6)",
           "oklch(84% 0.248 265.6)",
           "oklch(95% 0.248 265.6)"
-        ]
+        ],
+        "purpose": "The lens plate under the current navigation cell or tab. Measures 1.12:1 light and 1.10:1 dark — a recorded gap, not a target."
       },
       "danger-solid": {
         "role": "tertiary",
-        "displayName": "Oxblood",
-        "canonical": "#a13d52",
+        "displayName": "Crimson",
+        "canonical": "#961733",
         "tonalRamp": [
           "oklch(15% 0.133 10.4)",
           "oklch(26% 0.133 10.4)",
@@ -195,12 +265,13 @@
           "oklch(72% 0.133 10.4)",
           "oklch(84% 0.133 10.4)",
           "oklch(95% 0.133 10.4)"
-        ]
+        ],
+        "purpose": "Destructive actions, invalid fields, destructive menu rows."
       },
       "success-solid": {
         "role": "tertiary",
-        "displayName": "Deep Pine",
-        "canonical": "#00452d",
+        "displayName": "Pine",
+        "canonical": "#498c67",
         "tonalRamp": [
           "oklch(15% 0.075 162.2)",
           "oklch(26% 0.075 162.2)",
@@ -210,12 +281,13 @@
           "oklch(72% 0.075 162.2)",
           "oklch(84% 0.075 162.2)",
           "oklch(95% 0.075 162.2)"
-        ]
+        ],
+        "purpose": "Confirmation and successful state."
       },
       "warning-solid": {
         "role": "tertiary",
         "displayName": "Ochre",
-        "canonical": "#e0a52f",
+        "canonical": "#ddb54c",
         "tonalRamp": [
           "oklch(15% 0.143 79.9)",
           "oklch(26% 0.143 79.9)",
@@ -225,12 +297,29 @@
           "oklch(72% 0.143 79.9)",
           "oklch(84% 0.143 79.9)",
           "oklch(95% 0.143 79.9)"
-        ]
+        ],
+        "purpose": "Caution, and the only signal knocked out in ink. 1.76:1 on paper — may fill a shape, must never be the only thing drawing a boundary."
+      },
+      "warning-fg": {
+        "role": "tertiary",
+        "displayName": "Deep Ochre",
+        "canonical": "color-mix(in oklab, #ddb54c 50%, #16151d)",
+        "tonalRamp": [
+          "oklch(15% 0.143 79.9)",
+          "oklch(26% 0.143 79.9)",
+          "oklch(38% 0.143 79.9)",
+          "oklch(49% 0.143 79.9)",
+          "oklch(61% 0.143 79.9)",
+          "oklch(72% 0.143 79.9)",
+          "oklch(84% 0.143 79.9)",
+          "oklch(95% 0.143 79.9)"
+        ],
+        "purpose": "The rule color Alert's warning variant borrows, because the ochre solid cannot hold a hairline on paper."
       },
       "info-solid": {
         "role": "tertiary",
-        "displayName": "Slate Blue",
-        "canonical": "#53628f",
+        "displayName": "Plum",
+        "canonical": "#643d75",
         "tonalRamp": [
           "oklch(15% 0.074 269.5)",
           "oklch(26% 0.074 269.5)",
@@ -240,12 +329,13 @@
           "oklch(72% 0.074 269.5)",
           "oklch(84% 0.074 269.5)",
           "oklch(95% 0.074 269.5)"
-        ]
+        ],
+        "purpose": "Neutral information."
       },
       "info-alt-solid": {
         "role": "tertiary",
         "displayName": "Teal",
-        "canonical": "#005f72",
+        "canonical": "#3c9baa",
         "tonalRamp": [
           "oklch(15% 0.080 217.7)",
           "oklch(26% 0.080 217.7)",
@@ -255,97 +345,71 @@
           "oklch(72% 0.080 217.7)",
           "oklch(84% 0.080 217.7)",
           "oklch(95% 0.080 217.7)"
-        ]
+        ],
+        "purpose": "A second information voice when two must be distinguished."
       }
     },
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Page-level headings on documentation surfaces. No component uses it."
+        "purpose": "20px/700. Page-level headings on documentation and Storybook surfaces. No registry component uses it."
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "Dialog and Sheet titles only — the one place a component raises its voice."
+        "purpose": "18px/600 on 28px literal leading. Dialog and Sheet titles only — the one place a component raises its voice."
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Card titles and in-component section headings. Same size as body; weight does the work."
+        "purpose": "Inherited size at 600 and leading-tight; Card sets no size on its root. Card titles and in-component headings — weight does the work. leading-none clipped 1.13px of Latin descenders and was retired."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "The interface voice: labels, menu rows, table cells and headers (headers at weight 600), input and button text. Most type in the system."
+        "purpose": "14px/1.55. The interface voice: labels, menu rows, table cells and headers (600), input text, default and large buttons, tabs, navigation, pagination. 28 of the 36 explicit size utilities in the component sources."
       },
       "label": {
         "displayName": "Label",
-        "purpose": "Badges, the small button size, tooltips, and the secondary labels inside menus and select panels."
+        "purpose": "12px/1.45. Badges, the small button size, tooltips, menu group labels and shortcuts. The CJK floor — no script goes below it. Six of the 36."
       },
       "mono": {
         "displayName": "Mono",
-        "purpose": "Code badges and inline code only."
+        "purpose": "12px/1.45 monospace. Code badges and inline code only."
       }
     },
-    "themes": [
-      {
-        "name": "solace",
-        "description": "White canvas, graphite ink — muted signals, a reserved blue for action. The default.",
-        "accent": "#2b5bff",
-        "shadowSize": "1px"
-      },
-      {
-        "name": "porcelain",
-        "description": "Cool porcelain ground with a cobalt accent, after blue-and-white ware.",
-        "accent": "#1e40af",
-        "shadowSize": "1px"
-      },
-      {
-        "name": "tobacco",
-        "description": "Warm paper and tobacco-brown ink with a taupe accent.",
-        "accent": "#6c5240",
-        "shadowSize": "2px"
-      },
-      {
-        "name": "marigold",
-        "description": "Warm cream with the system's one remaining violet accent, drawn at 3px.",
-        "accent": "#8330d8",
-        "shadowSize": "3px"
-      },
-      {
-        "name": "eucalyptus",
-        "description": "Cool green-grey paper with a teal-blue accent.",
-        "accent": "#175a84",
-        "shadowSize": "2px"
-      }
-    ],
     "shadows": [
       {
         "name": "offset",
-        "value": "1px 1px 0 0 #c4c4c4",
-        "purpose": "Surface shade. Raised surfaces (cards). Static, never on a pressable."
+        "value": "2px 2px 0 0 #bfbdb9",
+        "purpose": "Surface shade. A raised card, a table with `shadow`. Static. Now the load-bearing signal that a surface is raised, since surfaces dropped their borders."
       },
       {
         "name": "offset-overlay",
-        "value": "1px 1px 0 0 #a0a0a0",
-        "purpose": "Overlay shade. Dialogs, sheets, menus, select panels — a darker grey for a higher layer. Static."
+        "value": "2px 2px 0 0 #a19e98",
+        "purpose": "Overlay shade. Dialogs, sheets, menus, select panels, a card at `overlay` elevation. Darker grey for a higher layer. Static."
       },
       {
         "name": "offset-action",
-        "value": "1px 1px 0 0 #2b5bff",
-        "purpose": "Action edge. Revealed on hover under an edged pressable; held statically by an engaged writing field."
+        "value": "2px 2px 0 0 #2657d0",
+        "purpose": "Action edge. Revealed on hover under an edged pressable, held statically by an engaged writing field, and taken by an interactive card's shade on hover."
       },
       {
         "name": "offset-action-hover",
-        "value": "2px 2px 0 0 #2b5bff",
-        "purpose": "Grown action edge. Held by a trigger for as long as it owns an open overlay — open mirrors hover, one step louder."
+        "value": "3px 3px 0 0 #2657d0",
+        "purpose": "Grown action edge. Held while a trigger owns an open overlay — open mirrors hover, one step louder."
       },
       {
         "name": "offset-action-danger",
-        "value": "1px 1px 0 0 #a13d52",
+        "value": "2px 2px 0 0 #961733",
         "purpose": "Danger edge. Replaces the action edge on an invalid field under focus."
       },
       {
         "name": "menu-leading-rule",
-        "value": "inset 2px 0 0 0 #2b5bff",
-        "purpose": "The inset accent rule on the currently navigated menu or select row. 2px, because it marks engagement rather than mere proximity."
+        "value": "inset 2px 0 0 0 #2657d0",
+        "purpose": "The inset accent rule on the currently navigated menu or select row. 2px marks engagement rather than proximity; Alert's role rule is the same 2px mark drawn as a left border."
+      },
+      {
+        "name": "shadow-size-by-theme",
+        "value": "porcelain 1px · solace 2px · tobacco 2px · eucalyptus 2px · marigold 3px",
+        "purpose": "Offset size is a theme decision, not a component one. The same component feels differently pressed under a different palette."
       }
     ],
     "motion": [
@@ -362,12 +426,17 @@
       {
         "name": "navigation-progress",
         "value": "navigation-progress 1s ease-in-out infinite",
-        "purpose": "The only looping animation: a bar sweeping across the navigation progress track. Overlays have no entrance animation at all."
+        "purpose": "A bar sweeping across the navigation progress track. Overlays have no entrance animation at all."
+      },
+      {
+        "name": "skeleton-pulse",
+        "value": "skeleton-pulse 2s ease-in-out infinite",
+        "purpose": "The loading placeholder breathes in ink, not light: bg-hover to bg-active and back. Opacity would dim the page showing through it."
       },
       {
         "name": "reduced-motion",
-        "value": "0.01ms",
-        "purpose": "prefers-reduced-motion: reduce collapses every animation and transition globally in foundation.css."
+        "value": "prefers-reduced-motion: reduce -> 0.01ms",
+        "purpose": "foundation.css collapses every animation, transition, and scroll behavior globally."
       }
     ],
     "breakpoints": [
@@ -398,98 +467,127 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Ink fill is the complete persistent emphasis signal; accent appears only on hover, open ownership, or keyboard focus.",
-      "html": "<button class='ds-btn ds-btn-primary' type='button'>Save changes</button>",
-      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: 0; border: 1px solid transparent; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 0.8125rem; font-weight: 500; cursor: pointer; transition: box-shadow 100ms, translate 100ms, border-color 100ms, background-color 100ms; } .ds-btn:focus-visible { outline: 2px solid var(--color-border-focus, #2b5bff); outline-offset: 2px; } .ds-btn-primary { background: var(--color-bg-emphasis, #090909); color: var(--color-fg-on-emphasis, #fcfcfa); border-color: var(--color-border-strong, #090909); } .ds-btn-primary:hover { background: color-mix(in oklab, #2b5bff 24%, #090909); box-shadow: var(--shadow-offset-action, 1px 1px 0 0 #2b5bff); } .ds-btn-primary:active { background: color-mix(in oklab, #2b5bff 14%, #090909); box-shadow: none; translate: 1px 1px; }"
+      "description": "Ink fill is the whole persistent emphasis signal; accent arrives only on engage.",
+      "html": "<button class='ds-btn-primary'>Save changes</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; font-weight: 500; cursor: pointer; transition: box-shadow 100ms, translate 100ms, border-color 100ms, background-color 100ms; background: var(--color-bg-emphasis, #16151d); color: var(--color-fg-on-emphasis, #fdfcfa); border: 1px solid var(--color-border-strong, #16151d); } .ds-btn-primary:hover { background: color-mix(in oklab, var(--color-accent-solid, #2657d0) 24%, var(--color-bg-emphasis, #16151d)); box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2657d0); } .ds-btn-primary:focus-visible { outline: 2px solid var(--color-border-focus, #2657d0); outline-offset: 2px; } .ds-btn-primary:active { box-shadow: none; translate: 1px 1px; background: color-mix(in oklab, var(--color-accent-solid, #2657d0) 14%, var(--color-bg-emphasis, #16151d)); }"
     },
     {
-      "name": "Secondary Button",
+      "name": "Outline Button",
       "kind": "button",
-      "refersTo": "button-secondary",
-      "description": "Raised paper with a hairline border. Same edge grammar as primary, quieter material.",
-      "html": "<button class='ds-btn ds-btn-secondary' type='button'>Cancel</button>",
-      "css": ".ds-btn-secondary { background: var(--color-bg-raised, #f9f9f9); color: var(--color-fg, #090909); border-color: var(--color-border, #8c8c8c); } .ds-btn-secondary:hover { background: var(--color-bg-hover, #ededed); box-shadow: var(--shadow-offset-action, 1px 1px 0 0 #2b5bff); } .ds-btn-secondary:active { background: var(--color-bg-active, #cbcbcb); box-shadow: none; translate: 1px 1px; }"
+      "refersTo": "button-outline",
+      "description": "Airy at rest. On engage the edge grows instead of a fill appearing; the press keeps a faint grey settle.",
+      "html": "<button class='ds-btn-outline'>Preview</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; font-weight: 500; cursor: pointer; transition: box-shadow 100ms, translate 100ms, border-color 100ms, background-color 100ms; background: transparent; color: var(--color-fg, #24232a); border: 1px solid var(--color-border, #868688); } .ds-btn-outline:hover { box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2657d0); } .ds-btn-outline:focus-visible { outline: 2px solid var(--color-border-focus, #2657d0); outline-offset: 2px; } .ds-btn-outline:active { box-shadow: none; translate: 1px 1px; background: var(--color-bg-active, #bcbcbc); }"
     },
     {
       "name": "Ghost Button",
       "kind": "button",
       "refersTo": "button-ghost",
-      "description": "Not an edged pressable. Its only hover signal is the grey fill — no accent edge, no press translation.",
-      "html": "<button class='ds-btn ds-btn-ghost' type='button'>Dismiss</button>",
-      "css": ".ds-btn-ghost { background: transparent; color: var(--color-fg, #090909); border-color: transparent; } .ds-btn-ghost:hover { background: var(--color-bg-hover, #ededed); } .ds-btn-ghost:active { background: var(--color-bg-active, #cbcbcb); }"
+      "description": "Not an edged pressable. Its only hover signal is the grey fill, and it never translates on press.",
+      "html": "<button class='ds-btn-ghost'>Cancel</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; font-weight: 500; cursor: pointer; transition: box-shadow 100ms, translate 100ms, border-color 100ms, background-color 100ms; background: transparent; color: var(--color-fg, #24232a); border: 0; } .ds-btn-ghost:hover { background: var(--color-bg-hover, #dbdada); } .ds-btn-ghost:focus-visible { outline: 2px solid var(--color-border-focus, #2657d0); outline-offset: 2px; } .ds-btn-ghost:active { background: var(--color-bg-active, #bcbcbc); }"
     },
     {
       "name": "Text Input",
       "kind": "input",
       "refersTo": "input",
-      "description": "Quiet at rest, cap-off on focus: a static accent edge and no outline. The caret carries the vivid voice.",
-      "html": "<input class='ds-input' type='text' placeholder='Search components' aria-label='Search components' />",
-      "css": ".ds-input { height: 36px; width: 100%; padding: 0 12px; border-radius: 0; border: 1px solid var(--color-border, #8c8c8c); background: var(--color-bg-input, #fcfcfa); color: var(--color-fg, #090909); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 0.8125rem; caret-color: var(--color-accent-solid, #2b5bff); transition: box-shadow 100ms; } .ds-input::placeholder { color: var(--color-fg-subtle, #666666); } .ds-input::selection { background: color-mix(in oklab, #2b5bff 17%, #fcfcfa); } .ds-input:focus { outline: none; box-shadow: var(--shadow-offset-action, 1px 1px 0 0 #2b5bff); } .ds-input[aria-invalid='true'] { border-color: var(--color-danger-solid, #a13d52); } .ds-input[aria-invalid='true']:focus { box-shadow: var(--shadow-offset-action-danger, 1px 1px 0 0 #a13d52); }"
+      "description": "A fresh sheet laid on the stock. Quiet at rest; focus caps off with a static accent edge that leaves when the pen lifts. No ring.",
+      "html": "<input class='ds-input' type='text' placeholder='Project name' />",
+      "css": ".ds-input { display: block; width: 100%; height: 36px; padding: 0 12px; border-radius: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; background: var(--color-bg-input, #fdfcfa); color: var(--color-fg, #24232a); border: 1px solid var(--color-border, #868688); caret-color: var(--color-accent-solid, #2657d0); transition: box-shadow 100ms, border-color 100ms; } .ds-input::placeholder { color: var(--color-fg-subtle, #636367); } .ds-input:focus { outline: none; box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2657d0); } .ds-input:read-only { background: var(--color-bg, #fdfcfa); border-color: var(--color-border-muted, #a1a0a2); } .ds-input:read-only:focus { box-shadow: var(--shadow-offset, 2px 2px 0 0 #bfbdb9); }"
     },
     {
       "name": "Card",
       "kind": "card",
       "refersTo": "card",
-      "description": "A material, not a template: square corners, one hairline border, a drawn grey offset shade. Imposes no header/body/footer.",
+      "description": "A sheet laid on the page, not a box drawn on it: no resting stroke, read by fill step plus the drawn shade.",
       "html": "<div class='ds-card'><h4 class='ds-card-title'>Offset, not blur</h4><p class='ds-card-desc'>Elevation is the trace a raised object leaves on paper.</p></div>",
-      "css": ".ds-card { display: flex; flex-direction: column; gap: 16px; padding: 20px; border-radius: 0; border: 1px solid var(--color-border, #8c8c8c); background: var(--color-bg-raised, #f9f9f9); color: var(--color-fg, #090909); box-shadow: var(--shadow-offset, 1px 1px 0 0 #c4c4c4); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-card-title { margin: 0; font-size: 0.875rem; font-weight: 600; line-height: 1; } .ds-card-desc { margin: 0; font-size: 0.8125rem; line-height: 1.4; color: var(--color-fg-muted, #535353); }"
+      "css": ".ds-card { display: flex; flex-direction: column; gap: 16px; padding: 20px; border-radius: 0; border: 0; background: var(--color-bg-raised, #f4f3f2); color: var(--color-fg, #24232a); box-shadow: var(--shadow-offset, 2px 2px 0 0 #bfbdb9); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; } .ds-card-title { margin: 0; font-size: 0.875rem; font-weight: 600; line-height: 1.25; } .ds-card-desc { margin: 0; font-size: 0.875rem; line-height: 1.55; color: var(--color-fg-muted, #525257); }"
+    },
+    {
+      "name": "Interactive Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The one crossing of the Shadow-Is-Voice rule: it rests as a raised sheet and changes voice on hover — fill lifts a ladder step, shade turns accent.",
+      "html": "<a class='ds-card-interactive' href='#'><h4 class='ds-card-title'>Open the registry</h4><p class='ds-card-desc'>Hover lifts the fill; the shade turns accent.</p></a>",
+      "css": ".ds-card-interactive { display: flex; flex-direction: column; gap: 16px; padding: 20px; border-radius: 0; border: 0; text-decoration: none; cursor: pointer; background: var(--color-bg-raised, #f4f3f2); color: var(--color-fg, #24232a); box-shadow: var(--shadow-offset, 2px 2px 0 0 #bfbdb9); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; transition: box-shadow 100ms, translate 100ms, background-color 100ms; } .ds-card-interactive:hover { background: var(--color-bg-overlay, #ecebea); box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2657d0); } .ds-card-interactive:focus-visible { outline: 2px solid var(--color-border-focus, #2657d0); outline-offset: 2px; } .ds-card-interactive:active { box-shadow: none; translate: 1px 1px; }"
+    },
+    {
+      "name": "Alert",
+      "kind": "custom",
+      "description": "A 2px leading role rule and a colored glyph on raised paper — never a box, never a tinted well. Warning borrows warning-fg because the ochre solid is 1.76:1.",
+      "html": "<div class='ds-alert'><svg class='ds-alert-icon' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' aria-hidden='true'><circle cx='12' cy='12' r='10'/><path d='M12 16v-4M12 8h.01'/></svg><div class='ds-alert-title'>Note</div><div class='ds-alert-desc'>Surfaces are read by fill step and shade, not by a frame.</div></div>",
+      "css": ".ds-alert { display: grid; grid-template-columns: 16px 1fr; column-gap: 12px; row-gap: 2px; align-items: start; padding: 12px 16px; border: 0; border-left: 2px solid var(--color-info-solid, #643d75); border-radius: 0; background: var(--color-bg-raised, #f4f3f2); color: var(--color-fg, #24232a); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; } .ds-alert-icon { width: 16px; height: 16px; translate: 0 2px; color: var(--color-info-solid, #643d75); } .ds-alert-title { grid-column-start: 2; font-weight: 500; } .ds-alert-desc { grid-column-start: 2; color: var(--color-fg-muted, #525257); }"
     },
     {
       "name": "Checkbox",
       "kind": "custom",
       "refersTo": "checkbox",
-      "description": "An instrument on a 24px chassis. Checked is ink plus a glyph, never accent; the chassis holds still while the glyph travels 1px under the press.",
-      "html": "<span class='ds-checkbox' role='checkbox' aria-checked='true' tabindex='0'><svg class='ds-checkbox-glyph' viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='square' aria-hidden='true'><path d='M4 12l6 6L20 6'/></svg></span>",
-      "css": ".ds-checkbox { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 0; border: 1px solid var(--color-border, #8c8c8c); background: var(--color-bg-emphasis, #090909); color: var(--color-fg-on-emphasis, #fcfcfa); cursor: pointer; transition: background-color 100ms, box-shadow 100ms; } .ds-checkbox::before { content: ''; position: absolute; inset: -11px; } .ds-checkbox:hover { box-shadow: var(--shadow-offset-action, 1px 1px 0 0 #2b5bff); } .ds-checkbox:focus-visible { outline: 2px solid var(--color-border-focus, #2b5bff); outline-offset: 2px; } .ds-checkbox-glyph { transition: transform 100ms; } .ds-checkbox:active .ds-checkbox-glyph { transform: translate(1px, 1px); }"
+      "description": "A 16px instrument: the chassis holds still, the glyph travels 1px. Sits under the cap height of a 14px Korean label.",
+      "html": "<label class='ds-cb-wrap'><span class='ds-cb' role='checkbox' aria-checked='true' tabindex='0'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' aria-hidden='true'><path d='M20 6 9 17l-5-5'/></svg></span><span class='ds-cb-label'>Ship it</span></label>",
+      "css": ".ds-cb-wrap { display: inline-flex; align-items: center; gap: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; color: var(--color-fg, #24232a); cursor: pointer; } .ds-cb { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; flex: none; border-radius: 0; border: 1px solid var(--color-border, #868688); background: var(--color-bg-emphasis, #16151d); color: var(--color-fg-on-emphasis, #fdfcfa); transition: background-color 100ms, box-shadow 100ms; } .ds-cb::before { content: ''; position: absolute; inset: -15px; } .ds-cb svg { width: 10px; height: 10px; transition: translate 100ms; } .ds-cb:hover { box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2657d0); } .ds-cb:focus-visible { outline: 2px solid var(--color-border-focus, #2657d0); outline-offset: 2px; } .ds-cb:active svg { translate: 1px 1px; }"
     },
     {
       "name": "Switch",
       "kind": "custom",
-      "description": "A track, not a square choice. Ink fills the track when checked; the thumb travels while the chassis stays fixed.",
+      "refersTo": "switch",
+      "description": "Defaults to sm (28x16). Checked fills the track with ink; the thumb travels, the track never drops.",
       "html": "<span class='ds-switch' role='switch' aria-checked='true' tabindex='0'><span class='ds-switch-thumb'></span></span>",
-      "css": ".ds-switch { position: relative; display: inline-flex; align-items: center; width: 36px; height: 20px; padding: 2px; border-radius: 0; border: 1px solid var(--color-border, #8c8c8c); background: var(--color-bg-emphasis, #090909); cursor: pointer; transition: background-color 100ms, box-shadow 100ms; } .ds-switch::before { content: ''; position: absolute; inset: -15px; } .ds-switch:hover { box-shadow: var(--shadow-offset-action, 1px 1px 0 0 #2b5bff); } .ds-switch:focus-visible { outline: 2px solid var(--color-border-focus, #2b5bff); outline-offset: 2px; } .ds-switch-thumb { display: block; width: 12px; height: 12px; background: var(--color-bg-input, #fcfcfa); transform: translateX(18px); transition: transform 100ms; } .ds-switch:active .ds-switch-thumb { transform: translate(19px, 1px); }"
+      "css": ".ds-switch { position: relative; display: inline-flex; align-items: center; width: 28px; height: 16px; padding: 2px; flex: none; border-radius: 0; cursor: pointer; border: 1px solid var(--color-border, #868688); background: var(--color-bg-emphasis, #16151d); transition: background-color 100ms, box-shadow 100ms; } .ds-switch::before { content: ''; position: absolute; inset: -15px; } .ds-switch-thumb { display: block; width: 8px; height: 8px; background: var(--color-bg-input, #fdfcfa); translate: 14px 0; transition: translate 100ms; } .ds-switch:hover { box-shadow: var(--shadow-offset-action, 2px 2px 0 0 #2657d0); } .ds-switch:focus-visible { outline: 2px solid var(--color-border-focus, #2657d0); outline-offset: 2px; } .ds-switch:active .ds-switch-thumb { translate: 15px 1px; }"
     },
     {
       "name": "Navigation Strip",
       "kind": "nav",
       "refersTo": "tab-active",
-      "description": "Cells fuse on shared hairlines with no gaps. The current cell paints an inset lens plate with a two-tone rim — glass laid over the page, not a highlight on the text.",
-      "html": "<nav class='ds-nav'><ul class='ds-nav-list'><li><a class='ds-nav-item ds-nav-item-current' href='#' aria-current='page'>Components</a></li><li><a class='ds-nav-item' href='#'>Tokens</a></li><li><a class='ds-nav-item' href='#'>Themes</a></li></ul></nav>",
-      "css": ".ds-nav { display: inline-block; border: 1px solid var(--color-border-muted, #aaaaaa); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-nav-list { display: inline-flex; margin: 0; padding: 0; list-style: none; } .ds-nav-list > li + li { border-left: 1px solid var(--color-border-muted, #aaaaaa); } .ds-nav-item { position: relative; isolation: isolate; display: flex; align-items: center; height: 32px; padding: 0 14px; font-size: 0.8125rem; text-decoration: none; color: var(--color-fg, #090909); } .ds-nav-item:hover { background: var(--color-bg-hover, #ededed); } .ds-nav-item:active { background: var(--color-bg-active, #cbcbcb); } .ds-nav-item:focus-visible { outline: 2px solid var(--color-border-focus, #2b5bff); outline-offset: 2px; z-index: 2; } .ds-nav-item-current { cursor: default; } .ds-nav-item-current:hover { background: transparent; } .ds-nav-item-current::after { content: ''; position: absolute; inset: 4px; z-index: -1; background: color-mix(in oklab, #2b5bff 8%, #fcfcfa); border: 1px solid; border-top-color: var(--color-border-muted, #aaaaaa); border-left-color: var(--color-border-muted, #aaaaaa); border-right-color: var(--color-border-strong, #090909); border-bottom-color: var(--color-border-strong, #090909); }"
+      "description": "One fused instrument: cells share a single seam. The current cell sits under a glass lens plate — two-tone rim over the faintest accent wash — never stamped in ink.",
+      "html": "<nav class='ds-nav'><ul class='ds-nav-list'><li class='ds-nav-item'><a class='ds-nav-link' href='#'>Overview</a></li><li class='ds-nav-item'><a class='ds-nav-link ds-nav-link-current' href='#' aria-current='page'>Components</a></li><li class='ds-nav-item'><a class='ds-nav-link' href='#'>Themes</a></li></ul></nav>",
+      "css": ".ds-nav-list { display: inline-flex; margin: 0; padding: 0; list-style: none; } .ds-nav-item { margin: 0; border: 1px solid var(--color-border-muted, #a1a0a2); } .ds-nav-item + .ds-nav-item { border-left: 0; } .ds-nav-link { position: relative; isolation: isolate; display: flex; align-items: center; height: 32px; padding: 0 14px; text-decoration: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; color: var(--color-fg, #24232a); transition: background-color 100ms; } .ds-nav-link::before { content: ''; position: absolute; left: 0; right: 0; top: -8px; bottom: -8px; } .ds-nav-link:hover { background: var(--color-bg-hover, #dbdada); } .ds-nav-link:focus-visible { outline: 2px solid var(--color-border-focus, #2657d0); outline-offset: 2px; z-index: 2; } .ds-nav-link-current { cursor: default; } .ds-nav-link-current::after { content: ''; position: absolute; inset: 4px; z-index: -1; background: color-mix(in oklab, var(--color-accent-solid, #2657d0) 8%, var(--color-bg-input, #fdfcfa)); border: 1px solid; border-top-color: var(--color-border-muted, #a1a0a2); border-left-color: var(--color-border-muted, #a1a0a2); border-right-color: var(--color-border-strong, #16151d); border-bottom-color: var(--color-border-strong, #16151d); }"
     },
     {
       "name": "Menu Item",
       "kind": "custom",
       "refersTo": "menu-item-highlighted",
-      "description": "The row you would act on takes the accent wash plus a 2px inset leading rule, with the label left in ink.",
-      "html": "<div class='ds-menu'><div class='ds-menu-item ds-menu-item-highlighted'>Duplicate</div><div class='ds-menu-item'>Rename</div><div class='ds-menu-item ds-menu-item-danger'>Delete</div></div>",
-      "css": ".ds-menu { min-width: 10rem; padding: 4px; border-radius: 0; border: 1px solid var(--color-border-strong, #090909); background: var(--color-bg-overlay, #f5f5f5); box-shadow: var(--shadow-offset-overlay, 1px 1px 0 0 #a0a0a0); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-menu-item { padding: 6px 8px; font-size: 0.8125rem; color: var(--color-fg, #090909); cursor: pointer; } .ds-menu-item-highlighted, .ds-menu-item:hover { background: color-mix(in oklab, #2b5bff 17%, #fcfcfa); box-shadow: inset 2px 0 0 0 var(--color-accent-solid, #2b5bff); } .ds-menu-item-danger { color: color-mix(in oklab, #a13d52 50%, #090909); } .ds-menu-item-danger:hover { background: color-mix(in oklab, #a13d52 17%, #fcfcfa); box-shadow: inset 2px 0 0 0 var(--color-danger-solid, #a13d52); }"
+      "description": "The row you would act on takes the accent wash plus a 2px inset leading rule, with the label left in ink. Destructive rows swap the whole cue to danger.",
+      "html": "<div class='ds-menu'><div class='ds-menu-item'>Duplicate</div><div class='ds-menu-item ds-menu-item-active'>Rename</div><div class='ds-menu-sep'></div><div class='ds-menu-item ds-menu-item-danger'>Delete</div></div>",
+      "css": ".ds-menu { padding: 4px; min-width: 12rem; border-radius: 0; border: 1px solid var(--color-border-strong, #16151d); background: var(--color-bg-overlay, #ecebea); box-shadow: var(--shadow-offset-overlay, 2px 2px 0 0 #a19e98); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; } .ds-menu-item { padding: 6px 8px; color: var(--color-fg, #24232a); cursor: default; } .ds-menu-item-active { background: color-mix(in oklab, var(--color-accent-solid, #2657d0) 17%, var(--color-bg-input, #fdfcfa)); box-shadow: inset 2px 0 0 0 var(--color-accent-solid, #2657d0); } .ds-menu-item-danger:hover { background: color-mix(in oklab, var(--color-danger-solid, #961733) 17%, var(--color-bg-input, #fdfcfa)); box-shadow: inset 2px 0 0 0 var(--color-danger-solid, #961733); } .ds-menu-sep { height: 1px; margin: 4px 0; background: var(--color-border-muted, #a1a0a2); }"
+    },
+    {
+      "name": "Table",
+      "kind": "custom",
+      "description": "No wrapper frame. The header keeps the single near-black rule and lost its grey fill; rows are parted by seams; the footer closes on a faint hairline.",
+      "html": "<table class='ds-table'><thead class='ds-thead'><tr><th class='ds-th'>Component</th><th class='ds-th'>Chassis</th></tr></thead><tbody><tr class='ds-tr'><td class='ds-td'>Checkbox</td><td class='ds-td'>16px</td></tr><tr class='ds-tr'><td class='ds-td'>Switch</td><td class='ds-td'>28x16</td></tr></tbody></table>",
+      "css": ".ds-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.875rem; line-height: 1.55; color: var(--color-fg, #24232a); } .ds-thead tr { border-bottom: 1px solid var(--color-border-strong, #16151d); } .ds-th { height: 40px; padding: 8px 16px; text-align: left; font-weight: 600; white-space: nowrap; } .ds-tr { background: var(--color-bg-raised, #f4f3f2); border-bottom: 1px solid var(--color-border-subtle, #bcbcbc); transition: background-color 100ms; } .ds-tr:last-child { border-bottom: 0; } .ds-tr:hover { background: var(--color-bg-hover, #dbdada); } .ds-td { padding: 10px 16px; vertical-align: middle; }"
     },
     {
       "name": "Badge",
       "kind": "chip",
       "refersTo": "badge-default",
-      "description": "Square, bordered, 11px. Ink with paper knockout by default; role variants always ship their own knockout foreground.",
-      "html": "<span class='ds-badge'>Stable</span> <span class='ds-badge ds-badge-danger'>Deprecated</span> <span class='ds-badge ds-badge-outline'>Draft</span>",
-      "css": ".ds-badge { display: inline-flex; align-items: center; justify-content: center; padding: 2px 8px; border-radius: 0; border: 1px solid var(--color-border-strong, #090909); background: var(--color-bg-emphasis, #090909); color: var(--color-fg-on-emphasis, #fcfcfa); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 0.6875rem; font-weight: 500; } .ds-badge-danger { background: var(--color-danger-solid, #a13d52); border-color: var(--color-danger-solid, #a13d52); color: var(--color-danger-fg-on-solid, #fcfcfa); } .ds-badge-outline { background: transparent; border-color: var(--color-border, #8c8c8c); color: var(--color-fg, #090909); }"
+      "description": "An instrument-scale stamp: square, bounded, 12px label type. default is ink under a strong frame; role variants carry their own knockout.",
+      "html": "<span class='ds-badge'>stable</span> <span class='ds-badge ds-badge-outline'>beta</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; justify-content: center; padding: 2px 8px; border-radius: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Apple SD Gothic Neo', sans-serif; font-size: 0.75rem; line-height: 1.45; font-weight: 500; background: var(--color-bg-emphasis, #16151d); color: var(--color-fg-on-emphasis, #fdfcfa); border: 1px solid var(--color-border-strong, #16151d); } .ds-badge-outline { background: transparent; color: var(--color-fg, #24232a); border-color: var(--color-border, #868688); }"
     }
   ],
   "narrative": {
     "northStar": "Ink & Instrument — a printed page you can press",
-    "overview": "Everything on screen is drawn, not lit. The references are the print shop and the machine shop: a well-set page, ruled forms, keys that travel when pressed. Corners are square, color is flat, borders are pen strokes, and shadows are offset marks with zero blur — the trace a raised object leaves on paper, not the glow of a light source. Nothing here emits light, because nothing printed does.\n\nThe system runs on one pen and one vivid voice. The neutral ramp is a single ink used at full strength for text, strong borders, and solid fills, so a line and a fill always agree about what matters. Ink is never diluted, only rationed: at 1px a stroke is either the ink voice or the hairline voice, with nothing in between. Against that monochrome ground, exactly one chromatic voice — the accent — is reserved for what you can act on. Signals (danger, success, warning, info) carry meaning but never emphasis, so a screen full of status never becomes a screen full of shouting.\n\nDepth is semantic before it is spatial. A grey offset shade means \"this is a raised surface\"; an accent edge means \"this responds to you.\" Pressables are neutral at rest, reveal a thin accent edge on hover, and drop onto it under the press. Writing fields stay quiet until engaged and then cap off with a static edge that leaves when the pen lifts. Small controls are instruments: the chassis stays put while the inner key — a check, a thumb, a label — travels one pixel. Brutalism supplies the refusals (no gradients, no blur, no rounding, nothing that lies about structure) but not the aggression. The goal is precision, not rawness.\n\nConfirmed visual rejections. This must not look like shadcn/ui (too soft, too rounded, too close to what everyone ships), Material Design (too corporate, too systematic), Stripe or Linear (lit rather than drawn — glow, gradients, blurred elevation; the precision is shared, the material is not), Bootstrap (no point of view), or a web-brutalism showcase (aggression as the point). What a person should feel using it is confidence and clarity, respect for the craft, and material distinction — made, not assembled from the same lit parts as everything else.",
+    "overview": "Everything on screen is drawn, not lit. The references are the print shop and the machine shop: a well-set page, ruled forms, keys that travel when pressed. Corners are square, color is flat, borders are pen strokes, and shadows are offset marks with zero blur — the trace a raised object leaves on paper, not the glow of a light source. Nothing here emits light, because nothing printed does.\n\nThe identity is rationed by scale, and the rationing is the thesis: **a drawn edge means you can act on it.** *Instruments* — button, input, select trigger, checkbox, radio, switch, badge — keep the 1px pen, the accent edge on engage, and the grown edge while they hold an overlay open. *Surfaces* — card, alert, table wrapper, DataTable container — carry no resting stroke at all; they are read by their fill step (page → raised → overlay) plus the drawn grey shade. Overlays keep a frame because they float over arbitrary content. Where two strokes must meet, they share one seam rather than stacking. A border around a region only repeats what the surface already said, and repeating it at every nesting level is what made a dense screen unreadable.\n\nThe system runs on one pen and one vivid voice. The neutral ramp is a single ink used at full strength for text, strong borders, and solid fills, so a line and a fill always agree about what matters. Ink is never diluted, only rationed — and it is rationed by *pressure*, not by grey: ink (`border-strong`), hairline (`border` / `border-muted`), seam (`border-subtle`). Against that monochrome ground, exactly one chromatic voice — the accent — is reserved for what you can act on. Signals (danger, success, warning, info) carry meaning but never emphasis, so a screen full of status never becomes a screen full of shouting.\n\nDepth is semantic before it is spatial. A grey offset shade means \"this is a raised surface\"; an accent edge means \"this responds to you.\" Pressables are neutral at rest, reveal a thin accent edge on hover, and drop onto it under the press. Writing fields stay quiet until engaged and then cap off with a static edge that leaves when the pen lifts. Small controls are instruments: the chassis stays put while the inner key — a check, a thumb, a label — travels one pixel. Brutalism supplies the refusals (no gradients, no blur, no rounding, nothing that lies about structure) but not the aggression. The goal is precision, not rawness.\n\n**Confirmed visual rejections.** This must not look like shadcn/ui (too soft, too rounded, too close to what everyone ships), Material Design (too corporate, too systematic), Stripe or Linear (lit rather than drawn — glow, gradients, blurred elevation; the precision is shared, the material is not), Bootstrap (no point of view), or a web-brutalism showcase (aggression as the point). What a person should feel using it is confidence and clarity, respect for the craft, and material distinction — made, not assembled from the same lit parts as everything else.",
     "keyCharacteristics": [
-      "Square by default — 0 radius everywhere except Radio's circle.",
-      "One neutral ink at full strength; no mid-grey text, no diluted borders.",
+      "Square by default — `0` radius everywhere except Radio's circle.",
+      "Surfaces carry no resting stroke; instruments keep the 1px pen.",
+      "One neutral ink at three pressures — ink, hairline, seam. No diluted grey.",
       "One chromatic accent, reserved for interaction — never for decoration.",
-      "Offset shadows with zero blur; grey for surfaces, accent for pressables.",
+      "Offset shadows with zero blur; grey for surfaces, accent for engagement.",
       "Flat fills only. No gradient, no blur, no opacity used as a styling device.",
-      "13px carries the interface; 11px carries labels.",
-      "Two-layer tokens: a theme writes 30 palette values, components read 68 semantic names and never touch a palette value directly."
+      "14px carries the interface; 12px carries labels. The floor is set by CJK.",
+      "Two-layer tokens: a theme writes 30 palette values, components read 69 semantic names and never touch a palette value directly."
     ],
     "rules": [
       {
-        "name": "The One Pen Rule",
-        "body": "The neutral ramp is a single ink. Text, strong borders, and solid fills all come from the deepest step, so a line and a fill never disagree about importance. Ink is rationed, not diluted: a 1px stroke is either the ink voice (border-strong) or the hairline voice (border / border-muted). A \"slightly softer black\" does not exist at hairline width — measured, not asserted.",
+        "name": "The One Ink, Three Pressures Rule",
+        "body": "The neutral ramp is a single ink, and a 1px stroke chooses how hard the pen is pressed: ink (`border-strong`) bounds a region that outranks the page, hairline (`border` / `border-muted`) bounds a control, seam (`border-subtle`) divides inside a surface. There is no fourth pressure and no \"slightly softer black\" between them. What this replaces is the old habit of drawing every seam at full hairline strength and then framing the group as well.",
+        "section": "colors"
+      },
+      {
+        "name": "The Border-Means-Act Rule",
+        "body": "A resting stroke is a claim that you can operate the thing it encloses. Instruments make that claim; surfaces do not. If a new region wants a border, the question is whether it is pressable — and if it is not, the answer is a fill step and a shade.",
         "section": "colors"
       },
       {
@@ -499,62 +597,77 @@
       },
       {
         "name": "The Knockout Rule",
-        "body": "Every solid ships with its own foreground (danger-solid + danger-fg-on-solid). Never hand-pick a text color on a solid, and never mix roles — warning text on an info tint is a defect, not a variation.",
+        "body": "Every solid ships with its own foreground (`danger-solid` + `danger-fg-on-solid`). Never hand-pick a text color on a solid, and never mix roles — warning text on an info tint is a defect, not a variation.",
         "section": "colors"
       },
       {
         "name": "The Palette-Swap Rule",
-        "body": "Components consume only the 68 semantic names. A theme authors 30 palette values (--surface-0…2, --tone-0…11, --signal-*, --signal-*-on, --shadow-*) and nothing else. Writing --tone-4 or a raw hex inside a component is the one unforgivable color error: it breaks every theme at once. Dark mode is the same mechanism — a palette swap under prefers-color-scheme: dark, not a separate set of component rules.",
+        "body": "Components consume only the 69 semantic names (64 color + 5 shadow). A theme authors 30 palette values (`--surface-0…2`, `--tone-0…11`, `--signal-*`, `--signal-*-on`, `--shadow-size`, `--shadow-color`, `--shadow-color-overlay`) and nothing else; 28 of those are functional dependencies and `--tone-8` and `--tone-9` are the reserved ramp slots — `--tone-10` left reserve in this revision when `fg` moved onto it. Writing `--tone-4` or a raw hex inside a component is the one unforgivable color error: it breaks every theme at once. Dark mode is the same mechanism — a palette swap under `prefers-color-scheme: dark`, not a separate set of component rules.",
         "section": "colors"
       },
       {
         "name": "The Two-Size Rule",
-        "body": "13px carries the interface and 11px carries labels. Together they are nearly every piece of type in the component set. Reaching past them is a claim that this element outranks the whole interface — Dialog and Sheet titles are the only components that earn it.",
+        "body": "14px carries the interface and 12px carries labels. Together they are 34 of the 36 explicit size utilities in the component sources — every one except Dialog's and Sheet's titles. Reaching past them is a claim that this element outranks the whole interface — Dialog and Sheet titles are the only components that earn it.",
+        "section": "typography"
+      },
+      {
+        "name": "The CJK-Floor Rule",
+        "body": "12px is the minimum step for any script, and the floor is set by CJK, not by Latin taste. Hangul packs two or three jamo into one em and kanji can carry a dozen strokes, so both collapse below 12px where Latin at the same size still reads. The two interface steps therefore pin their own leading (`--text-xs--line-height: 1.45`, `--text-sm--line-height: 1.55`) rather than inheriting Tailwind's tighter defaults, which crowd CJK at 14px.",
+        "section": "typography"
+      },
+      {
+        "name": "The Per-Script Routing Rule",
+        "body": "Font fallback runs per codepoint, and a Korean face such as Apple SD Gothic Neo also covers the CJK ideograph block — so one flat family list cannot serve both Korean and Japanese: whichever is named first captures every ideograph and the other language renders in the wrong national glyph forms. `@layer base` therefore re-declares `font-family` per `:lang(ko)`, `:lang(ja)`, `:lang(zh)` and `:lang(zh-Hant)`. It is re-declared, not swapped through a variable, because preflight resolves `font-family` once on `html` and descendants inherit the already-resolved value. `:lang(ko)` additionally sets `word-break: keep-all` with `overflow-wrap: break-word` as the relief valve; Japanese and Chinese carry no inter-word spaces and must not inherit it. **The consuming application must set `lang` on the document** or none of this applies. `src/components/cjk.stories.tsx` is the rendered baseline — nothing else in the set contains a Hangul or Kana glyph, which is how a type scale that was unusable in Korean stayed green through 357 visual snapshots.",
         "section": "typography"
       },
       {
         "name": "The Weight-Before-Size Rule",
-        "body": "Hierarchy inside a component is made with weight (400 → 500 → 600) and with ink color (fg → fg-muted), not by growing the type. A card title is the same size as its body text.",
+        "body": "Hierarchy inside a component is made with weight (400 → 500 → 600) and with ink color (`fg` → `fg-muted`), not by growing the type. A card title is the same size as its body text.",
         "section": "typography"
       },
       {
         "name": "The Fused Strip Rule",
-        "body": "Navigation and tab cells do not float as separate chips. They share hairlines: each cell pulls back one pixel (-ml-px) so adjacent borders collapse into a single ruled seam, and the strip carries no standing edge of its own. Gaps between cells break the instrument.",
-        "section": "layout"
-      },
-      {
-        "name": "The 44px Rule",
-        "body": "Any control smaller than 44px carries an invisible hit expander (before:absolute before:inset-[-Npx] before:content-['']). Because the pseudo-element starts inside the border, both 1px borders count toward the measurement, and the inset varies by chassis: -11px on the 24px checkbox/radio, -15px on the switch, -14px on a 16px glyph button. Verify the real box in the browser, never by arithmetic on the class name alone.",
+        "body": "Navigation, tab and pagination cells do not float as separate chips — they share one seam, and the strip carries no standing edge of its own. Two mechanisms are in use: Navigation borders the `<li>` and cancels the neighbour's leading border (`[&>li+li]:border-l-0`); Tabs and Pagination border the cell and pull it back one pixel (`-ml-px first:ml-0`). Either way the result is a single ruled line where two cells meet, never two. Gaps between cells break the instrument.",
         "section": "layout"
       },
       {
         "name": "The Drawn-Not-Lit Rule",
-        "body": "Every shadow is <offset> <offset> 0 0 <color>. Blur radius and spread are always zero. A blurred shadow claims a light source, and nothing on a printed page emits light.",
+        "body": "Every shadow is `<offset> <offset> 0 0 <color>`, and the offset is always down-and-right. Blur radius and spread are always zero. A blurred shadow claims a light source, and nothing on a printed page emits light. This also governs rims: ink gathers where the shade falls, so a two-tone rim is light on the top/left and ink on the bottom/right, never the reverse.",
         "section": "elevation"
       },
       {
         "name": "The Shadow-Is-Voice Rule",
-        "body": "Grey shade = raised surface. Accent edge = pressable. A surface never takes the accent edge, and a pressable is never given a standing grey shade at rest.",
+        "body": "Grey shade = raised surface. Accent edge = engagement. A surface never takes the accent edge *at rest*; a passive surface never gains one at all. An interactive surface is the one crossing: it rests as a raised sheet with the grey shade and **changes voice** on hover — the same shade turns accent while the fill lifts one ladder step. Without a resting shade a borderless interactive card would be invisible until hovered.",
+        "section": "elevation"
+      },
+      {
+        "name": "The One-Shadow Rule",
+        "body": "Exactly one shadow utility may land in a class list. tailwind-merge cannot dedupe custom shadow utilities against one another, and `shadow-none` does not opt a variant out of `shadow-offset-action`. Assign the shade and the edge through mutually exclusive variants, never by layering and overriding.",
         "section": "elevation"
       },
       {
         "name": "The Press-Drops-On Rule",
-        "body": "Pressing removes the shadow and translates the element one pixel toward it (active:shadow-none active:translate-x-px active:translate-y-px), so the control physically lands on the edge it revealed. Ghost and Link buttons opt out of both, because they never had an edge to drop onto.",
+        "body": "Pressing removes the shadow and translates the element one pixel toward it (`active:shadow-none active:translate-x-px active:translate-y-px`), so the control physically lands on the edge it revealed. Ghost and Link buttons opt out of both, because they never had an edge to drop onto.",
         "section": "elevation"
       },
       {
         "name": "The Square Rule",
-        "body": "Radius is 0. The only circle in the system is Radio's chassis and its dot. If a new component wants a rounded corner, the answer is no — find the meaning that corner was carrying and draw it with a stroke.",
+        "body": "Radius is `0`. The only circle in the system is Radio's chassis and its dot. If a new component wants a rounded corner, the answer is no — find the meaning that corner was carrying and draw it with a stroke.",
+        "section": "shapes"
+      },
+      {
+        "name": "The No-Frame-On-Frame Rule",
+        "body": "Nothing draws a boundary that its container already drew. A table inside a card has no wrapper border; rows are parted by seams that reach the card's padding edge. An alert is a rule and a glyph on paper, not a box on a surface.",
         "section": "shapes"
       },
       {
         "name": "The Dashed-Disabled Rule",
-        "body": "Disabled always means the same four things: dashed border, border-muted stroke, bg-disabled fill, fg-disabled text — plus removal of every shadow and interaction affordance. Never opacity.",
+        "body": "Disabled always means the same four things: dashed border, `border-muted` stroke, `bg-disabled` fill, `fg-disabled` text — plus removal of every shadow and interaction affordance. Never opacity.",
         "section": "shapes"
       },
       {
         "name": "The Focus-Outermost Rule",
-        "body": "Keyboard focus always owns the outermost mark: a 2px accent outline offset 2px on pressables, the cap-off edge on writing fields. Open ownership, hover, and current-selection cues all stay inside it, so a focused control is unmistakable even in a row of selected and open ones. When a field is invalid, danger replaces the accent in that indicator rather than layering over it.",
+        "body": "Keyboard focus always owns the outermost mark: a 2px accent outline offset 2px on pressables, the cap-off edge on writing fields. Open ownership, hover, and current-selection cues all stay inside it, so a focused control is unmistakable even in a row of selected and open ones. When a field is invalid, danger _replaces_ the accent in that indicator rather than layering over it.",
         "section": "components"
       },
       {
@@ -569,24 +682,29 @@
       }
     ],
     "dos": [
-      "Do use only the 68 semantic token names (bg-bg-raised, text-fg-muted, border-border-strong). They are the entire color API.",
-      "Do pair every role solid with its own knockout (bg-danger-solid text-danger-fg-on-solid), and every role tint with its full triple (bg-{role}-bg + border-{role}-border + text-{role}-fg).",
-      "Do give pressables the neutral rest / accent-edge-on-hover / grown-edge-while-open / drop-on-press sequence (hover:shadow-offset-action data-[state=open]:shadow-offset-action-hover active:shadow-none active:translate-x-px active:translate-y-px).",
-      "Do use one focus grammar on pressables — focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2 — and cap-off on writing fields: focus:outline-hidden not-read-only:focus:shadow-offset-action.",
-      "Do use the one disabled pattern everywhere: disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:shadow-none.",
-      "Do add a hit expander — before:absolute before:inset-[-Npx] before:content-[''] — to any control under 44px, sized so the measured box clears 44: -11px on the 24px checkbox/radio chassis, -15px on the switch, -14px on a 16px glyph button. Verify it in a browser, not by arithmetic on the class name.",
-      "Do assign a variant's edge explicitly. shadow-none does not opt a variant out of a custom shadow-offset-action — tailwind-merge cannot dedupe a custom shadow utility against it."
+      "**Do** use only the 69 semantic token names (`bg-bg-raised`, `text-fg-muted`, `border-border-subtle`). They are the entire color and shadow API.",
+      "**Do** give a region a fill step and a shade instead of a border, unless it is an instrument you can operate.",
+      "**Do** pick the pressure that matches the job: `border-strong` for a region that outranks the page, `border` / `border-muted` for a control, and `border-subtle` for a divider inside a surface.",
+      "**Do** pair every role solid with its own knockout (`bg-danger-solid text-danger-fg-on-solid`), and every role tint with its full triple (`bg-{role}-bg` + `border-{role}-border` + `text-{role}-fg`).",
+      "**Do** give pressables the neutral rest / accent-edge-on-hover / grown-edge-while-open / drop-on-press sequence (`hover:shadow-offset-action data-[state=open]:shadow-offset-action-hover active:shadow-none active:translate-x-px active:translate-y-px`).",
+      "**Do** use one focus grammar on pressables — `focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2` — and cap-off on writing fields: `focus:outline-hidden not-read-only:focus:shadow-offset-action`.",
+      "**Do** use the one disabled pattern everywhere: `disabled:border-dashed disabled:border-border-muted disabled:bg-bg-disabled disabled:text-fg-disabled disabled:shadow-none`.",
+      "**Do** expand a standalone instrument to 44px (`before:absolute before:inset-[-15px] before:content-['']` on a 16px chassis), expand a fused cell vertically only (`before:inset-x-0 before:-inset-y-2` plus the strip's outer edges), and give stacked bare instruments a 44px pitch. Verify the measured box in a browser, not by arithmetic on the class name.",
+      "**Do** assign a variant's edge explicitly, and let exactly one shadow utility reach the class list. `shadow-none` does not opt a variant out of a custom `shadow-offset-action` — tailwind-merge cannot dedupe a custom shadow utility against it.",
+      "**Do** set `lang` on the document in the consuming app; the per-script font routing and Korean `keep-all` line breaking depend on it."
     ],
     "donts": [
-      "Don't write a palette value (--tone-4, --surface-1, --signal-accent) or a raw color inside a component. Palette values belong to themes only.",
-      "Don't add a border radius. rounded-lg, rounded-md, and rounded-sm have no place here; Radio's rounded-full is the sole exception.",
-      "Don't use a blurred shadow (shadow-md, shadow-lg, any non-zero blur or spread), a gradient, or a backdrop blur.",
-      "Don't use opacity as a styling device — not for disabled, not for muted text, not for hover. The modal scrim is the only alpha in the system.",
-      "Don't put a standing accent edge on an idle pressable, or any accent edge on a surface. Accent is a state, not a synonym for \"interactive.\"",
-      "Don't let selection borrow the focus outline, or let hover and open cues stack in the same channel.",
-      "Don't give Ghost or Link buttons an edge or a press translation; they are not edged pressables.",
-      "Don't reach past 13px/11px for component type. Use weight and ink color for hierarchy instead.",
-      "Don't put gaps between navigation or tab cells — they fuse on shared hairlines."
+      "**Don't** write a palette value (`--tone-4`, `--surface-1`, `--signal-accent`) or a raw color inside a component. Palette values belong to themes only.",
+      "**Don't** put a resting border on a surface, or a border on something already bounded by its container. A card inside a card, a table inside a card, and an alert on a page all draw zero frames.",
+      "**Don't** add a border radius. `rounded-lg`, `rounded-md`, and `rounded-sm` have no place here; Radio's `rounded-full` is the sole exception.",
+      "**Don't** use a blurred shadow (`shadow-md`, `shadow-lg`, any non-zero blur or spread), a gradient, or a backdrop blur — and don't reverse the offset direction or invert a two-tone rim; ink gathers down and to the right.",
+      "**Don't** use opacity as a styling device — not for disabled, not for muted text, not for hover, not for a loading placeholder. The modal scrim is the only alpha in the system.",
+      "**Don't** put a standing accent edge on an idle pressable, or an accent edge on a passive surface. Accent is a state, not a synonym for \"interactive.\"",
+      "**Don't** let selection borrow the focus outline, or let hover and open cues stack in the same channel.",
+      "**Don't** give Ghost or Link buttons an edge or a press translation; they are not edged pressables.",
+      "**Don't** expand a fused cell horizontally — it steals clicks from its neighbour — and don't claim 44px for an `<input>`, which cannot carry a pseudo-element at all.",
+      "**Don't** reach past 14px/12px for component type, and don't go below 12px for any script. Use weight and ink color for hierarchy instead.",
+      "**Don't** put gaps between navigation, tab, or pagination cells — they fuse on a shared seam."
     ]
   }
 }

@@ -138,7 +138,11 @@ function NavigationLink({
       className={cn(
         "group relative isolate flex h-8 items-center px-3.5 text-sm no-underline",
         "text-fg",
-        "before:absolute before:inset-[-8px] before:content-['']",
+        // Each link is alone inside its own <li>, so `first:`/`last:` matched every
+        // one of them and left the expander at -8px on all four sides. The strip's
+        // outer edges are the <li>'s position, not the link's.
+        "before:absolute before:inset-x-0 before:-inset-y-2 before:content-['']",
+        "[li:first-child>&]:before:-left-2 [li:last-child>&]:before:-right-2",
         "focus-visible:outline-border-focus focus-visible:z-[2] focus-visible:outline-2 focus-visible:outline-offset-2",
         "transition-colors duration-100",
         isActive

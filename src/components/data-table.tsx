@@ -215,7 +215,7 @@ function DataTableTable({ className, children, ...props }: React.ComponentProps<
   return (
     <div
       data-slot="data-table-container"
-      className={cn("border-border bg-bg-raised overflow-x-auto border", className)}
+      className={cn("bg-bg-raised overflow-x-auto", className)}
       {...props}
     >
       <Table data-slot="data-table-table" className="min-w-full">

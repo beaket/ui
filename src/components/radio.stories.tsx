@@ -35,7 +35,7 @@ export const Default: Story = {
 // Compositions for docs
 export const AllStates = () => (
   <div className="flex flex-col gap-6">
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-7">
       <span className="text-fg-muted text-xs tracking-wide uppercase">Horizontal</span>
       <RadioGroup defaultValue="option1" aria-label="Horizontal options">
         <div className="flex items-center gap-1">
@@ -58,7 +58,7 @@ export const AllStates = () => (
         </div>
       </RadioGroup>
     </div>
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-7">
       <span className="text-fg-muted text-xs tracking-wide uppercase">Vertical</span>
       <RadioGroup
         defaultValue="option2"
@@ -86,7 +86,7 @@ export const AllStates = () => (
         </div>
       </RadioGroup>
     </div>
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-7">
       <span className="text-fg-muted text-xs tracking-wide uppercase">Disabled</span>
       <RadioGroup disabled defaultValue="option1" aria-label="Disabled options">
         <div className="flex items-center gap-1">

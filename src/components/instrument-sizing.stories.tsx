@@ -37,9 +37,14 @@ export const FilterPanel: StoryObj = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    // A 16px chassis sits under the cap-height of the label beside it rather
+    // than over it, which is what lets a dense form read as calm. The earlier
+    // 24px pair was chosen to survive this panel, but it solved visibility with
+    // mass; the hit expander below is what actually carries the touch target,
+    // and it is measured here rather than inferred from the chassis.
     for (const control of [canvas.getByRole("checkbox"), ...canvas.getAllByRole("radio")]) {
-      await expect(control.getBoundingClientRect().height).toBe(24);
-      await expect(control.getBoundingClientRect().width).toBe(24);
+      await expect(control.getBoundingClientRect().height).toBe(16);
+      await expect(control.getBoundingClientRect().width).toBe(16);
     }
     const switches = canvas.getAllByRole("switch");
     for (const [index, control] of switches.entries()) {

@@ -39,7 +39,9 @@ const PALETTE_CONTRACT = [
   "--shadow-color-overlay",
 ].sort();
 
-const RESERVED_PALETTE_TOKENS = ["--tone-8", "--tone-9", "--tone-10"];
+// tone-10 now carries body ink; tone-8 and tone-9 remain reserved to keep the
+// public 12-step ramp contract intact.
+const RESERVED_PALETTE_TOKENS = ["--tone-8", "--tone-9"];
 const FUNCTIONAL_PALETTE_TOKENS = PALETTE_CONTRACT.filter(
   (token) => !RESERVED_PALETTE_TOKENS.includes(token),
 );
@@ -126,26 +128,26 @@ describe("theme palette contract", () => {
       Object.fromEntries([...palette].filter(([token]) => token.startsWith("--signal-")));
 
     expect(signals(solaceLight)).toEqual({
-      "--signal-danger": "#a13d52",
-      "--signal-warning": "#e0a52f",
-      "--signal-success": "#00452d",
-      "--signal-info": "#53628f",
-      "--signal-info-alt": "#005f72",
-      "--signal-accent": "#2b5bff",
+      "--signal-danger": "#961733",
+      "--signal-warning": "#ddb54c",
+      "--signal-success": "#498c67",
+      "--signal-info": "#643d75",
+      "--signal-info-alt": "#3c9baa",
+      "--signal-accent": "#2657d0",
       "--signal-danger-on": "var(--tone-0)",
-      "--signal-success-on": "var(--tone-0)",
+      "--signal-success-on": "var(--tone-11)",
       "--signal-warning-on": "var(--tone-11)",
       "--signal-info-on": "var(--tone-0)",
-      "--signal-info-alt-on": "var(--tone-0)",
+      "--signal-info-alt-on": "var(--tone-11)",
       "--signal-accent-on": "var(--tone-0)",
     });
     expect(signals(solaceDark)).toEqual({
-      "--signal-danger": "#dc7184",
-      "--signal-warning": "#e4b650",
-      "--signal-success": "#45aa88",
-      "--signal-info": "#7190d6",
-      "--signal-info-alt": "#48a4af",
-      "--signal-accent": "#6f8fff",
+      "--signal-danger": "#e36f79",
+      "--signal-warning": "#f2cd6f",
+      "--signal-success": "#88c598",
+      "--signal-info": "#a076b3",
+      "--signal-info-alt": "#85dae9",
+      "--signal-accent": "#6c9bfe",
       "--signal-danger-on": "var(--tone-0)",
       "--signal-success-on": "var(--tone-0)",
       "--signal-warning-on": "var(--tone-0)",
@@ -178,11 +180,17 @@ describe("theme palette contract", () => {
     const surfaces = surfaceColors(solaceLight);
     const lightness = surfaces.map(relativeLuminance);
 
+    // Solace's page is the brightest sheet in the set, so its surfaces step
+    // down from it rather than up — there is no headroom above a near-white
+    // page, and a card that cannot be lighter has to be quieter instead. The
+    // other four palettes start from a toned page and rise; this one does not.
     expect(lightness[1]).toBeLessThan(lightness[0]);
     expect(lightness[2]).toBeLessThan(lightness[1]);
-    expect(contrastRatio(surfaces[0], surfaces[1])).toBeGreaterThanOrEqual(1.02);
-    expect(contrastRatio(surfaces[1], surfaces[2])).toBeGreaterThanOrEqual(1.03);
-    expect(contrastRatio(surfaces[0], surfaces[2])).toBeGreaterThanOrEqual(1.06);
+    expect(contrastRatio(surfaces[0], surfaces[1])).toBeGreaterThanOrEqual(1.05);
+    expect(contrastRatio(surfaces[1], surfaces[2])).toBeGreaterThanOrEqual(1.05);
+    expect(contrastRatio(surfaces[0], surfaces[2])).toBeGreaterThanOrEqual(1.1);
+
+    // The ramp is anchored on the page in every palette.
     expect(solaceLight.get("--tone-0")).toBe(solaceLight.get("--surface-0"));
   });
 

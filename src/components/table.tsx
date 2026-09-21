@@ -37,7 +37,7 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("[&_tr]:border-border-strong [&_tr]:bg-bg-hover [&_tr]:border-b", className)}
+      className={cn("[&_tr]:border-border-strong [&_tr]:border-b", className)}
       {...props}
     />
   );
@@ -57,10 +57,7 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   return (
     <tfoot
       data-slot="table-footer"
-      className={cn(
-        "border-border-muted bg-bg-hover border-t font-medium [&>tr]:last:border-b-0",
-        className,
-      )}
+      className={cn("border-border-muted border-t font-medium [&>tr]:last:border-b-0", className)}
       {...props}
     />
   );
@@ -71,7 +68,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
     <tr
       data-slot="table-row"
       className={cn(
-        "border-border-muted bg-bg-raised hover:bg-bg-hover data-[state=selected]:bg-bg-active border-b",
+        "border-border-subtle bg-bg-raised hover:bg-bg-hover data-[state=selected]:bg-bg-active border-b",
         className,
       )}
       {...props}
@@ -97,7 +94,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "px-4 py-2.5 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "px-4 py-2.5 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className,
       )}
       {...props}
