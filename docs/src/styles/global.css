@@ -423,9 +423,49 @@ h4:hover > .heading-anchor,
   margin: 2.5rem 0;
 }
 
-a:not([data-slot]) {
+:where(a:not([data-slot])) {
   color: var(--color-fg);
   text-decoration: none;
+}
+
+/* Prose links must be findable without relying on colour alone. */
+.sheet-body
+  a:not(
+    :where(
+      .stage *,
+      .specimen *,
+      .theme-try *,
+      .theme-showcase *,
+      [data-slot],
+      [data-slot] *,
+      .heading-anchor,
+      .page-nav-link,
+      .cell-link,
+      .plain
+    )
+  ) {
+  color: var(--color-fg-link);
+  text-decoration: underline;
+  text-decoration-color: var(--color-border);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+.sheet-body
+  a:not(
+    :where(
+      .stage *,
+      .specimen *,
+      .theme-try *,
+      .theme-showcase *,
+      [data-slot],
+      [data-slot] *,
+      .heading-anchor,
+      .page-nav-link,
+      .cell-link,
+      .plain
+    )
+  ):hover {
+  text-decoration-color: currentColor;
 }
 
 /* ─── Schedules (tables) ──────────────────────────────────────────────── */

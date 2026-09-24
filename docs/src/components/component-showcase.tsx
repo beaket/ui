@@ -127,7 +127,22 @@ export function ComponentShowcase({ components }: ComponentShowcaseProps) {
                         data-stage={needsSizedStage(name, story) ? "sized" : undefined}
                         inert
                       >
-                        <StoryPreview componentName={name} storyName={story} />
+                        {name === "slider" ? (
+                          // Radix hides the thumb until mount, and this gallery
+                          // never mounts. A slider without its thumb is not a
+                          // specimen of a slider.
+                          <span className="relative flex min-h-11 w-full items-center">
+                            <span className="border-border-strong bg-bg-input block h-2 w-full border">
+                              <span className="bg-bg-emphasis block h-full w-2/5" />
+                            </span>
+                            <span
+                              data-slot="slider-specimen-thumb"
+                              className="border-border-strong bg-bg-input absolute left-2/5 size-5 -translate-x-1/2 border"
+                            />
+                          </span>
+                        ) : (
+                          <StoryPreview componentName={name} storyName={story} />
+                        )}
                       </span>
                       <span className="cell-name">{component.docs.title}</span>
                     </div>
