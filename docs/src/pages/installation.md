@@ -1,9 +1,14 @@
 ---
 layout: ../layouts/doc.astro
+section: Manual
 title: Installation
 ---
 
 # Installation
+
+Beaket UI adds components to an existing React and Tailwind project. Point the
+`@` alias at your source directory, run `init` to write the tokens, then copy in
+the parts you need.
 
 ## Requirements
 

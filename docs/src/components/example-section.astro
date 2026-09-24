@@ -1,6 +1,6 @@
 ---
 import CodeBlock from './code-block.astro';
-import { StoryPreview } from './story-preview';
+import { StoryPreview, needsSizedStage } from './story-preview';
 import { InteractiveExample, hasInteractiveExample } from './interactive-example';
 
 interface Props {
@@ -11,11 +11,13 @@ interface Props {
 }
 
 const { componentName, storyName, displayName, source } = Astro.props;
+const slug = `${componentName}-${storyName.toLowerCase()}`;
 ---
 
-<div>
-  <h3>{displayName}</h3>
-  <div class="preview-box mt-2 border border-[var(--color-border-muted)] bg-[var(--color-bg)] p-4">
+<figure class="figure">
+  <h3 class="figure-title" id={slug}>{displayName}</h3>
+
+  <div class="preview-box stage" data-stage={needsSizedStage(componentName, storyName) ? 'sized' : undefined}>
     {hasInteractiveExample(componentName, storyName) ? (
       <InteractiveExample
         componentName={componentName}
@@ -26,9 +28,11 @@ const { componentName, storyName, displayName, source } = Astro.props;
       <StoryPreview componentName={componentName} storyName={storyName} />
     )}
   </div>
+
   {source && (
-    <div class="mt-2">
+    <details class="listing" open>
+      <summary>Source</summary>
       <CodeBlock code={source} />
-    </div>
+    </details>
   )}
-</div>
+</figure>

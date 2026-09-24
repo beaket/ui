@@ -1,14 +1,12 @@
-import { Button } from "../../../src/components/button";
-import { StoryPreview } from "./story-preview";
+import { StoryPreview, needsSizedStage } from "./story-preview";
 
 interface ComponentData {
   name: string;
+  description: string;
   docs: {
     title: string;
+    tagline?: string;
     previewStory: string;
-    span?: number;
-    lgSpan?: number;
-    rowSpan?: number;
   };
 }
 
@@ -16,95 +14,129 @@ interface ComponentShowcaseProps {
   components: ComponentData[];
 }
 
-export function ComponentShowcase({ components }: ComponentShowcaseProps) {
-  // index.astro server-renders cards, links, and static previews; do not hydrate this grid.
-  return (
-    <div
-      className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-      style={{ gridAutoRows: "190px", gridAutoFlow: "dense" }}
-    >
-      {/* Branding Card */}
-      <div
-        data-slot="branding-card"
-        className="border-border-strong bg-bg-emphasis flex flex-col justify-between border p-4 sm:col-span-2"
-      >
-        <div>
-          <div>
-            <span className="text-fg-on-emphasis text-sm font-bold tracking-wide uppercase">
-              Beaket UI
-            </span>
-          </div>
-          <p className="!text-fg-on-emphasis m-0 mt-3 text-sm leading-relaxed">
-            A tactile, copy-paste UI system for thoughtful web interfaces.
-          </p>
-        </div>
-        <Button asChild variant="secondary" size="lg" className="mt-4 self-start">
-          <a href="/ui/installation">Get Started →</a>
-        </Button>
-      </div>
+/**
+ * The set grouped by the job a part does rather than by its initial letter.
+ * Editorial grouping lives here and not in `registry.json`: it describes this
+ * site's reading order, not the CLI's contract.
+ */
+const GROUPS: { title: string; blurb: string; names: string[] }[] = [
+  {
+    title: "Form",
+    blurb: "Everything a person types, picks, or toggles.",
+    names: [
+      "button",
+      "input",
+      "textarea",
+      "select",
+      "checkbox",
+      "radio",
+      "switch",
+      "slider",
+      "label",
+      "field",
+    ],
+  },
+  {
+    title: "Feedback",
+    blurb: "What the interface says back.",
+    names: ["alert", "badge", "progress", "skeleton", "tooltip", "navigation-progress"],
+  },
+  {
+    title: "Navigation",
+    blurb: "Moving between places, and knowing where you are.",
+    names: ["navigation", "breadcrumb", "tabs", "pagination", "dropdown-menu"],
+  },
+  {
+    title: "Surface",
+    blurb: "The sheets that content sits on.",
+    names: ["card", "separator", "blockquote", "avatar"],
+  },
+  {
+    title: "Data",
+    blurb: "Rows, columns, and the controls over them.",
+    names: ["table", "data-table"],
+  },
+  { title: "Overlay", blurb: "Layers that float above the page.", names: ["dialog", "sheet"] },
+];
 
-      {/* Component Cards */}
-      {components.map((component) => {
-        const colSpan = component.docs.span ?? 1;
-        const rowSpan = component.docs.rowSpan ?? 1;
-        const colClass =
-          colSpan === 4
-            ? "col-span-full"
-            : component.docs.lgSpan === 1 && colSpan === 2
-              ? "sm:col-span-2 lg:col-span-1 xl:col-span-2"
-              : colSpan === 3
-                ? "col-span-full xl:col-span-3"
-                : colSpan === 2
-                  ? "sm:col-span-2"
-                  : "";
-        const overflowClass =
-          component.name === "data-table" ? "overflow-visible" : "overflow-hidden";
-        const positionClass =
-          component.name === "skeleton"
-            ? "lg:!col-start-1 xl:!col-start-1"
-            : component.name === "sheet"
-              ? "xl:!col-start-1"
-              : component.name === "pagination"
-                ? "xl:!col-start-2"
-                : "";
-        const responsiveClass = component.name === "sheet" ? "sm:col-span-2 lg:col-span-1" : "";
-        return (
-          <div
-            key={component.name}
-            className={`border-border bg-bg-raised hover:border-border-strong relative flex flex-col border p-4 ${colClass} ${responsiveClass} ${positionClass}`}
-            style={rowSpan > 1 ? { gridRow: `span ${rowSpan}` } : undefined}
-          >
-            <a
-              data-slot="component-link"
-              href={`/ui/components/${component.name}`}
-              aria-label={`View ${component.docs.title} details`}
-              className="focus-visible:outline-border-focus absolute -inset-px z-10 outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
-            />
-            <div
-              className={`-m-1 min-h-0 flex-1 p-1 ${overflowClass} [&_[data-slot=input-wrapper]]:w-full [&_[data-slot=input]]:w-full [&_[data-slot=select]]:w-full [&_ul]:justify-start [&>*]:m-0`}
-            >
-              {component.name === "slider" ? (
-                // Radix hides thumbs until mount. This linked, noninteractive grid
-                // needs a static specimen, not hydration of every component.
-                <div aria-hidden="true" className="relative flex min-h-11 items-center">
-                  <div className="border-border-strong bg-bg-input h-2 w-full border">
-                    <div className="bg-bg-emphasis h-full w-2/5" />
-                  </div>
-                  <div
-                    data-slot="slider-specimen-thumb"
-                    className="border-border-strong bg-bg-input absolute left-2/5 size-5 -translate-x-1/2 border"
-                  />
-                </div>
-              ) : (
-                <StoryPreview
-                  componentName={component.name}
-                  storyName={component.docs.previewStory}
-                />
-              )}
-            </div>
+/** Parts that need the whole measure; a column would cut them. */
+const WIDE = new Set(["table", "data-table"]);
+
+/**
+ * Which example makes the best single specimen. `previewStory` is often a
+ * multi-state demonstration written for a full-width docs page; in a gallery
+ * the part itself should lead. Only the overrides are listed — everything else
+ * shows its registry preview.
+ */
+const GALLERY_STORY: Record<string, string> = {
+  alert: "Default",
+  blockquote: "Default",
+  breadcrumb: "Default",
+  card: "Default",
+  input: "Affixes",
+  select: "Default",
+  separator: "Default",
+  switch: "OnOff",
+  table: "Default",
+  tabs: "Default",
+  textarea: "Default",
+};
+
+/**
+ * A specimen gallery: the parts at the size they ship, parted by shared seams,
+ * with nothing between the reader and the thing itself. Server-rendered end to
+ * end — `inert` keeps 29 decorative specimens out of the tab order.
+ */
+export function ComponentShowcase({ components }: ComponentShowcaseProps) {
+  const byName = new Map(components.map((component) => [component.name, component]));
+
+  return (
+    <>
+      {GROUPS.map((group) => (
+        <section className="set" key={group.title}>
+          <div className="set-head">
+            <h2 id={group.title.toLowerCase()}>{group.title}</h2>
+            <p>{group.blurb}</p>
+            <span className="set-count">{group.names.length}</span>
           </div>
-        );
-      })}
-    </div>
+
+          {[
+            { className: "gallery", names: group.names.filter((n) => !WIDE.has(n)) },
+            { className: "gallery band", names: group.names.filter((n) => WIDE.has(n)) },
+          ]
+            .filter((band) => band.names.length > 0)
+            .map((band) => (
+              <div className={band.className} key={band.className}>
+                {band.names.map((name) => {
+                  const component = byName.get(name);
+                  if (!component) return null;
+                  const story = GALLERY_STORY[name] ?? component.docs.previewStory;
+                  return (
+                    // The link overlays the cell rather than wrapping it: a
+                    // specimen contains its own links and buttons, and an <a>
+                    // may not nest inside an <a> — the parser re-parents the
+                    // outer one into the component's own markup.
+                    <div key={name} className="cell">
+                      <a
+                        href={`/ui/components/${name}`}
+                        className="cell-link"
+                        aria-label={component.docs.title}
+                      />
+                      <span
+                        className="specimen"
+                        data-stage={needsSizedStage(name, story) ? "sized" : undefined}
+                        inert
+                      >
+                        <StoryPreview componentName={name} storyName={story} />
+                      </span>
+                      <span className="cell-name">{component.docs.title}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+        </section>
+      ))}
+    </>
   );
 }

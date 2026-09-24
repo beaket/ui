@@ -2,15 +2,14 @@
 import Layout from '../layouts/doc.astro';
 import { getCollection, render } from 'astro:content';
 
-// Get changelog from content collection
 const entries = await getCollection('changelog');
 const entry = entries[0];
 const { Content } = await render(entry);
 ---
 
-<Layout title="Changelog">
+<Layout title="Changelog" section="Reference">
   <h1>Changelog</h1>
-  <p class="changelog-intro">All notable changes to Beaket UI are documented here.</p>
+  <p>Every notable change to Beaket UI, newest first.</p>
 
   <div class="changelog-content">
     <Content />
@@ -18,33 +17,21 @@ const { Content } = await render(entry);
 </Layout>
 
 <style>
-  .changelog-intro {
-    color: var(--color-fg-muted);
-    margin-bottom: 28px;
-  }
-
+  /* The page already has a title; the changelog file carries its own. */
   .changelog-content :global(h1) {
     display: none;
   }
-
+  /* Releases are the section breaks, so the version heading takes the rule. */
   .changelog-content :global(h2) {
-    margin-top: 28px;
-    padding-top: 14px;
-    border-top: 1px solid var(--color-border-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-md);
+    letter-spacing: -0.01em;
+    text-transform: none;
+    font-variant-numeric: tabular-nums;
   }
-
   .changelog-content :global(h3) {
-    margin-top: 14px;
+    font-size: var(--text-sm);
     color: var(--color-fg-muted);
+    margin-top: 1.25rem;
   }
-
-  .changelog-content :global(ul) {
-    margin: 7px 0;
-    padding-left: 14px;
-  }
-
-  .changelog-content :global(li) {
-    margin: 5.6px 0;
-  }
-
 </style>

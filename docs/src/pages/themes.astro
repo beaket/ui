@@ -1,38 +1,44 @@
 ---
 import Layout from '../layouts/doc.astro';
 import { ThemeAppMock } from '../components/theme-app-mock';
+import { ThemePalettes } from '../components/theme-palettes';
+import { ThemeSwitcher } from '../components/theme-switcher';
 import CodeBlock from '../components/code-block.astro';
 ---
 
-<Layout title="Themes">
+<Layout title="Themes" section="Reference" wide>
 
 <h1>Themes</h1>
 
-<p>Same components, different world. <strong>Pick one in the sidebar.</strong></p>
+<p>
+  Five palettes over one set of components. Each theme authors 30 values; the 69 semantic
+  names every component reads stay the same, so swapping a theme never touches component
+  source. Below is every shipped palette, light and dark.
+</p>
+
+<h2 id="compare">Compare</h2>
+
+<ThemePalettes />
+
+<h2 id="try">Try one here</h2>
+
+<p>
+  This picker repaints the whole documentation site, including the specimen below, so you can
+  read a theme in a real interface before installing it.
+</p>
+
+<div class="theme-try">
+  <ThemeSwitcher layout="inline" client:load />
+</div>
 
 <div class="theme-showcase">
   <!-- Static visual reference: it must remain available without JavaScript. -->
   <ThemeAppMock />
 </div>
 
-<h2>Available themes</h2>
-
-<table>
-  <thead>
-    <tr><th>Theme</th><th>Light</th><th>Dark</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>Solace</td><td>Warm paper, cool ink — equal-weight signals and one vivid blue for action</td><td>Warm paper marks on cool, near-black ink</td></tr>
-    <tr><td>Porcelain</td><td>Near-white paper, cool graphite ink, balanced signals</td><td>Cool light ink on a near-black page</td></tr>
-    <tr><td>Tobacco</td><td>Warm earthen paper, warm-grey ink, quiet low-chroma signals</td><td>Warm ink on a warm-black page</td></tr>
-    <tr><td>Marigold</td><td>Pure-grey paper and ink, with deliberately loud bright signals</td><td>Loud signals on black</td></tr>
-    <tr><td>Eucalyptus</td><td>Cool-blue paper, blue-black ink, vivid high-chroma signals</td><td>Blue ink on a blue-black page</td></tr>
-  </tbody>
-</table>
-
 <p>Every theme supplies 30 palette values and inherits the same 69 semantic names. The CLI also installs the shared type, spacing, border, and radius foundation. Components consume 28 palette values through the semantic layer; <code>--tone-8</code> and <code>--tone-9</code> are reserved for neutral-ramp compatibility and future deep-ink roles.</p>
 
-<p>Choose a theme with the CLI. It writes the foundation, semantic layer, and selected palette directly into the CSS file you choose during setup.</p>
+<p>The CLI writes the foundation, semantic layer, and selected palette directly into the CSS file you choose during setup.</p>
 
 <CodeBlock code={`npx @beaket/ui init --theme solace
 # Later, switch the saved project to another theme
@@ -69,11 +75,3 @@ npx @beaket/ui theme --theme tobacco`} lang="bash" />
 
 </Layout>
 
-<style>
-  :global(.main) {
-    max-width: none;
-  }
-  .theme-showcase {
-    margin-top: 1rem;
-  }
-</style>

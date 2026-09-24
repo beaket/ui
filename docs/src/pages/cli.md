@@ -1,9 +1,14 @@
 ---
 layout: ../layouts/doc.astro
+section: Manual
 title: CLI
 ---
 
 # CLI
+
+Five commands. `init` writes the token layers into your CSS, `list` shows what
+the registry holds, `add` copies components in, `diff` compares your copies
+against the registry, and `theme` swaps the palette.
 
 ## init
 

@@ -3,111 +3,120 @@ import Layout from '../../layouts/doc.astro';
 import CodeBlock from '../../components/code-block.astro';
 import PropsTable from '../../components/props-table.astro';
 import ExampleSection from '../../components/example-section.astro';
-import { StoryPreview } from '../../components/story-preview';
+import {
+  asConsumerSource,
+  needsSizedStage,
+  StoryPreview,
+} from '../../components/story-preview';
 import { InteractiveExample, hasInteractiveExample } from '../../components/interactive-example';
 import { getPublicExample } from '../../../../src/examples/registry';
+import { PageNav } from '../../components/page-nav';
 import registry from '../../../../registry/registry.json';
 import propsData from '../../generated/props.json';
 
-// Generate static paths for all components
+/** One order for the whole site: sidebar, index, and prev/next agree. */
+const ordered = [...registry.components].sort((a, b) => a.docs.title.localeCompare(b.docs.title));
+
 export function getStaticPaths() {
-  return registry.components.map((component) => ({
+  const all = [...registry.components].sort((a, b) => a.docs.title.localeCompare(b.docs.title));
+  return all.map((component, index) => ({
     params: { name: component.name },
-    props: { component },
+    props: { component, index },
   }));
 }
 
-const { component } = Astro.props as { component: (typeof registry.components)[0] };
+const { component, index } = Astro.props as {
+  component: (typeof registry.components)[0];
+  index: number;
+};
 const { name, docs } = component;
-const sections = docs?.sections ?? [];
-
-// Get props for this component
 const props = propsData[name as keyof typeof propsData] ?? [];
 
-// Generate import statement
-const pascalName = name.charAt(0).toUpperCase() + name.slice(1);
-const importCode = `import { ${pascalName} } from "@/components/ui/${name}"`;
 
-// Prepare section data
-const sectionData = sections.map((sectionName) => {
-  const publicExample = getPublicExample(name, sectionName);
-  return {
-    storyName: sectionName,
-    displayName: sectionName.replace(/([a-z])([A-Z])/g, '$1 $2'),
-    source: publicExample?.source ?? '',
-  };
-});
+// The specimen at the top of the sheet is already one of these stories. Show
+// its source under the stage rather than drawing the same figure twice.
+const previewStory = docs?.previewStory;
+const previewSource = previewStory
+  ? asConsumerSource(getPublicExample(name, previewStory)?.source ?? '')
+  : '';
 
-// Get prev/next components
-const currentIndex = registry.components.findIndex((c) => c.name === name);
-const prevComponent = currentIndex > 0 ? registry.components[currentIndex - 1] : null;
-const nextComponent = currentIndex < registry.components.length - 1 ? registry.components[currentIndex + 1] : null;
+const sectionData = (docs?.sections ?? [])
+  .filter((sectionName) => sectionName !== previewStory)
+  .map((sectionName) => {
+    const publicExample = getPublicExample(name, sectionName);
+    return {
+      storyName: sectionName,
+      displayName: sectionName.replace(/([a-z])([A-Z])/g, '$1 $2'),
+      source: asConsumerSource(publicExample?.source ?? ''),
+    };
+  });
+
+const prev = index > 0 ? ordered[index - 1] : null;
+const next = index < ordered.length - 1 ? ordered[index + 1] : null;
 ---
 
-<Layout title={docs?.title ?? name}>
-  <div>
-    <!-- Title + Preview -->
-    <header>
-      <h1>{docs?.title ?? name}</h1>
-      <p class="tagline">{docs?.tagline ?? component.description}</p>
-      <div class="preview-box mt-2 border border-[var(--color-border-muted)] bg-[var(--color-bg)] p-4">
-        {hasInteractiveExample(name, docs?.previewStory) ? (
-          <InteractiveExample
-            componentName={name}
-            storyName={docs?.previewStory}
-            client:visible={{ rootMargin: '200px' }}
-          />
-        ) : (
-          <StoryPreview componentName={name} storyName={docs?.previewStory} />
-        )}
-      </div>
-    </header>
+<Layout title={docs?.title ?? name} section="Components" wide>
+  <header class="part-head">
+    <h1>{docs?.title ?? name}</h1>
+    <p>{docs?.tagline ?? component.description}</p>
+  </header>
 
-    <!-- Install -->
-    <section>
-      <h2>Install</h2>
-      <CodeBlock code={`npx @beaket/ui add ${name}`} lang="bash" />
-    </section>
-
-    <!-- Import -->
-    <section>
-      <h2>Import</h2>
-      <CodeBlock code={importCode} />
-    </section>
-
-    <!-- Examples -->
-    <section>
-      <h2>Examples</h2>
-      <div class="space-y-4">
-        {sectionData.map((section) => (
-          <ExampleSection
-            componentName={name}
-            storyName={section.storyName}
-            displayName={section.displayName}
-            source={section.source}
-          />
-        ))}
-      </div>
-    </section>
-
-    <!-- Props -->
-    <section>
-      <h2>Props</h2>
-      <PropsTable props={props} />
-    </section>
-
-    <!-- Prev/Next Navigation -->
-    <nav class="component-nav">
-      {prevComponent ? (
-        <a href={`/ui/components/${prevComponent.name}`} class="component-nav-link">
-          ← {prevComponent.docs.title}
-        </a>
-      ) : <div />}
-      {nextComponent ? (
-        <a href={`/ui/components/${nextComponent.name}`} class="component-nav-link next">
-          {nextComponent.docs.title} →
-        </a>
-      ) : <div />}
-    </nav>
+  <div class="get">
+    <span class="install-line">
+      <code><span class="prompt">$&nbsp;</span><span class="install-text">npx @beaket/ui add {name}</span></code>
+      <button class="install-copy" aria-label={`Copy install command for ${name}`}>Copy</button>
+    </span>
   </div>
+
+  <div
+    class="preview-box stage hero"
+    data-stage={previewStory && needsSizedStage(name, previewStory) ? 'sized' : undefined}
+  >
+    {hasInteractiveExample(name, docs?.previewStory) ? (
+      <InteractiveExample
+        componentName={name}
+        storyName={docs?.previewStory}
+        client:visible={{ rootMargin: '200px' }}
+      />
+    ) : (
+      <StoryPreview componentName={name} storyName={docs?.previewStory} />
+    )}
+  </div>
+
+  {previewSource && (
+    <details class="listing" open>
+      <summary>Source</summary>
+      <CodeBlock code={previewSource} />
+    </details>
+  )}
+
+
+  {sectionData.length > 0 && (
+    <Fragment>
+      <h2 id="examples">Examples</h2>
+      {sectionData.map((section) => (
+        <ExampleSection
+          componentName={name}
+          storyName={section.storyName}
+          displayName={section.displayName}
+          source={section.source}
+        />
+      ))}
+    </Fragment>
+  )}
+
+  <h2 id="props">Props</h2>
+  <PropsTable props={props} />
+
+  <PageNav
+    label="Adjacent components"
+    prev={{
+      href: prev ? `/ui/components/${prev.name}` : '/ui/',
+      label: prev ? prev.docs.title : 'All components',
+    }}
+    next={{
+      href: next ? `/ui/components/${next.name}` : '/ui/',
+      label: next ? next.docs.title : 'All components',
+    }}
+  />
 </Layout>
