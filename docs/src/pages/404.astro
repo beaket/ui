@@ -1,56 +1,42 @@
 ---
-import '../styles/global.css';
+import Layout from '../layouts/doc.astro';
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/ui/favicon.svg" />
-    <title>404 - Beaket UI</title>
-    <script is:inline src="/ui/theme-init.js"></script>
-  </head>
-  <body>
-    <main class="error-page">
-      <h1 class="error-code">404</h1>
-      <p class="error-message">Page not found.</p>
-      <a href="/ui/" class="error-action">← Home</a>
-    </main>
-  </body>
-</html>
+<Layout title="Sheet not found" section="Error" folio="404" folioLabel="Error">
+  <div class="error-rule"></div>
+  <h1>Sheet not found</h1>
+  <p class="tagline">
+    This drawing is not in the set. Every sheet that is in it is listed in the parts
+    catalog, and the manual is in the index to the left.
+  </p>
+  <a href="/ui/" class="plain error-action">← Parts catalog</a>
+  <div class="error-rule"></div>
+</Layout>
 
 <style>
-  .error-page {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
+  .error-rule {
+    border-top: 1px solid var(--color-border-strong);
+    margin: 2rem 0 2.5rem;
   }
-  .error-code {
-    font-size: 4.5rem;
-    font-weight: 300;
-    letter-spacing: -0.02em;
-    margin: 0;
-  }
-  .error-message {
-    margin-top: 0.5rem;
-    color: var(--color-fg-muted);
+  .error-rule:last-of-type {
+    margin: 3rem 0 0;
   }
   .error-action {
-    margin-top: 2rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.25rem;
+    padding: 0.5rem 1rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
     color: var(--color-fg);
     text-decoration: none;
-    border: 1px solid var(--color-fg);
-    padding: 0.5rem 1.5rem;
+    border: 1px solid var(--color-border-strong);
   }
   .error-action:hover {
-    background: var(--color-bg-hover);
+    box-shadow: var(--shadow-offset-action);
+  }
+  .error-action:active {
+    box-shadow: none;
+    translate: 1px 1px;
   }
 </style>

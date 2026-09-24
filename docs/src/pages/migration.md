@@ -1,5 +1,6 @@
 ---
 layout: ../layouts/doc.astro
+section: Manual
 title: Coming from native HTML
 ---
 

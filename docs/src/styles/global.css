@@ -2,451 +2,1288 @@
 @source "../../../src";
 @source "../";
 
-/* Syntax highlighting uses the same semantic roles as the rest of the docs. */
+/*
+ * The set leads. The index is a specimen gallery — the parts at the size they
+ * ship, parted by shared seams, with nothing between the reader and the thing
+ * itself; a component page opens on that part at full stage.
+ *
+ * Two voices, rationed. The manual letters its own furniture — running heads,
+ * folios, schedules, measurements — in the mono. Everything the product says
+ * (prose, specimen type, component names) stays in the sans the components
+ * themselves use, so the manual is never a different material from the parts.
+ *
+ * Only semantic token names are read here. Palette values (--tone-*,
+ * --surface-*, --signal-*) belong to themes.
+ */
+
 :root {
-  --astro-code-foreground: var(--color-fg);
-  --astro-code-background: var(--color-bg-raised);
-  --astro-code-token-constant: var(--color-info-alt-solid);
-  --astro-code-token-string: var(--color-success-solid);
-  --astro-code-token-string-expression: var(--color-success-solid);
-  --astro-code-token-comment: var(--color-fg-muted);
-  --astro-code-token-keyword: var(--color-info-solid);
-  --astro-code-token-function: var(--color-accent-solid);
-  --astro-code-token-parameter: var(--color-fg);
-  --astro-code-token-punctuation: var(--color-fg-muted);
-  --astro-code-token-link: var(--color-info-solid);
+  --rail-w: 15rem; /* sheet index */
+  --margin-w: 13rem; /* right margin — on-sheet contents */
+  --sheet-pad: 2.5rem;
+  --measure: 68ch;
+  --head-h: 3.25rem; /* title block and running head share one rule line */
+  --head-title-lh: 1.375rem; /* --text-2xl at 1.1 */
+}
+
+/* ─── Ground ──────────────────────────────────────────────────────────── */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--head-h) + 1.5rem);
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-family: var(--font-sans);
   background: var(--color-bg);
   color: var(--color-fg);
-  line-height: 1.6;
-  font-size: 14px;
+  font-size: var(--text-base);
+  line-height: 1.65;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
-.layout {
-  display: flex;
-  min-height: 100vh;
-}
-
-.sidebar {
-  width: 200px;
-  border-right: 1px solid var(--color-border-muted);
-  padding: 1rem;
-  position: fixed;
-  height: 100vh;
-  overflow-y: auto;
-}
-
-.sidebar-title {
-  font-weight: 600;
-  font-size: 0.875rem;
-  color: var(--color-fg);
-  text-decoration: none;
-  display: block;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.sidebar-version {
-  font-size: 0.625rem;
-  color: var(--color-fg-muted);
-  margin-bottom: 1rem;
-}
-
-.sidebar-section {
-  margin-bottom: 0.75rem;
-}
-
-.sidebar-section-title {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-fg-muted);
-  margin-bottom: 0.25rem;
-}
-
-.sidebar-link {
-  display: block;
-  min-height: 24px;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.75rem;
-  color: var(--color-fg-muted);
-  text-decoration: none;
-}
-.sidebar-link:hover {
-  color: var(--color-fg);
-  background: var(--color-bg-hover);
-}
-.sidebar-link.active {
-  color: var(--color-fg);
-  font-weight: 600;
-}
-
-.main {
-  flex: 1;
-  margin-left: 200px;
-  padding: 1.5rem;
-  max-width: 720px;
-}
-
-.main.wide {
-  max-width: 1152px;
-}
-
-h1 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.5rem;
-}
-h2 {
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-fg);
-  margin: 1.5rem 0 0.5rem;
-  border-bottom: 1px solid var(--color-border-muted);
-  padding-bottom: 0.25rem;
-}
-.heading-anchor {
-  margin-left: 0.5rem;
-  color: var(--color-border-muted);
-  text-decoration: none;
-  display: inline-block;
-  transition: color 0.15s;
-}
-h2:hover .heading-anchor {
-  color: var(--color-fg-muted);
-}
-.heading-anchor:hover {
+/* The parts of the page nobody draws still belong to the system. */
+::selection {
+  background: var(--color-accent-bg);
   color: var(--color-fg);
 }
-h3 {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  margin: 1rem 0 0.5rem;
-  color: var(--color-fg-muted);
+* {
+  scrollbar-color: var(--color-border-muted) transparent;
+  scrollbar-width: thin;
 }
-.main p,
-.main li {
-  margin: 0.5rem 0;
-  color: var(--color-fg-muted);
-}
-ul {
-  margin: 0.5rem 0;
-  padding-left: 1.25rem;
-}
-li {
-  margin: 0.25rem 0;
-}
-
-.main > table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.8125rem;
-  margin: 0.5rem 0;
-  display: block;
-  overflow-x: auto;
-}
-th {
-  text-align: left;
-  font-weight: 600;
-  color: var(--color-fg);
-  padding: 0.375rem 0.75rem;
-  border-bottom: 2px solid var(--color-border-strong);
-  white-space: nowrap;
-}
-td {
-  padding: 0.375rem 0.75rem;
-  color: var(--color-fg-muted);
-  border-bottom: 1px solid var(--color-border-muted);
-}
-tr:last-child td {
-  border-bottom: none;
-}
-
-code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.8125rem;
-  background: var(--color-bg-hover);
-  padding: 0.125rem 0.25rem;
-}
-
-pre {
-  position: relative;
-  padding: 0.75rem;
-  overflow-x: auto;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.8125rem;
-  margin: 0.5rem 0;
-  border: 1px solid var(--color-border-muted);
-}
-pre code {
-  background: none;
-  padding: 0;
-}
-.copy-button {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.625rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  background: var(--astro-code-background, var(--color-bg-hover));
-  border: 1px solid var(--color-border-muted);
-  color: var(--color-fg-muted);
-  cursor: pointer;
-  visibility: hidden;
-}
-pre:hover .copy-button,
-pre:focus-within .copy-button {
-  visibility: visible;
-}
-.copy-button:hover {
-  color: var(--color-fg);
-  border-color: var(--color-fg);
-  background: var(--color-bg-active);
-}
-.copy-button:active {
-  background: var(--color-border-muted);
-}
-.copy-button.copied {
-  color: var(--color-success-fg);
-  border-color: var(--color-success-fg);
-}
-
-a:not([data-slot]) {
-  color: var(--color-fg);
-  text-decoration: none;
-}
-.main a:not([data-slot]) {
-  color: var(--color-fg-link);
-  text-decoration: underline;
-}
-.main a:not([data-slot]):hover {
-  background: var(--color-bg-hover);
-}
-.main a:not([data-slot]):focus {
-  outline: 2px solid var(--color-border-focus);
-  outline-offset: 2px;
-}
-
-/* Focus states */
 :focus-visible {
   outline: 2px solid var(--color-border-focus);
   outline-offset: 2px;
 }
 
-.tagline {
-  color: var(--color-fg-muted);
-  margin-bottom: 1rem;
-  font-size: 0.75rem;
+/* ─── Layout ──────────────────────────────────────────────────────────── */
+
+.layout {
+  display: block;
+  min-height: 100vh;
 }
 
-.components {
-  margin-top: 0.25rem;
-}
-.component {
+/* ─── Sheet index (sidebar) ───────────────────────────────────────────── */
+
+.sidebar {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: var(--rail-w);
+  border-right: 1px solid var(--color-border-muted);
+  background: var(--color-bg);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   display: flex;
-  justify-content: space-between;
-  padding: 0.25rem 0;
-  border-bottom: 1px solid var(--color-border-muted);
-}
-.component:last-child {
-  border-bottom: none;
+  flex-direction: column;
+  z-index: 40;
 }
 
-/* Component prev/next navigation */
-.component-nav {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-border-muted);
-}
-
-.component-nav-link {
-  font-size: 0.75rem;
-  color: var(--color-fg);
-  text-decoration: none;
-}
-
-.component-nav-link.next {
-  text-align: right;
-}
-
-.component-nav-link:hover {
-  text-decoration: underline;
-}
-
-/* Site footer */
-.site-footer {
-  margin-top: 3rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-border-muted);
-  font-size: 0.6875rem;
-  color: var(--color-fg-muted);
-}
-
-.site-footer a {
-  color: var(--color-fg-muted);
-  text-decoration: none;
-}
-
-.site-footer a:hover {
-  color: var(--color-fg);
-  text-decoration: underline;
-}
-
-.footer-sep {
-  margin: 0 0.5rem;
-}
-
-/* Sidebar toggle (hidden on desktop) */
 .sidebar-header {
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
+  height: var(--head-h);
+  flex-shrink: 0;
+  box-sizing: border-box;
+  /* Baseline-aligned inside a fixed box: pad to centre the title's line box. */
+  padding: calc((var(--head-h) - var(--head-title-lh)) / 2) 1.25rem 0;
+  border-bottom: 1px solid var(--color-border-muted);
 }
+
+.sidebar-title {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  color: var(--color-fg);
+  text-decoration: none;
+}
+.sidebar-title:hover {
+  color: var(--color-fg-link);
+}
+
+.sidebar-version {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-fg-muted);
+}
+
+.sidebar-nav {
+  padding: 0 0.75rem 3rem;
+  flex: 1;
+}
+
+.sidebar-section {
+  padding-top: 1.25rem;
+}
+
+.sidebar-section-title {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-fg-subtle);
+  padding: 0 0.5rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.3125rem 0.5rem;
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: var(--color-fg-muted);
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+}
+.sidebar-link:hover {
+  color: var(--color-fg);
+  background: var(--color-bg-hover);
+}
+/* Current selection: the lens wash under the leading rule — the same mark a
+   navigated menu row carries, which is what this row is. */
+.sidebar-link.active {
+  color: var(--color-fg);
+  font-weight: 600;
+  background: var(--color-accent-bg-subtle);
+  box-shadow: inset 2px 0 0 0 var(--color-accent-solid);
+}
+
+/* ─── Sheet ───────────────────────────────────────────────────────────── */
+
+.main {
+  margin-left: var(--rail-w);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Running head: page furniture, not a label for the heading below it. */
+.sheet-head {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: var(--head-h);
+  box-sizing: border-box;
+  padding: 0 var(--sheet-pad);
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border-muted);
+}
+
+/* The running head's trail is a Breadcrumb — the component this site ships
+   for exactly this job. It only needs its measure constrained here. */
+.sheet-head [data-slot="breadcrumb"] {
+  min-width: 0;
+  overflow: hidden;
+}
+.sheet-head [data-slot="breadcrumb-list"] {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.folio {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-fg-subtle);
+  white-space: nowrap;
+}
+.folio b {
+  color: var(--color-fg);
+  font-weight: 500;
+}
+
+.sheet-area {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  padding: 2.25rem var(--sheet-pad) 4rem;
+  gap: 0 2.5rem;
+}
+
+.sheet-body {
+  min-width: 0;
+  max-width: var(--measure);
+}
+.sheet-body.wide {
+  max-width: none;
+}
+.sheet-body.wide > p,
+.sheet-body.wide > ul,
+.sheet-body.wide > ol,
+.sheet-body.wide .part-head > p {
+  max-width: var(--measure);
+}
+
+/* Right margin: contents of this sheet. Built by the inline script from the
+   headings that are actually on the page, so it can never drift from them. */
+.sheet-margin {
+  width: var(--margin-w);
+  position: sticky;
+  top: calc(var(--head-h) + 1.5rem);
+  align-self: start;
+  max-height: calc(100vh - var(--head-h) - 3.5rem);
+  overflow-y: auto;
+}
+.sheet-margin:empty {
+  display: none;
+}
+.margin-link {
+  display: block;
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  padding: 0.25rem 0;
+  color: var(--color-fg-muted);
+  text-decoration: none;
+  border-left: 1px solid transparent;
+  padding-left: 0.625rem;
+  margin-left: -0.625rem;
+  transition: color 0.2s ease-out;
+}
+/* Three pressures of the one ink, chosen by distance from the section you are
+   reading. No alpha: the ramp is the system's own way of going quiet. */
+.margin-link[data-near="1"] {
+  color: var(--color-fg-muted);
+}
+.margin-link[data-near="2"] {
+  color: var(--color-fg-subtle);
+}
+.margin-link:hover {
+  color: var(--color-fg);
+}
+.margin-link.current,
+.margin-link[data-near="0"] {
+  color: var(--color-fg);
+  border-left-color: var(--color-accent-solid);
+}
+@media (prefers-reduced-motion: reduce) {
+  .margin-link {
+    transition: none;
+  }
+}
+.margin-link.sub {
+  padding-left: 1.5rem;
+  font-size: var(--text-xs);
+  font-family: var(--font-sans);
+}
+
+/* ─── Headings ────────────────────────────────────────────────────────── */
+
+h1 {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  color: var(--color-fg);
+  margin: 0 0 0.375rem;
+}
+
+h2 {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1.3;
+  color: var(--color-fg);
+  margin: 3rem 0 0.875rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--color-border-muted);
+}
+
+h3 {
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-fg);
+  margin: 2rem 0 0.5rem;
+}
+
+h4 {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-fg);
+  margin: 1.5rem 0 0.375rem;
+}
+
+.heading-anchor {
+  margin-left: 0.5rem;
+  color: var(--color-border-muted);
+  text-decoration: none;
+  font-weight: 400;
+  visibility: hidden;
+}
+h1:hover > .heading-anchor,
+h2:hover > .heading-anchor,
+h3:hover > .heading-anchor,
+h4:hover > .heading-anchor,
+.heading-anchor:focus-visible {
+  visibility: visible;
+}
+.heading-anchor:hover {
+  color: var(--color-fg);
+}
+
+/* ─── Prose ───────────────────────────────────────────────────────────── */
+
+.sheet-body
+  p:not(:where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)),
+.sheet-body
+  li:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  ) {
+  color: var(--color-fg);
+  margin: 0.875rem 0;
+}
+.sheet-body > p:first-child {
+  margin-top: 0;
+}
+.sheet-body .tagline {
+  color: var(--color-fg-muted);
+  font-size: var(--text-md);
+  line-height: 1.5;
+  margin: 0 0 1.5rem;
+  max-width: 56ch;
+}
+
+/* Prose styling stops at a specimen or any live component the page embeds. Every component ships its own lists,
+   paragraphs and type; a docs rule that reaches inside one restyles the very
+   thing the page exists to show. `:where()` keeps the exclusion free of
+   specificity, so a component's own utility classes still win. */
+.sheet-body
+  ul:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  ),
+.sheet-body
+  ol:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  ) {
+  margin: 0.875rem 0;
+  padding-left: 1.5rem;
+}
+.sheet-body
+  ul:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  ) {
+  list-style: disc;
+}
+.sheet-body
+  ol:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  ) {
+  list-style: decimal;
+}
+.sheet-body
+  li:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  ) {
+  margin: 0.375rem 0;
+}
+.sheet-body
+  ul:not(:where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *))
+  > li::marker {
+  color: var(--color-border);
+}
+.sheet-body
+  ol:not(:where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *))
+  > li::marker {
+  color: var(--color-fg-subtle);
+  font-size: var(--text-xs);
+}
+
+.sheet-body
+  strong:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  ) {
+  font-weight: 600;
+  color: var(--color-fg);
+}
+
+.sheet-body hr {
+  border: none;
+  border-top: 1px solid var(--color-border-muted);
+  margin: 2.5rem 0;
+}
+
+:where(a:not([data-slot])) {
+  color: var(--color-fg);
+  text-decoration: none;
+}
+
+/* Prose links must be findable without relying on colour alone. */
+.sheet-body
+  a:not(
+    :where(
+      .stage *,
+      .specimen *,
+      .theme-try *,
+      .theme-showcase *,
+      [data-slot],
+      [data-slot] *,
+      .heading-anchor,
+      .page-nav-link,
+      .cell-link,
+      .plain
+    )
+  ) {
+  color: var(--color-fg-link);
+  text-decoration: underline;
+  text-decoration-color: var(--color-border);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+.sheet-body
+  a:not(
+    :where(
+      .stage *,
+      .specimen *,
+      .theme-try *,
+      .theme-showcase *,
+      [data-slot],
+      [data-slot] *,
+      .heading-anchor,
+      .page-nav-link,
+      .cell-link,
+      .plain
+    )
+  ):hover {
+  text-decoration-color: currentColor;
+}
+
+/* ─── Schedules (tables) ──────────────────────────────────────────────── */
+
+.sheet-body
+  table:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  ) {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  margin: 1rem 0 1.25rem;
+}
+.sheet-body > table {
+  display: block;
+  overflow-x: auto;
+}
+
+.sheet-body
+  table:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  )
+  thead
+  th {
+  text-align: left;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-fg-muted);
+  padding: 0 0.75rem 0.5rem;
+  border-bottom: 1px solid var(--color-border-strong);
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+.sheet-body
+  table:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  )
+  th:first-child,
+.sheet-body
+  table:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  )
+  td:first-child {
+  padding-left: 0;
+}
+.sheet-body
+  table:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  )
+  th:last-child,
+.sheet-body
+  table:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  )
+  td:last-child {
+  padding-right: 0;
+}
+
+.sheet-body
+  table:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  )
+  td:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  ) {
+  padding: 0.5rem 0.75rem;
+  color: var(--color-fg);
+  border-bottom: 1px solid var(--color-border-subtle);
+  vertical-align: top;
+}
+.sheet-body
+  table:not(
+    :where(.stage *, .specimen *, .theme-try *, .theme-showcase *, [data-slot], [data-slot] *)
+  )
+  tr:last-child
+  td {
+  border-bottom: none;
+}
+
+/* ─── Code ────────────────────────────────────────────────────────────── */
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-bg-hover);
+  padding: 0.0625rem 0.25rem;
+  color: var(--color-fg);
+}
+
+/* Code always reads on the theme's dark twin, whichever scheme the page is
+   in: a syntax palette tuned for ink on paper is not the same instrument.
+   `--code-*` is published by the theme script; the fallbacks keep the block
+   legible before it runs, or with JavaScript off. */
+pre {
+  position: relative;
+  background: var(--code-color-bg-raised, var(--color-bg-raised));
+  color: var(--code-color-fg, var(--color-fg));
+  --astro-code-background: var(--code-color-bg-raised, var(--color-bg-raised));
+  --astro-code-foreground: var(--code-color-fg, var(--color-fg));
+  --astro-code-token-constant: var(--code-color-info-alt-solid, var(--color-info-alt-solid));
+  --astro-code-token-string: var(--code-color-success-solid, var(--color-success-solid));
+  --astro-code-token-string-expression: var(--code-color-success-solid, var(--color-success-solid));
+  --astro-code-token-comment: var(--code-color-fg-muted, var(--color-fg-muted));
+  --astro-code-token-keyword: var(--code-color-info-solid, var(--color-info-solid));
+  --astro-code-token-function: var(--code-color-accent-solid, var(--color-accent-solid));
+  --astro-code-token-parameter: var(--code-color-fg, var(--color-fg));
+  --astro-code-token-punctuation: var(--code-color-fg-muted, var(--color-fg-muted));
+  --astro-code-token-link: var(--code-color-info-solid, var(--color-info-solid));
+  padding: 0.875rem 1rem;
+  padding-right: 4.5rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  margin: 0.875rem 0;
+  border: none;
+}
+/* Inline `code` carries the page's ink; inside a block it must not, or a
+   plaintext listing — which has no per-token colour to override it — renders
+   the light theme's ink on the dark block. */
+pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.1875rem 0.5rem;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  background: var(--code-color-bg-raised, var(--color-bg-raised));
+  border: 1px solid var(--code-color-border, var(--color-border));
+  color: var(--code-color-fg-muted, var(--color-fg-muted));
+  cursor: pointer;
+  visibility: hidden;
+}
+pre:hover .copy-button,
+pre:focus-within .copy-button,
+.copy-button:focus-visible {
+  visibility: visible;
+}
+.copy-button:hover {
+  color: var(--code-color-fg, var(--color-fg));
+  background: var(--code-color-bg-hover, var(--color-bg-hover));
+}
+.copy-button:active {
+  box-shadow: none;
+  translate: 1px 1px;
+}
+.copy-button.copied {
+  visibility: visible;
+  color: var(--code-color-success-fg, var(--color-success-fg));
+  border-color: var(--code-color-success-border, var(--color-success-border));
+}
+
+/* ─── Stage: where a specimen is shown ───────────────────────────────── */
+
+/* A stage is a window cut into the page, not a card laid on it: the stock
+   shows through and two rules delimit it. Specimens carry their own fill step,
+   so anything but the page ground under them would be a lie. */
+.stage {
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding: 2.5rem 2rem;
+  margin: 0;
+  overflow-x: auto;
+  display: grid;
+  align-content: center;
+  justify-items: stretch;
+  min-height: 9rem;
+}
+.stage.hero {
+  padding: 4rem 2rem;
+  min-height: 15rem;
+}
+/* Six shipped examples size themselves with `h-full`, written for a container
+   that had a height. They get one; everything else keeps its intrinsic size,
+   because stretching a `flex` root stretches every part inside it. */
+/* The six `h-full` examples want the plain, fixed-height box they were written
+   for. Grid centring makes their absolutely-positioned content resolve against
+   a stretched track, which is what left the Navigation strip staggered. */
+.stage[data-stage="sized"],
+.specimen[data-stage="sized"] {
+  display: block;
+  position: relative;
+}
+.stage[data-stage="sized"] {
+  height: 12rem;
+}
+.stage.hero[data-stage="sized"] {
+  height: 16rem;
+}
+
+.figure {
+  margin: 0 0 3rem;
+}
+.figure-title {
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--color-fg);
+  margin: 0 0 0.875rem;
+}
+
+/* Source listings fold away: a specimen is read before its procedure. */
+.listing {
+  margin: 0.75rem 0 0;
+}
+.listing > summary {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  padding: 0.5rem 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+}
+.listing > summary::-webkit-details-marker {
+  display: none;
+}
+.listing > summary:hover {
+  color: var(--color-fg);
+}
+.listing > summary::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  rotate: -45deg;
+  translate: 0 -1px;
+  transition: rotate 0.15s;
+}
+.listing[open] > summary::before {
+  rotate: 45deg;
+  translate: 0 -2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .listing > summary::before {
+    transition: none;
+  }
+}
+
+/* ─── Title block ─────────────────────────────────────────────────────── */
+
+.title-block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 1.5rem 2.5rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--color-border-strong);
+  margin-bottom: 0;
+}
+.title-block h1 {
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+.title-block .tagline {
+  font-size: var(--text-md);
+  max-width: 46ch;
+  margin: 0;
+}
+.title-block-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* The install line is the one thing a visitor came to copy. */
+/* A command you run, shown on the ground you run it on: the same dark sheet
+   the code blocks use, so a listing and the command that produces it are one
+   material. No frame and no divider — a surface is read by its fill, and the
+   restraint is what keeps it from looking like a costume terminal. */
+.install-line {
+  display: inline-flex;
+  align-items: stretch;
+  max-width: 100%;
+  background: var(--code-color-bg-raised, var(--color-bg-emphasis));
+  color: var(--code-color-fg, var(--color-fg-on-emphasis));
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+.install-line code {
+  background: none;
+  color: inherit;
+  font-size: inherit;
+  padding: 0.625rem 0.5rem 0.625rem 0.875rem;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+.install-line .prompt {
+  color: var(--code-color-fg-subtle, var(--color-fg-subtle));
+  user-select: none;
+}
+.install-copy::before,
+.copy-button::before {
+  content: "Copied";
+  display: block;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.install-copy {
+  flex: none;
+  visibility: hidden;
+  border: none;
+  background: transparent;
+  color: var(--code-color-fg-muted, var(--color-fg-subtle));
+  font-size: var(--text-xs);
+  font-weight: 600;
+  padding: 0 0.875rem;
+  cursor: pointer;
+  transition: color 0.12s;
+}
+.install-line:hover .install-copy,
+.install-line:focus-within .install-copy,
+.install-copy:focus-visible {
+  visibility: visible;
+}
+.install-copy:hover {
+  background: var(--code-color-bg-hover, var(--color-bg-hover));
+  color: var(--code-color-fg, var(--color-fg-on-emphasis));
+}
+.install-copy:focus-visible {
+  outline-offset: -3px;
+}
+.install-copy.copied {
+  color: var(--code-color-success-fg, var(--color-success-fg));
+}
+
+/* ─── Specimen gallery ───────────────────────────────────────────────── */
+
+.set {
+  margin-top: 4.5rem;
+}
+.set:first-of-type {
+  margin-top: 3rem;
+}
+
+.set-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0 1.5rem;
+  padding-bottom: 0.875rem;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--color-border-strong);
+}
+.set-head h2 {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.set-head p {
+  grid-column: 1;
+  margin: 0.25rem 0 0;
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+}
+.set-count {
+  grid-row: 1;
+  grid-column: 2;
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-fg-subtle);
+}
+
+/* Multi-column, not a row grid: specimens differ in height by design, and a row
+   grid stretches every cell in a row to its tallest neighbour and leaves a hole
+   wherever a wide part lands. Columns are parted by a shared rule. */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--color-border-subtle);
+}
+.gallery.band {
+  grid-template-columns: minmax(0, 1fr);
+  border-top: none;
+}
+
+.cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.75rem 1.5rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.cell-link {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  outline-offset: -3px;
+}
+.cell:has(.cell-link:focus-visible) {
+  background: var(--color-bg-raised);
+}
+.gallery:not(.band) .cell:nth-child(odd) {
+  border-right: 1px solid var(--color-border-subtle);
+}
+.cell:hover {
+  background: var(--color-bg-raised);
+}
+.cell:hover .cell-name {
+  color: var(--color-fg-link);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* A specimen keeps its own width and alignment. Centring it with
+   `justify-items` collapses any block that has no intrinsic width — which is
+   what flattened Card into a 40px column of broken words. */
+.specimen {
+  display: block;
+  position: relative;
+  min-height: 4rem;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+.specimen > * {
+  max-width: 100%;
+}
+.specimen[data-stage="sized"] {
+  height: 5rem;
+}
+
+.cell-name {
+  display: block;
+  margin-top: auto;
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-fg);
+}
+
+@media (max-width: 899px) {
+  .gallery {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .gallery .cell:nth-child(odd) {
+    border-right: none;
+  }
+}
+
+/* ─── Get it ──────────────────────────────────────────────────────────── */
+
+.part-head {
+  margin-bottom: 1.25rem;
+}
+
+/* How to get the part, directly under what it is — the primary action should
+   not sit below the specimen and a collapsed source block. */
+.get {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin: 0 0 1.75rem;
+}
+
+/* ─── Theme palettes ──────────────────────────────────────────────────── */
+
+.palette {
+  margin: 0;
+  padding: 1.75rem 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.palette:first-of-type {
+  border-top: 1px solid var(--color-border-strong);
+}
+
+.palette-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+}
+.palette-head h3 {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+.palette-note {
+  margin: 0.375rem 0 1.125rem;
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+  max-width: 68ch;
+}
+
+/* The strip carries the palette's own page colour, so a dark twin is judged in
+   the world it ships in rather than against this page. */
+.palette-strip {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0 1rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--color-border-muted);
+}
+.palette-strip + .palette-strip {
+  border-top: none;
+}
+.palette-scheme {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: currentColor;
+}
+
+.palette-chips {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 0.5rem;
+  min-width: 0;
+}
+.chip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+  min-width: 0;
+}
+.chip-swatch {
+  display: block;
+  height: 2.5rem;
+  border: 1px solid;
+}
+.chip-label {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: currentColor;
+  line-height: 1.2;
+}
+.chip-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--strip-muted, currentColor);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.theme-try {
+  margin: 1rem 0 1.75rem;
+}
+
+/* Phone width, because that is the frame these screens were designed for; two
+   of them, because one left the column half empty. */
+.app-mock {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin: 0 0 1.5rem;
+}
+/* Both frames run to the same height: two device screens side by side read as
+   one comparison, and a short one next to a tall one reads as a mistake. */
+.app-screen {
+  width: 22rem;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.app-screen > :first-child {
+  flex: 1;
+}
+.app-screen-label {
+  margin: 0.625rem 0 0;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-fg-subtle);
+}
+
+@media (max-width: 1100px) {
+  .palette-chips {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.75rem 0.5rem;
+  }
+}
+@media (max-width: 767px) {
+  .palette-strip {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.625rem;
+  }
+  .palette-chips {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ─── Materials schedule (tokens / themes) ────────────────────────────── */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.swatch {
+  display: block;
+  width: 3rem;
+  height: 1.75rem;
+  border: 1px solid var(--color-border-muted);
+  flex-shrink: 0;
+}
+
+/* The Table component owns the chrome; these are the docs-only concerns it
+   cannot know — which column is code, and how wide a swatch reads. */
+.token-table [data-slot="table-cell"] {
+  vertical-align: top;
+}
+.token-table .token-swatch-cell {
+  width: 4rem;
+}
+.token-table .token-name,
+.token-table .token-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  overflow-wrap: anywhere;
+}
+.token-table .token-name {
+  font-weight: 600;
+  color: var(--color-fg);
+}
+.token-table .token-value {
+  color: var(--color-fg-muted);
+  max-width: 18rem;
+}
+.token-table .token-usage {
+  color: var(--color-fg-muted);
+  min-width: 12rem;
+}
+
+/* ─── Sheet navigation ────────────────────────────────────────────────── */
+
+.page-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 3.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border-muted);
+}
+
+/* ─── Footer ──────────────────────────────────────────────────────────── */
+
+.site-footer {
+  margin-top: auto;
+  padding: 1.25rem var(--sheet-pad) 2rem;
+  border-top: 1px solid var(--color-border-muted);
+  font-size: var(--text-xs);
+  color: var(--color-fg-subtle);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.5rem;
+}
+.site-footer a {
+  color: var(--color-fg-subtle);
+  text-decoration: none;
+}
+.site-footer a:hover {
+  color: var(--color-fg);
+}
+.footer-sep {
+  color: var(--color-border-muted);
+}
+
+/* ─── Mobile menu control ─────────────────────────────────────────────── */
 
 .sidebar-toggle {
   display: none;
+  align-items: center;
+  gap: 0.375rem;
   background: none;
   border: none;
   cursor: pointer;
   margin-left: auto;
-  font-size: 0.6875rem;
-  font-family: inherit;
-  color: var(--color-fg-muted);
+  font-size: var(--text-xs);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: var(--color-fg-muted);
+  padding: 0;
+  position: relative;
+}
+.sidebar-toggle svg {
+  display: block;
+}
+.sidebar-toggle[aria-expanded="true"] .bar-b {
+  visibility: hidden;
 }
 
-/* Responsive: Mobile (<768px) */
-@media (max-width: 767px) {
+/* ─── Narrower desktops: the margin folds away first ──────────────────── */
+
+@media (max-width: 1279px) {
+  .sheet-area {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sheet-margin {
+    display: none;
+  }
+}
+
+@media (max-width: 1100px) {
+  :root {
+    --sheet-pad: 1.75rem;
+    --rail-w: 13.5rem;
+  }
+}
+
+/* ─── Mobile ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 899px) {
+  :root {
+    --sheet-pad: 1.25rem;
+    --head-title-lh: 1.25rem; /* --text-xl at 1.1 */
+  }
+
   .layout {
-    flex-direction: column;
+    display: block;
   }
 
   .sidebar {
     position: sticky;
-    top: 0;
-    z-index: 50;
+    inset: 0 auto auto 0;
     width: 100%;
     height: auto;
+    max-height: 100vh;
     border-right: none;
     border-bottom: 1px solid var(--color-border-muted);
-    padding: 0.5rem 1rem;
-    overflow-y: visible;
-    background: var(--color-bg);
+    z-index: 50;
   }
 
   .sidebar-header {
-    margin-bottom: 0;
+    padding: calc((var(--head-h) - var(--head-title-lh)) / 2) 1.25rem 0;
+    border-bottom: none;
   }
-
   .sidebar-title {
-    display: inline;
-  }
-
-  .sidebar-version {
-    display: inline;
-    margin-bottom: 0;
+    font-size: var(--text-xl);
   }
 
   .sidebar-toggle {
-    display: block;
-    position: relative;
-    padding: 0;
-  }
-
-  .sidebar-toggle::before {
-    content: "";
-    position: absolute;
-    inset: -12px -8px;
+    display: flex;
+    min-height: 2.75rem;
+    padding-inline: 0.5rem;
+    margin-right: -0.5rem;
   }
 
   .sidebar-nav {
     display: none;
-    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border-muted);
+    padding-bottom: 1.5rem;
+    max-height: calc(100vh - var(--head-h));
+    overflow-y: auto;
   }
-
   .sidebar-nav.open {
     display: block;
   }
 
-  .sidebar-section {
-    display: block;
-    margin-bottom: 0.5rem;
-  }
-
-  .sidebar-section-title {
-    display: block;
-    margin-top: 0.5rem;
-  }
-
   .sidebar-link {
-    display: block;
-    padding: 0.25rem 0;
-    position: relative;
-  }
-
-  .sidebar-link::before {
-    content: "";
-    position: absolute;
-    inset: -8px -12px;
+    min-height: 2.75rem;
   }
 
   .main {
     margin-left: 0;
-    padding: 1rem;
-    max-width: 100%;
   }
 
-  body {
-    font-size: 16px;
+  .sheet-head {
+    top: calc(var(--head-h) + 1px);
   }
 
-  pre {
-    font-size: 0.75rem;
-    /* The always-visible Copy button needs its own row above scrollable code. */
-    padding-top: 2.75rem;
+  .sheet-area {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
   }
 
-  table {
-    font-size: 0.75rem;
+  .title-block {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
   }
 
-  /* Smooth scroll for props table on touch */
-  .props-table-scroll {
-    -webkit-overflow-scrolling: touch;
+  .schedule {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .schedule dt {
+    padding: 0.625rem 0 0.125rem;
+    border-bottom: none;
+  }
+  .schedule dd {
+    padding-top: 0;
+    padding-bottom: 0.625rem;
   }
 
-  /* Copy button always visible on touch devices */
-  .copy-button {
+  .copy-button,
+  .install-copy {
     visibility: visible;
   }
-
-  /* Prev/next nav touch targets */
-  .component-nav-link {
-    position: relative;
+  pre {
+    padding-top: 2.5rem;
   }
 
-  .component-nav-link::before {
-    content: "";
-    position: absolute;
-    inset: -12px -8px;
-  }
-
-  /* Responsive preview boxes */
-  .preview-box {
-    padding: 0.75rem;
+  .page-nav-link {
+    min-height: 2.75rem;
+    justify-content: center;
   }
 }

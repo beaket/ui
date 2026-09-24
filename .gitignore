@@ -29,6 +29,10 @@ storybook-static
 .ds-sync/
 ds-bundle/
 
-# impeccable: PRODUCT.md / DESIGN.md / .impeccable/design.json are durable and committed.
+# impeccable: PRODUCT.md / DESIGN.md / .impeccable/design.json and the surface
+# briefs under .impeccable/surfaces/ are durable and committed.
 # Per-developer only: hook consent + private rule suppressions.
 .impeccable/config.local.json
+# Run artifacts: review screenshots and served decision payloads.
+.impeccable/review/
+.impeccable/rounds/

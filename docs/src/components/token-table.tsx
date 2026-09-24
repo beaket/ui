@@ -1,9 +1,15 @@
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/table";
+
 interface Token {
   name: string;
   value: string;
   usage: string;
 }
 
+/**
+ * A materials schedule: the ink on the left at a size you can actually judge,
+ * its name and value beside it, what it is for on the right.
+ */
 export function TokenTable({
   tokens,
   showSwatch = true,
@@ -12,105 +18,35 @@ export function TokenTable({
   showSwatch?: boolean;
 }) {
   return (
-    <table
-      style={{
-        width: "100%",
-        borderCollapse: "collapse",
-        fontSize: "0.8125rem",
-        margin: "0.5rem 0",
-      }}
-    >
-      <thead>
-        <tr>
-          <th
-            style={{
-              textAlign: "left",
-              fontWeight: 600,
-              padding: "0.375rem 0.75rem",
-              borderBottom: "2px solid var(--color-border-strong)",
-              whiteSpace: "nowrap",
-            }}
-          >
-            Token
-          </th>
-          <th
-            style={{
-              textAlign: "left",
-              fontWeight: 600,
-              padding: "0.375rem 0.75rem",
-              borderBottom: "2px solid var(--color-border-strong)",
-              whiteSpace: "nowrap",
-            }}
-          >
-            Value
-          </th>
-          <th
-            style={{
-              textAlign: "left",
-              fontWeight: 600,
-              padding: "0.375rem 0.75rem",
-              borderBottom: "2px solid var(--color-border-strong)",
-            }}
-          >
-            Usage
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {tokens.map((token) => (
-          <tr key={token.name}>
-            <td
-              style={{
-                padding: "0.375rem 0.75rem",
-                borderBottom: "1px solid var(--color-border-muted)",
-                fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
-                fontSize: "0.75rem",
-              }}
-            >
-              {token.name}
-            </td>
-            <td
-              style={{
-                padding: "0.375rem 0.75rem",
-                borderBottom: "1px solid var(--color-border-muted)",
-              }}
-            >
-              <span style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>
-                {showSwatch && (
-                  <span
-                    style={{
-                      display: "inline-block",
-                      width: 14,
-                      height: 14,
-                      backgroundColor: token.value,
-                      border: "1px solid var(--color-border-muted)",
-                      flexShrink: 0,
-                    }}
-                  />
-                )}
-                <code
-                  style={{
-                    fontSize: "0.75rem",
-                    background: "none",
-                    padding: 0,
-                  }}
-                >
-                  {token.value}
-                </code>
-              </span>
-            </td>
-            <td
-              style={{
-                padding: "0.375rem 0.75rem",
-                borderBottom: "1px solid var(--color-border-muted)",
-                color: "var(--color-fg-muted)",
-              }}
-            >
-              {token.usage}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="token-table">
+      <Table scrollLabel="Tokens">
+        <TableHeader>
+          <TableRow>
+            {showSwatch && (
+              <TableHead scope="col">
+                <span className="sr-only">Swatch</span>
+              </TableHead>
+            )}
+            <TableHead scope="col">Token</TableHead>
+            <TableHead scope="col">Value</TableHead>
+            <TableHead scope="col">Usage</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {tokens.map((token) => (
+            <TableRow key={token.name}>
+              {showSwatch && (
+                <TableCell className="token-swatch-cell">
+                  <span className="swatch" style={{ backgroundColor: token.value }} />
+                </TableCell>
+              )}
+              <TableCell className="token-name">{token.name}</TableCell>
+              <TableCell className="token-value">{token.value}</TableCell>
+              <TableCell className="token-usage">{token.usage}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

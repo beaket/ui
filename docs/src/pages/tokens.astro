@@ -68,9 +68,9 @@ const palette = [
 ].map(t => ({ name: t.name, usage: t.usage, value: val(t.key) }));
 ---
 
-<Layout title="Design Tokens">
+<Layout title="Design tokens" section="Reference" wide>
 
-<h1>Design Tokens</h1>
+<h1>Design tokens</h1>
 
 <p>Three layers. The theme-independent foundation supplies type, spacing, borders, and radii. A theme authors <strong>30 palette values</strong>; 28 feed the <strong>69 semantic names</strong> components actually use, while <code>--tone-8</code> and <code>--tone-9</code> are reserved to preserve the public 12-step neutral ramp and support future deep-ink roles. The <code>init</code> command adds all three layers to your CSS file — after that you own them. Values shown are Solace (default). See <a href="/ui/themes">Themes</a> for other presets.</p>
 

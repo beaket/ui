@@ -3,15 +3,75 @@ import '../styles/global.css';
 import pkg from '../../../packages/cli/package.json';
 import registry from '../../../registry/registry.json';
 import { ThemeSwitcher, DarkModeToggle } from '../components/theme-switcher';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/breadcrumb';
+import { PageNav } from '../components/page-nav';
 import themeInitScript from '../../public/theme-init.js?raw';
 
 interface Props {
   title?: string;
+  /** Left half of the running head. Falls back to the site name. */
+  section?: string;
+  /** Right half of the running head — a real position in the set. */
+  folio?: string;
+  /** What that position counts. */
+  folioLabel?: string;
+  /** Suppress the on-this-sheet rail where the page needs the full measure. */
+  noMargin?: boolean;
   wide?: boolean;
 }
-const { title = 'Beaket UI', wide = false } = Astro.props;
+
+const props = Astro.props as Props & { frontmatter?: Props };
+const front = props.frontmatter ?? {};
+const title = props.title ?? front.title ?? 'Beaket UI';
+const section = props.section ?? front.section;
+const folio = props.folio ?? front.folio;
+const folioLabel = props.folioLabel ?? front.folioLabel ?? 'Sheet';
+const wide = props.wide ?? front.wide ?? false;
+const noMargin = props.noMargin ?? front.noMargin ?? false;
 const currentPath = Astro.url.pathname;
-const components = [...registry.components].sort((a, b) => a.docs.title.localeCompare(b.docs.title));
+
+/** One order for the whole site: the sidebar, the index, and prev/next. */
+const components = [...registry.components].sort((a, b) =>
+  a.docs.title.localeCompare(b.docs.title),
+);
+const sheetTotal = components.length;
+
+const manual = [
+  ['/ui/installation', 'Installation'],
+  ['/ui/cli', 'CLI'],
+  ['/ui/updating', 'Updating'],
+  ['/ui/migration', 'From native HTML'],
+];
+const reference = [
+  ['/ui/design-rules', 'Design rules'],
+  ['/ui/tokens', 'Design tokens'],
+  ['/ui/themes', 'Themes'],
+  ['/ui/changelog', 'Changelog'],
+];
+const isCurrent = (href: string) => currentPath.replace(/\/$/, '') === href.replace(/\/$/, '');
+
+/** Where this page sits in its own group, if it belongs to one. */
+function placeInGroup() {
+  for (const group of [manual, reference]) {
+    const at = group.findIndex(([href]) => isCurrent(href));
+    if (at >= 0) {
+      return {
+        prev: at > 0 ? group[at - 1] : null,
+        next: at < group.length - 1 ? group[at + 1] : null,
+      };
+    }
+  }
+  return undefined;
+}
+const place = placeInGroup();
+const resolvedFolio = folio ? { label: folioLabel, value: folio } : undefined;
 const currentYear = new Date().getFullYear();
 ---
 
@@ -21,58 +81,113 @@ const currentYear = new Date().getFullYear();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/ui/favicon.svg" />
-    <title>{title} - Beaket UI</title>
-    <meta name="description" content="Ink & Instrument: React components set like print — sharp, flat, offset. Copy them directly into your project." />
+    <title>{title} — Beaket UI</title>
+    <meta
+      name="description"
+      content="Ink & Instrument: React components set like print — sharp, flat, offset. Copy them directly into your project."
+    />
     <script is:inline set:html={themeInitScript} />
   </head>
   <body>
     <div class="layout">
-      <nav class="sidebar">
+      <nav class="sidebar" aria-label="Documentation">
         <div class="sidebar-header">
           <a href="/ui/" class="sidebar-title">Beaket UI</a>
           <span class="sidebar-version">v{pkg.version}</span>
-          <button class="sidebar-toggle" aria-label="Toggle menu" aria-expanded="false">
-            Menu ▼
+          <button class="sidebar-toggle" aria-label="Toggle documentation menu" aria-expanded="false">
+            <svg width="14" height="12" viewBox="0 0 14 12" aria-hidden="true">
+              <path d="M0 1h14M0 6h14M0 11h14" stroke="currentColor" stroke-width="1.5" class="bar-b" />
+              <path d="M0 1h14M0 11h14" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+            Menu
           </button>
         </div>
 
         <div class="sidebar-nav">
           <div class="sidebar-section">
-            <div class="sidebar-section-title" style="display: flex; align-items: center; justify-content: space-between;">
-              Theme
+            <div class="sidebar-section-title">
+              Ink
               <DarkModeToggle client:load />
             </div>
             <ThemeSwitcher client:load />
           </div>
 
           <div class="sidebar-section">
-            <div class="sidebar-section-title">Getting Started</div>
-            <a href="/ui/installation" class:list={["sidebar-link", { active: currentPath.includes('/installation') }]}>Installation</a>
-            <a href="/ui/cli" class:list={["sidebar-link", { active: currentPath.includes('/cli') }]}>CLI</a>
-            <a href="/ui/updating" class:list={["sidebar-link", { active: currentPath.includes('/updating') }]}>Updating</a>
-            <a href="/ui/migration" class:list={["sidebar-link", { active: currentPath.includes('/migration') }]}>From Native HTML</a>
-            <a href="/ui/design-rules" class:list={["sidebar-link", { active: currentPath.includes('/design-rules') }]}>Design Rules</a>
-            <a href="/ui/tokens" class:list={["sidebar-link", { active: currentPath.includes('/tokens') }]}>Design Tokens</a>
-            <a href="/ui/themes" class:list={["sidebar-link", { active: currentPath.includes('/themes') }]}>Themes</a>
-          </div>
-
-          <div class="sidebar-section">
-            <div class="sidebar-section-title">Components</div>
-            {components.map((component) => (
-              <a href={`/ui/components/${component.name}`} class:list={["sidebar-link", { active: currentPath.includes(`/components/${component.name}`) }]}>{component.docs.title}</a>
+            <div class="sidebar-section-title">Manual</div>
+            {manual.map(([href, label]) => (
+              <a href={href} class:list={['sidebar-link', { active: isCurrent(href) }]}>{label}</a>
             ))}
           </div>
 
           <div class="sidebar-section">
-            <a href="/ui/changelog" class:list={["sidebar-link", { active: currentPath.includes('/changelog') }]}>Changelog</a>
+            <div class="sidebar-section-title">Reference</div>
+            {reference.map(([href, label]) => (
+              <a href={href} class:list={['sidebar-link', { active: isCurrent(href) }]}>{label}</a>
+            ))}
           </div>
 
-
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">
+              Components
+              <span class="section-count">{sheetTotal}</span>
+            </div>
+            {components.map((component) => (
+              <a
+                href={`/ui/components/${component.name}`}
+                class:list={[
+                  'sidebar-link',
+                  { active: currentPath.includes(`/components/${component.name}`) },
+                ]}
+              >
+                {component.docs.title}
+              </a>
+            ))}
+          </div>
         </div>
       </nav>
 
-      <main class:list={["main", { wide }]}>
-        <slot />
+      <main class="main">
+        <div class="sheet-head">
+          {/* No site-name crumb: the wordmark stands in the rail beside it, and
+              repeating it on every sheet says nothing. */}
+          {section && (
+            <Breadcrumb aria-label="Breadcrumb">
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                {section === 'Components' ? (
+                  <BreadcrumbLink href="/ui/">Components</BreadcrumbLink>
+                ) : (
+                  /* An ancestor with no page of its own: muted, and never a
+                     second `aria-current`. Only the last crumb is the page. */
+                  <span class="text-fg-muted">{section}</span>
+                )}
+              </BreadcrumbItem>
+              <BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbPage>{title}</BreadcrumbPage>
+              </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          )}
+          {resolvedFolio && (
+            <div class="folio">{resolvedFolio.label}&nbsp;<b>{resolvedFolio.value}</b></div>
+          )}
+        </div>
+
+        <div class="sheet-area">
+          <div class:list={['sheet-body', { wide }]}>
+            <slot />
+            {place && (place.prev || place.next) && (
+              <PageNav
+                label="Adjacent pages"
+                prev={place.prev && { href: place.prev[0], label: place.prev[1] }}
+                next={place.next && { href: place.next[0], label: place.next[1] }}
+              />
+            )}
+          </div>
+          {!noMargin && <aside class="sheet-margin" aria-label="On this sheet"></aside>}
+        </div>
+
         <footer class="site-footer">
           <span>© {currentYear} Beaket</span>
           <span class="footer-sep">·</span>
@@ -84,6 +199,7 @@ const currentYear = new Date().getFullYear();
         </footer>
       </main>
     </div>
+
     <script>
       const toggle = document.querySelector('.sidebar-toggle');
       const nav = document.querySelector('.sidebar-nav');
@@ -91,28 +207,95 @@ const currentYear = new Date().getFullYear();
         const expanded = toggle.getAttribute('aria-expanded') === 'true';
         toggle.setAttribute('aria-expanded', String(!expanded));
         nav?.classList.toggle('open');
-        if (toggle) toggle.textContent = `Menu ${expanded ? '▼' : '▲'}`;
       });
 
-      // Add copy buttons to all code blocks
+      function attachCopy(button: HTMLElement, getText: () => string, restore: string) {
+        button.addEventListener('click', async () => {
+          await navigator.clipboard.writeText(getText());
+          button.textContent = 'Copied';
+          button.classList.add('copied');
+          setTimeout(() => {
+            button.textContent = restore;
+            button.classList.remove('copied');
+          }, 2000);
+        });
+      }
+
       document.querySelectorAll('pre').forEach((pre) => {
         const button = document.createElement('button');
         button.className = 'copy-button';
         button.textContent = 'Copy';
         button.setAttribute('aria-label', 'Copy code');
-        button.addEventListener('click', async () => {
-          const code = pre.querySelector('code')?.textContent || pre.textContent || '';
-          await navigator.clipboard.writeText(code);
-          button.textContent = 'Copied';
-          button.classList.add('copied');
-          setTimeout(() => {
-            button.textContent = 'Copy';
-            button.classList.remove('copied');
-          }, 2000);
-        });
+        attachCopy(button, () => pre.querySelector('code')?.textContent || pre.textContent || '', 'Copy');
         pre.appendChild(button);
       });
 
+      document.querySelectorAll<HTMLElement>('.install-copy').forEach((button) => {
+        const line = button.closest('.install-line')?.querySelector('.install-text');
+        attachCopy(button, () => line?.textContent?.trim() || '', 'Copy');
+      });
+
+      // The margin contents are read off the sheet, so they can never drift
+      // from the headings actually on it.
+      const margin = document.querySelector('.sheet-margin');
+      // Specimens carry their own headings; a docs rail that lists them is
+      // reading the exhibit instead of the page.
+      const headings = [
+        ...document.querySelectorAll<HTMLElement>('.sheet-body h2, .sheet-body h3'),
+      ].filter((heading) => !heading.closest('.stage, .specimen, [data-slot]'));
+      for (const heading of headings) {
+        if (heading.id) continue;
+        heading.id =
+          (heading.textContent || '')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '') || 'section';
+      }
+      // The rail carries no visible heading: the aside's aria-label names it
+      // for assistive tech, and the links read as what they are.
+      if (margin && headings.length > 2) {
+        const links = new Map<string, HTMLAnchorElement>();
+        for (const heading of headings) {
+          const link = document.createElement('a');
+          link.className = heading.tagName === 'H3' ? 'margin-link sub' : 'margin-link';
+          link.href = `#${heading.id}`;
+          link.textContent = heading.textContent?.replace(/#$/, '').trim() || '';
+          margin.appendChild(link);
+          links.set(heading.id, link);
+        }
+        // Read the active section straight off scroll position. An
+        // IntersectionObserver band only reports while a heading is inside it,
+        // so on a page of long sections nothing was current most of the time.
+        const spy = () => {
+          let at = 0;
+          for (let i = 0; i < headings.length; i += 1) {
+            if (headings[i].getBoundingClientRect().top - 96 <= 0) at = i;
+          }
+          // Ink weight tracks distance from where you are: full ink on the
+          // current section, quiet ink beside it, faint further out. Opacity is
+          // not a styling device in this system — the neutral ramp is.
+          headings.forEach((heading, i) => {
+            const link = links.get(heading.id);
+            if (!link) return;
+            const distance = Math.abs(i - at);
+            link.classList.toggle('current', distance === 0);
+            link.dataset.near = String(Math.min(distance, 2));
+          });
+        };
+
+        let queued = false;
+        const onScroll = () => {
+          if (queued) return;
+          queued = true;
+          requestAnimationFrame(() => {
+            queued = false;
+            spy();
+          });
+        };
+        addEventListener('scroll', onScroll, { passive: true });
+        addEventListener('resize', onScroll, { passive: true });
+        spy();
+      }
     </script>
   </body>
 </html>

@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+
+import { Button } from "@/components/button";
 import themeTokensData from "../data/theme-tokens.json";
 
 const themeTokens: Record<string, Record<string, string>> = themeTokensData;
@@ -40,6 +42,11 @@ function applyTheme(baseName: string, updateUrl = true) {
   const root = document.documentElement;
   for (const [key, value] of Object.entries(tokens)) {
     root.style.setProperty(key, value);
+  }
+  // Code blocks read the theme's dark twin whichever scheme the page is in.
+  const code = themeTokens[`${baseName}-dark`] ?? tokens;
+  for (const [key, value] of Object.entries(code)) {
+    root.style.setProperty(key.replace(/^--/, "--code-"), value);
   }
   localStorage.setItem("beaket-theme", baseName);
   if (updateUrl) {
@@ -144,45 +151,30 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
 
   if (layout === "inline") {
     return (
-      <nav aria-label="Theme" className="flex items-center gap-2">
-        {/* Desktop: button row */}
-        <ul className="m-0 hidden list-none gap-2 p-0 sm:flex">
-          {baseThemes.map((name) => (
-            <li key={name}>
-              <button
-                type="button"
-                data-slot="theme-link"
-                onClick={() => handleClick(name)}
-                data-active={active === name || undefined}
-                className="border-border-strong text-fg hover:shadow-offset-action hover:bg-bg-hover data-[active]:text-fg-on-emphasis data-[active]:bg-bg-emphasis data-[active]:hover:bg-bg-emphasis inline-block cursor-pointer border bg-transparent px-2 py-0.5 text-left text-xs no-underline transition-[box-shadow,translate] duration-100 active:translate-x-px active:translate-y-px active:shadow-none data-[active]:shadow-none data-[active]:hover:shadow-none data-[active]:active:translate-x-0 data-[active]:active:translate-y-0"
-              >
-                {themeLabels[name]}
-              </button>
-            </li>
-          ))}
-        </ul>
-        {/* Mobile: select */}
-        <select
-          value={active}
-          onChange={(e) => handleClick(e.target.value)}
-          aria-label="Theme"
-          className="border-border-strong text-fg border bg-transparent px-2 py-1 text-xs sm:hidden"
-        >
-          {baseThemes.map((name) => (
-            <option key={name} value={name}>
-              {themeLabels[name]}
-            </option>
-          ))}
-        </select>
-        <button
-          type="button"
+      // Button, not a copy of it: the old markup re-implemented the outline
+      // border, the hover edge and the press translation by hand, under a
+      // `data-slot` no registry component owns.
+      <nav aria-label="Theme" className="flex flex-wrap items-center gap-2">
+        {baseThemes.map((name) => (
+          <Button
+            key={name}
+            size="sm"
+            variant={active === name ? "primary" : "outline"}
+            aria-pressed={active === name}
+            onClick={() => handleClick(name)}
+          >
+            {themeLabels[name]}
+          </Button>
+        ))}
+        <Button
+          size="icon"
+          variant="outline"
           onClick={toggleDark}
           aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
           title={dark ? "Switch to light mode" : "Switch to dark mode"}
-          className="border-border-strong text-fg hover:shadow-offset-action hover:bg-bg-hover inline-flex cursor-pointer items-center justify-center border bg-transparent px-1.5 py-0.5 transition-[box-shadow,translate] duration-100 active:translate-x-px active:translate-y-px active:shadow-none"
         >
           {dark ? <SunIcon /> : <MoonIcon />}
-        </button>
+        </Button>
       </nav>
     );
   }
@@ -198,15 +190,16 @@ export function ThemeSwitcher({ layout = "sidebar" }: { layout?: "sidebar" | "in
             key={name}
             onClick={() => handleClick(name)}
             className={`sidebar-link bg-transparent ${active === name ? "active" : ""}`}
-            style={{ display: "flex", width: "100%", alignItems: "center", gap: "6px" }}
+            style={{ justifyContent: "flex-start", gap: "8px" }}
           >
             <span
+              aria-hidden="true"
               style={{
                 display: "inline-block",
-                width: 8,
-                height: 8,
+                width: 16,
+                height: 10,
                 backgroundColor: accentColor,
-                border: active === name ? "1px solid var(--color-fg)" : "none",
+                border: "1px solid var(--color-border-strong)",
                 flexShrink: 0,
               }}
             />

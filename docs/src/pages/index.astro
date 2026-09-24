@@ -2,8 +2,43 @@
 import Layout from '../layouts/doc.astro';
 import { ComponentShowcase } from '../components/component-showcase';
 import registry from '../../../registry/registry.json';
+
+const components = [...registry.components].sort((a, b) =>
+  a.docs.title.localeCompare(b.docs.title),
+);
 ---
 
-<Layout wide>
-  <ComponentShowcase components={registry.components} />
+<Layout wide noMargin>
+  <div class="title-block">
+    <h1>Beaket UI</h1>
+    <p class="tagline">
+      A tactile, copy-paste UI system for thoughtful web interfaces. {components.length} React
+      components, five themes. The CLI copies the source into your project; after that you own it.
+    </p>
+    <div class="title-block-actions">
+      <span class="install-line">
+        <code><span class="prompt">$&nbsp;</span><span class="install-text">npx @beaket/ui init</span></code>
+        <button class="install-copy" aria-label="Copy install command">Copy</button>
+      </span>
+      <a href="/ui/installation" class="plain title-block-link">Read the manual →</a>
+    </div>
+  </div>
+
+  <ComponentShowcase components={components} />
 </Layout>
+
+<style>
+  .title-block-link {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-fg);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    white-space: nowrap;
+  }
+  .title-block-link:hover {
+    color: var(--color-fg-link);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+</style>

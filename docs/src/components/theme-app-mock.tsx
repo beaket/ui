@@ -1,305 +1,215 @@
+import type { ReactNode } from "react";
+
+import { Alert } from "@/components/alert";
+import { Avatar } from "@/components/avatar";
+import { Badge } from "@/components/badge";
+import { Button } from "@/components/button";
+import { Card } from "@/components/card";
+import { Checkbox } from "@/components/checkbox";
+import { Input } from "@/components/input";
+import { Label } from "@/components/label";
+import { Navigation } from "@/components/navigation";
+import { Progress } from "@/components/progress";
+import { RadioGroup } from "@/components/radio";
+import { Select } from "@/components/select";
+import { Separator } from "@/components/separator";
+import { Switch } from "@/components/switch";
+import { Table } from "@/components/table";
+import { Tabs } from "@/components/tabs";
+import { Textarea } from "@/components/textarea";
+
+const ORDERS = [
+  { id: "#1042", customer: "Sofia Martinez", status: "Shipped", tone: "success" as const },
+  { id: "#1041", customer: "Liam O'Connor", status: "Pending", tone: "warning" as const },
+  { id: "#1040", customer: "Aisha Rahman", status: "Failed", tone: "danger" as const },
+  { id: "#1039", customer: "Noah Williams", status: "Shipped", tone: "success" as const },
+];
+
+function Screen({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="app-screen">
+      <div className="border-border-strong bg-bg border">{children}</div>
+      <p className="app-screen-label">{label}</p>
+    </div>
+  );
+}
+
+function Chrome({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <>
+      <header className="bg-bg-overlay border-border-strong flex items-center justify-between gap-2 border-b px-3 py-2">
+        <span className="text-fg text-sm font-semibold">{title}</span>
+        <div className="flex items-center gap-2">
+          <Badge variant="success">Live</Badge>
+          <Avatar className="size-7">
+            <Avatar.Fallback>AM</Avatar.Fallback>
+          </Avatar>
+        </div>
+      </header>
+      {children}
+    </>
+  );
+}
+
+/**
+ * Two phone-width app screens built only from the registry. The themes page
+ * claims "same components, different world" — so the specimen proving it has
+ * to be made of the components. Nothing here is drawn with a bare div: every
+ * part is the one a consumer installs, reading the palette through the
+ * semantic layer, and every one renders on the server with no island.
+ *
+ * Phone width on purpose. The old mock forced a desktop dashboard into a
+ * documentation column, where every panel was too narrow to read.
+ */
 export function ThemeAppMock() {
   return (
-    <div className="border-border bg-bg border" style={{ minHeight: 520 }}>
-      {/* App header */}
-      <div className="bg-bg-overlay border-border-strong flex flex-col items-start gap-2 border-b px-4 py-2 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <span className="text-fg text-sm font-bold">Acme Dashboard</span>
-          <nav className="hidden gap-1 sm:flex">
-            <span className="bg-accent-bg-subtle text-fg px-3 py-1 text-xs font-medium">
-              Overview
-            </span>
-            <span className="text-fg px-3 py-1 text-xs font-medium">Analytics</span>
-            <span className="text-fg px-3 py-1 text-xs font-medium">Settings</span>
-          </nav>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="bg-success-solid border-success-solid text-success-fg-on-solid border px-2 py-0.5 text-xs font-bold">
-            Live
-          </span>
-          <span className="bg-bg-hover border-border text-fg border px-2 py-0.5 text-xs">
-            admin@acme.co
-          </span>
-        </div>
-      </div>
+    <div className="app-mock">
+      <Screen label="Overview">
+        <Chrome title="Acme">
+          <Navigation value="/overview" className="border-border-muted block border-b px-3 py-2">
+            <Navigation.List>
+              <Navigation.Item>
+                <Navigation.Link href="#overview" value="/overview">
+                  Overview
+                </Navigation.Link>
+              </Navigation.Item>
+              <Navigation.Item>
+                <Navigation.Link href="#orders" value="/orders">
+                  Orders
+                </Navigation.Link>
+              </Navigation.Item>
+              <Navigation.Item>
+                <Navigation.Link href="#users" value="/users">
+                  Users
+                </Navigation.Link>
+              </Navigation.Item>
+            </Navigation.List>
+          </Navigation>
 
-      <div className="flex flex-col sm:flex-row">
-        {/* Sidebar */}
-        <div className="bg-bg-raised border-border w-full shrink-0 border-b p-3 sm:w-44 sm:border-r sm:border-b-0">
-          <div className="text-fg-subtle mb-2 text-xs font-semibold tracking-wider uppercase">
-            Navigation
-          </div>
-          <div className="flex flex-col gap-0.5">
-            <span className="bg-bg-active text-fg px-2 py-1 text-xs font-medium">Dashboard</span>
-            <span className="text-fg hover:bg-bg-hover px-2 py-1 text-xs">Users</span>
-            <span className="text-fg hover:bg-bg-hover px-2 py-1 text-xs">Products</span>
-            <span className="text-fg hover:bg-bg-hover px-2 py-1 text-xs">Orders</span>
-            <span className="text-fg hover:bg-bg-hover px-2 py-1 text-xs">Reports</span>
-          </div>
-          <div className="border-border my-3 border-t" />
-          <div className="text-fg-subtle mb-2 text-xs font-semibold tracking-wider uppercase">
-            Status
-          </div>
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center justify-between">
-              <span className="text-fg-muted text-xs">API</span>
-              <span
-                className="bg-success-solid text-success-fg-on-solid inline-flex w-10 justify-center text-xs"
-                style={{ padding: "1px 6px", fontWeight: 700 }}
-              >
-                OK
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-fg-muted text-xs">Queue</span>
-              <span
-                className="bg-warning-solid text-warning-fg-on-solid inline-flex w-10 justify-center text-xs"
-                style={{ padding: "1px 6px", fontWeight: 700 }}
-              >
-                3
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-fg-muted text-xs">Errors</span>
-              <span
-                className="bg-danger-solid text-danger-fg-on-solid inline-flex w-10 justify-center text-xs"
-                style={{ padding: "1px 6px", fontWeight: 700 }}
-              >
-                1
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Main content */}
-        <div className="min-w-0 flex-1 p-4">
-          {/* Stats row */}
-          <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-            {[
-              { label: "Revenue", value: "$12,840", change: "+14%", positive: true },
-              { label: "Users", value: "1,284", change: "+8%", positive: true },
-              { label: "Errors", value: "23", change: "+2", positive: false },
-            ].map((stat) => (
-              <div key={stat.label} className="border-border bg-bg shadow-offset border p-3">
-                <div className="text-fg-subtle text-xs font-medium">{stat.label}</div>
-                <div className="text-fg mt-1 text-lg font-bold">{stat.value}</div>
-                <div
-                  className="mt-0.5 text-xs font-semibold"
-                  style={{
-                    color: stat.positive ? "var(--color-success-fg)" : "var(--color-danger-fg)",
-                  }}
-                >
-                  {stat.change}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Content area: table + form side by side */}
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-            {/* Table */}
-            <div className="border-border bg-bg shadow-offset border">
-              <div className="border-border border-b px-3 py-2">
-                <span className="text-fg text-sm font-bold">Recent Orders</span>
-              </div>
-              <table style={{ width: "100%", fontSize: 12, borderCollapse: "collapse" }}>
-                <thead>
-                  <tr className="border-border-strong border-b">
-                    <th className="text-fg-muted px-3 py-1.5 text-left text-xs font-semibold">
-                      ID
-                    </th>
-                    <th className="text-fg-muted px-3 py-1.5 text-left text-xs font-semibold">
-                      Customer
-                    </th>
-                    <th className="text-fg-muted px-3 py-1.5 text-right text-xs font-semibold">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    {
-                      id: "#1042",
-                      name: "Sofia Martinez",
-                      status: "Shipped",
-                      role: "success",
-                    },
-                    {
-                      id: "#1041",
-                      name: "Liam O'Connor",
-                      status: "Pending",
-                      role: "warning",
-                    },
-                    {
-                      id: "#1040",
-                      name: "Aisha Rahman",
-                      status: "Failed",
-                      role: "danger",
-                    },
-                    {
-                      id: "#1039",
-                      name: "Noah Williams",
-                      status: "Shipped",
-                      role: "success",
-                    },
-                    {
-                      id: "#1038",
-                      name: "Priya Nair",
-                      status: "Pending",
-                      role: "warning",
-                    },
-                    {
-                      id: "#1037",
-                      name: "Mateo Silva",
-                      status: "Failed",
-                      role: "danger",
-                    },
-                  ].map((row) => (
-                    <tr key={row.id} className="border-border border-b last:border-b-0">
-                      <td className="text-fg px-3 py-1.5 font-mono">{row.id}</td>
-                      <td className="text-fg px-3 py-1.5">{row.name}</td>
-                      <td className="px-3 py-1.5 text-right">
-                        <span
-                          className="inline-flex w-20 justify-center border text-xs font-bold"
-                          style={{
-                            padding: "1px 6px",
-                            backgroundColor: `var(--color-${row.role}-solid)`,
-                            borderColor: `var(--color-${row.role}-solid)`,
-                            color: `var(--color-${row.role}-fg-on-solid)`,
-                          }}
-                        >
-                          {row.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          <div className="flex flex-col gap-4 p-3">
+            <div className="grid grid-cols-2 gap-3">
+              <Card>
+                <Card.Header>
+                  <Card.Description>Revenue</Card.Description>
+                  <Card.Title>$12,840</Card.Title>
+                </Card.Header>
+              </Card>
+              <Card>
+                <Card.Header>
+                  <Card.Description>Users</Card.Description>
+                  <Card.Title>1,284</Card.Title>
+                </Card.Header>
+              </Card>
             </div>
 
-            {/* Form */}
-            <div className="border-border bg-bg shadow-offset border p-3">
-              <div className="text-fg mb-3 text-sm font-bold">Quick Actions</div>
+            <div className="flex flex-col gap-1.5">
+              <div className="text-fg-muted flex items-center justify-between text-xs">
+                <span>Monthly target</span>
+                <span>64%</span>
+              </div>
+              <Progress value={64} aria-label="Monthly target" />
+            </div>
 
-              <div className="mb-2">
-                <label htmlFor="search-users" className="text-fg mb-1 block text-xs font-semibold">
-                  Search Users
-                </label>
-                <input
-                  id="search-users"
-                  type="text"
-                  placeholder="Enter name or email..."
-                  className="border-border-strong bg-bg-hover text-fg w-full border px-2 py-1.5 text-xs outline-none"
-                  style={{ boxSizing: "border-box" }}
-                />
+            <Alert variant="note">
+              <Alert.Description>One payment failed in the last hour.</Alert.Description>
+            </Alert>
+
+            <Table>
+              <Table.Header>
+                <Table.Row>
+                  <Table.Head>Order</Table.Head>
+                  <Table.Head>Customer</Table.Head>
+                  <Table.Head>Status</Table.Head>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {ORDERS.map((order) => (
+                  <Table.Row key={order.id}>
+                    <Table.Cell className="font-mono text-xs">{order.id}</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap">{order.customer}</Table.Cell>
+                    <Table.Cell>
+                      <Badge variant={order.tone}>{order.status}</Badge>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+          </div>
+        </Chrome>
+      </Screen>
+
+      <Screen label="Settings">
+        <Chrome title="Account">
+          <Tabs defaultValue="profile" className="p-3">
+            <Tabs.List>
+              <Tabs.Trigger value="profile">Profile</Tabs.Trigger>
+              <Tabs.Trigger value="billing">Billing</Tabs.Trigger>
+            </Tabs.List>
+            <Tabs.Content value="profile" className="flex flex-col gap-4 pt-4">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="mock-name">Workspace</Label>
+                <Input id="mock-name" defaultValue="Acme Inc." />
               </div>
 
-              <div className="mb-2">
-                <div className="text-fg mb-1 block text-xs font-semibold">Category</div>
-                <div className="border-border-strong bg-bg text-fg flex items-center justify-between border px-2 py-1.5 text-xs">
-                  <span className="text-fg-subtle">Select category...</span>
-                  <span className="text-fg-muted">▾</span>
-                </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="mock-region">Region</Label>
+                <Select defaultValue="iad1">
+                  <Select.Trigger id="mock-region">
+                    <Select.Value>Washington</Select.Value>
+                  </Select.Trigger>
+                  <Select.Content>
+                    <Select.Item value="iad1">Washington</Select.Item>
+                    <Select.Item value="icn1">Seoul</Select.Item>
+                  </Select.Content>
+                </Select>
               </div>
 
-              <div className="mb-3 flex items-center gap-4">
-                <div className="flex items-center gap-1.5">
-                  <span className="border-border-strong bg-bg-emphasis flex size-3.5 items-center justify-center border">
-                    <svg
-                      className="text-fg-on-emphasis size-2.5"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                    >
-                      <path d="M5 13l4 4L19 7" />
-                    </svg>
-                  </span>
-                  <span className="text-fg text-xs">Active only</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="border-border-strong size-3.5 border" />
-                  <span className="text-fg text-xs">Include archived</span>
-                </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="mock-note">Notes</Label>
+                <Textarea id="mock-note" rows={2} placeholder="Internal notes…" />
               </div>
+
+              <Separator />
+
+              <fieldset className="flex flex-col gap-2">
+                <legend className="text-fg mb-1 text-sm font-medium">Plan</legend>
+                <RadioGroup defaultValue="team">
+                  <div className="flex items-center gap-2">
+                    <RadioGroup.Item value="team" id="mock-team" />
+                    <Label htmlFor="mock-team">Team</Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <RadioGroup.Item value="solo" id="mock-solo" />
+                    <Label htmlFor="mock-solo">Solo</Label>
+                  </div>
+                </RadioGroup>
+              </fieldset>
+
+              <div className="flex items-center gap-2">
+                <Checkbox id="mock-archive" defaultChecked />
+                <Label htmlFor="mock-archive">Include archived</Label>
+              </div>
+
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-fg text-sm">Email receipts</span>
+                <Switch defaultChecked aria-label="Email receipts" />
+              </div>
+
+              <Separator />
 
               <div className="flex gap-2">
-                <button
-                  className="bg-bg-emphasis text-fg-on-emphasis border-border-strong shadow-offset border px-3 py-1.5 text-xs font-semibold"
-                  style={{ cursor: "pointer" }}
-                >
-                  Search
-                </button>
-                <button
-                  className="border-border bg-bg text-fg shadow-offset border px-3 py-1.5 text-xs font-semibold"
-                  style={{ cursor: "pointer" }}
-                >
-                  Reset
-                </button>
-                <button
-                  className="bg-danger-solid border-danger-solid shadow-offset text-danger-fg-on-solid border px-3 py-1.5 text-xs font-semibold"
-                  style={{ cursor: "pointer" }}
-                >
+                <Button size="sm">Save</Button>
+                <Button size="sm" variant="outline">
+                  Cancel
+                </Button>
+                <Button size="sm" variant="danger" className="ml-auto">
                   Delete
-                </button>
+                </Button>
               </div>
-
-              {/* Alert */}
-              <div
-                className="border-info-solid mt-3 border-l-2 py-1.5 pl-2.5"
-                style={{ backgroundColor: "var(--color-bg-hover)" }}
-              >
-                <span className="text-fg text-xs">
-                  <strong className="text-fg-link">Note:</strong> Deleted users cannot be recovered.
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Tabs section — lens grammar: fused hairline strip, glass plate on current */}
-          <div className="mt-3">
-            <div className="inline-flex">
-              <span className="border-border-muted text-fg after:border-t-border-muted after:border-l-border-muted after:border-r-border-strong after:border-b-border-strong after:bg-accent-bg-subtle relative isolate flex h-8 items-center justify-center gap-1.5 border px-3.5 text-sm font-medium whitespace-nowrap after:absolute after:inset-1 after:-z-[1] after:border after:content-['']">
-                Activity
-              </span>
-              <span className="border-border-muted text-fg -ml-px flex h-8 items-center justify-center gap-1.5 border px-3.5 text-sm font-medium whitespace-nowrap">
-                Logs
-              </span>
-              <span className="border-border-muted text-fg -ml-px flex h-8 items-center justify-center gap-1.5 border px-3.5 text-sm font-medium whitespace-nowrap">
-                Webhooks
-              </span>
-            </div>
-            <div className="border-border bg-bg mt-2 border p-3">
-              <div className="flex flex-col gap-1.5">
-                {[
-                  { time: "2m ago", text: "User alice@acme.co logged in", type: "info" },
-                  { time: "5m ago", text: "Order #1042 shipped successfully", type: "success" },
-                  { time: "12m ago", text: "Payment failed for order #1040", type: "error" },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <span className="text-fg-subtle text-xs" style={{ minWidth: 48 }}>
-                      {item.time}
-                    </span>
-                    <span
-                      className="text-xs"
-                      style={{
-                        color:
-                          item.type === "error"
-                            ? "var(--color-danger-fg)"
-                            : item.type === "success"
-                              ? "var(--color-success-fg)"
-                              : "var(--color-fg)",
-                      }}
-                    >
-                      {item.text}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            </Tabs.Content>
+          </Tabs>
+        </Chrome>
+      </Screen>
     </div>
   );
 }

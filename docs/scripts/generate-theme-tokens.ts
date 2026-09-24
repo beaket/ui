@@ -90,6 +90,12 @@ function emitThemeInit(output: Record<string, Record<string, string>>) {
     for (var key in tokens) {
       root.style.setProperty(key, tokens[key]);
     }
+    // Code blocks read the theme's dark twin whichever scheme the page is in,
+    // published here under a --code- prefix.
+    var code = themes[name.replace(/-dark$/, "") + "-dark"] || tokens;
+    for (var codeKey in code) {
+      root.style.setProperty(codeKey.replace(/^--/, "--code-"), code[codeKey]);
+    }
   }
 
   var params = new URLSearchParams(window.location.search);
