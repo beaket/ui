@@ -348,7 +348,7 @@ importers:
         version: 4.3.3(vite@8.3.3(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.0))
       astro:
         specifier: ^7.2.10
-        version: 7.3.7(@astrojs/markdown-remark@7.3.2(supports-color@7.2.0))(@types/node@25.9.9)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.0)
+        version: 7.3.8(@astrojs/markdown-remark@7.3.2(supports-color@7.2.0))(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.0)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -471,7 +471,7 @@ importers:
         version: link:../../packages/paper
       astro:
         specifier: ^7.0.0
-        version: 7.3.7(@astrojs/markdown-remark@7.3.2(supports-color@7.2.0))(@types/node@26.6.4)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.0)
+        version: 7.3.8(@astrojs/markdown-remark@7.3.2(supports-color@7.2.0))(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.0)
       mermaid:
         specifier: ^12.0.0
         version: 12.1.0
@@ -3252,8 +3252,8 @@ packages:
     resolution: {integrity: sha512-LElXdjswlqjWrPpJFg1Fx4wpkOCxj1TDHlSV4PlaRxHGWko024xICaa97ZkMfs6DRKlCguiAI+rbXv5GWwXIkg==}
     hasBin: true
 
-  astro@7.3.7:
-    resolution: {integrity: sha512-MyxnNzy+HHkLa8iNVcGTXbmSTlkjqkXJyRcMU3EwprbsF7gh3M03DKLAGVcVTmATF8jV1Fen0rkala1JiEyMSg==}
+  astro@7.3.8:
+    resolution: {integrity: sha512-LHzDHSaV+YzZiR3EFndDYTLLeNeuMtP1qX1FLcCNUUHOCqTTIWPczy2UV3zpA5VqvJe5cWZolqM9Z8JFqR2i9w==}
     engines: {node: '>=22.12.0', npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
     peerDependencies:
@@ -9233,7 +9233,7 @@ snapshots:
 
   astring@1.9.0: {}
 
-  astro@7.3.7(@astrojs/markdown-remark@7.3.2(supports-color@7.2.0))(@types/node@25.9.9)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.0):
+  astro@7.3.8(@astrojs/markdown-remark@7.3.2(supports-color@7.2.0))(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.0):
     dependencies:
       '@astrojs/compiler-rs': 0.5.1
       '@astrojs/internal-helpers': 0.12.0
@@ -9253,7 +9253,6 @@ snapshots:
       diff: 9.0.0
       dset: 3.1.4
       es-module-lexer: 3.0.3
-      esbuild: 0.28.2
       find-proc: 0.2.0
       flattie: 1.1.1
       fontace: 0.4.1
@@ -9310,6 +9309,7 @@ snapshots:
       - '@vitejs/devtools'
       - aws4fetch
       - db0
+      - esbuild
       - idb-keyval
       - ioredis
       - jiti
@@ -9323,7 +9323,7 @@ snapshots:
       - uploadthing
       - yaml
 
-  astro@7.3.7(@astrojs/markdown-remark@7.3.2(supports-color@7.2.0))(@types/node@26.6.4)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.0):
+  astro@7.3.8(@astrojs/markdown-remark@7.3.2(supports-color@7.2.0))(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.0):
     dependencies:
       '@astrojs/compiler-rs': 0.5.1
       '@astrojs/internal-helpers': 0.12.0
@@ -9343,7 +9343,6 @@ snapshots:
       diff: 9.0.0
       dset: 3.1.4
       es-module-lexer: 3.0.3
-      esbuild: 0.28.2
       find-proc: 0.2.0
       flattie: 1.1.1
       fontace: 0.4.1
@@ -9400,6 +9399,7 @@ snapshots:
       - '@vitejs/devtools'
       - aws4fetch
       - db0
+      - esbuild
       - idb-keyval
       - ioredis
       - jiti
