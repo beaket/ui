@@ -5,7 +5,8 @@ This is a public repository: what you write is public too, so you report that so
 attention without publishing how to exploit it.
 
 Complete the [preflight](./README.md#preflight--every-job-before-anything-else) first. The desk
-throttle does not apply here; a real security finding is always filed.
+throttle does not apply here; a real security finding is always filed. This desk runs every weekday
+and may open pull requests, but only for the security fixes in step 4.
 
 ## 1. Alerts
 
@@ -43,14 +44,36 @@ Deduplicate exactly as [`triage.md`](./triage.md#2-deduplicate) does. Labels: `s
 
 What may go in a public issue depends on the finding:
 
-| Finding                                                          | Public issue says                                                                                    |
-| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Dependabot alert (a published advisory in a dependency)          | The package, advisory ID, severity, fixed version, and whether a Renovate PR exists                  |
-| Code scanning or secret scanning alert (may be undisclosed)      | Only "Alert #N needs review", its severity and age, and the alert link. No file, no rule, no detail. |
-| Workflow or policy weakness that is not exploitable on its own   | The full finding with the proposed diff                                                              |
-| Anything you believe is exploitable in this repository right now | Do not file it. Put "Security finding needs private review" in the run summary, and stop.            |
+| Finding                                                          | Public issue says                                                                                                |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Dependabot alert (a published advisory in a dependency)          | The package, advisory ID, severity, fixed version, and whether a Renovate PR exists                              |
+| Code scanning or secret scanning alert (may be undisclosed)      | Only "Alert #N needs review", its severity and age, and the alert link. Details go to `beaket/bunsen`.           |
+| Workflow or policy weakness that is not exploitable on its own   | The full finding with the proposed diff                                                                          |
+| Anything you believe is exploitable in this repository right now | Nothing public. File the details as an issue in the private `beaket/bunsen`, labeled `beaket/ui` and `security`. |
 
 Never paste a secret, even a revoked one, and never describe an exploit path.
+
+## 4. Ship security fixes
+
+Security fixes do not wait for the weekly release. For a Dependabot alert in a dependency that a
+published package ships to users — a `dependencies` entry in `packages/cli/package.json` or
+`packages/paper/package.json`, not a dev dependency and not the docs site:
+
+1. **Get the fix onto `main`.** If Renovate has an open pull request for it, leave it to Renovate
+   and note it. If there is none, open one yourself on `agent/security-<package>`: the smallest
+   version bump that clears the advisory, the updated lockfile from `pnpm install`, and a `patch`
+   changeset whose description starts with `Security:` and names the advisory ID. Only patch and
+   minor bumps; a major bump of the dependency is a `needs:maintainer` issue instead.
+2. **Make sure it releases.** Once the fix is on `main`, check that a pending changeset covers it
+   (Renovate's pull requests carry none). If none does, open a pull request that adds only the
+   `Security:` changeset.
+3. **Escalate the release.** When a `Security:` changeset is pending on `main`, file one issue —
+   title `Release the security fix for <advisory ID>`, labels `source:agent`, `desk:security`,
+   `security`, `needs:maintainer`, `p1` recommended in the body — linking the release pull request.
+   If the release pull request also carries a breaking change, say so in the issue: the maintainer
+   must either ship both or release the fix separately.
+
+## 5. Summarize
 
 End with the run summary described in [`README.md`](./README.md#rules-for-every-job), including the
 open-alert count per list.

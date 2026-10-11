@@ -48,8 +48,31 @@ Labels: `source:agent`, `desk:growth`, `documentation`, and one `area:*`. Finger
 `growth:` (for example `growth:docs:select:prop-placeholder-undocumented`). Use the issue body from
 [`triage.md`](./triage.md#3-rank-and-file).
 
-In phase 2, a documentation-only fix — a typo, a broken link, an example or prop table that no longer
-matches the code — goes straight to a pull request instead of an issue; see the charter.
+## 5. Documentation pull request
+
+A documentation-only fix — a typo, a broken link, an example or prop table that no longer matches
+the code — goes straight to a pull request instead of an issue; the charter allows it without
+`agent:ready`. Open **at most one** per run, bundling this run's fixes on a branch named
+`agent/docs-YYYY-MM-DD`.
+
+- Only files under `docs/`, `sites/`, `README.md`, and `packages/*/README.md`. Never the files the
+  charter reserves for the maintainer, and never component source, even to fix a doc comment.
+- Run `npx prettier --check` on the files you changed, and `pnpm --filter docs build` when you
+  touched `docs/`.
+- No changeset; docs are not a published package.
+- Title `docs: …`; body lists each fix with the evidence that it was wrong, and ends with
+  `<sub>Opened by Bunsen · growth run · YYYY-MM-DD</sub>`.
+
+Anything that needs judgment — rewording the pitch, restructuring a page — is an issue, not a pull
+request.
+
+## 6. Drafts for the maintainer
+
+If a release was published in the last 7 days, write an announcement draft as an issue in
+`beaket/bunsen`: title `Draft: @beaket/ui <version> announcement`, labeled `beaket/ui` and `draft`.
+Give a short post (under 280 characters) and a longer one (three short paragraphs), both in the
+project's voice from `PRODUCT.md`, with the release link. The maintainer edits and posts it, or
+closes the issue.
 
 End with the run summary described in [`README.md`](./README.md#rules-for-every-job), including the
 download and star figures.
