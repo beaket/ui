@@ -53,7 +53,16 @@ for (const viewport of [
             // bump shifts a handful of pixels on all 99 docs snapshots at once
             // and blocks the release that produced it. The version is not what
             // these snapshots are guarding.
-            mask: [page.locator(".sidebar-version")],
+            //
+            // It is painted over in CSS rather than with `mask`. `mask` sizes its
+            // box from a measurement taken before each capture, and on
+            // `/ui/components/data-table` that measurement intermittently came
+            // back one character narrower than the painted text, so the last
+            // digit leaked out and no two captures matched (#1073). A
+            // background on the element itself always covers what is painted,
+            // in the same color `mask` uses.
+            style:
+              ".sidebar-version { color: transparent !important; background: #ff00ff !important; }",
           },
         );
       });
