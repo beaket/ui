@@ -13,6 +13,10 @@ The editor (`@beaket/paper`) is **exempt from the component checklist** — no r
 
 **`@beaket/paper` decisions:** read `packages/paper/docs/CONTEXT.md` (orientation map — modules, glossary, invariants) before editing, `packages/paper/docs/DECISIONS.md` for load-bearing decisions, and follow `packages/paper/docs/adr/README.md` for when/how to write an ADR (decisions only — routine bug/perf fixes get a changeset whose body states the root cause, not an ADR). `packages/paper/docs/MAINTENANCE.md` describes the improvement queue, the `agent:ready` Definition of Ready, and the release cadence.
 
+## Maintenance automation
+
+A scheduled agent, `beaket-ai`, triages the repo and posts a weekly report. Its charter — what it may do and what stays with the maintainer — is `docs/MAINTENANCE.md`; run instructions are in `.github/agents/`.
+
 ## Architecture
 
 - **Self-contained**: Each component includes its own `cn` utility. No shared imports.
