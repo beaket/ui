@@ -38,10 +38,10 @@ naming Bunsen.
 
 ## Talking to Bunsen
 
-Write `@bunsen` in an issue or pull request comment, followed by the request. Only people with
-write access can summon it; a mention from anyone else is ignored. Bunsen replies in the same
-thread, so the question, the answer, and any decision stay on GitHub — no other channel is the
-record.
+Write `@bunsen` in an issue or pull request comment, followed by the request. On a pull request,
+use the Conversation tab; inline review comments do not reach it. Only people with write access can
+summon it; a mention from anyone else is ignored. Bunsen replies in the same thread, so the
+question, the answer, and any decision stay on GitHub — no other channel is the record.
 
 A maintainer can use this to ask questions, start an investigation, run a job early, or record a
 queue decision ("approve as `agent:ready`, p2"). The maintainer's comment is the decision; Bunsen
@@ -146,9 +146,9 @@ the repository's Actions tab.
 ## Rollout
 
 **Phase 1 — observe, answer, report.** The Bunsen workflow answers `@bunsen`, runs triage, and posts
-the weekly report. It authenticates with the maintainer's Claude subscription
-(`CLAUDE_CODE_OAUTH_TOKEN`) and makes no code changes. Goal: tune the instructions until the reports
-are worth reading and triage issues are worth keeping.
+the weekly report. It authenticates through workload identity federation to the company's
+Anthropic Console organization, billed to the Bunsen workspace, and makes no code changes. Goal:
+tune the instructions until the reports are worth reading and triage issues are worth keeping.
 
 **Phase 2 — act through the gate.** Give Bunsen its own identity and budget, and add the fix job.
 Prerequisites:
@@ -157,8 +157,8 @@ Prerequisites:
       and discussions (write) — and no administration permission — passed to the workflow as
       `github_token`
 - [ ] The App is not a bypass actor on the `main` ruleset
-- [ ] Authentication that does not depend on one person's subscription: a company Anthropic Console
-      key or workload identity federation
+- [x] Authentication that does not depend on one person's subscription: workload identity
+      federation, with a federation rule that accepts only runs on `main` of this repository
 - [ ] Four weeks of phase 1 reports reviewed
 
 ## Changing this charter
