@@ -12,14 +12,13 @@ Look back 7 days unless a step says otherwise. Record each finding with its evid
 `guardrail-semantic:src/components/select.tsx`. The same problem must produce the same fingerprint
 on every run.
 
-Use only the endpoints described in
-[`README.md` § GitHub access](./README.md#github-access-in-the-scheduled-environment).
+See [`README.md` § The runtime](./README.md#the-runtime) for what `gh` can reach.
 
 **CI on `main`.** `gh api 'repos/beaket/ui/actions/runs?branch=main&per_page=100'`. A finding is a
-workflow whose most recent run on `main` failed, or that failed more than once in the window. Use
-`actions/runs/<id>/jobs` to name the failing job and step. Job logs cannot be downloaded here, so
-form a hypothesis from the step name, the commits in the failing range, and the workflow file, and
-say plainly that you have not seen the log.
+workflow whose most recent run on `main` failed, or that failed more than once in the window. Read
+the failing log (`gh run view <id> --log-failed`) and, when the workflow uploads one, the failure
+artifact (`gh run download <id>`). Name the failing test or step, and say whether the failure looks
+deterministic (the same assertion every time) or intermittent.
 
 **Release flow.** Compare the published versions (`npm view @beaket/ui version`,
 `npm view @beaket/paper version`) with `packages/cli/package.json` and
