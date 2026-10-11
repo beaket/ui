@@ -28,13 +28,35 @@ permissions and the `main` ruleset, not only by instructions.
 | Role                   | Owns                                                                                                                                                                                  |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Maintainer** (human) | The authored documents above, queue decisions (`agent:ready`, priority, `type:arch`), merges, releases, `major` approval, every reply in the project's voice to outside contributors. |
-| **Bunsen** (agent)     | Answering the maintainer, scheduled triage, weekly reporting, and — from phase 2 — fixes for `agent:ready` issues, delivered as pull requests.                                        |
+| **Bunsen** (agent)     | Noticing, proposing, and preparing, through the desks below. Nothing it produces takes effect until the maintainer acts on it.                                                        |
 
 Bunsen runs in GitHub Actions ([`.github/workflows/bunsen.yml`](../.github/workflows/bunsen.yml)).
 In phase 1 its replies appear as `claude[bot]` and the issues and reports it files as
 `github-actions[bot]`; phase 2 gives it its own GitHub App, "Beaket Bunsen" (`beaket-bunsen[bot]`).
 Every issue it files carries the `source:agent` label, and everything it writes ends with a footer
 naming Bunsen.
+
+## Desks
+
+Bunsen is one agent with several lenses. Each desk has its own run instructions in
+[`.github/agents/`](../.github/agents/) and its own label, so the maintainer can see — and the
+weekly report can measure — which lens produces work worth keeping.
+
+| Desk                | Looks at                                                                                    | Produces                                           |
+| ------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| Triage              | CI on `main`, the release flow, stuck dependencies, the philosophy guardrails               | Issues for what is broken                          |
+| Security            | Dependabot, code scanning, and secret scanning alerts; workflow supply chain; policy files  | `desk:security` issues, within the disclosure rule |
+| Developer proposals | A rotating set of components, as a developer: API consistency, edge cases, ecosystem, tests | `desk:dev` proposals                               |
+| Designer proposals  | The same components, as the author of `DESIGN.md`: drift, missing states, contrast          | `desk:design` proposals, always `needs:maintainer` |
+| Growth and docs     | The docs site, README, community files, how the project is described, release notes         | `desk:growth` issues; phase 2 docs pull requests   |
+| Review              | A pull request, when a maintainer asks or (phase 2) when Bunsen opened it                   | One review comment, never an approval              |
+| Fix                 | Phase 2: the top `agent:ready` issue                                                        | One pull request per issue                         |
+| Weekly report       | Everything above                                                                            | One Discussion, with a scorecard per desk          |
+
+More activity is only useful if the maintainer can keep up with it. The proposal desks stop filing
+when their backlog reaches 5 open issues, and slow to one proposal per run when fewer than 30% of
+their recent proposals were accepted; see
+[the desk throttle](../.github/agents/README.md#desk-throttle).
 
 ## Talking to Bunsen
 
@@ -43,23 +65,26 @@ use the Conversation tab; inline review comments do not reach it. Only people wi
 summon it; a mention from anyone else is ignored. Bunsen replies in the same thread, so the
 question, the answer, and any decision stay on GitHub — no other channel is the record.
 
-A maintainer can use this to ask questions, start an investigation, run a job early, or record a
+A maintainer can use this to ask questions, start an investigation, run a job early, ask for a
+review of any pull request (`@bunsen review`), or record a
 queue decision ("approve as `agent:ready`, p2"). The maintainer's comment is the decision; Bunsen
 only carries it out and quotes it. How Bunsen handles each kind of request is in
 [`.github/agents/respond.md`](../.github/agents/respond.md).
 
 ## What Bunsen may and may not do
 
-| May                                                                                              | Must never                                                                                                                                                                                           |
-| ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Open issues (at most 3 per run), labeled `source:agent`, after searching for duplicates          | Apply `agent:ready`, `p1`, `p2`, `p3`, `type:arch`, or `post-1.0` on its own judgment — it may _recommend_ them in the issue body, and apply them only when a maintainer's `@bunsen` comment says to |
-| Apply descriptive labels to its own issues: `area:*`, `bug`, `perf`, `documentation`, `security` | Merge, approve, or push to `main`; run or merge the release PR; publish to npm                                                                                                                       |
-| Comment on and close its own issues (for example, when a finding no longer reproduces)           | Add a `major` changeset or set `ALLOW_MAJOR`                                                                                                                                                         |
-| Post the weekly report, and reply where a maintainer writes `@bunsen`                            | Edit `DESIGN.md`, `PRODUCT.md`, `CLAUDE.md`, `.impeccable/`, this charter, ADRs, or `src/themes/*.css`                                                                                               |
-| Phase 2: open pull requests from `agent/*` branches for `agent:ready` issues                     | Edit `.github/workflows/`, `renovate.json`, repository settings, or secrets                                                                                                                          |
-|                                                                                                  | Comment on, label, or close issues and pull requests opened by people                                                                                                                                |
+| May                                                                                                                                                                                           | Must never                                                                                                                                                                                           |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Open issues (at most 3 per run), labeled `source:agent`, after searching for duplicates                                                                                                       | Apply `agent:ready`, `p1`, `p2`, `p3`, `type:arch`, or `post-1.0` on its own judgment — it may _recommend_ them in the issue body, and apply them only when a maintainer's `@bunsen` comment says to |
+| Apply descriptive labels to its own issues: `area:*`, `bug`, `perf`, `documentation`, `security`                                                                                              | Merge, approve, or push to `main`; run or merge the release PR; publish to npm                                                                                                                       |
+| Comment on and close its own issues (for example, when a finding no longer reproduces)                                                                                                        | Add a `major` changeset or set `ALLOW_MAJOR`                                                                                                                                                         |
+| Post the weekly report, and reply where a maintainer writes `@bunsen` — including a review                                                                                                    | Edit `DESIGN.md`, `PRODUCT.md`, `CLAUDE.md`, `.impeccable/`, this charter, ADRs, or `src/themes/*.css`                                                                                               |
+| Phase 2: open pull requests from `agent/*` branches for `agent:ready` issues                                                                                                                  |
+| Phase 2: open documentation-only pull requests without an `agent:ready` issue — typos, broken links, examples or prop tables that no longer match the code — and review its own pull requests | Edit `.github/workflows/`, `renovate.json`, repository settings, or secrets                                                                                                                          |
+|                                                                                                                                                                                               | Comment on, label, or close issues and pull requests opened by people                                                                                                                                |
+|                                                                                                                                                                                               | Publish the details of a vulnerability that is not yet fixed — see [`security.md`](../.github/agents/security.md#3-file)                                                                             |
 
-The last rule keeps the project's public voice human. When an outside issue needs a response, the
+The rule about issues and pull requests opened by people keeps the project's public voice human. When an outside issue needs a response, the
 agent drafts one in the weekly report and the maintainer posts it.
 
 When a finding touches a judgment the authored documents reserve for the maintainer — a design rule,
@@ -76,6 +101,7 @@ The existing queue labels keep their meaning (`agent:ready`, `type:arch`, `p1`�
 | `source:agent`     | Filed by Bunsen. Lets anyone filter agent output from human reports.            |
 | `needs:maintainer` | Blocked on a decision only the maintainer can make. Listed first in the report. |
 | `agent:pause`      | Kill switch — see below.                                                        |
+| `desk:*`           | Which desk filed it: `desk:dev`, `desk:design`, `desk:growth`, `desk:security`. |
 
 ## Definition of Ready outside `@beaket/paper`
 
@@ -118,6 +144,10 @@ All times are UTC+9.
 | ------------- | ---------------------------------- | -------------------------------------------------------- |
 | Respond       | When a maintainer writes `@bunsen` | A reply in the same thread                               |
 | Triage        | Tuesday and Friday, 09:07          | Up to 3 new issues per run; otherwise nothing            |
+| Security      | Tuesday and Friday, 09:37          | Issues for open alerts and supply-chain weaknesses       |
+| Developer     | Wednesday, 09:07                   | Up to 2 proposals                                        |
+| Designer      | Thursday, 09:07                    | Up to 2 proposals                                        |
+| Growth        | Friday, 10:07                      | Up to 3 documentation issues                             |
 | Weekly report | Monday, 09:07                      | One Discussion covering the previous Monday–Sunday       |
 | Fix           | Phase 2                            | Pull requests for `agent:ready` issues, one issue per PR |
 
@@ -154,8 +184,12 @@ tune the instructions until the reports are worth reading and triage issues are 
 Prerequisites:
 
 - [ ] Beaket Bunsen GitHub App installed on this repository with contents, issues, pull requests,
-      and discussions (write) — and no administration permission — passed to the workflow as
-      `github_token`
+      and discussions (write); Dependabot, code scanning, and secret scanning alerts (read); and
+      no workflows or administration permission — passed to the workflow as `github_token`. Pull
+      requests opened with the workflow's own token do not trigger CI, so the fix job and docs
+      pull requests need the App.
+- [ ] A private repository, `beaket/bunsen`, for what should not be public yet: announcement
+      drafts, growth notes, and anything the security desk holds back
 - [ ] The App is not a bypass actor on the `main` ruleset
 - [x] Authentication that does not depend on one person's subscription: workload identity
       federation, with a federation rule that accepts only runs on `main` of this repository

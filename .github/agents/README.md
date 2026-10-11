@@ -1,14 +1,21 @@
 # Bunsen run instructions
 
-Instructions for the scheduled maintenance agent. The charter — what the agent may and may not do,
+Instructions for Bunsen, the maintenance agent. The charter — what the agent may and may not do,
 and why — is [`docs/MAINTENANCE.md`](../../docs/MAINTENANCE.md). These files are the how.
 
-| File                                     | Job           | Runs                               |
-| ---------------------------------------- | ------------- | ---------------------------------- |
-| [`respond.md`](./respond.md)             | Respond       | When a maintainer writes `@bunsen` |
-| [`triage.md`](./triage.md)               | Triage        | Tuesday and Friday, 09:07 UTC+9    |
-| [`weekly-report.md`](./weekly-report.md) | Weekly report | Monday, 09:07 UTC+9                |
-| [`fix.md`](./fix.md)                     | Fix           | Phase 2 — not yet enabled          |
+Bunsen is one agent working several desks. Each desk is a file here with its own lens and cadence.
+
+| File                                       | Desk                | Runs (UTC+9)                                             |
+| ------------------------------------------ | ------------------- | -------------------------------------------------------- |
+| [`respond.md`](./respond.md)               | Respond             | When a maintainer writes `@bunsen`                       |
+| [`triage.md`](./triage.md)                 | Triage              | Tuesday and Friday, 09:07                                |
+| [`security.md`](./security.md)             | Security            | Tuesday and Friday, 09:37                                |
+| [`propose-dev.md`](./propose-dev.md)       | Developer proposals | Wednesday, 09:07                                         |
+| [`propose-design.md`](./propose-design.md) | Designer proposals  | Thursday, 09:07                                          |
+| [`growth.md`](./growth.md)                 | Growth and docs     | Friday, 10:07                                            |
+| [`weekly-report.md`](./weekly-report.md)   | Weekly report       | Monday, 09:07                                            |
+| [`review.md`](./review.md)                 | Review              | On `@bunsen review`; on Bunsen's own pull requests later |
+| [`fix.md`](./fix.md)                       | Fix                 | Phase 2 — not yet enabled                                |
 
 Every job runs in GitHub Actions from [`.github/workflows/bunsen.yml`](../workflows/bunsen.yml),
 which starts Claude Code with a short prompt naming one of these files. Everything else the agent
@@ -27,6 +34,19 @@ scheduled jobs can also be started by hand from the workflow's **Run workflow** 
    `0`, end the run with `Paused by agent:pause` and take no other action.
 4. **Use UTC+9 for dates.** The workflow sets `TZ=Asia/Seoul`, so `date` already prints UTC+9.
 
+## Desk throttle
+
+The proposal desks (developer, designer, growth) must not bury the maintainer. Before filing, count
+the issues carrying the desk's label (`desk:dev`, `desk:design`, or `desk:growth`):
+
+1. **Backlog.** If 5 or more are open, file nothing new this run; list the candidates in the run
+   summary instead.
+2. **Acceptance.** Over issues closed or labeled in the last 8 weeks, an issue is _accepted_ if it
+   got `agent:ready` or was closed as completed, and _declined_ if it was closed as not planned or
+   labeled `wontfix`. With at least 5 decided and fewer than 30% accepted, file at most 1 this run.
+
+Put both numbers in the run summary; the weekly report collects them.
+
 ## The runtime
 
 - `gh` is authenticated through `GH_TOKEN` (the workflow's token, acting as `github-actions[bot]`).
@@ -36,6 +56,8 @@ scheduled jobs can also be started by hand from the workflow's **Run workflow** 
 - The checkout is read-only by policy: `git push` and `git commit` are disallowed, and the charter
   forbids repository writes in phase 1. You may write scratch files (for example an issue body to
   pass with `-F body=@body.md`), but they go nowhere.
+- `gh` can read Dependabot and code scanning alerts (`security-events: read`). Secret scanning
+  alerts need a token the workflow does not have yet; treat a `403` as `n/a`.
 - `npm view` and `https://api.npmjs.org` are reachable.
 - `node` and `python3` are available for analysis, such as diffing screenshots from a
   `gh run download` artifact. No dependencies are installed; use the standard library.
