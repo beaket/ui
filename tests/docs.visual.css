@@ -1,0 +1,7 @@
+/* Applied by `tests/docs.visual.spec.ts` while capturing docs snapshots. */
+
+/* Paint over the published version in the color `mask` uses. See the spec for why. */
+.sidebar-version {
+  color: transparent !important;
+  background: #ff00ff !important;
+}
