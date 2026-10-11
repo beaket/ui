@@ -6,7 +6,7 @@ fixes, where every change records _why_. This page is for anyone filing or picki
 See also: [`CONTEXT.md`](./CONTEXT.md) (what/where — read before editing),
 [`DECISIONS.md`](./DECISIONS.md) (why), [`adr/README.md`](./adr/README.md) (the ADR rule),
 [`docs/MAINTENANCE.md`](../../../docs/MAINTENANCE.md) (the repo-wide maintenance charter and the
-`beaket-ai` agent).
+Bunsen agent).
 
 ## Roadmap: driving to 1.0.0
 

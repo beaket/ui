@@ -9,15 +9,15 @@ Complete the [preflight](./README.md#preflight--every-job-before-anything-else) 
 
 The window is the previous ISO week: Monday 00:00 to Sunday 23:59, UTC+9. The title is
 `Weekly Report YYYY-Www` for that week (`TZ=Asia/Seoul date -d 'last monday' +%G-W%V` on a Monday
-run). Convert the window to UTC for GitHub search qualifiers.
+run). Convert the window to UTC to compare against GitHub timestamps.
 
 ## 2. Gather
 
-Use `gh` against `beaket/ui` for everything below.
+See [`README.md` § The runtime](./README.md#the-runtime) for what `gh` can reach.
 
-- **Merged pull requests** in the window, grouped as maintainer, Renovate, `beaket-ai`, and outside
-  contributors.
-- **Releases** published in the window (`gh release list`), with versions.
+- **Merged pull requests** in the window (`pulls?state=closed&sort=updated&direction=desc`, filtered
+  on `merged_at`), grouped as maintainer, Renovate, Bunsen, and outside contributors.
+- **Releases** published in the window (`releases`), with versions.
 - **Issues** opened and closed in the window; current open counts for all issues, `needs:maintainer`,
   `agent:ready`, `security`, and `source:agent`.
 - **CI on `main`**: runs and failures in the window, per workflow.
@@ -85,18 +85,21 @@ What triage checked this week against the guardrails in `docs/MAINTENANCE.md`, a
 Omit this section when empty. Proposed changes to the agent's instructions or the charter, problems
 the agent hit (access errors, unreachable services), and guardrails worth promoting to CI.
 
-<sub>Filed by beaket-ai · weekly report · YYYY-MM-DD</sub>
+<sub>Filed by Bunsen · weekly report · YYYY-MM-DD</sub>
 ```
 
 ## 4. Publish
 
-Post the report as a discussion in the **Maintenance** category with the GitHub GraphQL API
-(`createDiscussion`; look up the repository and category IDs with `gh api graphql` first).
+Post the report as a discussion in the **Maintenance** category, through the GraphQL API: look up
+the repository ID and the category ID with `gh api graphql`, then call `createDiscussion`.
 
 - If a discussion with the same title already exists, update it with `updateDiscussion` instead of
   creating a duplicate.
-- If the Maintenance category does not exist, post in **General** and make "Create a Maintenance
+- If the Maintenance category is missing, post in **General** and make "Create a Maintenance
   discussion category" the first item under Decisions for you.
+
+The report is posted as `github-actions[bot]`, so GitHub notifies the maintainer like any other
+activity they watch.
 
 End with the run summary described in [`README.md`](./README.md#rules-for-every-job), including the
 discussion URL.

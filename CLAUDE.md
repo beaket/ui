@@ -15,7 +15,7 @@ The editor (`@beaket/paper`) is **exempt from the component checklist** — no r
 
 ## Maintenance automation
 
-A scheduled agent, `beaket-ai`, triages the repo and posts a weekly report. Its charter — what it may do and what stays with the maintainer — is `docs/MAINTENANCE.md`; run instructions are in `.github/agents/`.
+Bunsen, the organization's scheduled AI agent, triages the repo and posts a weekly report. Its charter — what it may do and what stays with the maintainer — is `docs/MAINTENANCE.md`; run instructions are in `.github/agents/`.
 
 ## Architecture
 

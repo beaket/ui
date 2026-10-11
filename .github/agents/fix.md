@@ -11,8 +11,8 @@ the phase 1 "no repository writes" rule is replaced by the rules below.
 ## 1. Pick
 
 Take the highest-priority open issue labeled `agent:ready` (`p1` before `p2` before `p3`, then oldest)
-that has no open pull request linked to it and no `beaket-ai` claim comment from the last 24 hours.
-Comment `Claimed by beaket-ai.` on it before starting.
+that has no open pull request linked to it and no Bunsen claim comment from the last 24 hours.
+Comment `Claimed by Bunsen.` on it before starting.
 
 Re-check the Definition of Ready in `docs/MAINTENANCE.md` (and, for `area:paper`, in
 `packages/paper/docs/MAINTENANCE.md`). If any item fails, comment which one and why, remove
@@ -52,7 +52,7 @@ How the regression test pins the fix, and the command that runs it.
 
 Anything noticed but left alone.
 
-<sub>Opened by beaket-ai · fix run · YYYY-MM-DD</sub>
+<sub>Opened by Bunsen · fix run · YYYY-MM-DD</sub>
 ```
 
 Request review from the maintainer. Never merge, approve, or enable auto-merge.

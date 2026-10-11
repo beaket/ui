@@ -1,11 +1,15 @@
 # Maintenance charter
 
-How this repository is maintained with the help of a scheduled AI agent, `beaket-ai`, and where the
-line sits between what the agent does and what the maintainer decides.
+How this repository is maintained with the help of Bunsen, the beaket organization's scheduled AI
+maintenance agent, and where the line sits between what the agent does and what the maintainer
+decides.
 
 Scope: the whole repository (`@beaket/ui` registry, CLI, docs, and `@beaket/paper`). For
 `area:paper` work, [`packages/paper/docs/MAINTENANCE.md`](../packages/paper/docs/MAINTENANCE.md)
 adds package-specific rules and takes precedence where the two differ.
+
+Bunsen works across the organization, but only in repositories that opt in. Each repository keeps
+its own charter and run instructions, so what Bunsen may do here is decided by this file alone.
 
 ## The principle: the agent proposes, the maintainer decides
 
@@ -21,25 +25,39 @@ permissions and the `main` ruleset, not only by instructions.
 
 ## Roles
 
-| Role                                           | Owns                                                                                                                                                             |
-| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Maintainer** (human)                         | The authored documents above, `agent:ready` and priority labels, merges, releases, `major` approval, every reply in the project's voice to outside contributors. |
-| **`beaket-ai`** (GitHub App, `beaket-ai[bot]`) | Scheduled triage, weekly reporting, and — from phase 2 — fixes for `agent:ready` issues, delivered as pull requests.                                             |
+| Role                   | Owns                                                                                                                                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Maintainer** (human) | The authored documents above, queue decisions (`agent:ready`, priority, `type:arch`), merges, releases, `major` approval, every reply in the project's voice to outside contributors. |
+| **Bunsen** (agent)     | Answering the maintainer, scheduled triage, weekly reporting, and — from phase 2 — fixes for `agent:ready` issues, delivered as pull requests.                                        |
 
-During phase 1 (see [Rollout](#rollout)) the agent runs as Claude Code routines authenticated as the
-maintainer, so its GitHub activity appears under the maintainer's account. Everything it files
-therefore carries the `source:agent` label and a footer line identifying it as `beaket-ai`.
+Bunsen runs in GitHub Actions ([`.github/workflows/bunsen.yml`](../.github/workflows/bunsen.yml)).
+In phase 1 its replies appear as `claude[bot]` and the issues and reports it files as
+`github-actions[bot]`; phase 2 gives it its own GitHub App, "Beaket Bunsen" (`beaket-bunsen[bot]`).
+Every issue it files carries the `source:agent` label, and everything it writes ends with a footer
+naming Bunsen.
 
-## What `beaket-ai` may and may not do
+## Talking to Bunsen
 
-| May                                                                                              | Must never                                                                                                    |
-| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
-| Open issues (at most 3 per run), labeled `source:agent`, after searching for duplicates          | Apply `agent:ready`, `p1`, `p2`, `p3`, `type:arch`, or `post-1.0` — it may _recommend_ them in the issue body |
-| Apply descriptive labels to its own issues: `area:*`, `bug`, `perf`, `documentation`, `security` | Merge, approve, or push to `main`; run or merge the release PR; publish to npm                                |
-| Comment on and close its own issues (for example, when a finding no longer reproduces)           | Add a `major` changeset or set `ALLOW_MAJOR`                                                                  |
-| Post the weekly report                                                                           | Edit `DESIGN.md`, `PRODUCT.md`, `CLAUDE.md`, `.impeccable/`, this charter, ADRs, or `src/themes/*.css`        |
-| Phase 2: open pull requests from `agent/*` branches for `agent:ready` issues                     | Edit `.github/workflows/`, `renovate.json`, repository settings, or secrets                                   |
-|                                                                                                  | Comment on, label, or close issues and pull requests opened by people                                         |
+Write `@bunsen` in an issue or pull request comment, followed by the request. Only people with
+write access can summon it; a mention from anyone else is ignored. Bunsen replies in the same
+thread, so the question, the answer, and any decision stay on GitHub — no other channel is the
+record.
+
+A maintainer can use this to ask questions, start an investigation, run a job early, or record a
+queue decision ("approve as `agent:ready`, p2"). The maintainer's comment is the decision; Bunsen
+only carries it out and quotes it. How Bunsen handles each kind of request is in
+[`.github/agents/respond.md`](../.github/agents/respond.md).
+
+## What Bunsen may and may not do
+
+| May                                                                                              | Must never                                                                                                                                                                                           |
+| ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Open issues (at most 3 per run), labeled `source:agent`, after searching for duplicates          | Apply `agent:ready`, `p1`, `p2`, `p3`, `type:arch`, or `post-1.0` on its own judgment — it may _recommend_ them in the issue body, and apply them only when a maintainer's `@bunsen` comment says to |
+| Apply descriptive labels to its own issues: `area:*`, `bug`, `perf`, `documentation`, `security` | Merge, approve, or push to `main`; run or merge the release PR; publish to npm                                                                                                                       |
+| Comment on and close its own issues (for example, when a finding no longer reproduces)           | Add a `major` changeset or set `ALLOW_MAJOR`                                                                                                                                                         |
+| Post the weekly report, and reply where a maintainer writes `@bunsen`                            | Edit `DESIGN.md`, `PRODUCT.md`, `CLAUDE.md`, `.impeccable/`, this charter, ADRs, or `src/themes/*.css`                                                                                               |
+| Phase 2: open pull requests from `agent/*` branches for `agent:ready` issues                     | Edit `.github/workflows/`, `renovate.json`, repository settings, or secrets                                                                                                                          |
+|                                                                                                  | Comment on, label, or close issues and pull requests opened by people                                                                                                                                |
 
 The last rule keeps the project's public voice human. When an outside issue needs a response, the
 agent drafts one in the weekly report and the maintainer posts it.
@@ -55,7 +73,7 @@ The existing queue labels keep their meaning (`agent:ready`, `type:arch`, `p1`�
 
 | Label              | Meaning                                                                         |
 | ------------------ | ------------------------------------------------------------------------------- |
-| `source:agent`     | Filed by `beaket-ai`. Lets anyone filter agent output from human reports.       |
+| `source:agent`     | Filed by Bunsen. Lets anyone filter agent output from human reports.            |
 | `needs:maintainer` | Blocked on a decision only the maintainer can make. Listed first in the report. |
 | `agent:pause`      | Kill switch — see below.                                                        |
 
@@ -96,11 +114,15 @@ precedence — are not auto-fixed. A suspected drift is filed with `needs:mainta
 
 All times are UTC+9.
 
-| Job           | When                      | Output                                                   |
-| ------------- | ------------------------- | -------------------------------------------------------- |
-| Triage        | Tuesday and Friday, 09:00 | Up to 3 new issues per run; otherwise nothing            |
-| Weekly report | Monday, 09:00             | One Discussion covering the previous Monday–Sunday       |
-| Fix           | Phase 2                   | Pull requests for `agent:ready` issues, one issue per PR |
+| Job           | When                               | Output                                                   |
+| ------------- | ---------------------------------- | -------------------------------------------------------- |
+| Respond       | When a maintainer writes `@bunsen` | A reply in the same thread                               |
+| Triage        | Tuesday and Friday, 09:07          | Up to 3 new issues per run; otherwise nothing            |
+| Weekly report | Monday, 09:07                      | One Discussion covering the previous Monday–Sunday       |
+| Fix           | Phase 2                            | Pull requests for `agent:ready` issues, one issue per PR |
+
+The scheduled jobs can also be started by hand from the Bunsen workflow's **Run workflow** button,
+or by asking `@bunsen` in a comment.
 
 Run instructions live in [`.github/agents/`](../.github/agents/). They are versioned with the code,
 so changing how the agent behaves is a reviewed pull request, not a hidden prompt edit.
@@ -118,22 +140,25 @@ charter.
 ## Kill switch
 
 Open any issue with the `agent:pause` label. Every run checks for one first and exits without acting
-while it is open. Close the issue to resume. To stop runs entirely, disable the routines (phase 1)
-or the workflows (phase 2).
+while it is open. Close the issue to resume. To stop runs entirely, disable the Bunsen workflow in
+the repository's Actions tab.
 
 ## Rollout
 
-**Phase 1 — observe and report.** Claude Code routines run triage and the weekly report. No code
-changes. Goal: tune the instructions until the reports are worth reading and triage issues are
-worth keeping.
+**Phase 1 — observe, answer, report.** The Bunsen workflow answers `@bunsen`, runs triage, and posts
+the weekly report. It authenticates with the maintainer's Claude subscription
+(`CLAUDE_CODE_OAUTH_TOKEN`) and makes no code changes. Goal: tune the instructions until the reports
+are worth reading and triage issues are worth keeping.
 
-**Phase 2 — act through the gate.** Move the runs to GitHub Actions authenticated as the
-`beaket-ai` GitHub App with a company-billed Anthropic API key, and add the fix job. Prerequisites:
+**Phase 2 — act through the gate.** Give Bunsen its own identity and budget, and add the fix job.
+Prerequisites:
 
-- [ ] `beaket-ai` GitHub App installed on this repository with issues, pull requests, discussions,
-      and contents (write) — and no administration permission
+- [ ] Beaket Bunsen GitHub App installed on this repository with contents, issues, pull requests,
+      and discussions (write) — and no administration permission — passed to the workflow as
+      `github_token`
 - [ ] The App is not a bypass actor on the `main` ruleset
-- [ ] `ANTHROPIC_API_KEY` repository secret from the company Anthropic Console organization
+- [ ] Authentication that does not depend on one person's subscription: a company Anthropic Console
+      key or workload identity federation
 - [ ] Four weeks of phase 1 reports reviewed
 
 ## Changing this charter
