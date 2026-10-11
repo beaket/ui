@@ -17,12 +17,31 @@ agent needs is in the repository, so behavior changes go through review like any
 1. **Read the charter.** Read `docs/MAINTENANCE.md` and `CLAUDE.md` in full. Read `DESIGN.md`,
    `PRODUCT.md`, and `docs/git-rules.md` whenever a finding touches the visual system, product
    scope, or the public contract.
-2. **Check GitHub access.** Run `gh auth status`. If `gh` is missing or unauthenticated, stop and end
-   the run with a one-line failure summary. Do not fall back to another way of writing to GitHub.
+2. **Check GitHub access.** Run `gh api repos/beaket/ui --jq .full_name`. If it does not print
+   `beaket/ui`, stop and end the run with a one-line failure summary. (`gh auth status` reports an
+   invalid token in the scheduled environment even when access works; ignore it.)
 3. **Check the kill switch.** Run
-   `gh issue list --repo beaket/ui --label agent:pause --state open --json number --jq length`.
-   If the result is not `0`, end the run with `Paused by agent:pause` and take no other action.
+   `gh api 'repos/beaket/ui/issues?state=open&labels=agent:pause' --jq length`. If the result is not
+   `0`, end the run with `Paused by agent:pause` and take no other action.
 4. **Use UTC+9 for dates.** Compute "today" and report windows with `TZ=Asia/Seoul date`.
+
+## GitHub access in the scheduled environment
+
+Phase 1 runs reach GitHub through a proxy that allows only **repository-scoped REST endpoints**,
+called with `gh api repos/beaket/ui/...`. These do not work there, so do not use them:
+
+- GraphQL (`gh api graphql`), which also rules out GitHub Discussions
+- The search API (`search/issues` and friends)
+- `gh` subcommands built on GraphQL, such as `gh issue list`, `gh pr list`, and `gh pr view`
+- Downloading job logs, and `api.npmjs.org` (the npm registry itself, via `npm view`, works)
+
+Useful endpoints: `issues` (returns pull requests too — drop items that have a `pull_request` key),
+`pulls`, `actions/runs`, `actions/runs/<id>/jobs` (step names and conclusions), `releases`, and
+`issues/<n>/comments`. Create or update with `-X POST` / `-X PATCH` and `-f` fields, for example
+`gh api repos/beaket/ui/issues -f title=… -f body=@body.md -f 'labels[]=source:agent'`. Page with
+`per_page=100` and `page=N`.
+
+If a needed signal is unreachable, write `n/a` for it and list it under process notes. Do not guess.
 
 ## Rules for every job
 
@@ -35,7 +54,7 @@ agent needs is in the repository, so behavior changes go through review like any
   for reading and running checks.
 - **Stay inside the charter.** If a step here seems to conflict with `docs/MAINTENANCE.md`, the
   charter wins; note the conflict in your output.
-- **Identify yourself.** End every issue, comment, and discussion you write with the footer
+- **Identify yourself.** End every issue and comment you write with the footer
   `<sub>Filed by beaket-ai · <job> run · YYYY-MM-DD</sub>`.
 - **Be specific or be quiet.** Every claim cites a file and line, a run URL, an issue, or a command
   and its output. If you cannot point at evidence, do not file it.

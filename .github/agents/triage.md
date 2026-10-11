@@ -12,11 +12,14 @@ Look back 7 days unless a step says otherwise. Record each finding with its evid
 `guardrail-semantic:src/components/select.tsx`. The same problem must produce the same fingerprint
 on every run.
 
-**CI on `main`.**
-`gh run list --repo beaket/ui --branch main --limit 50 --json workflowName,conclusion,createdAt,url`.
-A finding is a workflow whose most recent run on `main` failed, or that failed more than once in the
-window. Open the failing log (`gh run view <id> --log-failed`) and name the failing step and the
-likely cause.
+Use only the endpoints described in
+[`README.md` § GitHub access](./README.md#github-access-in-the-scheduled-environment).
+
+**CI on `main`.** `gh api 'repos/beaket/ui/actions/runs?branch=main&per_page=100'`. A finding is a
+workflow whose most recent run on `main` failed, or that failed more than once in the window. Use
+`actions/runs/<id>/jobs` to name the failing job and step. Job logs cannot be downloaded here, so
+form a hypothesis from the step name, the commits in the failing range, and the workflow file, and
+say plainly that you have not seen the log.
 
 **Release flow.** Compare the published versions (`npm view @beaket/ui version`,
 `npm view @beaket/paper version`) with `packages/cli/package.json` and
@@ -50,8 +53,9 @@ Do not file anything about issues or pull requests opened by people. The weekly 
 
 ## 2. Deduplicate
 
-For each finding, search for its fingerprint:
-`gh issue list --repo beaket/ui --state all --label source:agent --search '"Fingerprint: <fingerprint>" in:body'`.
+Fetch every `source:agent` issue, open and closed
+(`gh api 'repos/beaket/ui/issues?state=all&labels=source:agent&per_page=100'`), and match each
+finding against the `Fingerprint:` line in their bodies.
 
 - An **open** match means the finding is already tracked. If there is materially new evidence (a
   new failing run, a new file), add one comment with it; otherwise do nothing.

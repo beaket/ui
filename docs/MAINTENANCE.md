@@ -27,8 +27,9 @@ permissions and the `main` ruleset, not only by instructions.
 | **`beaket-ai`** (GitHub App, `beaket-ai[bot]`) | Scheduled triage, weekly reporting, and — from phase 2 — fixes for `agent:ready` issues, delivered as pull requests.                                             |
 
 During phase 1 (see [Rollout](#rollout)) the agent runs as Claude Code routines authenticated as the
-maintainer, so its GitHub activity appears under the maintainer's account. Everything it files
-therefore carries the `source:agent` label and a footer line identifying it as `beaket-ai`.
+maintainer, so its GitHub activity appears under the maintainer's account. Every issue it files
+therefore carries the `source:agent` or `report:weekly` label, and everything it writes ends with a
+footer line identifying it as `beaket-ai`.
 
 ## What `beaket-ai` may and may not do
 
@@ -51,13 +52,14 @@ not pick a side.
 ## Labels
 
 The existing queue labels keep their meaning (`agent:ready`, `type:arch`, `p1`–`p3`, `area:*`,
-`bug`, `perf`, `security`, `post-1.0`). Three labels support the agent:
+`bug`, `perf`, `security`, `post-1.0`). Four labels support the agent:
 
 | Label              | Meaning                                                                         |
 | ------------------ | ------------------------------------------------------------------------------- |
 | `source:agent`     | Filed by `beaket-ai`. Lets anyone filter agent output from human reports.       |
 | `needs:maintainer` | Blocked on a decision only the maintainer can make. Listed first in the report. |
 | `agent:pause`      | Kill switch — see below.                                                        |
+| `report:weekly`    | The weekly report. Exactly one is open at a time.                               |
 
 ## Definition of Ready outside `@beaket/paper`
 
@@ -99,7 +101,7 @@ All times are UTC+9.
 | Job           | When                      | Output                                                   |
 | ------------- | ------------------------- | -------------------------------------------------------- |
 | Triage        | Tuesday and Friday, 09:00 | Up to 3 new issues per run; otherwise nothing            |
-| Weekly report | Monday, 09:00             | One Discussion covering the previous Monday–Sunday       |
+| Weekly report | Monday, 09:00             | One report issue covering the previous Monday–Sunday     |
 | Fix           | Phase 2                   | Pull requests for `agent:ready` issues, one issue per PR |
 
 Run instructions live in [`.github/agents/`](../.github/agents/). They are versioned with the code,
@@ -107,10 +109,15 @@ so changing how the agent behaves is a reviewed pull request, not a hidden promp
 
 ## The weekly report
 
-Posted in **Discussions › Maintenance** as `Weekly Report YYYY-Www` (ISO week). It opens with the
-decisions waiting on the maintainer, and should take no more than two minutes to read. The format is
+Filed as an issue labeled `report:weekly`, titled `Weekly Report YYYY-Www` (ISO week); the previous
+week's report is closed when the new one is filed, and the maintainer gets a push notification. It
+opens with the decisions waiting on the maintainer, and should take no more than two minutes to
+read. The format is
 fixed in [`.github/agents/weekly-report.md`](../.github/agents/weekly-report.md) so that weeks can be
 compared at a glance.
+
+A GitHub Discussion would suit the report better than an issue, but Discussions need GraphQL, which
+the phase 1 environment cannot reach. Phase 2 can move the report there.
 
 The report is also the agent's channel for proposing changes to its own process, including this
 charter.

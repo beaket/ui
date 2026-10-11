@@ -9,29 +9,30 @@ Complete the [preflight](./README.md#preflight--every-job-before-anything-else) 
 
 The window is the previous ISO week: Monday 00:00 to Sunday 23:59, UTC+9. The title is
 `Weekly Report YYYY-Www` for that week (`TZ=Asia/Seoul date -d 'last monday' +%G-W%V` on a Monday
-run). Convert the window to UTC for GitHub search qualifiers.
+run). Convert the window to UTC to compare against GitHub timestamps.
 
 ## 2. Gather
 
-Use `gh` against `beaket/ui` for everything below.
+Use only the endpoints described in
+[`README.md` § GitHub access](./README.md#github-access-in-the-scheduled-environment).
 
-- **Merged pull requests** in the window, grouped as maintainer, Renovate, `beaket-ai`, and outside
-  contributors.
-- **Releases** published in the window (`gh release list`), with versions.
+- **Merged pull requests** in the window (`pulls?state=closed&sort=updated&direction=desc`, filtered
+  on `merged_at`), grouped as maintainer, Renovate, `beaket-ai`, and outside contributors.
+- **Releases** published in the window (`releases`), with versions.
 - **Issues** opened and closed in the window; current open counts for all issues, `needs:maintainer`,
-  `agent:ready`, `security`, and `source:agent`.
+  `agent:ready`, `security`, and `source:agent`. Exclude `report:weekly` issues from every count.
 - **CI on `main`**: runs and failures in the window, per workflow.
 - **Renovate backlog**: open Renovate pull requests and the oldest one's age.
 - **Release pull request**: whether `changeset-release/main` is open, and how many changesets it
   carries.
 - **Downloads**: `curl -s https://api.npmjs.org/downloads/point/last-week/@beaket/ui` and the same for
-  `@beaket/paper`. Write `n/a` if unreachable.
+  `@beaket/paper`. The scheduled environment currently blocks this host; write `n/a` if unreachable.
 - **Waiting on a human**: issues and pull requests opened by outside contributors with no maintainer
   reply for more than 3 days. Read each one and draft a short reply in the project's voice — factual,
   warm, no promises about dates. These are drafts for the maintainer to post; do not post them.
 - **Decisions**: open `needs:maintainer` issues, `source:agent` issues that recommend `agent:ready`
   but have not been labeled, and pull requests awaiting maintainer review for more than 3 days.
-- **Last week's report**: find the previous `Weekly Report` discussion and read its Health table, to
+- **Last week's report**: find the previous `report:weekly` issue and read its Health table, to
   compute changes. If there is none, leave the change column empty.
 
 ## 3. Write
@@ -90,13 +91,17 @@ the agent hit (access errors, unreachable services), and guardrails worth promot
 
 ## 4. Publish
 
-Post the report as a discussion in the **Maintenance** category with the GitHub GraphQL API
-(`createDiscussion`; look up the repository and category IDs with `gh api graphql` first).
+Post the report as an issue labeled `report:weekly` (not `source:agent`, so triage leaves it alone). (Discussions would suit a
+report better, but they need GraphQL, which the scheduled environment cannot reach. Phase 2 may move
+the report there.)
 
-- If a discussion with the same title already exists, update it with `updateDiscussion` instead of
-  creating a duplicate.
-- If the Maintenance category does not exist, post in **General** and make "Create a Maintenance
-  discussion category" the first item under Decisions for you.
+1. If an issue with the same title already exists, update its body with `-X PATCH` instead of
+   creating a duplicate.
+2. Close every other open `report:weekly` issue with a one-line comment linking the new report, so
+   exactly one report is open at a time.
+3. Send a push notification to the maintainer containing the TL;DR, the number of decisions waiting,
+   and the issue URL. In phase 1 the report is filed under the maintainer's own account, so GitHub
+   will not notify them; the push notification is how they learn it is ready.
 
 End with the run summary described in [`README.md`](./README.md#rules-for-every-job), including the
-discussion URL.
+issue URL.
