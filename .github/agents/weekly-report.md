@@ -17,7 +17,7 @@ Use only the endpoints described in
 [`README.md` § GitHub access](./README.md#github-access-in-the-scheduled-environment).
 
 - **Merged pull requests** in the window (`pulls?state=closed&sort=updated&direction=desc`, filtered
-  on `merged_at`), grouped as maintainer, Renovate, `beaket-ai`, and outside contributors.
+  on `merged_at`), grouped as maintainer, Renovate, Bunsen, and outside contributors.
 - **Releases** published in the window (`releases`), with versions.
 - **Issues** opened and closed in the window; current open counts for all issues, `needs:maintainer`,
   `agent:ready`, `security`, and `source:agent`. Exclude `report:weekly` issues from every count.
@@ -86,7 +86,7 @@ What triage checked this week against the guardrails in `docs/MAINTENANCE.md`, a
 Omit this section when empty. Proposed changes to the agent's instructions or the charter, problems
 the agent hit (access errors, unreachable services), and guardrails worth promoting to CI.
 
-<sub>Filed by beaket-ai · weekly report · YYYY-MM-DD</sub>
+<sub>Filed by Bunsen · weekly report · YYYY-MM-DD</sub>
 ```
 
 ## 4. Publish

@@ -1,4 +1,4 @@
-# `beaket-ai` run instructions
+# Bunsen run instructions
 
 Instructions for the scheduled maintenance agent. The charter — what the agent may and may not do,
 and why — is [`docs/MAINTENANCE.md`](../../docs/MAINTENANCE.md). These files are the how.
@@ -55,7 +55,7 @@ If a needed signal is unreachable, write `n/a` for it and list it under process 
 - **Stay inside the charter.** If a step here seems to conflict with `docs/MAINTENANCE.md`, the
   charter wins; note the conflict in your output.
 - **Identify yourself.** End every issue and comment you write with the footer
-  `<sub>Filed by beaket-ai · <job> run · YYYY-MM-DD</sub>`.
+  `<sub>Filed by Bunsen · <job> run · YYYY-MM-DD</sub>`.
 - **Be specific or be quiet.** Every claim cites a file and line, a run URL, an issue, or a command
   and its output. If you cannot point at evidence, do not file it.
 - **End with a summary.** Finish every run with a short plain-text summary of what you checked and

@@ -1,11 +1,15 @@
 # Maintenance charter
 
-How this repository is maintained with the help of a scheduled AI agent, `beaket-ai`, and where the
-line sits between what the agent does and what the maintainer decides.
+How this repository is maintained with the help of Bunsen, the beaket organization's scheduled AI
+maintenance agent, and where the line sits between what the agent does and what the maintainer
+decides.
 
 Scope: the whole repository (`@beaket/ui` registry, CLI, docs, and `@beaket/paper`). For
 `area:paper` work, [`packages/paper/docs/MAINTENANCE.md`](../packages/paper/docs/MAINTENANCE.md)
 adds package-specific rules and takes precedence where the two differ.
+
+Bunsen works across the organization, but only in repositories that opt in. Each repository keeps
+its own charter and run instructions, so what Bunsen may do here is decided by this file alone.
 
 ## The principle: the agent proposes, the maintainer decides
 
@@ -21,17 +25,17 @@ permissions and the `main` ruleset, not only by instructions.
 
 ## Roles
 
-| Role                                           | Owns                                                                                                                                                             |
-| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Maintainer** (human)                         | The authored documents above, `agent:ready` and priority labels, merges, releases, `major` approval, every reply in the project's voice to outside contributors. |
-| **`beaket-ai`** (GitHub App, `beaket-ai[bot]`) | Scheduled triage, weekly reporting, and — from phase 2 — fixes for `agent:ready` issues, delivered as pull requests.                                             |
+| Role                                                          | Owns                                                                                                                                                             |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Maintainer** (human)                                        | The authored documents above, `agent:ready` and priority labels, merges, releases, `major` approval, every reply in the project's voice to outside contributors. |
+| **Bunsen** (GitHub App "Beaket Bunsen", `beaket-bunsen[bot]`) | Scheduled triage, weekly reporting, and — from phase 2 — fixes for `agent:ready` issues, delivered as pull requests.                                             |
 
 During phase 1 (see [Rollout](#rollout)) the agent runs as Claude Code routines authenticated as the
 maintainer, so its GitHub activity appears under the maintainer's account. Every issue it files
 therefore carries the `source:agent` or `report:weekly` label, and everything it writes ends with a
-footer line identifying it as `beaket-ai`.
+footer line identifying it as Bunsen.
 
-## What `beaket-ai` may and may not do
+## What Bunsen may and may not do
 
 | May                                                                                              | Must never                                                                                                    |
 | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
@@ -56,7 +60,7 @@ The existing queue labels keep their meaning (`agent:ready`, `type:arch`, `p1`�
 
 | Label              | Meaning                                                                         |
 | ------------------ | ------------------------------------------------------------------------------- |
-| `source:agent`     | Filed by `beaket-ai`. Lets anyone filter agent output from human reports.       |
+| `source:agent`     | Filed by Bunsen. Lets anyone filter agent output from human reports.            |
 | `needs:maintainer` | Blocked on a decision only the maintainer can make. Listed first in the report. |
 | `agent:pause`      | Kill switch — see below.                                                        |
 | `report:weekly`    | The weekly report. Exactly one is open at a time.                               |
@@ -135,9 +139,9 @@ changes. Goal: tune the instructions until the reports are worth reading and tri
 worth keeping.
 
 **Phase 2 — act through the gate.** Move the runs to GitHub Actions authenticated as the
-`beaket-ai` GitHub App with a company-billed Anthropic API key, and add the fix job. Prerequisites:
+Beaket Bunsen GitHub App with a company-billed Anthropic API key, and add the fix job. Prerequisites:
 
-- [ ] `beaket-ai` GitHub App installed on this repository with issues, pull requests, discussions,
+- [ ] Beaket Bunsen GitHub App installed on this repository with issues, pull requests, discussions,
       and contents (write) — and no administration permission
 - [ ] The App is not a bypass actor on the `main` ruleset
 - [ ] `ANTHROPIC_API_KEY` repository secret from the company Anthropic Console organization

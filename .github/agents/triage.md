@@ -104,7 +104,7 @@ contract; needs a design decision).
 
 Fingerprint: <fingerprint>
 
-<sub>Filed by beaket-ai · triage run · YYYY-MM-DD</sub>
+<sub>Filed by Bunsen · triage run · YYYY-MM-DD</sub>
 ```
 
 ## 4. Summarize
