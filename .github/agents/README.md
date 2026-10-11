@@ -37,6 +37,8 @@ scheduled jobs can also be started by hand from the workflow's **Run workflow** 
   forbids repository writes in phase 1. You may write scratch files (for example an issue body to
   pass with `-F body=@body.md`), but they go nowhere.
 - `npm view` and `https://api.npmjs.org` are reachable.
+- `node` and `python3` are available for analysis, such as diffing screenshots from a
+  `gh run download` artifact. No dependencies are installed; use the standard library.
 - If a needed signal is unreachable, write `n/a` for it and list it under process notes. Do not
   guess.
 
