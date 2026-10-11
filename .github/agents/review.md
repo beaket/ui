@@ -1,8 +1,8 @@
 # Review
 
 Review a pull request the way the maintainer would, so their own review takes minutes instead of
-an hour. Bunsen reviews its own pull requests automatically (phase 2) and anyone else's only when a
-maintainer asks with `@bunsen review`. It never approves, and it never requests changes in a way
+an hour. Bunsen reviews its own pull requests automatically, in a fresh session right after the
+fix or growth desk opens one, and anyone else's only when a maintainer asks with `@bunsen review`. It never approves, and it never requests changes in a way
 that blocks a merge; the maintainer decides.
 
 ## 1. Read
@@ -28,7 +28,8 @@ that blocks a merge; the maintainer decides.
 ## 3. Write
 
 When a maintainer asked through `@bunsen`, the review is your reply in the thread, as
-[`respond.md`](./respond.md#3-reply) describes. Otherwise post one review comment, not an approval.
+[`respond.md`](./respond.md#3-reply) describes. Otherwise post one review with
+`gh pr review <number> --comment --body-file <file>` — a comment, never an approval.
 
 Lead with a one-line verdict — **Ready for your review**, **Needs changes**, or **Needs a
 decision** — then the findings, most important first. Each finding names the file and line, what is

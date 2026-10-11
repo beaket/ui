@@ -43,12 +43,12 @@ Deduplicate exactly as [`triage.md`](./triage.md#2-deduplicate) does. Labels: `s
 
 What may go in a public issue depends on the finding:
 
-| Finding                                                          | Public issue says                                                                                    |
-| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Dependabot alert (a published advisory in a dependency)          | The package, advisory ID, severity, fixed version, and whether a Renovate PR exists                  |
-| Code scanning or secret scanning alert (may be undisclosed)      | Only "Alert #N needs review", its severity and age, and the alert link. No file, no rule, no detail. |
-| Workflow or policy weakness that is not exploitable on its own   | The full finding with the proposed diff                                                              |
-| Anything you believe is exploitable in this repository right now | Do not file it. Put "Security finding needs private review" in the run summary, and stop.            |
+| Finding                                                          | Public issue says                                                                                                |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Dependabot alert (a published advisory in a dependency)          | The package, advisory ID, severity, fixed version, and whether a Renovate PR exists                              |
+| Code scanning or secret scanning alert (may be undisclosed)      | Only "Alert #N needs review", its severity and age, and the alert link. Details go to `beaket/bunsen`.           |
+| Workflow or policy weakness that is not exploitable on its own   | The full finding with the proposed diff                                                                          |
+| Anything you believe is exploitable in this repository right now | Nothing public. File the details as an issue in the private `beaket/bunsen`, labeled `beaket/ui` and `security`. |
 
 Never paste a secret, even a revoked one, and never describe an exploit path.
 
