@@ -1,5 +1,83 @@
 # @beaket/ui
 
+## 4.2.0
+
+### Minor Changes
+
+- [#996](https://github.com/beaket/ui/pull/996) [`04e10b2`](https://github.com/beaket/ui/commit/04e10b2608c24c4f817256833002d90d019aa9a5) Thanks [@jihnma](https://github.com/jihnma)! - Breaking change: rebuild all five palettes in OKLCH, as ten separately designed schemes.
+
+  Light and dark are no longer one palette inverted. Every ramp is built on an even OKLab lightness step — only Solace was ever checked for progressivity, and the other four were violating it badly, with jumps of 0.17–0.20 at `tone-3→4` against a 0.12 ceiling, which is why their mid-greys collapsed into each other. Nothing in the set reaches `#ffffff` or `#000000` at either end.
+
+  **Each palette carries its own page, and they are spread on purpose.** Porcelain `#fdfdfe` is the starkest ground; Solace `#fdfcfa` the near-white; Marigold `#faf9fc` a bright panel with a trace of its own violet; Eucalyptus `#f4f7f9` a soft canvas that was never pure white; Tobacco `#f6f3f0` an aged stock. Dark grounds are five different rooms rather than one: a slate night `#0f171e`, a neutral black `[#151617](https://github.com/beaket/ui/issues/151617)`, a warm `#1b150e`, a violet-black `#18141f`, and a grey `[#222527](https://github.com/beaket/ui/issues/222527)` that deliberately sits well above black.
+
+  **A ramp may travel in hue as well as lightness.** Solace runs warm paper under cool ink. That cast is interpolated through OKLab a/b rather than by rotating hue, because rotating drags the mid-tones around the colour wheel and straight through green.
+
+  **Signal hue follows convention; its treatment follows the palette.** Green has to read as green, so the hue is not the palette's to choose — but its chroma, lightness tier and temperature are. Tobacco is the quietest set and Marigold the loudest, measured rather than asserted.
+
+  **Role lightness is tiered on purpose.** Hue cannot carry status separation alone: tritanopia collapses blue against green, and protanopia and deuteranopia collapse red against green — and against brown, which is why a warm accent could not coexist with a red danger. Each role sits on its own lightness step, and every palette clears the project's colour-vision floors.
+
+  **Accent is never quieter than danger.** The interaction colour marks what you can do; the destructive one marks a rare path. Tobacco's accent takes the red its reference actually carries, with danger stepping down to a deeper oxblood.
+
+  **Migration.** Re-run `npx @beaket/ui theme <name>` to pick up the palette block. Any consumer that hard-coded a palette value rather than reading a semantic token needs to re-read it; the 69 semantic names are unchanged.
+
+- [#1010](https://github.com/beaket/ui/pull/1010) [`edc2485`](https://github.com/beaket/ui/commit/edc2485be6be765bda86d4a9a7a020c52f52e9fc) Thanks [@jihnma](https://github.com/jihnma)! - Breaking change: return Solace's `info` signal to the blue band, held apart from the accent by step rather than by hue.
+
+  The regrade moved `--signal-info` to a plum at hue 315° and recorded the reason in `DESIGN.md`: "Plum is deliberately not a blue: the accent already owns the blue band, and an informational blue beside it would read as actionable." The diagnosis was right and the remedy was not.
+
+  **The old blue's problem was step, not hue.** Solace light's previous info `#53628f` measured L\* 0.503, C 0.074, h 269.5 against an accent at L\* 0.501, C 0.195, h 263.9 — the same lightness and effectively the same hue, separated by chroma alone. That is why it cleared the project's colour-vision floor by only 0.0485 against a 0.04 minimum, and why it read as a duller version of the thing you can click rather than a different kind of mark.
+
+  **Rotating 45° into plum bought margin by abandoning the convention.** It also made Solace the only palette whose info left the blue band: Porcelain, Eucalyptus and Tobacco all ship a blue info, and Porcelain does it beside a blue accent at 0.0407 — a thinner margin than the Solace blue that was replaced. The stated rule was never held system-wide.
+
+  `--signal-info` is now `[#275085](https://github.com/beaket/ui/issues/275085)` light and `#5f8bc6` dark: the regrade's own lightness and chroma tiers for the role, unchanged (L\* 0.430 / 0.630, C 0.100), with only the hue moved from 315° to 256°. Separation from the accent is now carried by a full lightness step and roughly half the chroma, which is the relationship Eucalyptus already ships between its blue accent and blue info — and it measures 0.0900 light and 0.0743 dark, better than both the old blue and Porcelain's shipping pair. The role's display name follows the value from **Plum** to **Prussian Blue**.
+
+  **Migration.** Re-run `npx @beaket/ui theme solace` to pick up the palette block. Only Solace changes; the other four palettes are untouched. Any consumer that hard-coded `#643d75` or `#a076b3` rather than reading `--color-info-*` needs to re-read it.
+
+- [#996](https://github.com/beaket/ui/pull/996) [`04e10b2`](https://github.com/beaket/ui/commit/04e10b2608c24c4f817256833002d90d019aa9a5) Thanks [@jihnma](https://github.com/jihnma)! - Breaking change: retune the surface, type, and instrument layers so a drawn edge means "you can act on this".
+
+  Measured on the Storybook Overview, 21.7% of rendered elements carried a border while ink fill covered 0.46% of the page — the weight was never the black, it was the lines. Containers now read by surface and drawn shade; strokes are rationed to instruments.
+
+  **The page is now painted.** `--color-bg` was defined and never applied — no `body` rule anywhere in the token layer or the CLI's injected block. That was invisible while `--color-bg` was near-white and the host's default page was white, and it makes every surface claim in this release conditional, so `semantic.css` now sets `body { background-color; color }` as an element selector any consumer rule overrides.
+
+  **Surfaces.** Solace's light ladder landed raised surfaces 1.02:1 from the page — inside the range of its own hover fills — so every container had to draw a border simply to be seen. The direction was never the problem; the step size was. Ladder steps are now large enough to read on their own (1.08:1 and 1.16:1 in Solace light, 1.13:1 and 1.28:1 in dark), and `--shadow-size` goes to 2px so the drawn shade, not a stroke, is what says "raised". A ladder step means separation from the page; which way it travels is a per-theme decision, and half the light schemes now step darker than their page rather than climbing toward white. The palette values themselves are set by the accompanying regrade.
+
+  **Body ink.** `--color-fg` moves from the ramp's deepest step to `--tone-10`, taking body text from 17.7:1 to 15.2:1 against the page. The deepest step measured well over 2x the AAA threshold and read as a high-contrast accessibility mode rather than a printed page. `--color-border-strong` and `--color-bg-emphasis` stay deepest, so emphasis still wins; the One Ink, Three Pressures Rule now covers type as well as stroke, and `--tone-10` leaves the reserved set (28 functional palette values, not 27, with only `--tone-8` and `--tone-9` held back).
+
+  **Type.** `--text-xs` 11px → 12px and `--text-sm` 13px → 14px, with `--text-xs--line-height` and `--text-sm--line-height` pinned at 1.45 / 1.55 (Tailwind derives leading from its own scale, so overriding size alone left 14px text on a 1.43 ratio). Hangul packs two or three jamo into one em and kanji can carry a dozen strokes; both collapse below 12px where Latin does not.
+
+  **CJK.** `--font-sans` gains CJK families — none of the Latin entries carry Hangul or Kana, so resolution was uncontrolled OS fallback that differed per platform. One flat list is not enough: fallback runs per codepoint and a Korean face such as Apple SD Gothic Neo also covers the CJK ideograph block, so whichever script is named first captures every ideograph and the other renders in the wrong national glyph forms. `@layer base` therefore re-declares `font-family` per `:lang(ko|ja|zh|zh-Hant)` — re-declares rather than swaps a variable, because preflight sets `font-family` once on `html` and descendants inherit the already-substituted value. `:lang(zh-Hant)` cannot infer the script from a region-only tag, so `zh-TW`, `zh-HK` and `zh-MO` are named alongside it — otherwise the Simplified rule stays active and Traditional text renders in Simplified glyph forms. `:lang(ko)` also sets `word-break: keep-all`, without which Korean wraps mid-eojeol (관리|하려면). All of this requires the host to set `lang` on the document. `Alert.Title` drops `tracking-tight`, which tightened glyphs that are already full-width. A new `Design/CJK` story renders Korean and Japanese screens so the floor has a visual baseline — nothing else in the set contained a single Hangul or Kana glyph.
+
+  **Instruments.** Checkbox and Radio move from a 24px chassis to 16px, and `Switch` defaults to `sm` (28×16). Hit expanders are re-measured from the padding box, so the inset moves to `-15px` and every control still clears 44×44.
+
+  **Containers.** Card, the DataTable container, the Table wrapper and Alert drop their resting borders. Alert becomes one 2px role rule down its leading edge. Table row seams move to the new `--color-border-subtle` (69th semantic name) and data cells can wrap again.
+
+  **Fixes.** Fused-strip hit expanders overlapped their neighbours — `elementFromPoint` 2px inside a Navigation cell returned the adjacent one, and ~8px of every Tabs cell activated the wrong tab. Horizontal expansion is removed inside a strip and kept on its outer edges — keyed off the `<li>` in Navigation, where every link is alone in its own list item and `first:`/`last:` had matched all of them. A disabled Switch rendered track and thumb at the same grey (1.00:1) — unchecked, both landed on `border-muted`; the thumb now draws in `fg-disabled`, the disabled ink Radio's indicator already uses, which clears both disabled track values (worst of the ten schemes: 1.79:1 unchecked, 3.34:1 checked). Taking it to `bg-disabled` instead would have moved the collapse onto the checked track rather than removed it — that track is `bg-disabled` too. `Card.Title` loses `leading-none`, which clipped its own descenders. A read-only Input now sits flush with the page instead of being materially identical to a writable one. `ring-0` is removed from the Switch thumb — a live zero shadow in a system that refuses rings. A read-only Textarea gains the same treatment as Input, which had been split. Stacked bare instruments in the Checkbox, Radio and Switch stories move to a 44px pitch: a 16px chassis reserves a 44px target, so a tighter stack made the lower third of each control belong to its neighbour.
+
+  **Migration.** Re-run `npx @beaket/ui theme <name>` to pick up the palette and foundation block. Consumers who copied components earlier keep their files; re-run `add` for the component changes. Anything that pinned a 24px checkbox or radio in its own layout, or relied on `Switch` defaulting to `md`, needs the size passed explicitly. Set `lang` on your document for the Korean line-breaking rule to apply.
+
+### Patch Changes
+
+- [#1020](https://github.com/beaket/ui/pull/1020) [`3092754`](https://github.com/beaket/ui/commit/3092754d557518e57790e6e36bb793c6d9d0213f) Thanks [@jihnma](https://github.com/jihnma)! - Breadcrumb: widen the gap around the separator from 4px to 8px.
+
+  At `gap-1` the separator sat 4px from the labels on both sides, which reads as
+  one crowded string rather than a trail. DESIGN.md spends 4px on icon gaps and
+  8px on control gaps; a separator standing between two labels belongs to the
+  latter. `Breadcrumb.List` and `Breadcrumb.Item` both move to `gap-2`, so the
+  spacing is symmetric whether the separator is composed inside the item (as the
+  shipped examples do) or as a sibling in the list.
+
+- [#1011](https://github.com/beaket/ui/pull/1011) [`a3b7a81`](https://github.com/beaket/ui/commit/a3b7a81b4490c4860f8f7a5c5cae22dd46094132) Thanks [@jihnma](https://github.com/jihnma)! - Stop treating a commented-out `@import "tailwindcss"` as a real Tailwind import.
+
+  `init` picks your Tailwind entry by looking for that import, but it tested the raw
+  file while the setup check tested the file with comments stripped. The two
+  disagreed, so a stylesheet whose only `@import "tailwindcss"` sat inside a `/* */`
+  comment could be chosen as the theme target and then reported as not importing
+  Tailwind. Both paths now share the comment-aware check.
+
+  Internal tidying with no visible change: one BOM-tolerant JSON reader instead of
+  four, one `package.json` read for the Next.js check instead of two, and the
+  component-level `up-to-date`/`outdated` status has been dropped from
+  `compareComponent` — `diff` reports per-file status and never read it.
+
 ## 4.1.1
 
 ### Patch Changes
