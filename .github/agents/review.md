@@ -14,7 +14,7 @@ an hour. There are two ways this file runs:
 
 - The pull request body, every commit, the full diff, and the check results. Wait for nothing:
   if checks are still running, say which and review the rest.
-- Review comments already on it, including GitHub Copilot's. Note whether each was addressed.
+- Review comments already on it. Note whether each was addressed.
 - The linked issue, and the documents that govern the files it touches: `DESIGN.md` for anything
   visual, `docs/git-rules.md` for anything in the public contract, `docs/component-api-patterns.md`
   for component APIs, and `packages/paper/docs/CONTEXT.md` for `area:paper`.
