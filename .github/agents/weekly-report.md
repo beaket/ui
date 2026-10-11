@@ -25,7 +25,12 @@ See [`README.md` § The runtime](./README.md#the-runtime) for what `gh` can reac
 - **Release pull request**: whether `changeset-release/main` is open, and how many changesets it
   carries.
 - **Downloads**: `curl -s https://api.npmjs.org/downloads/point/last-week/@beaket/ui` and the same for
-  `@beaket/paper`. Write `n/a` if unreachable.
+  `@beaket/paper`. Write `n/a` if unreachable. Stars: `gh api repos/beaket/ui --jq .stargazers_count`.
+- **Security**: the open-alert count per list from the latest security run's summary, or rerun the
+  three alert queries from [`security.md`](./security.md#1-alerts). Counts only — never alert details.
+- **Desks**: for each label `desk:dev`, `desk:design`, `desk:growth`, and `desk:security` — issues
+  filed in the window, open now, and accepted and declined over the last 8 weeks, as the
+  [desk throttle](./README.md#desk-throttle) defines them.
 - **Waiting on a human**: issues and pull requests opened by outside contributors with no maintainer
   reply for more than 3 days. Read each one and draft a short reply in the project's voice — factual,
   warm, no promises about dates. These are drafts for the maintainer to post; do not post them.
@@ -64,6 +69,19 @@ Write "Nothing needs you this week." when empty.
 | Pending changesets            |           |        |
 | npm downloads `@beaket/ui`    |           |        |
 | npm downloads `@beaket/paper` |           |        |
+| GitHub stars                  |           |        |
+| Open security alerts          |           |        |
+
+## Desks
+
+| Desk     | Filed | Open | Accepted (8 wk) | Declined (8 wk) |
+| -------- | ----- | ---- | --------------- | --------------- |
+| Dev      |       |      |                 |                 |
+| Design   |       |      |                 |                 |
+| Growth   |       |      |                 |                 |
+| Security |       |      |                 |                 |
+
+One line after the table: which desk is throttled, if any, and why.
 
 ## Shipped
 
