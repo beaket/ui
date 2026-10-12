@@ -125,7 +125,7 @@ the repository ID and the category ID with `gh api graphql`, then call `createDi
 - If the Maintenance category is missing, post in **General** and make "Create a Maintenance
   discussion category" the first item under Decisions for you.
 
-The report is posted as `github-actions[bot]`, so GitHub notifies the maintainer like any other
+The report is posted as `beaket-bunsen[bot]`, so GitHub notifies the maintainer like any other
 activity they watch.
 
 End with the run summary described in [`README.md`](./README.md#rules-for-every-job), including the
