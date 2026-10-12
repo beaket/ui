@@ -1,8 +1,9 @@
 # Release review
 
-Once a week, tell the maintainer whether the release pull request is ready to ship, so releasing
-is one informed click. You run as Beaket Bunsen Reviewer. You never merge: merging the release pull
-request publishes to npm, and that is the maintainer's act.
+Once a week, decide whether the release pull request is ready to ship. You run as Beaket Bunsen
+Reviewer. You never merge, but your approval releases: the merge step merges an approved release
+pull request once its checks pass, and merging publishes to npm. A release with a `major` bump or a
+`Breaking change:` is the maintainer's decision, so it gets a comment, never an approval.
 
 Releases are weekly. The one exception is a security fix, which the security desk escalates the day
 it lands (see [`security.md`](./security.md#4-ship-security-fixes)); a maintainer can also start

@@ -55,11 +55,17 @@ the code — goes straight to a pull request instead of an issue; the charter al
 `agent:ready`. Open **at most one** per run, bundling this run's fixes on a branch named
 `agent/docs-YYYY-MM-DD`.
 
-- Only files under `docs/`, `sites/`, `README.md`, and `packages/*/README.md`. Never the files the
-  charter reserves for the maintainer, and never component source, even to fix a doc comment.
+- Only files under `docs/`, `sites/`, `README.md`, `packages/*/README.md`, and
+  `packages/*/CHANGELOG.md`. Never the files the charter reserves for the maintainer, and never
+  component source, even to fix a doc comment.
 - Run `npx prettier --check` on the files you changed, and `pnpm --filter docs build` when you
   touched `docs/`.
-- No changeset; docs are not a published package.
+- No changeset; docs are not a published package. The exception is a `CHANGELOG.md` fix, which
+  needs an empty one (`pnpm changeset --empty`) because the changeset check covers `packages/`.
+- A rendering error, broken link, or typo in a published release's notes lives in two places: fix
+  the `CHANGELOG.md` entry in this pull request, and the GitHub release body with
+  `gh release edit <tag> --notes-file <file>`. Quote the old and new release text in the pull
+  request body. Correct how a note reads, never what it says shipped.
 - Title `docs: …`; body lists each fix with the evidence that it was wrong, and ends with
   `<sub>Opened by Bunsen · growth run · YYYY-MM-DD</sub>`.
 

@@ -6,7 +6,8 @@ an hour. There are two ways this file runs:
 - **As Beaket Bunsen Reviewer**, right after a Bunsen writing desk (fix, growth, security) opens or
   updates a pull request. You are a separate App on a different model; you did not write the pull
   request and cannot push to it. Your verdict is a real GitHub review: approve or request changes.
-  The maintainer still merges.
+  An approval merges it once every check passes — no one reviews after you, so approve only what
+  you would merge yourself.
 - **As Bunsen**, when a maintainer asks with `@bunsen review` on anyone's pull request. Your review
   is advice in the thread, never an approval.
 
@@ -43,11 +44,11 @@ to say, say so in one line.
 
 As Beaket Bunsen Reviewer, post it with `gh pr review <number> --body-file <file>` and:
 
-| Verdict          | Flag                | When                                                                                            |
-| ---------------- | ------------------- | ----------------------------------------------------------------------------------------------- |
-| Ready to merge   | `--approve`         | Every check above holds, required checks pass, and you would defend the merge to the maintainer |
-| Needs changes    | `--request-changes` | Something the author can fix. The fix desk picks it up on its next run                          |
-| Needs a decision | `--comment`         | A charter, design, or contract question only the maintainer can answer. Say which one           |
+| Verdict          | Flag                | When                                                                                           |
+| ---------------- | ------------------- | ---------------------------------------------------------------------------------------------- |
+| Ready to merge   | `--approve`         | Every check above holds, no check has failed, and you would defend the merge to the maintainer |
+| Needs changes    | `--request-changes` | Something the author can fix. The fix desk picks it up on its next run                         |
+| Needs a decision | `--comment`         | A charter, design, or contract question only the maintainer can answer. Say which one          |
 
 Approve only what you have read in full. When in doubt, it is **Needs changes** or **Needs a
 decision**, never an approval.
