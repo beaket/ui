@@ -233,7 +233,7 @@ maintainer merging and releasing; since 2026-10-12 an approval merges under the
       no workflows or administration permission — passed to the workflow as `github_token`. Pull
       requests opened with the workflow's own token do not trigger CI, so the fix job and docs
       pull requests need the App.
-- [ ] Beaket Bunsen Reviewer GitHub App installed on this repository with pull requests (write)
+- [x] Beaket Bunsen Reviewer GitHub App installed on this repository with pull requests (write)
       and contents, issues, checks, and actions (read) — no contents write
 - [x] A private repository, `beaket/bunsen`, for what should not be public yet: announcement
       drafts, growth notes, and anything the security desk holds back
