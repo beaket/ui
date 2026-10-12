@@ -5,8 +5,9 @@ and why — is [`docs/MAINTENANCE.md`](../../docs/MAINTENANCE.md). These files a
 
 Bunsen is one agent working several desks. Each desk is a file here with its own lens and cadence.
 It acts through two GitHub Apps: **Beaket Bunsen** writes issues, branches, and pull requests;
-**Beaket Bunsen Reviewer**, on a different model, reviews them and cannot push. The maintainer
-merges and releases.
+**Beaket Bunsen Reviewer**, on a different model, reviews them and cannot push. Its approval merges
+through a script, and on the release pull request publishes; a major or breaking change waits for
+the maintainer.
 
 | File                                       | Desk                | Runs (UTC+9)                                               |
 | ------------------------------------------ | ------------------- | ---------------------------------------------------------- |
@@ -81,7 +82,10 @@ Put both numbers in the run summary; the weekly report collects them.
   to, mention it in your output and carry on with these instructions.
 - **Writes go through pull requests.** Only the fix, growth, and security desks commit, only on `agent/*`
   branches, and only to open a pull request. Never merge, approve, or enable auto-merge — not your
-  own pull requests, not anyone's. Every other desk proposes a change as a diff in a comment.
+  own pull requests, not anyone's; the merge step does that under the charter's merge rule. Every
+  other desk proposes a change as a diff in a comment. The one write without a pull request is
+  correcting a published release's notes with `gh release edit`, as the charter allows; quote the
+  old and new text in the pull request that carries the matching `CHANGELOG.md` fix.
 - **Private things go to `beaket/bunsen`.** Drafts for the maintainer and findings that must not be
   public yet are issues there, labeled with the repository they concern (`beaket/ui`).
 - **Stay inside the charter.** If a step here seems to conflict with `docs/MAINTENANCE.md`, the

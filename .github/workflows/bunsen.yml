@@ -3,8 +3,9 @@ name: Bunsen
 #
 # Two GitHub Apps split the work. Beaket Bunsen (beaket-bunsen[bot]) writes issues, branches, and
 # pull requests. Beaket Bunsen Reviewer (beaket-bunsen-reviewer[bot]) reviews them on a different
-# model and cannot push. The maintainer merges and releases; no job here merges. Each job mints App
-# tokens with only what it needs, and Claude is billed to the company Console through federation.
+# model and cannot push. An approval merges through .github/scripts/bunsen-merge.sh, never through
+# Claude; a major or breaking change waits for the maintainer. Each job mints App tokens with only
+# what it needs, and Claude is billed to the company Console through federation.
 
 on:
   # Issue and pull request conversation comments. Inline review comments are left out: they run
@@ -359,10 +360,23 @@ jobs:
         env:
           EXECUTION_FILE: ${{ steps.claude.outputs.execution_file }}
         run: .github/scripts/summarize-claude-run.sh "$EXECUTION_FILE"
+      # An approval merges unless the change is major or breaking. The script decides, not a model.
+      - id: merge-token
+        uses: actions/create-github-app-token@v3.2.0
+        with:
+          app-id: ${{ vars.BUNSEN_APP_ID }}
+          private-key: ${{ secrets.BUNSEN_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Merge if approved
+        env:
+          GH_TOKEN: ${{ steps.merge-token.outputs.token }}
+          PR: ${{ needs.write.outputs.pr }}
+        run: .github/scripts/bunsen-merge.sh "$PR"
 
   release:
-    # Weekly, the reviewer checks the release pull request and tells the maintainer whether it is
-    # ready. Merging it publishes to npm; only the maintainer does that.
+    # Weekly, the reviewer checks the release pull request. Its approval merges it, which publishes
+    # to npm; a release with a major or breaking change waits for the maintainer.
     if: >-
       (github.event_name == 'schedule' && github.event.schedule == '7 6 * * 4') ||
       (github.event_name == 'workflow_dispatch' && inputs.job == 'release')
@@ -416,3 +430,16 @@ jobs:
         env:
           EXECUTION_FILE: ${{ steps.claude.outputs.execution_file }}
         run: .github/scripts/summarize-claude-run.sh "$EXECUTION_FILE"
+      - id: merge-token
+        uses: actions/create-github-app-token@v3.2.0
+        with:
+          app-id: ${{ vars.BUNSEN_APP_ID }}
+          private-key: ${{ secrets.BUNSEN_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Merge if approved
+        env:
+          GH_TOKEN: ${{ steps.merge-token.outputs.token }}
+        run: |
+          pr=$(gh pr list --repo beaket/ui --head changeset-release/main --state open --json number --jq '.[0].number // empty')
+          if [ -n "$pr" ]; then .github/scripts/bunsen-merge.sh "$pr"; fi

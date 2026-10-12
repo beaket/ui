@@ -1,0 +1,58 @@
+name: Bunsen merge
+# Merges Bunsen's pull requests and the release pull request once Beaket Bunsen Reviewer has
+# approved them and every check has passed; a major or breaking change waits for the maintainer.
+# The rule is .github/scripts/bunsen-merge.sh, and the charter is docs/MAINTENANCE.md § Merging.
+#
+# The Bunsen workflow runs the script right after each review. This one runs it again when a pull
+# request's checks finish, since they usually finish after the review, and once each weekday for
+# anything neither caught (CodeQL, for one, is not a workflow this can wait on). No Claude here.
+
+on:
+  workflow_run:
+    workflows: [CI, Visual regression, Consumer templates, Changeset Check]
+    types: [completed]
+  schedule:
+    - cron: "47 2 * * 1-5" # Weekdays 11:47 UTC+9, after the fix desk and its review
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  merge:
+    # For workflow_run, only same-named branches are candidates; the script checks the author too.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.event == 'pull_request' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       (startsWith(github.event.workflow_run.head_branch, 'agent/') ||
+        github.event.workflow_run.head_branch == 'changeset-release/main'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: bunsen-merge-${{ github.event.workflow_run.head_branch || 'sweep' }}
+    steps:
+      - id: app-token
+        uses: actions/create-github-app-token@v3.2.0
+        with:
+          app-id: ${{ vars.BUNSEN_APP_ID }}
+          private-key: ${{ secrets.BUNSEN_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      # main's copy of the script, never the pull request's.
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/scripts
+      - name: Merge what is approved
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          if [ -n "$BRANCH" ]; then
+            prs=$(gh pr list --repo beaket/ui --head "$BRANCH" --state open --json number --jq '.[].number')
+          else
+            prs=$(gh pr list --repo beaket/ui --state open --json number,headRefName \
+              --jq '.[] | select(.headRefName | startswith("agent/") or . == "changeset-release/main") | .number')
+          fi
+          for pr in $prs; do .github/scripts/bunsen-merge.sh "$pr"; done

@@ -62,4 +62,4 @@ Anything noticed but left alone.
 ```
 
 Never merge, approve, or enable auto-merge. Beaket Bunsen Reviewer reviews the pull request right
-after this run; the maintainer merges.
+after this run, and its approval merges it once every check passes.
