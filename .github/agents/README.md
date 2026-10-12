@@ -20,7 +20,10 @@ the maintainer.
 | [`weekly-report.md`](./weekly-report.md)   | Weekly report       | Monday, 09:07                                              |
 | [`review.md`](./review.md)                 | Review              | After each writing run (Reviewer App); on `@bunsen review` |
 | [`fix.md`](./fix.md)                       | Fix                 | Weekdays, 11:07, when there is work                        |
-| [`release.md`](./release.md)               | Release review      | Thursday, 15:07 (Reviewer App); on demand for security     |
+| [`release.md`](./release.md)               | Release review      | Thursday, 09:17 (Reviewer App); on demand for security     |
+
+The times are when GitHub queues a run; it often starts scheduled runs hours later. Do not assume
+another desk has or has not run yet today.
 
 Every job runs in GitHub Actions from [`.github/workflows/bunsen.yml`](../workflows/bunsen.yml),
 which starts Claude Code with a short prompt naming one of these files. Everything else the agent

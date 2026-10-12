@@ -157,8 +157,13 @@ All times are UTC+9.
 | Growth        | Friday, 10:07                      | Up to 3 documentation issues                             |
 | Weekly report | Monday, 09:07                      | One Discussion covering the previous Monday–Sunday       |
 | Fix           | Weekdays, 11:07                    | Pull requests for `agent:ready` issues, one issue per PR |
-| Release       | Thursday, 15:07                    | A release verdict; an approval merges, which publishes   |
+| Release       | Thursday, 09:17                    | A release verdict; an approval merges, which publishes   |
 | Merge         | When checks finish; weekdays 11:47 | Merges what the reviewer approved — no Claude involved   |
+
+The times are when GitHub queues a run, not when it starts. Under load GitHub starts scheduled runs
+late — in this organization four to six hours late in a typical week of 2026 — and may skip one. The
+weekly report counts which desks ran and how late. A desk that keeps missing its slot is the signal
+to move it or to start it some other way.
 
 The scheduled jobs can also be started by hand from the Bunsen workflow's **Run workflow** button,
 or by asking `@bunsen` in a comment.
