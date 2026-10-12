@@ -1,23 +1,29 @@
 name: Release
 
+# Releases are weekly (docs/MAINTENANCE.md § Releases). This workflow does two jobs:
+#
+#   1. Rebuild the release PR from every pending changeset, then start Bunsen's
+#      release review. Weekly on schedule, or by hand for an urgent release such
+#      as a security fix. The reviewer's approval merges the PR.
+#   2. Publish when a merged release PR lands on main.
+#
+# A push to main never rebuilds the release PR. Rebuilding on every push
+# restarted the PR's checks, each held for the maintainer's approval, on every
+# merge. A stale base is not the risk it was when #893's fix failed to reach
+# #882: the rebuild runs right before the review, on the main of that moment.
 on:
+  schedule:
+    # Thursday 09:17 UTC+9. Early, because an approval publishes: hours of
+    # GitHub delay should still land the release in working hours.
+    - cron: "17 0 * * 4"
+  workflow_dispatch:
   push:
     branches:
       - main
-    # Deliberately no `paths` filter. This workflow does two jobs, and only one
-    # of them is about package content:
-    #
-    #   1. publish when main has no changesets left, and
-    #   2. keep the release PR rebased on main.
-    #
-    # (2) depends on all of main, not a subset of it. With a paths filter, a
-    # push that misses the list leaves the release PR sitting on a stale base
-    # until some unrelated change happens to touch `src/**` — and a stale base
-    # is invisible until the release PR's checks fail against a tree nobody is
-    # looking at. That is exactly how #893's fix failed to reach #882.
-    #
-    # The run is cheap when there is nothing to do, and `concurrency` below
-    # collapses bursts, so the filter was buying very little.
+    # Only a merged release PR, which writes the changelogs, has anything to
+    # publish. A changelog fix on its own publishes nothing.
+    paths:
+      - "packages/*/CHANGELOG.md"
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -28,6 +34,7 @@ jobs:
       contents: write
       pull-requests: write
       checks: write
+      actions: write # start the release review in bunsen.yml
       id-token: write # OIDC for npm publish provenance
     steps:
       - uses: actions/checkout@v7.0.1
@@ -42,6 +49,14 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      # A push publishes the release PR that was just merged, and nothing else.
+      # Changesets merged after the weekly rebuild wait for the next one. Set
+      # aside here (the files stay on main), changesets/action sees none and
+      # publishes; otherwise it would rebuild the release PR instead.
+      - name: Set later changesets aside
+        if: github.event_name == 'push'
+        run: find .changeset -maxdepth 1 -name '*.md' ! -name README.md -delete
 
       - name: Create Release Pull Request or Publish
         id: changesets
@@ -84,3 +99,10 @@ jobs:
                 summary: 'Automatically approved for Release PR created by changesets'
               }
             });
+
+      # The workflow's own token may start another workflow by dispatch.
+      - name: Start the release review
+        if: github.event_name != 'push' && steps.changesets.outputs.pr-number
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run bunsen.yml --repo "$GITHUB_REPOSITORY" --ref main -f job=release

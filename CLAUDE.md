@@ -15,7 +15,7 @@ The editor (`@beaket/paper`) is **exempt from the component checklist** — no r
 
 ## Maintenance automation
 
-Bunsen, the organization's scheduled AI agent, works several desks — triage, security, developer and designer proposals, growth and docs, fixes, reviews — and posts a weekly report. It writes pull requests; an independent reviewer App approves them, and an approval merges and releases — a major or breaking change waits for the maintainer. Its charter — what it may do and what stays with the maintainer — is `docs/MAINTENANCE.md`; run instructions are in `.github/agents/`.
+Bunsen, the organization's scheduled AI agent, works several desks — triage, security, developer and designer proposals, growth and docs, fixes, reviews — and posts a weekly report. It writes pull requests; an independent reviewer App approves them, and an approval merges them; a weekly release goes out the same way. A major or breaking change waits for the maintainer. Its charter — what it may do and what stays with the maintainer — is `docs/MAINTENANCE.md`; run instructions are in `.github/agents/`.
 
 ## Architecture
 

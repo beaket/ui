@@ -157,7 +157,7 @@ All times are UTC+9.
 | Growth        | Friday, 10:07                      | Up to 3 documentation issues                             |
 | Weekly report | Monday, 09:07                      | One Discussion covering the previous Monday–Sunday       |
 | Fix           | Weekdays, 11:07                    | Pull requests for `agent:ready` issues, one issue per PR |
-| Release       | Thursday, 09:17                    | A release verdict; an approval merges, which publishes   |
+| Release       | Thursday, 09:17, after the rebuild | A release verdict; an approval merges, which publishes   |
 | Merge         | When checks finish; weekdays 11:47 | Merges what the reviewer approved — no Claude involved   |
 
 The times are when GitHub queues a run, not when it starts. Under load GitHub starts scheduled runs
@@ -193,12 +193,14 @@ did before.
 
 ## Releases
 
-Releases are weekly: on Thursday the reviewer reviews the release pull request, and its approval
-merges it, which publishes to npm. A security fix does not wait — the security desk gets it onto
-`main` with a `Security:` changeset and escalates the release the same day; running the release
-review early ships it. A release that carries a `major` or `Breaking change:` changeset is always
-the maintainer's explicit decision: the reviewer comments instead of approving, and the merge rule
-refuses it regardless.
+Releases are weekly. On Thursday the **Release** workflow rebuilds the release pull request from
+every pending changeset and starts the release review; the reviewer's approval merges it, which
+publishes to npm. Between Thursdays a merge to `main` leaves the release pull request alone, and new
+changesets wait for the next rebuild. A security fix does not wait — the security desk gets it onto
+`main` with a `Security:` changeset and escalates the same day; running the Release workflow by hand
+rebuilds the pull request and starts the review, which ships it. A release that carries a `major` or
+`Breaking change:` changeset is always the maintainer's explicit decision: the reviewer comments
+instead of approving, and the merge rule refuses it regardless.
 
 ## The weekly report
 
