@@ -28,6 +28,12 @@ See [`README.md` § The runtime](./README.md#the-runtime) for what `gh` can reac
   `@beaket/paper`. Write `n/a` if unreachable. Stars: `gh api repos/beaket/ui --jq .stargazers_count`.
 - **Security**: the open-alert count per list from the latest security run's summary, or rerun the
   three alert queries from [`security.md`](./security.md#1-alerts). Counts only — never alert details.
+- **Scheduled runs**: the Bunsen workflow's runs started by its schedule in the window
+  (`actions/workflows/bunsen.yml/runs?event=schedule&created=<from>..<to>`, in UTC). Each is named
+  `Bunsen · <cron line>`; map the lines to desks with the `schedule` block of
+  `.github/workflows/bunsen.yml`. For each line, count the slots due in the window and the runs that
+  started, and take the delay from slot to `created_at`. Report the totals and the longest delay,
+  and name every desk that missed a slot.
 - **Desks**: for each label `desk:dev`, `desk:design`, `desk:growth`, and `desk:security` — issues
   filed in the window, open now, and accepted and declined over the last 8 weeks, as the
   [desk throttle](./README.md#desk-throttle) defines them.
@@ -61,6 +67,8 @@ Write "Nothing needs you this week." when empty.
 | Signal                        | This week | Change |
 | ----------------------------- | --------- | ------ |
 | CI runs on `main` (failed)    |           |        |
+| Scheduled runs started / due  |           |        |
+| Longest schedule delay        |           |        |
 | Open issues                   |           |        |
 | `needs:maintainer`            |           |        |
 | `agent:ready` (unclaimed)     |           |        |
@@ -101,7 +109,8 @@ What triage checked this week against the guardrails in `docs/MAINTENANCE.md`, a
 ## Process notes
 
 Omit this section when empty. Proposed changes to the agent's instructions or the charter, problems
-the agent hit (access errors, unreachable services), and guardrails worth promoting to CI.
+the agent hit (access errors, unreachable services), desks that missed a scheduled slot, and
+guardrails worth promoting to CI.
 
 <sub>Filed by Bunsen · weekly report · YYYY-MM-DD</sub>
 ```

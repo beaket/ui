@@ -7,6 +7,12 @@ name: Bunsen
 # Claude; a major or breaking change waits for the maintainer. Each job mints App tokens with only
 # what it needs, and Claude is billed to the company Console through federation.
 
+# Scheduled runs are named after their cron line, so the weekly report can count which desks ran and
+# how late GitHub started them. Comment runs keep the issue's title.
+run-name: >-
+  ${{ github.event_name == 'issue_comment' && github.event.issue.title
+  || format('Bunsen · {0}', inputs.job || github.event.schedule) }}
+
 on:
   # Issue and pull request conversation comments. Inline review comments are left out: they run
   # with a pull_request subject, which the federation rule does not accept.
@@ -22,7 +28,9 @@ on:
     - cron: "7 0 * * 4" # Designer proposals, Thursday 09:07
     - cron: "7 1 * * 5" # Growth and docs, Friday 10:07
     - cron: "7 2 * * 1-5" # Fix, weekdays 11:07
-    - cron: "7 6 * * 4" # Release review, Thursday 15:07
+    # Release review, Thursday 09:17. Early, because an approval publishes: hours of GitHub delay
+    # should still land the release in working hours.
+    - cron: "17 0 * * 4"
   workflow_dispatch:
     inputs:
       job:
@@ -378,7 +386,7 @@ jobs:
     # Weekly, the reviewer checks the release pull request. Its approval merges it, which publishes
     # to npm; a release with a major or breaking change waits for the maintainer.
     if: >-
-      (github.event_name == 'schedule' && github.event.schedule == '7 6 * * 4') ||
+      (github.event_name == 'schedule' && github.event.schedule == '17 0 * * 4') ||
       (github.event_name == 'workflow_dispatch' && inputs.job == 'release')
     runs-on: ubuntu-latest
     timeout-minutes: 30
