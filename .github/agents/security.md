@@ -69,9 +69,11 @@ published package ships to users — a `dependencies` entry in `packages/cli/pac
    `Security:` changeset.
 3. **Escalate the release.** When a `Security:` changeset is pending on `main`, file one issue —
    title `Release the security fix for <advisory ID>`, labels `source:agent`, `desk:security`,
-   `security`, `needs:maintainer`, `p1` recommended in the body — linking the release pull request.
-   If the release pull request also carries a breaking change, say so in the issue: the maintainer
-   must either ship both or release the fix separately.
+   `security`, `needs:maintainer`, `p1` recommended in the body — linking the changeset and asking
+   the maintainer to run the **Release** workflow by hand (Actions › Release › Run workflow). That
+   rebuilds the release pull request with the fix and starts the release review; the weekly rebuild
+   is days away. If a breaking change is pending too, say so in the issue: the maintainer must
+   either ship both or release the fix separately.
 
 ## 5. Summarize
 

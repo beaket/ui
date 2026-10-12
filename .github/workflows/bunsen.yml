@@ -28,9 +28,8 @@ on:
     - cron: "7 0 * * 4" # Designer proposals, Thursday 09:07
     - cron: "7 1 * * 5" # Growth and docs, Friday 10:07
     - cron: "7 2 * * 1-5" # Fix, weekdays 11:07
-    # Release review, Thursday 09:17. Early, because an approval publishes: hours of GitHub delay
-    # should still land the release in working hours.
-    - cron: "17 0 * * 4"
+    # The release review has no line here: release.yml starts it right after its weekly rebuild of
+    # the release pull request.
   workflow_dispatch:
     inputs:
       job:
@@ -383,11 +382,10 @@ jobs:
         run: .github/scripts/bunsen-merge.sh "$PR"
 
   release:
-    # Weekly, the reviewer checks the release pull request. Its approval merges it, which publishes
-    # to npm; a release with a major or breaking change waits for the maintainer.
-    if: >-
-      (github.event_name == 'schedule' && github.event.schedule == '17 0 * * 4') ||
-      (github.event_name == 'workflow_dispatch' && inputs.job == 'release')
+    # The reviewer checks the release pull request. Its approval merges it, which publishes to npm;
+    # a release with a major or breaking change waits for the maintainer. release.yml dispatches
+    # this weekly, and by hand for an urgent release, right after it rebuilds the pull request.
+    if: github.event_name == 'workflow_dispatch' && inputs.job == 'release'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     concurrency:

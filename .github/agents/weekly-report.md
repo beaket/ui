@@ -32,8 +32,10 @@ See [`README.md` § The runtime](./README.md#the-runtime) for what `gh` can reac
   (`actions/workflows/bunsen.yml/runs?event=schedule&created=<from>..<to>`, in UTC). Each is named
   `Bunsen · <cron line>`; map the lines to desks with the `schedule` block of
   `.github/workflows/bunsen.yml`. For each line, count the slots due in the window and the runs that
-  started, and take the delay from slot to `created_at`. Report the totals and the longest delay,
-  and name every desk that missed a slot.
+  started, and take the delay from slot to `created_at`. The release review has no line of its
+  own: count the Release workflow's scheduled runs (`actions/workflows/release.yml/runs`, same
+  filter) as its slot. Report the totals and the longest delay, and name every desk that missed a
+  slot.
 - **Desks**: for each label `desk:dev`, `desk:design`, `desk:growth`, and `desk:security` — issues
   filed in the window, open now, and accepted and declined over the last 8 weeks, as the
   [desk throttle](./README.md#desk-throttle) defines them.
