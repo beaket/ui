@@ -33,7 +33,7 @@ jobs:
       group: bunsen-merge-${{ github.event.workflow_run.head_branch || 'sweep' }}
     steps:
       - id: app-token
-        uses: actions/create-github-app-token@v3.2.0
+        uses: actions/create-github-app-token@v3.3.0
         with:
           app-id: ${{ vars.BUNSEN_APP_ID }}
           private-key: ${{ secrets.BUNSEN_APP_PRIVATE_KEY }}
