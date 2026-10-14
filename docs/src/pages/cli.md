@@ -104,6 +104,8 @@ Pass `--registry-ref <tag|sha>` to choose a version, or `--latest` to explicitly
 the current commit on `main`. The two options cannot be combined. Historical
 releases 2.8.0 and 3.0.0 have no tags; select a tagged release or explicitly opt into
 `--latest` when a tag is missing. The CLI never silently falls back to `main`.
+`--latest` asks the GitHub API which commit `main` points to; set `GITHUB_TOKEN` to
+avoid its anonymous rate limit on shared networks and CI runners.
 
 Commit `beaket.ui.json`: its `installed` entries record the registry ref, SHA-256
 content hash and CLI version for each copied file. Skipped local edits retain their

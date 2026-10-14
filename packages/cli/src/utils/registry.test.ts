@@ -12,6 +12,7 @@ import {
 afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
   vi.useRealTimers();
 });
 
@@ -24,6 +25,19 @@ it("pins the default tag and resolves moving refs to one immutable commit", asyn
   expect(fetch.mock.calls[0][0]).toContain("/commits/main");
   await expect(resolveRegistryRef({ latest: true, registryRef: "v1" })).rejects.toThrow("either");
   await expect(resolveRegistryRef({ registryRef: "../main" })).rejects.toThrow("Invalid");
+});
+
+it("authenticates only the commit lookup when GITHUB_TOKEN is set", async () => {
+  vi.stubEnv("GITHUB_TOKEN", "t0ken");
+  const sha = "b".repeat(40);
+  const fetch = vi
+    .fn()
+    .mockImplementation(() => Promise.resolve(new Response(JSON.stringify({ sha }))));
+  vi.stubGlobal("fetch", fetch);
+  await resolveRegistryRef({ latest: true });
+  await fetchRegistry(sha);
+  expect(fetch.mock.calls[0][1].headers).toEqual({ authorization: "Bearer t0ken" });
+  expect(fetch.mock.calls[1][1].headers).toBeUndefined();
 });
 
 it("fetches registry and component bytes from the same explicit ref", async () => {

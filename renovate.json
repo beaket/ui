@@ -16,6 +16,11 @@
       "matchManagers": ["github-actions"],
       "matchPackageNames": ["changesets/action"],
       "allowedVersions": "<2"
+    },
+    {
+      "description": "Visual regression runs in mcr.microsoft.com/playwright:v<version>-noble, read from package.json. Microsoft publishes that image some hours after the npm release, so an immediate update PR fails to pull it. Wait a day.",
+      "matchPackageNames": ["playwright", "@playwright/test"],
+      "minimumReleaseAge": "1 day"
     }
   ],
   "vulnerabilityAlerts": {

@@ -57,6 +57,10 @@ jobs:
         run: cat test-results/a11y-summary.md >> "$GITHUB_STEP_SUMMARY"
       - name: Test CLI
         run: pnpm test:cli
+        env:
+          # `add --latest` resolves main through the GitHub API; anonymous calls
+          # from shared runner IPs hit the rate limit and fail with HTTP 403.
+          GITHUB_TOKEN: ${{ github.token }}
       - name: Test generated consumer theme behavior
         run: node scripts/test-theme-consumer.mjs
       - name: Test CLI units

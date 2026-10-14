@@ -69,9 +69,13 @@ export async function resolveRegistryRef(options: RegistryOptions = {}): Promise
   if (/^[a-f0-9]{40}$/i.test(ref) || ref.startsWith("@beaket/ui@")) return ref;
   // A moving branch must become a commit before its files or baseline are fetched.
   const url = `https://api.github.com/repos/beaket/ui/commits/${encodeURIComponent(ref)}`;
+  // Anonymous API calls share a 60/hour limit per IP, which CI runners exhaust.
+  // A token lifts it; only this api.github.com call ever sees it.
+  const token = process.env.GITHUB_TOKEN;
   const commit = await fetchWithTimeout(
     url,
     async (response) => (await response.json()) as { sha: string },
+    token ? { authorization: `Bearer ${token}` } : undefined,
   );
   if (!/^[a-f0-9]{40}$/i.test(commit.sha)) throw new Error(`Could not resolve registry ref ${ref}`);
   return commit.sha;
@@ -87,12 +91,13 @@ export const FETCH_TIMEOUT_MS = 10_000;
 async function fetchWithTimeout<T>(
   url: string,
   readBody: (res: Response) => Promise<T>,
+  headers?: Record<string, string>,
 ): Promise<T> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
   try {
-    const response = await fetch(url, { signal: controller.signal });
+    const response = await fetch(url, { headers, signal: controller.signal });
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
