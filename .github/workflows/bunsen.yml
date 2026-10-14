@@ -71,7 +71,7 @@ jobs:
       id-token: write
     steps:
       - id: app-token
-        uses: actions/create-github-app-token@v3.3.0
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           app-id: ${{ vars.BUNSEN_APP_ID }}
           private-key: ${{ secrets.BUNSEN_APP_PRIVATE_KEY }}
@@ -86,12 +86,12 @@ jobs:
           permission-security-events: read
           permission-vulnerability-alerts: read
           permission-secret-scanning-alerts: read
-      - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 50
           persist-credentials: false
       - id: claude
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@1d6de8cb0c237e7c15e9e1bdf973826ebae490cc # v1.0.248
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         with:
@@ -145,7 +145,7 @@ jobs:
           test -n "$job"
           echo "JOB=$job" >> "$GITHUB_ENV"
       - id: app-token
-        uses: actions/create-github-app-token@v3.3.0
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           app-id: ${{ vars.BUNSEN_APP_ID }}
           private-key: ${{ secrets.BUNSEN_APP_PRIVATE_KEY }}
@@ -160,12 +160,12 @@ jobs:
           permission-security-events: read
           permission-vulnerability-alerts: read
           permission-secret-scanning-alerts: read
-      - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 200
           persist-credentials: false
       - id: claude
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@1d6de8cb0c237e7c15e9e1bdf973826ebae490cc # v1.0.248
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         with:
@@ -224,7 +224,7 @@ jobs:
           echo "JOB=$job" >> "$GITHUB_ENV"
           echo "STARTED=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
       - id: app-token
-        uses: actions/create-github-app-token@v3.3.0
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           app-id: ${{ vars.BUNSEN_APP_ID }}
           private-key: ${{ secrets.BUNSEN_APP_PRIVATE_KEY }}
@@ -255,7 +255,7 @@ jobs:
             fi
           fi
       - if: steps.work.outputs.skip != 'true'
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 50
           token: ${{ steps.app-token.outputs.token }}
@@ -265,9 +265,9 @@ jobs:
           git config user.name "beaket-bunsen[bot]"
           git config user.email "340865321+beaket-bunsen[bot]@users.noreply.github.com"
       - if: steps.work.outputs.skip != 'true'
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
       - if: steps.work.outputs.skip != 'true'
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: pnpm
@@ -275,7 +275,7 @@ jobs:
         run: pnpm install
       - id: claude
         if: steps.work.outputs.skip != 'true'
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@1d6de8cb0c237e7c15e9e1bdf973826ebae490cc # v1.0.248
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         with:
@@ -326,7 +326,7 @@ jobs:
       id-token: write
     steps:
       - id: reviewer-token
-        uses: actions/create-github-app-token@v3.3.0
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           app-id: ${{ vars.BUNSEN_REVIEWER_APP_ID }}
           private-key: ${{ secrets.BUNSEN_REVIEWER_APP_PRIVATE_KEY }}
@@ -335,12 +335,12 @@ jobs:
           permission-issues: read
           permission-actions: read
           permission-checks: read
-      - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 50
           persist-credentials: false
       - id: claude
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@1d6de8cb0c237e7c15e9e1bdf973826ebae490cc # v1.0.248
         env:
           GH_TOKEN: ${{ steps.reviewer-token.outputs.token }}
         with:
@@ -369,7 +369,7 @@ jobs:
         run: .github/scripts/summarize-claude-run.sh "$EXECUTION_FILE"
       # An approval merges unless the change is major or breaking. The script decides, not a model.
       - id: merge-token
-        uses: actions/create-github-app-token@v3.3.0
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           app-id: ${{ vars.BUNSEN_APP_ID }}
           private-key: ${{ secrets.BUNSEN_APP_PRIVATE_KEY }}
@@ -395,7 +395,7 @@ jobs:
       id-token: write
     steps:
       - id: reviewer-token
-        uses: actions/create-github-app-token@v3.3.0
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           app-id: ${{ vars.BUNSEN_REVIEWER_APP_ID }}
           private-key: ${{ secrets.BUNSEN_REVIEWER_APP_PRIVATE_KEY }}
@@ -404,12 +404,12 @@ jobs:
           permission-issues: read
           permission-actions: read
           permission-checks: read
-      - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 50
           persist-credentials: false
       - id: claude
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@1d6de8cb0c237e7c15e9e1bdf973826ebae490cc # v1.0.248
         env:
           GH_TOKEN: ${{ steps.reviewer-token.outputs.token }}
         with:
@@ -437,7 +437,7 @@ jobs:
           EXECUTION_FILE: ${{ steps.claude.outputs.execution_file }}
         run: .github/scripts/summarize-claude-run.sh "$EXECUTION_FILE"
       - id: merge-token
-        uses: actions/create-github-app-token@v3.3.0
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           app-id: ${{ vars.BUNSEN_APP_ID }}
           private-key: ${{ secrets.BUNSEN_APP_PRIVATE_KEY }}
