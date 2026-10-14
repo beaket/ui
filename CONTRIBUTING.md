@@ -34,6 +34,18 @@ pnpm dev
 - `sections`: Story export names to show in docs Examples section
 - `previewStory`: Story to show in the preview box
 
+### Icons
+
+Beaket UI has no icon set of its own, and a component should not add one — no
+wrapper, sprite, or `<symbol>` sheet. When a component needs a fixed glyph,
+import it from `lucide-react` and add `lucide-react` to that component's
+`dependencies` in `registry/registry.json`; a component that does not import
+it must not list it. When the icon is the consumer's choice, accept a React
+element or a slot instead.
+
+Decorative icons get `aria-hidden="true"`. An icon-only control gets an
+accessible name (`aria-label` or visually hidden text).
+
 ## Commands
 
 | Command          | Description     |

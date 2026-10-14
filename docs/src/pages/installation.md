@@ -150,3 +150,31 @@ If you chose a different component directory during `init`, import from that
 directory instead.
 
 See [CLI](/ui/cli) for all options.
+
+## Icons
+
+Beaket UI does not ship an icon set of its own. Components that draw a fixed
+glyph — the check in Checkbox, the chevrons in Select and Pagination, the close
+button in Dialog and Sheet — import it from
+[Lucide](https://lucide.dev/), and `add` installs `lucide-react` for exactly
+those components. Nothing else requires it.
+
+Where you supply the icon — an Input `prefix` or `suffix`, the children of a
+menu item or button — you pass a React element, so any icon library works. Lucide is the
+default only because the shipped components already use it.
+
+An icon-only control still needs an accessible name, and the icon inside it is
+decoration, hidden from assistive technology:
+
+```tsx
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+export function AddRowButton() {
+  return (
+    <Button size="icon" aria-label="Add row">
+      <Plus aria-hidden="true" />
+    </Button>
+  );
+}
+```
