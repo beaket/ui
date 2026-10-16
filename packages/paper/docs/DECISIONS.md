@@ -188,8 +188,8 @@ a live design deferral, and dormant-code housekeeping — don't flatten them int
   Real hardware-IME verification is the deliberate boundary of the jsdom strategy
   ([ADR-0005](./adr/0005-quality-via-jsdom-contract-and-regression-tests.md) — jsdom cannot reproduce a
   genuine IME pipeline), and it is owned by the **CJK/IME real-device verification** exit criterion
-  ([#483](https://github.com/beaket/ui/issues/483), blocked by the verification-method precursor
-  [#479](https://github.com/beaket/ui/issues/479)), not by #481. That exact list of guarded paths is the
+  ([#483](https://github.com/beaket/ui/issues/483), whose first step is choosing the verification
+  method), not by #481. That exact list of guarded paths is the
   concrete test matrix #483 inherits. Until #483 passes, IME is **delegated and still owed — not verified.**
 
 - **Orphan-status re-emit on in-session delete; prefix/suffix context anchors — _accepted for 1.0_.**
