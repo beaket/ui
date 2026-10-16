@@ -52,6 +52,13 @@ export default defineConfig({
           environment: "node",
         },
       },
+      {
+        test: {
+          name: "changeset",
+          include: [".changeset/**/*.test.ts"],
+          environment: "node",
+        },
+      },
     ],
   },
 });
