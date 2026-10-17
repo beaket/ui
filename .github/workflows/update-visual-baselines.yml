@@ -4,8 +4,7 @@ on:
   pull_request:
     types: [labeled]
 
-permissions:
-  contents: write
+permissions: {}
 
 jobs:
   version:
@@ -13,6 +12,8 @@ jobs:
       github.event.label.name == 'visual-baseline-update' &&
       github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       playwright: ${{ steps.playwright.outputs.version }}
     steps:
@@ -27,6 +28,8 @@ jobs:
   update:
     needs: version
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     # Baselines must be drawn by the same browser build that verifies them.
     container: mcr.microsoft.com/playwright:v${{ needs.version.outputs.playwright }}-noble
     steps:
