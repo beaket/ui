@@ -89,6 +89,10 @@ Put both numbers in the run summary; the weekly report collects them.
   other desk proposes a change as a diff in a comment. The one write without a pull request is
   correcting a published release's notes with `gh release edit`, as the charter allows; quote the
   old and new text in the pull request that carries the matching `CHANGELOG.md` fix.
+- **Drafts in the project's voice are pull requests.** When a desk drafts a document the maintainer
+  must adopt — a policy file such as a code of conduct — it opens a pull request from a `draft/*`
+  branch instead of putting the draft in an issue body. The merge rule leaves `draft/*` alone; the
+  maintainer edits and merges it. Drafts that must not be public yet still go to `beaket/bunsen`.
 - **Private things go to `beaket/bunsen`.** Drafts for the maintainer and findings that must not be
   public yet are issues there, labeled with the repository they concern (`beaket/ui`).
 - **Stay inside the charter.** If a step here seems to conflict with `docs/MAINTENANCE.md`, the
