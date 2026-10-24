@@ -91,7 +91,7 @@ jobs:
           fetch-depth: 50
           persist-credentials: false
       - id: claude
-        uses: anthropics/claude-code-action@8d70a0dd265122bd65b8e09d3d959e65373ae2a1 # v1.0.260
+        uses: anthropics/claude-code-action@16f9f71ab9c490faf367f94dd294897edc25be33 # v1.0.261
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         with:
@@ -165,7 +165,7 @@ jobs:
           fetch-depth: 200
           persist-credentials: false
       - id: claude
-        uses: anthropics/claude-code-action@8d70a0dd265122bd65b8e09d3d959e65373ae2a1 # v1.0.260
+        uses: anthropics/claude-code-action@16f9f71ab9c490faf367f94dd294897edc25be33 # v1.0.261
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         with:
@@ -275,7 +275,7 @@ jobs:
         run: pnpm install
       - id: claude
         if: steps.work.outputs.skip != 'true'
-        uses: anthropics/claude-code-action@8d70a0dd265122bd65b8e09d3d959e65373ae2a1 # v1.0.260
+        uses: anthropics/claude-code-action@16f9f71ab9c490faf367f94dd294897edc25be33 # v1.0.261
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         with:
@@ -340,7 +340,7 @@ jobs:
           fetch-depth: 50
           persist-credentials: false
       - id: claude
-        uses: anthropics/claude-code-action@8d70a0dd265122bd65b8e09d3d959e65373ae2a1 # v1.0.260
+        uses: anthropics/claude-code-action@16f9f71ab9c490faf367f94dd294897edc25be33 # v1.0.261
         env:
           GH_TOKEN: ${{ steps.reviewer-token.outputs.token }}
         with:
@@ -409,7 +409,7 @@ jobs:
           fetch-depth: 50
           persist-credentials: false
       - id: claude
-        uses: anthropics/claude-code-action@8d70a0dd265122bd65b8e09d3d959e65373ae2a1 # v1.0.260
+        uses: anthropics/claude-code-action@16f9f71ab9c490faf367f94dd294897edc25be33 # v1.0.261
         env:
           GH_TOKEN: ${{ steps.reviewer-token.outputs.token }}
         with:
