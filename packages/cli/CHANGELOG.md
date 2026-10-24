@@ -8,7 +8,7 @@
 
   Light and dark are no longer one palette inverted. Every ramp is built on an even OKLab lightness step — only Solace was ever checked for progressivity, and the other four were violating it badly, with jumps of 0.17–0.20 at `tone-3→4` against a 0.12 ceiling, which is why their mid-greys collapsed into each other. Nothing in the set reaches `#ffffff` or `#000000` at either end.
 
-  **Each palette carries its own page, and they are spread on purpose.** Porcelain `#fdfdfe` is the starkest ground; Solace `#fdfcfa` the near-white; Marigold `#faf9fc` a bright panel with a trace of its own violet; Eucalyptus `#f4f7f9` a soft canvas that was never pure white; Tobacco `#f6f3f0` an aged stock. Dark grounds are five different rooms rather than one: a slate night `#0f171e`, a neutral black `[#151617](https://github.com/beaket/ui/issues/151617)`, a warm `#1b150e`, a violet-black `#18141f`, and a grey `[#222527](https://github.com/beaket/ui/issues/222527)` that deliberately sits well above black.
+  **Each palette carries its own page, and they are spread on purpose.** Porcelain `#fdfdfe` is the starkest ground; Solace `#fdfcfa` the near-white; Marigold `#faf9fc` a bright panel with a trace of its own violet; Eucalyptus `#f4f7f9` a soft canvas that was never pure white; Tobacco `#f6f3f0` an aged stock. Dark grounds are five different rooms rather than one: a slate night `#0f171e`, a neutral black `#151617`, a warm `#1b150e`, a violet-black `#18141f`, and a grey `#222527` that deliberately sits well above black.
 
   **A ramp may travel in hue as well as lightness.** Solace runs warm paper under cool ink. That cast is interpolated through OKLab a/b rather than by rotating hue, because rotating drags the mid-tones around the colour wheel and straight through green.
 
@@ -28,7 +28,7 @@
 
   **Rotating 45° into plum bought margin by abandoning the convention.** It also made Solace the only palette whose info left the blue band: Porcelain, Eucalyptus and Tobacco all ship a blue info, and Porcelain does it beside a blue accent at 0.0407 — a thinner margin than the Solace blue that was replaced. The stated rule was never held system-wide.
 
-  `--signal-info` is now `[#275085](https://github.com/beaket/ui/issues/275085)` light and `#5f8bc6` dark: the regrade's own lightness and chroma tiers for the role, unchanged (L\* 0.430 / 0.630, C 0.100), with only the hue moved from 315° to 256°. Separation from the accent is now carried by a full lightness step and roughly half the chroma, which is the relationship Eucalyptus already ships between its blue accent and blue info — and it measures 0.0900 light and 0.0743 dark, better than both the old blue and Porcelain's shipping pair. The role's display name follows the value from **Plum** to **Prussian Blue**.
+  `--signal-info` is now `#275085` light and `#5f8bc6` dark: the regrade's own lightness and chroma tiers for the role, unchanged (L\* 0.430 / 0.630, C 0.100), with only the hue moved from 315° to 256°. Separation from the accent is now carried by a full lightness step and roughly half the chroma, which is the relationship Eucalyptus already ships between its blue accent and blue info — and it measures 0.0900 light and 0.0743 dark, better than both the old blue and Porcelain's shipping pair. The role's display name follows the value from **Plum** to **Prussian Blue**.
 
   **Migration.** Re-run `npx @beaket/ui theme solace` to pick up the palette block. Only Solace changes; the other four palettes are untouched. Any consumer that hard-coded `#643d75` or `#a076b3` rather than reading `--color-info-*` needs to re-read it.
 
@@ -847,9 +847,9 @@ tracking-wide"`. Since components are copy-paste, existing copies are unaffected
 
   **Changes per theme (light / dark):**
   - **Porcelain**: graphite `#030508 → #1e2229` / `#e6eaee → #c4cad4`; ink `#080b10 → #0a0d14` / `#dce0e6 → #e6eaee`; iron `#282b2f → #15191f` / `#b4bcc6 → #aab2bd`; dark paper `#06080c → #0d1117` (reduces dark-mode halation + re-adaptation fatigue).
-  - **Eucalyptus**: graphite `#0a1025 → #1e2638` / `#e8ecf4 → #c6cdde`; ink `[#162036](https://github.com/beaket/ui/issues/162036) → #0e1628` / `#dce2ec → #e8ecf4`; iron `[#243250](https://github.com/beaket/ui/issues/243250) → #151d30` / `#b0bace → #a6aec4`; dark paper `#060a14 → #0e1320`.
-  - **Marigold**: graphite `#0a0a0a → #1f1f1f` / `#f5f5f5 → #d8d8d8`; ink `[#121212](https://github.com/beaket/ui/issues/121212) → #0a0a0a` / `#ececec → #f5f5f5`; iron `[#262626](https://github.com/beaket/ui/issues/262626) → [#141414](https://github.com/beaket/ui/issues/141414)` / `#d0d0d0 → #c0c0c0`; dark paper `#0a0a0a → [#101010](https://github.com/beaket/ui/issues/101010)` (conservative — preserves neon identity). Shadow references rebound (`--shadow-offset` now uses `iron`; `-dark` variant uses `ink`) to keep the "ink-black heavy shadow" semantic intact after the ink/graphite value swap.
-  - **Tobacco**: graphite `[#111110](https://github.com/beaket/ui/issues/111110) → #26231e` / `#eceae0 → #cfcabc`; ink `#1a1a18 → #14130f` / `#e2e0d6 → #eceae0`; iron `#312f2c → #1c1a16` / `#c0bcb2 → #b4b0a6`; dark paper `#0c0b0a → #14130f`.
+  - **Eucalyptus**: graphite `#0a1025 → #1e2638` / `#e8ecf4 → #c6cdde`; ink `#162036 → #0e1628` / `#dce2ec → #e8ecf4`; iron `#243250 → #151d30` / `#b0bace → #a6aec4`; dark paper `#060a14 → #0e1320`.
+  - **Marigold**: graphite `#0a0a0a → #1f1f1f` / `#f5f5f5 → #d8d8d8`; ink `#121212 → #0a0a0a` / `#ececec → #f5f5f5`; iron `#262626 → #141414` / `#d0d0d0 → #c0c0c0`; dark paper `#0a0a0a → #101010` (conservative — preserves neon identity). Shadow references rebound (`--shadow-offset` now uses `iron`; `-dark` variant uses `ink`) to keep the "ink-black heavy shadow" semantic intact after the ink/graphite value swap.
+  - **Tobacco**: graphite `#111110 → #26231e` / `#eceae0 → #cfcabc`; ink `#1a1a18 → #14130f` / `#e2e0d6 → #eceae0`; iron `#312f2c → #1c1a16` / `#c0bcb2 → #b4b0a6`; dark paper `#0c0b0a → #14130f`.
 
   **Token semantics clarified (via values, not rename):**
   - `graphite` = prose body (tuned for sustained reading, 13–14:1 light, ~12:1 dark).
@@ -953,7 +953,7 @@ tracking-wide"`. Since components are copy-paste, existing copies are unaffected
   - CSS tokens moved from `:root` to `@theme` block with `--color-*` prefix
   - Components now use clean Tailwind utilities (`bg-paper` instead of `bg-[var(--paper)]`)
   - Unified color token values with Beaket app (chrome, platinum, signal-blue)
-  - Added `--color-muted` ([#737373](https://github.com/beaket/ui/issues/737373)) for WCAG AA-compliant muted text (replaces aluminum for text)
+  - Added `--color-muted` (#737373) for WCAG AA-compliant muted text (replaces aluminum for text)
   - Added `--color-signal-red-text` (#b91c1c) for accessible red text on light backgrounds
   - Accessibility improvements across all components:
     - BlankSlate: decorative icons marked `aria-hidden`
