@@ -25,7 +25,8 @@ there is no second document model. Everything else follows from this:
    decorations to the new coordinates; re-evaluate on `compositionend`. Any decoration-producing
    extension must go through the **`guardedDecorations`** helper (`extensions/composing-guard.ts`),
    never a bare `ViewPlugin`. Locked by `composing-guard.test` / `ime-composition.test`, and in a
-   real browser by the CDP IME suite (`e2e/composing-guard.e2e.ts`, see invariant #4).
+   real browser by the CDP IME suite (`e2e/composing-guard.e2e.ts`, and `e2e/recompute.e2e.ts`,
+   which counts `guardedDecorations` computes and asserts zero during a composition; see invariant #4).
    → [ADR-0004](./adr/0004-composing-guard-defer-plus-map.md)
 2. **CJK font ordering.** In the font stack, **Japanese fonts must precede Korean** — otherwise
    shared Han glyphs render in the Korean font (measured). Lives in `theme.ts`.
@@ -46,6 +47,10 @@ there is no second document model. Everything else follows from this:
    composition pipeline through CDP `Input.imeSetComposition` (Korean, Japanese, Chinese) against
    `e2e/fixture/`, a page mounting `<Paper>` from source. Run it with `pnpm test:editor:ime`; add a
    case by composing a `Run` from `e2e/ime.ts` and asserting through `window.__paper`.
+   **Perf** rides the same fixture: `pnpm test:editor:perf` (`e2e/latency.perf.ts`, own config,
+   local-only) types into generated 1k/10k-line docs (`e2e/large-doc.ts`) and writes p50/p95 to
+   `test-results/paper-perf/summary.{json,md}`; targets and method in DECISIONS.md § Performance targets.
+   The compute counter is a Vite transform in `e2e/vite.config.ts` — shipped source carries no hook.
    → [ADR-0005](./adr/0005-quality-via-jsdom-contract-and-regression-tests.md)
 
 ## Glossary
