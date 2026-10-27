@@ -323,10 +323,53 @@ export const AllStates = () => (
         <DropdownMenu.Item>Enabled</DropdownMenu.Item>
         <DropdownMenu.Item disabled>Disabled</DropdownMenu.Item>
         <DropdownMenu.Item>Enabled</DropdownMenu.Item>
+        <DropdownMenu.Sub>
+          <DropdownMenu.SubTrigger disabled>Disabled submenu</DropdownMenu.SubTrigger>
+          <DropdownMenu.SubContent>
+            <DropdownMenu.Item>Unreachable</DropdownMenu.Item>
+          </DropdownMenu.SubContent>
+        </DropdownMenu.Sub>
       </DropdownMenu.Content>
     </DropdownMenu>
   </div>
 );
+
+// A disabled submenu parent carries the same text-only disabled treatment as
+// its sibling rows, and neither pointer nor keyboard opens its submenu. Kept
+// out of AllStates so that composition stays in the visual baselines.
+export const DisabledSubTriggerTest: Story = {
+  tags: ["!autodocs"],
+  render: () => <AllStates />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Disabled Items" }));
+    const menu = await screen.findByRole("menu");
+    const subTrigger = within(menu).getByRole("menuitem", { name: "Disabled submenu" });
+    await expect(subTrigger).toHaveAttribute("data-disabled");
+    await expect(subTrigger).toHaveAttribute("aria-disabled", "true");
+    // Same ink and affordance as the disabled sibling Item, not the enabled rows
+    const disabledItem = within(menu).getByRole("menuitem", { name: "Disabled" });
+    const enabledItem = within(menu).getAllByRole("menuitem", { name: "Enabled" })[0];
+    await expect(getComputedStyle(subTrigger).color).toBe(getComputedStyle(disabledItem).color);
+    await expect(getComputedStyle(subTrigger).color).not.toBe(getComputedStyle(enabledItem).color);
+    await expect(getComputedStyle(subTrigger).pointerEvents).toBe("none");
+
+    // Pointer: hovering or clicking does not open the submenu
+    subTrigger.dispatchEvent(
+      new PointerEvent("pointermove", { bubbles: true, pointerType: "mouse" }),
+    );
+    subTrigger.click();
+    await expect(subTrigger).toHaveAttribute("data-state", "closed");
+    await expect(screen.queryByRole("menuitem", { name: "Unreachable" })).not.toBeInTheDocument();
+
+    // Keyboard: ArrowRight on the focused row does not open it either
+    subTrigger.focus();
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(subTrigger).toHaveAttribute("data-state", "closed");
+    await expect(screen.queryAllByRole("menu")).toHaveLength(1);
+    await expect(screen.queryByRole("menuitem", { name: "Unreachable" })).not.toBeInTheDocument();
+  },
+};
 
 // The trigger is neutral at rest and grows an accent edge while the menu is
 // open (still pressable, now the active owner). Compare the two states.

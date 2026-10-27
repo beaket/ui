@@ -243,6 +243,7 @@ function DropdownMenuSubTrigger({
         row,
         // An open submenu's parent holds the same cue for as long as it is out.
         "data-[state=open]:bg-accent-bg data-[state=open]:shadow-[inset_2px_0_0_0_var(--color-accent-solid)]",
+        "data-[disabled]:text-fg-disabled data-[disabled]:pointer-events-none",
         "data-[inset]:pl-8",
         className,
       )}
