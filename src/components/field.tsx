@@ -160,7 +160,13 @@ export function FieldLabel({ asChild, id, className, ...props }: FieldLabelProps
       data-slot="field-label"
       id={partId}
       htmlFor={controlId}
-      className={cn("text-fg text-sm font-medium", className)}
+      className={cn(
+        // A disabled control dims its label to `fg-disabled` (DESIGN.md § The
+        // Dashed-Disabled Rule): `:disabled` covers inputs and buttons,
+        // `[data-disabled]` covers Radix roots such as RadioGroup.
+        "text-fg in-[[data-slot=field]:has([data-slot=field-control]:is(:disabled,[data-disabled]))]:text-fg-disabled text-sm font-medium",
+        className,
+      )}
       {...props}
     />
   );
