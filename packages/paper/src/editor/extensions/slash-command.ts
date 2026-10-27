@@ -234,6 +234,9 @@ class SlashMenu implements MenuController {
   }
 
   private evaluate(): void {
+    // update() only schedules this; a composition can start before the timeout fires. Re-check here,
+    // and composingWake re-runs it after compositionend (invariant #1).
+    if (this.view.composing) return;
     const { state } = this.view;
     const sel = state.selection.main;
     if (!sel.empty || !this.view.hasFocus) return this.close();
