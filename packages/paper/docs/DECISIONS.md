@@ -187,10 +187,14 @@ a live design deferral, and dormant-code housekeeping — don't flatten them int
   `onSelect` / `activeHighlightId` flush) are verified with **synthetic** composition events only.
   Real hardware-IME verification is the deliberate boundary of the jsdom strategy
   ([ADR-0005](./adr/0005-quality-via-jsdom-contract-and-regression-tests.md) — jsdom cannot reproduce a
-  genuine IME pipeline), and it is owned by the **CJK/IME real-device verification** exit criterion
-  ([#483](https://github.com/beaket/ui/issues/483), whose first step is choosing the verification
-  method), not by #481. That exact list of guarded paths is the
-  concrete test matrix #483 inherits. Until #483 passes, IME is **delegated and still owed — not verified.**
+  genuine IME pipeline), and it is owned by the **CJK/IME verification** exit criterion
+  ([#483](https://github.com/beaket/ui/issues/483)), not by #481. That exact list of guarded paths is the
+  concrete test matrix #483 inherits. The method (rescoped 2026-10-27): a Playwright + CDP
+  `Input.imeSetComposition` suite drives Chromium's real composition pipeline for Korean, Japanese,
+  and Chinese ([#1176](https://github.com/beaket/ui/issues/1176)). The guard only reads whether a
+  composition is active, so that suite covers its logic. The OS-IME layer CDP cannot reach is narrowed
+  to a manual Korean spot-check on macOS Safari and Chrome. Until #483 passes, IME is **delegated and
+  still owed — not verified.**
 
 - **Orphan-status re-emit on in-session delete; prefix/suffix context anchors — _accepted for 1.0_.**
   Reaffirms [ADR-0014](./adr/0014-selection-annotation-mechanism.md) decisions 2 / 7. Bounded
