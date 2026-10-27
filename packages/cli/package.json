@@ -1,7 +1,7 @@
 {
   "name": "@beaket/ui",
   "version": "4.2.0",
-  "description": "CLI tool for adding Beaket UI components to your project",
+  "description": "React + Tailwind components you own outright: the CLI copies the source into your project, with a committed visual identity instead of a neutral default.",
   "type": "module",
   "engines": {
     "node": ">=22.13"
@@ -22,7 +22,10 @@
     "components",
     "ui",
     "tailwindcss",
-    "cli"
+    "cli",
+    "copy-paste",
+    "component-library",
+    "design-system"
   ],
   "license": "MIT",
   "repository": {
