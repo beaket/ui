@@ -53,24 +53,24 @@ export const AllStates: Story = {
   render: () => (
     <div className="flex flex-col gap-7">
       <div className="flex items-center gap-3">
-        <Switch defaultChecked={false} aria-label="Unchecked switch" />
-        <span className="text-sm">Unchecked</span>
+        <Switch id="state-unchecked" defaultChecked={false} />
+        <Label htmlFor="state-unchecked">Unchecked</Label>
       </div>
       <div className="flex items-center gap-3">
-        <Switch defaultChecked={true} aria-label="Checked switch" />
-        <span className="text-sm">Checked</span>
+        <Switch id="state-checked" defaultChecked={true} />
+        <Label htmlFor="state-checked">Checked</Label>
       </div>
       <div className="flex items-center gap-3">
-        <Switch disabled aria-label="Disabled unchecked switch" />
-        <span className="text-sm">Disabled (unchecked)</span>
+        <Switch id="state-disabled" disabled />
+        <Label htmlFor="state-disabled">Disabled (unchecked)</Label>
       </div>
       <div className="flex items-center gap-3">
-        <Switch disabled defaultChecked={true} aria-label="Disabled checked switch" />
-        <span className="text-sm">Disabled (checked)</span>
+        <Switch id="state-disabled-checked" disabled defaultChecked={true} />
+        <Label htmlFor="state-disabled-checked">Disabled (checked)</Label>
       </div>
       <div className="flex items-center gap-3">
-        <Switch aria-invalid aria-label="Invalid switch" />
-        <span className="text-sm">Invalid</span>
+        <Switch id="state-invalid" aria-invalid />
+        <Label htmlFor="state-invalid">Invalid</Label>
       </div>
     </div>
   ),
@@ -103,9 +103,7 @@ export const WithLabel: Story = {
           </div>
           <div className="flex items-center gap-3">
             <Switch id="bluetooth" disabled />
-            <Label htmlFor="bluetooth" className="cursor-pointer opacity-50">
-              Bluetooth (disabled)
-            </Label>
+            <Label htmlFor="bluetooth">Bluetooth (disabled)</Label>
           </div>
         </div>
       );
