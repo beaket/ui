@@ -24,7 +24,8 @@ there is no second document model. Everything else follows from this:
    (`view.composing`): no decoration recompute, no widget DOM rebuild, no menu action. Map existing
    decorations to the new coordinates; re-evaluate on `compositionend`. Any decoration-producing
    extension must go through the **`guardedDecorations`** helper (`extensions/composing-guard.ts`),
-   never a bare `ViewPlugin`. Locked by `composing-guard.test` / `ime-composition.test`.
+   never a bare `ViewPlugin`. Locked by `composing-guard.test` / `ime-composition.test`, and in a
+   real browser by the CDP IME suite (`e2e/composing-guard.e2e.ts`, see invariant #4).
    → [ADR-0004](./adr/0004-composing-guard-defer-plus-map.md)
 2. **CJK font ordering.** In the font stack, **Japanese fonts must precede Korean** — otherwise
    shared Han glyphs render in the Korean font (measured). Lives in `theme.ts`.
@@ -41,7 +42,10 @@ there is no second document model. Everything else follows from this:
 4. **Test boundary.** Logic is covered by jsdom **contract + regression tests** (every bug fixed
    red→green). Coordinate/visual concerns are deliberately _carved out_ — jsdom returns zero-size
    rects (polyfills in `test/setup.ts`), so anything geometry-dependent needs real-browser
-   verification, not a jsdom test.
+   verification, not a jsdom test. IME timing is the other carve-out: `e2e/` drives Chromium's real
+   composition pipeline through CDP `Input.imeSetComposition` (Korean, Japanese, Chinese) against
+   `e2e/fixture/`, a page mounting `<Paper>` from source. Run it with `pnpm test:editor:ime`; add a
+   case by composing a `Run` from `e2e/ime.ts` and asserting through `window.__paper`.
    → [ADR-0005](./adr/0005-quality-via-jsdom-contract-and-regression-tests.md)
 
 ## Glossary
