@@ -32,20 +32,16 @@ const inputBaseStyles = [
 ].join(" ");
 
 export function Input({ className, type = "text", prefix, suffix, ref, ...props }: InputProps) {
-  if (!prefix && !suffix) {
-    return (
-      <input
-        ref={ref}
-        type={type}
-        data-slot="input"
-        className={cn(inputBaseStyles, className)}
-        {...props}
-      />
-    );
-  }
+  const hasAffix = Boolean(prefix || suffix);
 
+  // The wrapper is always rendered so the <input> keeps one position in the
+  // tree: toggling an affix must not remount it (that would drop focus, caret,
+  // selection and IME composition — #1105). Without an affix the wrapper is
+  // `display: contents`, so it draws no box and the <input> lays out exactly
+  // as a bare one would. `className`, `ref` and the rest of the props belong
+  // to the <input>, never to the wrapper.
   return (
-    <div data-slot="input-wrapper" className="relative flex items-center">
+    <div data-slot="input-wrapper" className={hasAffix ? "relative flex items-center" : "contents"}>
       {prefix && (
         <span
           data-slot="input-prefix"
