@@ -25,6 +25,7 @@
     "test:cli": "./scripts/test-cli.sh",
     "test:cli:unit": "vitest run --project cli",
     "test:editor": "pnpm --filter @beaket/paper test",
+    "test:editor:ime": "playwright test -c playwright.ime.config.ts",
     "check:adr": "node scripts/check-adr-refs.mjs",
     "build-storybook": "storybook build",
     "release": "changeset publish",
