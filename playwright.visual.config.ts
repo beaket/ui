@@ -5,6 +5,11 @@ export default defineConfig({
   testMatch: /.*\.(visual|a11y)\.spec\.ts/,
   outputDir: "test-results/visual",
   snapshotPathTemplate: "{testDir}/__screenshots__/{testFilePath}/{arg}{ext}",
+  expect: {
+    // pixelmatch tolerates a colour delta up to 35215 × threshold². The default 0.2
+    // lets a flat grey move 52 levels unnoticed; 0.1 cuts that to 26 (#994).
+    toHaveScreenshot: { threshold: 0.1 },
+  },
   webServer: [
     {
       command: "python3 -m http.server 6006 --bind 127.0.0.1 --directory storybook-static",
