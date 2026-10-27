@@ -884,7 +884,9 @@ track on a 1s ease-in-out cycle, and the skeleton placeholder breathing one step
 along the neutral ramp (`bg-hover` → `bg-active` → `bg-hover`) over 2s — in ink,
 not in light, because opacity would dim the page showing through it.
 `prefers-reduced-motion: reduce` collapses every animation and transition to
-0.01ms globally in `foundation.css`.
+0.01ms globally in `foundation.css`. With motion removed, an indeterminate
+indicator holds a full, static ink line across its track rather than a partial
+one, because a partial fill reads as determinate progress.
 
 ### Named Rules
 

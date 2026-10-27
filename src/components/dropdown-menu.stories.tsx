@@ -151,6 +151,43 @@ export const WithSubmenus: Story = {
   ),
 };
 
+// Keyboard path through a submenu: ArrowRight opens it and lands on its first
+// row, ArrowLeft closes it and hands focus back to the sub-trigger. A separate
+// story so WithSubmenus keeps its visual baseline (play stories are not captured).
+export const SubmenuKeyboardTest: Story = {
+  tags: ["!autodocs"],
+  render: WithSubmenus.render,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Open Menu" }));
+    const menu = await screen.findByRole("menu");
+    const subTrigger = within(menu).getByRole("menuitem", { name: "Invite users" });
+    await expect(subTrigger).toHaveAttribute("aria-haspopup", "menu");
+    await expect(subTrigger).toHaveAttribute("aria-expanded", "false");
+
+    subTrigger.focus();
+    await expect(subTrigger).toHaveFocus();
+
+    // ArrowRight opens the submenu and moves focus to its first item
+    await userEvent.keyboard("{ArrowRight}");
+    await waitFor(() => expect(screen.getAllByRole("menu")).toHaveLength(2));
+    await expect(subTrigger).toHaveAttribute("aria-expanded", "true");
+    await expect(subTrigger).toHaveAttribute("data-state", "open");
+    const email = screen.getByRole("menuitem", { name: "Email" });
+    await waitFor(() => expect(email).toHaveFocus());
+
+    // ArrowLeft closes the submenu and returns focus to the sub-trigger
+    await userEvent.keyboard("{ArrowLeft}");
+    await waitFor(() => expect(screen.getAllByRole("menu")).toHaveLength(1));
+    await expect(screen.queryByRole("menuitem", { name: "Email" })).not.toBeInTheDocument();
+    await expect(subTrigger).toHaveAttribute("aria-expanded", "false");
+    await waitFor(() => expect(subTrigger).toHaveFocus());
+
+    // The parent menu is still the one open
+    await expect(screen.getByRole("menu")).toBe(menu);
+  },
+};
+
 export const NonModalIsolation: Story = {
   tags: ["!autodocs"],
   render: () => (
@@ -323,10 +360,53 @@ export const AllStates = () => (
         <DropdownMenu.Item>Enabled</DropdownMenu.Item>
         <DropdownMenu.Item disabled>Disabled</DropdownMenu.Item>
         <DropdownMenu.Item>Enabled</DropdownMenu.Item>
+        <DropdownMenu.Sub>
+          <DropdownMenu.SubTrigger disabled>Disabled submenu</DropdownMenu.SubTrigger>
+          <DropdownMenu.SubContent>
+            <DropdownMenu.Item>Unreachable</DropdownMenu.Item>
+          </DropdownMenu.SubContent>
+        </DropdownMenu.Sub>
       </DropdownMenu.Content>
     </DropdownMenu>
   </div>
 );
+
+// A disabled submenu parent carries the same text-only disabled treatment as
+// its sibling rows, and neither pointer nor keyboard opens its submenu. Kept
+// out of AllStates so that composition stays in the visual baselines.
+export const DisabledSubTriggerTest: Story = {
+  tags: ["!autodocs"],
+  render: () => <AllStates />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Disabled Items" }));
+    const menu = await screen.findByRole("menu");
+    const subTrigger = within(menu).getByRole("menuitem", { name: "Disabled submenu" });
+    await expect(subTrigger).toHaveAttribute("data-disabled");
+    await expect(subTrigger).toHaveAttribute("aria-disabled", "true");
+    // Same ink and affordance as the disabled sibling Item, not the enabled rows
+    const disabledItem = within(menu).getByRole("menuitem", { name: "Disabled" });
+    const enabledItem = within(menu).getAllByRole("menuitem", { name: "Enabled" })[0];
+    await expect(getComputedStyle(subTrigger).color).toBe(getComputedStyle(disabledItem).color);
+    await expect(getComputedStyle(subTrigger).color).not.toBe(getComputedStyle(enabledItem).color);
+    await expect(getComputedStyle(subTrigger).pointerEvents).toBe("none");
+
+    // Pointer: hovering or clicking does not open the submenu
+    subTrigger.dispatchEvent(
+      new PointerEvent("pointermove", { bubbles: true, pointerType: "mouse" }),
+    );
+    subTrigger.click();
+    await expect(subTrigger).toHaveAttribute("data-state", "closed");
+    await expect(screen.queryByRole("menuitem", { name: "Unreachable" })).not.toBeInTheDocument();
+
+    // Keyboard: ArrowRight on the focused row does not open it either
+    subTrigger.focus();
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(subTrigger).toHaveAttribute("data-state", "closed");
+    await expect(screen.queryAllByRole("menu")).toHaveLength(1);
+    await expect(screen.queryByRole("menuitem", { name: "Unreachable" })).not.toBeInTheDocument();
+  },
+};
 
 // The trigger is neutral at rest and grows an accent edge while the menu is
 // open (still pressable, now the active owner). Compare the two states.
@@ -358,32 +438,106 @@ export const TriggerOpenState: Story = {
   ),
 };
 
+// Controlled mode: the parent owns `open` and hears every change through
+// `onOpenChange`, so an outside control can open the menu and the menu's own
+// close paths (Escape, selection) report back to that state.
+function ControlledExample() {
+  const [open, setOpen] = useState(false);
+  const [changes, setChanges] = useState<boolean[]>([]);
+
+  return (
+    <div className="flex flex-col items-start gap-4">
+      <div className="flex items-center gap-4">
+        <Button variant="secondary" onClick={() => setOpen(true)}>
+          Open from outside
+        </Button>
+        <DropdownMenu
+          open={open}
+          onOpenChange={(next) => {
+            setOpen(next);
+            setChanges((previous) => [...previous, next]);
+          }}
+        >
+          <DropdownMenu.Trigger asChild>
+            <Button variant="outline">Controlled Menu</Button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content>
+            <DropdownMenu.Item>Profile</DropdownMenu.Item>
+            <DropdownMenu.Item>Settings</DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu>
+      </div>
+      <p className="text-fg-muted text-sm" data-testid="controlled-state">
+        {`open: ${open} · onOpenChange: [${changes.join(", ")}]`}
+      </p>
+    </div>
+  );
+}
+
+export const Controlled: Story = {
+  render: () => <ControlledExample />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole("button", { name: "Controlled Menu" });
+    const state = canvas.getByTestId("controlled-state");
+    await expect(state).toHaveTextContent("open: false · onOpenChange: []");
+
+    // Setting `open` from outside opens the menu without calling onOpenChange
+    await userEvent.click(canvas.getByRole("button", { name: "Open from outside" }));
+    let menu = await screen.findByRole("menu");
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect(state).toHaveTextContent("open: true · onOpenChange: []");
+
+    // Escape asks the parent to close through onOpenChange(false)
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("menu")).not.toBeInTheDocument());
+    await expect(state).toHaveTextContent("open: false · onOpenChange: [false]");
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+
+    // The trigger asks the parent to open through onOpenChange(true)
+    await userEvent.click(trigger);
+    menu = await screen.findByRole("menu");
+    await expect(state).toHaveTextContent("open: true · onOpenChange: [false, true]");
+
+    // Selecting an item asks the parent to close through onOpenChange(false)
+    await userEvent.click(within(menu).getByRole("menuitem", { name: "Settings" }));
+    await waitFor(() => expect(screen.queryByRole("menu")).not.toBeInTheDocument());
+    await expect(state).toHaveTextContent("open: false · onOpenChange: [false, true, false]");
+  },
+};
+
 // One consolidated test folding the six former per-behavior tests: keyboard
 // open, item render, disabled marking, plain-item selection closes, arrow-key
 // highlight, Escape closes, and checkbox/radio state persisting across reopen.
 function InteractionExample() {
   const [checked, setChecked] = useState(false);
   const [position, setPosition] = useState("one");
+  const [activations, setActivations] = useState(0);
 
   return (
-    <DropdownMenu>
-      <DropdownMenu.Trigger asChild>
-        <Button>Open Menu</Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <DropdownMenu.Item>Profile</DropdownMenu.Item>
-        <DropdownMenu.Item disabled>Disabled</DropdownMenu.Item>
-        <DropdownMenu.Separator />
-        <DropdownMenu.CheckboxItem checked={checked} onCheckedChange={setChecked}>
-          Toggle Option
-        </DropdownMenu.CheckboxItem>
-        <DropdownMenu.Separator />
-        <DropdownMenu.RadioGroup value={position} onValueChange={setPosition}>
-          <DropdownMenu.RadioItem value="one">Option One</DropdownMenu.RadioItem>
-          <DropdownMenu.RadioItem value="two">Option Two</DropdownMenu.RadioItem>
-        </DropdownMenu.RadioGroup>
-      </DropdownMenu.Content>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenu.Trigger asChild>
+          <Button>Open Menu</Button>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.Item onSelect={() => setActivations((count) => count + 1)}>
+            Profile
+          </DropdownMenu.Item>
+          <DropdownMenu.Item disabled>Disabled</DropdownMenu.Item>
+          <DropdownMenu.Separator />
+          <DropdownMenu.CheckboxItem checked={checked} onCheckedChange={setChecked}>
+            Toggle Option
+          </DropdownMenu.CheckboxItem>
+          <DropdownMenu.Separator />
+          <DropdownMenu.RadioGroup value={position} onValueChange={setPosition}>
+            <DropdownMenu.RadioItem value="one">Option One</DropdownMenu.RadioItem>
+            <DropdownMenu.RadioItem value="two">Option Two</DropdownMenu.RadioItem>
+          </DropdownMenu.RadioGroup>
+        </DropdownMenu.Content>
+      </DropdownMenu>
+      <p data-testid="activations">{`Profile activated ${activations} times`}</p>
+    </>
   );
 }
 
@@ -408,16 +562,43 @@ export const InteractionTest: Story = {
       "data-disabled",
     );
 
-    // Arrow keys move the highlight through the menu
+    // ArrowDown skips the disabled item: the highlight goes from Profile
+    // straight to the checkbox, never resting on Disabled
+    const disabled = within(menu).getByRole("menuitem", { name: "Disabled" });
     await userEvent.keyboard("{ArrowDown}");
     await expect(
       within(menu).getByRole("menuitemcheckbox", { name: "Toggle Option" }),
     ).toHaveFocus();
+    await expect(disabled).not.toHaveFocus();
+    await expect(disabled).not.toHaveAttribute("data-highlighted");
 
     // Escape closes
     await userEvent.keyboard("{Escape}");
     await expect(screen.queryByRole("menu")).not.toBeInTheDocument();
     await expect(trigger).toHaveFocus();
+
+    // Enter activates the highlighted item and closes the menu
+    const activations = canvas.getByTestId("activations");
+    await expect(activations).toHaveTextContent("Profile activated 0 times");
+    await userEvent.keyboard("{Enter}");
+    menu = await screen.findByRole("menu");
+    await waitFor(() =>
+      expect(within(menu).getByRole("menuitem", { name: "Profile" })).toHaveFocus(),
+    );
+    await userEvent.keyboard("{Enter}");
+    await waitFor(() => expect(screen.queryByRole("menu")).not.toBeInTheDocument());
+    await expect(activations).toHaveTextContent("Profile activated 1 times");
+    await waitFor(() => expect(trigger).toHaveFocus());
+
+    // Space activates the highlighted item and closes the menu
+    await userEvent.keyboard("{Enter}");
+    menu = await screen.findByRole("menu");
+    await waitFor(() =>
+      expect(within(menu).getByRole("menuitem", { name: "Profile" })).toHaveFocus(),
+    );
+    await userEvent.keyboard(" ");
+    await waitFor(() => expect(screen.queryByRole("menu")).not.toBeInTheDocument());
+    await expect(activations).toHaveTextContent("Profile activated 2 times");
 
     // Selecting a plain item closes the menu
     await userEvent.click(trigger);

@@ -12,6 +12,9 @@ export interface NavigationProgressProps extends React.ComponentProps<"div"> {
  * Indeterminate progress bar for page navigation.
  * Framework-agnostic — receives loading state via props.
  *
+ * Under `prefers-reduced-motion: reduce` the bar stops sweeping and fills the
+ * whole track: a static partial fill would read as determinate progress.
+ *
  * `npx @beaket/ui init` installs the animation CSS below automatically.
  * Only add it manually when copying this component without running init:
  * ```css
@@ -39,7 +42,10 @@ export function NavigationProgress({ active, className, ...props }: NavigationPr
       )}
       {...props}
     >
-      <div className="animate-navigation-progress bg-bg-emphasis h-full w-1/3 will-change-transform" />
+      <div
+        data-slot="navigation-progress-bar"
+        className="animate-navigation-progress bg-bg-emphasis h-full w-1/3 will-change-transform motion-reduce:w-full motion-reduce:animate-none"
+      />
     </div>
   );
 }
