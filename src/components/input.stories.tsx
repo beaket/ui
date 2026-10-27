@@ -174,10 +174,6 @@ export const AffixToggleTest: Story = {
     const canvas = within(canvasElement);
     const input = canvas.getByTestId("toggle-input");
     const wrapper = input.parentElement;
-
-    // No affix: the wrapper is there but draws no box.
-    await expect(wrapper).toHaveAttribute("data-slot", "input-wrapper");
-    await expect(getComputedStyle(wrapper as HTMLElement).display).toBe("contents");
     await expect(canvas.queryByTestId("toggle-clear")).not.toBeInTheDocument();
 
     await userEvent.click(input);
@@ -186,9 +182,10 @@ export const AffixToggleTest: Story = {
     // First keystroke mounts the suffix — same node, still focused.
     await userEvent.keyboard("a");
     await expect(canvas.getByTestId("toggle-clear")).toBeInTheDocument();
-    await expect(canvas.getByTestId("toggle-input")).toBe(input);
     await expect(document.activeElement).toBe(input);
-    await expect(getComputedStyle(wrapper as HTMLElement).display).toBe("flex");
+    await expect(canvas.getByTestId("toggle-input")).toBe(input);
+    await expect(input.parentElement).toBe(wrapper);
+    await expect(wrapper).toHaveAttribute("data-slot", "input-wrapper");
 
     // Typing continues uninterrupted into the same field.
     await userEvent.keyboard("bc");
@@ -198,8 +195,8 @@ export const AffixToggleTest: Story = {
     await userEvent.keyboard("{Backspace}{Backspace}{Backspace}");
     await expect(input).toHaveValue("");
     await expect(canvas.queryByTestId("toggle-clear")).not.toBeInTheDocument();
-    await expect(canvas.getByTestId("toggle-input")).toBe(input);
     await expect(document.activeElement).toBe(input);
-    await expect(getComputedStyle(wrapper as HTMLElement).display).toBe("contents");
+    await expect(canvas.getByTestId("toggle-input")).toBe(input);
+    await expect(input.parentElement).toBe(wrapper);
   },
 };

@@ -32,16 +32,21 @@ const inputBaseStyles = [
 ].join(" ");
 
 export function Input({ className, type = "text", prefix, suffix, ref, ...props }: InputProps) {
-  const hasAffix = Boolean(prefix || suffix);
-
   // The wrapper is always rendered so the <input> keeps one position in the
   // tree: toggling an affix must not remount it (that would drop focus, caret,
-  // selection and IME composition — #1105). Without an affix the wrapper is
-  // `display: contents`, so it draws no box and the <input> lays out exactly
-  // as a bare one would. `className`, `ref` and the rest of the props belong
-  // to the <input>, never to the wrapper.
+  // selection and IME composition — #1105). It is a real box in both cases, so
+  // parent spacing rules (`space-y-*`, `> * + *` margins) and flex/grid
+  // placement act on it; `w-full` lets the <input> fill its slot the way a bare
+  // one did. It becomes `relative` only when it has to position an affix: a
+  // positioned wrapper would paint over a consumer's own absolutely positioned
+  // overlay placed before it (DataTable's search icon is one).
+  // `className`, `ref` and the rest of the props belong to the <input>, never
+  // to the wrapper.
   return (
-    <div data-slot="input-wrapper" className={hasAffix ? "relative flex items-center" : "contents"}>
+    <div
+      data-slot="input-wrapper"
+      className={cn("flex w-full items-center", (prefix || suffix) && "relative")}
+    >
       {prefix && (
         <span
           data-slot="input-prefix"
