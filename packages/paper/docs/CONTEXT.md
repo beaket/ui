@@ -71,10 +71,12 @@ there is no second document model. Everything else follows from this:
 - `editor/value-controller.ts` — `setValue` full-document replacement, IME-safe (deferred during
   composition; does not echo through `onChange`).
 - `editor/theme.ts` — single source of token truth; the porcelain bridge + editor-owned tokens; the
-  CJK font stack; `colorScheme` / `setColorScheme` (light/dark/system, live via a compartment); the
+  CJK font stack; `colorScheme` / `setColorScheme` (light/dark/system, live via a compartment; public
+  as `editor.setColorScheme`); the
   `height` / `minHeight` sizing recipes (`sizeTheme` / the pure `sizeRules` seam, ADR-0018).
 - `editor/extensions/read-only.ts` — the `readOnly` option: `EditorState.readOnly` +
-  `EditorView.editable` in one compartment; `setReadOnly` flips it live (ADR-0018). The doc-mutating
+  `EditorView.editable` in one compartment; `setReadOnly` flips it live (ADR-0018; public as
+  `editor.setReadOnly`). The doc-mutating
   entry points guard on `view.state.readOnly` themselves (the matrix lives in the ADR).
 - `editor/extensions/markdown.ts` — the dialect: CommonMark + GFM core (Table, TaskList,
   Strikethrough, Autolink), the **footnotes** parser config (below), and the heading/code style ramp.
@@ -134,10 +136,11 @@ there is no second document model. Everything else follows from this:
 
 **Selection annotations** (mechanism only)
 
-- `editor/anchor.ts` — `createAnchor` / `resolveAnchor`; the `Anchor`/`AnchorStatus`/`ResolvedAnchor`
-  types; reserved `prefix`/`suffix` context slots.
+- `editor/anchor.ts` — `createAnchor` (internal; feeds `onSelect`'s `sel.anchor`) / `resolveAnchor`
+  (public); the `Anchor`/`AnchorStatus`/`ResolvedAnchor` types; reserved `prefix`/`suffix` context slots.
 - `extensions/highlight-layer.ts` — renders the consumer's anchor list as mark decorations;
-  `setHighlightsEffect` / `setActiveHighlightEffect`; `HighlightInput`.
+  `setHighlightsEffect` / `setActiveHighlightEffect` (internal), and `createHighlightController`, the
+  IME-deferring dispatcher behind `editor.setHighlights` / `setActiveHighlight`; `HighlightInput`.
 
 **Menus**
 
@@ -196,11 +199,16 @@ view` rendered as a permanently-atomic replace-widget (caret steps over, one Bac
 
 ## Public API surface
 
-**Core (`@beaket/paper`)** — `createEditor`, `editorExtensions`, `defaultSlashItems`,
-`setColorScheme`, `setReadOnly`, `createAnchor`, `resolveAnchor`, `setHighlightsEffect`,
-`setActiveHighlightEffect`; types `EditorOptions`, `SlashItemSpec`, `SlashItemsConfig`,
-`TriggerSpec`, `TriggerItem`, `TokenSpec`, `TokenView`, `ColorScheme`, `ImageResolver`, `Anchor`,
-`AnchorStatus`, `ResolvedAnchor`, `HighlightInput`, `SelectionInfo`.
+**Core (`@beaket/paper`)** — `createEditor` (returns a `PaperEditor` handle, ADR-0024),
+`defaultSlashItems`, `resolveAnchor`; types `PaperEditor`, `EditorOptions`, `SlashItemSpec`,
+`SlashItemsConfig`, `TriggerSpec`, `TriggerItem`, `TokenSpec`, `TokenView`, `CodeBlockRenderer`,
+`CodeBlockRenderers`, `CodeBlockRenderContext`, `ColorScheme`, `ImageResolver`, `Anchor`,
+`AnchorStatus`, `ResolvedAnchor`, `HighlightInput`, `SelectionInfo`. No export names a CM6 type
+except `PaperEditor.getView()`, the unsafe hatch. `editorExtensions` is internal (tests use it).
+
+`PaperEditor`: `getValue`, `setValue`, `focus`, `getSelection`, `setHighlights`,
+`setActiveHighlight`, `setColorScheme`, `setReadOnly`, `getView`, `destroy`. Every method is
+IME-safe.
 
 **React (`@beaket/paper/react`)** — `Paper`; types `PaperHandle`, `PaperProps`, plus the shared
 types above.

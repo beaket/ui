@@ -78,8 +78,10 @@ and pass `ctx.colorScheme` so diagrams follow light/dark (Paper re-renders on a 
 
 ## Framework-agnostic core
 
-No React? Mount the core onto any element — it returns the CodeMirror `EditorView`. The React wrapper
-is thin wiring over this surface.
+No React? Mount the core onto any element — it returns a `PaperEditor` handle. Its methods mirror the
+React wrapper's live props (`setValue`, `setHighlights`, `setActiveHighlight`, `setColorScheme`,
+`setReadOnly`) and are IME-safe; `getView()` is the unsafe CodeMirror escape hatch, and `destroy()`
+tears it down. The React wrapper is thin wiring over this handle.
 
 ```ts
 import { createEditor } from "@beaket/paper";

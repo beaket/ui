@@ -89,7 +89,7 @@ change needs an ADR vs. a changeset. Each bullet below links to its ADR.
   round-trips to plain markdown (no second model). Built on the `guardedDecorations` `{atomic}` path.
   The same family carries the **embedding options** — `placeholder` (CM6's hint), `readOnly`, and
   explicit sizing (`height` fixed-scroll / `minHeight` grow-floor). `readOnly` sets **both**
-  `EditorState.readOnly` **and** `EditorView.editable` (live via `setReadOnly`), with an explicit
+  `EditorState.readOnly` **and** `EditorView.editable` (live via `editor.setReadOnly`), with an explicit
   behavior matrix: because `EditorState.readOnly` does not block a raw `view.dispatch`, the
   doc-mutating entry points (image ingest, paste-to-table, and the **table cell subview**, which is a
   separate `EditorView` the parent's `editable` does not reach) each guard on `view.state.readOnly`,
@@ -114,7 +114,10 @@ change needs an ADR vs. a changeset. Each bullet below links to its ADR.
 - **Package shape.** Two layers: a framework-agnostic **core** (`createEditor`, zero React) plus a
   thin **React wrapper** (`<Paper>`). Uncontrolled (`defaultValue` + `ref.setValue()`);
   `onChange` emits full markdown on user edits only (IME-guarded; `setValue` does not echo). A
-  curated `ref` handle with a `getView()` escape hatch. Shipped as a **standalone npm package**, not
+  curated `ref` handle with a `getView()` escape hatch. The core returns the same kind of handle —
+  `createEditor()` yields a `PaperEditor` whose every method is IME-safe, so the vanilla surface
+  carries no CM6 type except `getView()` ([ADR-0024](./adr/0024-core-returns-a-curated-editor-handle.md)).
+  Shipped as a **standalone npm package**, not
   a copy-paste registry component — so it is exempt from the monorepo's component checklist (no
   Storybook story, no `registry.json`, no `cn` util, no Tailwind). **Controlled-value** consumers are
   served by a documented **controlled-bridge recipe** (a thin `setValue` + `onChange` + `value !==
