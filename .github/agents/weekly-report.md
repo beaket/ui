@@ -42,8 +42,13 @@ See [`README.md` § The runtime](./README.md#the-runtime) for what `gh` can reac
 - **Waiting on a human**: issues and pull requests opened by outside contributors with no maintainer
   reply for more than 3 days. Read each one and draft a short reply in the project's voice — factual,
   warm, no promises about dates. These are drafts for the maintainer to post; do not post them.
-- **Decisions**: open `needs:maintainer` issues, `source:agent` issues that recommend `agent:ready`
-  but have not been labeled, and pull requests awaiting maintainer review for more than 3 days.
+- **Decisions**: open `needs:maintainer` issues, `source:agent` issues outside the
+  [delegated queue rule](../../docs/MAINTENANCE.md#delegated-queue-decisions) (`desk:design`,
+  `area:paper`, `type:arch`) that recommend `agent:ready` but have not been labeled, pull requests
+  waiting on the maintainer (a major or breaking change, a `draft/*` branch, a reviewer's **Needs a
+  decision**), and pull requests from people awaiting review for more than 3 days.
+- **Queue**: from the queue desk's run summaries in the window, the issues it granted
+  `agent:ready`, the pull requests it closed as stalled, and the issues it escalated.
 - **Last week's report**: find the previous `Weekly Report` discussion and read its Health table, to
   compute changes. If there is none, leave the change column empty.
 
@@ -98,6 +103,12 @@ One line after the table: which desk is throttled, if any, and why.
 Releases and merged pull requests worth a line, grouped by who authored them. Collapse Renovate into
 a single count.
 
+## Delegated
+
+What Bunsen decided on the maintainer's behalf under the delegated queue rule: issues granted
+`agent:ready` (with priority), pull requests closed as stalled, and issues escalated to
+`needs:maintainer`. One line each. "Nothing delegated this week." when empty.
+
 ## Waiting on a human
 
 Omit this section when empty. Each item: the link, who has been waiting and for how long, then the
@@ -129,6 +140,29 @@ the repository ID and the category ID with `gh api graphql`, then call `createDi
 
 The report is posted as `beaket-bunsen[bot]`, so GitHub notifies the maintainer like any other
 activity they watch.
+
+## 5. Slack message
+
+The maintainer reads the report in Slack, not on GitHub. After publishing, write `slack-report.md`
+at the root of the checkout, and the workflow sends it. It is Slack `mrkdwn`, not
+GitHub Markdown: `*bold*`, `<url|text>` links, `•` bullets, no headings or tables. Keep it under 20
+lines, in English:
+
+```text
+*Weekly Report YYYY-Www* · <discussion url|full report>
+<the TL;DR, unchanged>
+
+*Decisions for you* (<n>)
+• <issue url|#123> <what to decide> — recommend *<option>*: <one-line reason>
+  Reply on GitHub: `@bunsen <the exact comment that records the recommended decision>`
+
+*Shipped* <n> merged, releases <versions or "none"> · *Delegated* <n> queued, <n> closed as stalled
+*Health* <only the signals that changed for the worse, or "steady">
+```
+
+Under **Decisions for you**, copy the report's items in the same order. When there are none, write
+`Nothing needs you this week.` and drop the reply lines. The Slack message is a notification; the
+Discussion stays the record.
 
 End with the run summary described in [`README.md`](./README.md#rules-for-every-job), including the
 discussion URL.
