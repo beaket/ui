@@ -68,6 +68,15 @@ change needs an ADR vs. a changeset. Each bullet below links to its ADR.
   red → green. Coordinate and visual concerns are deliberately carved out for browser verification
   (jsdom returns zero-size rects via the polyfills in `src/test/setup.ts`).
   ([ADR-0005](./adr/0005-quality-via-jsdom-contract-and-regression-tests.md))
+- **Performance targets (proposed, [#482](https://github.com/beaket/ui/issues/482)).** Keystroke
+  `work` p95 < 16 ms on a 1k-line doc and < 50 ms on a 10k-line doc; **zero** `guardedDecorations`
+  recomputes during an active composition. `work` = keydown → CM update applied, plus the next
+  frame's render time with the vsync wait removed (`e2e/fixture/perf-probe.ts`); `paint`, which keeps
+  the vsync wait, is reported alongside but is frame-quantized (the harness sends each key just after a
+  frame, so it reads ~16 ms at 60 Hz whatever the editor costs), so it is not the gated number. The recompute count is hard-asserted in CI (`pnpm test:editor:ime`);
+  latency runs locally (`pnpm test:editor:perf`, report-only; `PAPER_PERF_ASSERT=targets` makes it a
+  gate) because shared CI runners are too noisy for a millisecond threshold. Targets stay
+  "proposed" until #482 step 2 confirms them on the measured baseline in the PR that added the harness.
 - **Visual language.** "Porcelain, softened"; CSS-variable tokens; evidence-based CJK typography.
   **Trap — CJK font interception:** Japanese fonts must come _before_ Korean in the font stack, or
   shared Han glyphs render in the Korean font (measured). See `theme.ts`.
@@ -146,33 +155,37 @@ The design separates **tokens** (a customization contract, exposed as CSS variab
 public, documented surface is the `--beaket-paper-*` name — extensions never read it; they use the
 short internal name (`var(--ink)` etc.) and the mapping lives in one place.
 
-- **Porcelain-bridged tokens** → 3-tier: `var(--beaket-paper-X, var(--color-Y, default))`.
-  1. explicit consumer override (editor-owned public name — no need to know porcelain's names),
-  2. porcelain bridge (matches `@beaket/ui` for free, inherits its dark-mode block),
+- **Color tokens are named by role and bridge to the `@beaket/ui` semantic layer** → 3-tier:
+  `var(--beaket-paper-ROLE, var(--color-ROLE, default))` — `fg`, `fg-muted`, `fg-subtle`, `bg`
+  (bridges `--color-bg-input`, the writable surface), `bg-raised`, `bg-overlay`, `bg-hover`,
+  `bg-active`, `border-subtle`, `border`, `border-strong`, `accent` (`--color-accent-solid`), `shadow`
+  (`--shadow-offset-overlay`).
+  1. explicit consumer override,
+  2. the host's semantic token of the same role (a `@beaket/ui` app themes the editor for free,
+     dark mode included),
   3. built-in default (self-sufficient standalone).
-- **Editor-owned tokens** → 2-tier: `var(--beaket-paper-X, default)` (typography, `--canvas`,
-  `--surface`, `--syn-*`). No porcelain equivalent; each carries a dark-aware default (dark mode
-  shipped in v0.2.0 — see [ADR-0009](./adr/0009-visual-language-porcelain-tokens-cjk-typography.md)'s amendment).
+     The pre-ADR-0025 metal names (`ink`, `paper`, `silver`, …) are read as deprecated aliases between
+  4. and 2. through 0.x and removed at 1.0.
+     ([ADR-0025](./adr/0025-role-named-theme-tokens-bridged-to-the-semantic-layer.md))
+- **Editor-owned tokens** → 2-tier: `var(--beaket-paper-X, default)` (typography, `--syn-*`). No
+  semantic equivalent; each carries a dark-aware default (dark mode shipped in v0.2.0 — see
+  [ADR-0009](./adr/0009-visual-language-porcelain-tokens-cjk-typography.md)'s amendment).
 
 Three customization tiers for consumers: (1) override `--beaket-paper-*` variables, (2) render
-inside porcelain for a zero-config match, (3) escape hatches — the stable `.cm-*` class hooks and
+inside a `@beaket/ui` theme for a zero-config match, (3) escape hatches — the stable `.cm-*` class hooks and
 `getView()`. Typography (`--beaket-paper-font` / `-font-size` / `-line-height` / `-measure`) is
 variabilized because writers tune it; `letter-spacing` is deliberately **not** exposed (negative
 spacing breaks mixed-script CJK).
 
-Deliberate, documented local divergences (each now carries a dark-aware value; dark mode shipped in v0.2.0):
-
-- `--color-ink` is overridden locally to `#232a35` (porcelain's `#0a0d14` is too harsh on the
-  near-white canvas); it is the default tier of `--ink`'s chain.
-- `--canvas` is `#fbfcfd`, a cool near-white writing surface — not porcelain's `--color-paper`
-  (`#ffffff`).
+The editor no longer pins `--color-ink` locally: the `@beaket/ui` semantic `--color-fg` is already
+softened one step below the deepest ink, so the host value is inherited as is (ADR-0025).
 
 **A forced `colorScheme` is authoritative over the bridge** ([ADR-0020](./adr/0020-forced-colorscheme-authoritative-over-bridge.md)).
-`"light"`/`"dark"` pin the bridged surface `--color-*` per scheme on `.cm-editor` (the same mechanism
-`--color-ink` uses), so a forced scheme beats a consumer `--color-*` bridge that tracks the OS — otherwise
-overlays leaked the OS scheme (#472). `"system"` stays unpinned, keeping the porcelain match-for-free;
-tier-1 `--beaket-paper-*` is the escape hatch within a forced scheme. The pins are derived off the var()
-chains (single source of truth), forced-block-only — never merged into the token maps.
+`"light"`/`"dark"` pin every bridged `--color-*` per scheme on `.cm-editor`, so a forced scheme beats a
+host `--color-*` that tracks the OS — otherwise overlays leaked the OS scheme (#472). `"system"` stays
+unpinned, keeping the host match-for-free; tier-1 `--beaket-paper-*` is the escape hatch within a forced
+scheme. The pins are derived from the same role table as the chains (single source of truth),
+forced-block-only — never merged into the token maps.
 
 Not yet exposed (deliberate scope cut, revisit on demand): a `theme?: Extension` option to append a
 consumer CodeMirror theme.

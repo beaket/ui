@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "24.22.2"
+    "node": "26.13.0"
   },
   "scripts": {
     "dev": "storybook dev -p 6006",
@@ -26,6 +26,7 @@
     "test:cli:unit": "vitest run --project cli",
     "test:editor": "pnpm --filter @beaket/paper test",
     "test:editor:ime": "playwright test -c playwright.ime.config.ts",
+    "test:editor:perf": "playwright test -c playwright.perf.config.ts",
     "check:adr": "node scripts/check-adr-refs.mjs",
     "build-storybook": "storybook build",
     "release": "changeset publish",

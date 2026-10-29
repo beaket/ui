@@ -173,3 +173,12 @@ A second readability grill (the "paper-md" body typescale, 2026-06-22) finalised
    **In-quote density (revises Decision 5's blank-line rhythm).** An empty `>` separator line inside a quote was rendering as a full line-height (~29px) row, far looser than the collapsed-HTML quote's ~8px inter-block margins. Empty quote lines (only `>` marks) now shrink to a ~0.5em strip when the cursor is elsewhere — the same `font-size:0.5em; line-height:1` widget-buffer-flattening trick the code fence uses (Decision 2) — and return to full height while the cursor is on them for editing. The depth bar's background keeps the rule continuous through the shorter segment.
 
 **Deliberately _not_ adopted from `.paper-md`:** (a) the 640px prose measure + 720px breakout — the editor has no breakout mechanism, so a hard cap would clip tables/code with no escape; the default stays full-width (`--measure: none`) and a reading column is an opt-in (`--beaket-paper-measure: 640px`), the convenient neutral default for an embeddable component (decided with the maintainer, 2026-06-22). (b) the gold task-checkbox accent — the checkbox keeps beaket/ui's brutalist ink fill (`--ink`), which is the design system's actual checkbox, not the `.paper-md` theme's gold. `theme.test.ts` is updated for the new `--font-size` / `--canvas` defaults.
+
+## Amendment (2026-10-27, #480) — tokens named by role, bridged to the semantic layer
+
+The token architecture above is revised by [ADR-0025](./0025-role-named-theme-tokens-bridged-to-the-semantic-layer.md).
+The public color tokens are now named by role (`--beaket-paper-fg`, `-bg`, `-border`, …) and bridge
+to the `@beaket/ui` semantic layer instead of porcelain's palette names, which that layer no longer
+defines. `--canvas` and `--surface` join the bridge (`bg-input`, `bg-raised`), and the local
+`--color-ink` pin is removed. The visual language, the built-in defaults, and the CJK typography
+decisions are unchanged. The body above is historical.

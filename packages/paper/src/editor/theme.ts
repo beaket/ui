@@ -25,58 +25,146 @@ const DEFAULT_FONT_STACK = [
   "sans-serif",
 ].join(", ");
 
-// Single source of token truth (ADR-0013 decision 6 = porcelain reconciliation). Every visual token
-// is defined on the `.cm-editor` scope (`&`), so the package is self-sufficient and depends on no
-// consumer `:root`. Every overlay (slash menu, imageDrop indicator, copy buttons) attaches to
-// view.dom (= .cm-editor), so these definitions cascade to all of them.
+// Single source of token truth (ADR-0013 decision 6, ADR-0025). Every visual token is defined on the
+// `.cm-editor` scope (`&`), so the package is self-sufficient and depends on no consumer `:root`. Every
+// overlay (slash menu, imageDrop indicator, copy buttons) attaches to view.dom (= .cm-editor), so these
+// definitions cascade to all of them.
 //
-// Each token resolves through a deliberate fallback chain. The PUBLIC theming contract is the
-// `--beaket-paper-*` name — that is what a consumer sets to customize the editor, and it is stable
-// and documented (see README). Extensions never read it directly; they use the short internal name
-// (var(--ink)/var(--accent)/…) and the mapping lives here, in one place.
+// The PUBLIC theming contract is the `--beaket-paper-*` name, named by role (ADR-0025). Extensions never
+// read it directly; they use the short internal name (var(--ink)/var(--accent)/…) and the mapping lives
+// here, in one place.
 //
-// ① Porcelain-bridged → 3-tier: `var(--beaket-paper-X, var(--color-Y, default))`.
-//    1) explicit consumer override (editor-owned public name, no need to know porcelain's names)
-//    2) porcelain bridge — when rendered inside @beaket/ui's porcelain theme it matches for free
-//       (and inherits porcelain's dark-mode block)
-//    3) built-in default — keeps the package self-sufficient standalone.
-// ② Editor-owned → 2-tier: `var(--beaket-paper-X, default)` (no porcelain equivalent). These do
-//    NOT inherit porcelain's dark block, so they carry their own dark default in `darkTokens` below.
-// ③ `--color-ink` is a deliberate local override of porcelain's harsh ink — documented divergence.
-//    accent-sel/weak are derived from `--accent`, so a consumer accent override flows into them.
-//    letter-spacing is intentionally NOT exposed (negative spacing breaks mixed CJK; CJK-first guard).
+// ① Bridged colors resolve 3 tiers deep: `var(--beaket-paper-ROLE, var(--color-ROLE, default))`.
+//    1) the consumer's explicit override
+//    2) the host's @beaket/ui semantic token of the same role, so inside a @beaket/ui app the editor
+//       inherits the theme (and its dark mode) for free
+//    3) the built-in default, which keeps the package self-sufficient standalone.
+//    During 0.x the pre-ADR-0025 name is read between 1) and 2) as a deprecated alias.
+// ② Editor-owned tokens are 2-tier: `var(--beaket-paper-X, default)` (syntax colors, typography). They
+//    carry their own dark default in `darkTokens`.
+// ③ accent-sel/weak derive from `--accent`, so an accent override flows into them. letter-spacing is
+//    intentionally NOT exposed (negative spacing breaks mixed CJK; CJK-first guard).
+
+interface BridgedToken {
+  /** Public role name, after `--beaket-paper-`. */
+  role: string;
+  /** The pre-ADR-0025 public name, read as a deprecated alias during 0.x. */
+  alias?: string;
+  /** The @beaket/ui semantic token of the same role. */
+  bridge: string;
+  light: string;
+  dark: string;
+}
+
+// Keyed by the internal name extensions read. Roles follow the @beaket/ui semantic layer and DESIGN.md:
+// the writing surface is `bg-input`, menus and popovers are `bg-overlay`, code is the raised sheet.
+const BRIDGED: Record<string, BridgedToken> = {
+  "--ink": { role: "fg", alias: "ink", bridge: "--color-fg", light: "#232a35", dark: "#e6eaee" },
+  "--steel": {
+    role: "fg-muted",
+    alias: "steel",
+    bridge: "--color-fg-muted",
+    light: "#686b6f",
+    dark: "#6c7486",
+  },
+  "--muted": {
+    role: "fg-subtle",
+    alias: "muted",
+    bridge: "--color-fg-subtle",
+    light: "#7a7d81",
+    dark: "#586070",
+  },
+  "--canvas": {
+    role: "bg",
+    alias: "canvas",
+    bridge: "--color-bg-input",
+    light: "#ffffff",
+    dark: "#14171c",
+  },
+  "--surface": {
+    role: "bg-raised",
+    alias: "surface",
+    bridge: "--color-bg-raised",
+    light: "#eceef2",
+    dark: "#1c1f27",
+  },
+  "--paper": {
+    role: "bg-overlay",
+    alias: "paper",
+    bridge: "--color-bg-overlay",
+    light: "#ffffff",
+    dark: "#0d1117",
+  },
+  "--frost": {
+    role: "bg-hover",
+    alias: "frost",
+    bridge: "--color-bg-hover",
+    light: "#f3f4f6",
+    dark: "#0e1016",
+  },
+  "--chrome": {
+    role: "bg-active",
+    alias: "chrome",
+    bridge: "--color-bg-active",
+    light: "#c0c4ca",
+    dark: "#2a303e",
+  },
+  "--platinum": {
+    role: "border-subtle",
+    alias: "platinum",
+    bridge: "--color-border-subtle",
+    light: "#e8eaec",
+    dark: "#161a22",
+  },
+  "--silver": {
+    role: "border",
+    alias: "silver",
+    bridge: "--color-border",
+    light: "#d5d8dc",
+    dark: "#1e242e",
+  },
+  "--slate": {
+    role: "border-strong",
+    alias: "slate",
+    bridge: "--color-border-strong",
+    light: "#3e4145",
+    dark: "#9ca4b2",
+  },
+  "--accent": { role: "accent", bridge: "--color-accent-solid", light: "#0c6bae", dark: "#1a8ed8" },
+  "--shadow-overlay": {
+    role: "shadow",
+    bridge: "--shadow-offset-overlay",
+    light: "1px 1px 0 0 #c0c4ca",
+    dark: "1px 1px 0 0 #000000",
+  },
+};
+
+function bridgedChain(t: BridgedToken, fallback: string): string {
+  const host = `var(${t.bridge}, ${fallback})`;
+  const inner = t.alias ? `var(--beaket-paper-${t.alias}, ${host})` : host;
+  return `var(--beaket-paper-${t.role}, ${inner})`;
+}
+
+function bridgedTokens(scheme: "light" | "dark"): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(BRIDGED).map(([internal, t]) => [internal, bridgedChain(t, t[scheme])]),
+  );
+}
+
 // Exported for the token-wiring contract test (not part of the package's JS public surface).
-export const tokens = {
-  // ③ Local override: porcelain --color-ink is #0a0d14 (≈18:1), too harsh on the near-white canvas
-  //    (ADR-0009). Pin it softer, locally to the editor. Dark-aware counterpart in `darkTokens`.
-  "--color-ink": "#232a35",
-  // ① Porcelain-bridged colors (3-tier)
-  "--ink": "var(--beaket-paper-ink, var(--color-ink, #232a35))",
-  "--paper": "var(--beaket-paper-paper, var(--color-paper, #ffffff))",
-  "--frost": "var(--beaket-paper-frost, var(--color-frost, #f3f4f6))",
-  "--accent": "var(--beaket-paper-accent, var(--color-signal-blue, #0c6bae))",
-  "--shadow-overlay": "var(--beaket-paper-shadow, var(--shadow-offset, 1px 1px 0 0 #c0c4ca))",
+export const tokens: Record<string, string> = {
+  // ① Bridged colors (3-tier, plus the 0.x alias)
+  ...bridgedTokens("light"),
   // ③ Derived from --accent so a consumer accent override flows into the selection tint.
   "--accent-sel": "color-mix(in srgb, var(--accent) 16%, transparent)",
   "--accent-weak": "color-mix(in srgb, var(--accent) 8%, transparent)",
-  // ① Porcelain-bridged neutral scale (values verified identical to porcelain.css)
-  "--platinum": "var(--beaket-paper-platinum, var(--color-platinum, #e8eaec))",
-  "--silver": "var(--beaket-paper-silver, var(--color-silver, #d5d8dc))",
-  "--chrome": "var(--beaket-paper-chrome, var(--color-chrome, #c0c4ca))",
-  "--aluminum": "var(--beaket-paper-aluminum, var(--color-aluminum, #a0a3a7))",
-  "--muted": "var(--beaket-paper-muted, var(--color-muted, #7a7d81))",
-  "--steel": "var(--beaket-paper-steel, var(--color-steel, #686b6f))",
-  "--slate": "var(--beaket-paper-slate, var(--color-slate, #3e4145))",
-  // ② Editor-owned colors (2-tier; no porcelain equivalent)
-  "--canvas": "var(--beaket-paper-canvas, #ffffff)", // white writing surface by default (paper-md grill 2026-06-22), overridable via --beaket-paper-canvas (e.g. beaket's #fffefc)
-  "--surface": "var(--beaket-paper-surface, #eceef2)",
-  // ② Task-checkbox checkmark image. Light = white stroke (stamped on the dark --ink fill). The dark
-  //    variant lives in `darkTokens`, so the checkmark follows a forced `colorScheme` via the scope
-  //    class — not a bare `prefers-color-scheme` query (which ignored forced schemes). Consumed by
-  //    `list-rendering.ts` as `var(--cm-check-mark)`; inherits to the checkbox from the editor root.
+  // Task-checkbox checkmark image. Light = white stroke (stamped on the dark --ink fill). The dark
+  // variant lives in `darkTokens`, so the checkmark follows a forced `colorScheme` via the scope class —
+  // not a bare `prefers-color-scheme` query (which ignored forced schemes). Consumed by
+  // `list-rendering.ts` as `var(--cm-check-mark)`; inherits to the checkbox from the editor root.
   "--cm-check-mark":
     "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%20fill='none'%20stroke='%23ffffff'%20stroke-width='2.25'%3E%3Cpath%20d='M3.5%208.5l3%203%206-6'/%3E%3C/svg%3E\")",
-  // ② Editor-owned code syntax (GitHub Light, ADR-0006); porcelain has none
+  // ② Editor-owned code syntax (GitHub Light, ADR-0006)
   "--syn-kw": "var(--beaket-paper-syntax-keyword, #cf222e)",
   "--syn-str": "var(--beaket-paper-syntax-string, #0a3069)",
   "--syn-num": "var(--beaket-paper-syntax-number, #0550ae)",
@@ -98,43 +186,17 @@ export const tokens = {
   "--word-break": "var(--beaket-paper-word-break, normal)",
 };
 
-// Dark mode (ADR-0009 dark canvas). Same architecture as `tokens`: each entry keeps its var() chain
-// so the public `--beaket-paper-*` override and the porcelain `--color-*` bridge still win — ONLY the
-// built-in fallback default is swapped to a dark-aware value. That makes the package self-sufficient in
-// dark mode standalone, while still inheriting porcelain's dark block (or a host's dark `--color-*`)
-// when present. These values are emitted into the scoped `@media` stylesheet by `darkThemeStyle()`
-// below (it can't live in baseTheme — see that comment for why).
-//
-// `--color-ink`: in LIGHT we pin it softer than porcelain's harsh #0a0d14 (ADR-0009). In DARK porcelain's
-// ink (#e6eaee) is already soft, so the pin just carries a dark-aware value of its own — same role,
-// dark-aware. The PUBLIC `--beaket-paper-ink` still overrides first.
-//
-// Neutral scale + accent defaults mirror porcelain's dark block (so standalone == porcelain dark).
-// Code syntax swaps GitHub Light → GitHub Dark Default. Derived `--accent-sel`/`--accent-weak` are NOT
+// Dark mode (ADR-0009 dark canvas). Same chains as `tokens` — the public override and the host bridge
+// still win — and ONLY the built-in default is swapped to a dark-aware value. That keeps the package
+// self-sufficient in dark mode standalone, while a host's dark semantic tokens still apply when present.
+// These values are emitted into the scoped `@media` stylesheet by `darkThemeStyle()` below (it can't
+// live in baseTheme — see that comment for why). Derived `--accent-sel`/`--accent-weak` are NOT
 // re-declared: they read `var(--accent)` at use time, which is the dark accent here, so they follow.
-export const darkTokens = {
-  // ③ Local override, dark-aware (no longer shadows the host with a light value in dark mode).
-  "--color-ink": "#e6eaee",
-  // ① Porcelain-bridged colors (3-tier), dark defaults mirror porcelain's dark block
-  "--ink": "var(--beaket-paper-ink, var(--color-ink, #e6eaee))",
-  "--paper": "var(--beaket-paper-paper, var(--color-paper, #0d1117))",
-  "--frost": "var(--beaket-paper-frost, var(--color-frost, #0e1016))",
-  "--accent": "var(--beaket-paper-accent, var(--color-signal-blue, #1a8ed8))",
-  "--shadow-overlay": "var(--beaket-paper-shadow, var(--shadow-offset, 1px 1px 0 0 #000000))",
-  // ① Porcelain-bridged neutral scale (dark, inverted ramp — values verified identical to porcelain.css)
-  "--platinum": "var(--beaket-paper-platinum, var(--color-platinum, #161a22))",
-  "--silver": "var(--beaket-paper-silver, var(--color-silver, #1e242e))",
-  "--chrome": "var(--beaket-paper-chrome, var(--color-chrome, #2a303e))",
-  "--aluminum": "var(--beaket-paper-aluminum, var(--color-aluminum, #3e4454))",
-  "--muted": "var(--beaket-paper-muted, var(--color-muted, #586070))",
-  "--steel": "var(--beaket-paper-steel, var(--color-steel, #6c7486))",
-  "--slate": "var(--beaket-paper-slate, var(--color-slate, #9ca4b2))",
-  // ② Editor-owned colors (2-tier; no porcelain equivalent). Cool near-black writing canvas + raised fill.
-  "--canvas": "var(--beaket-paper-canvas, #14171c)",
-  "--surface": "var(--beaket-paper-surface, #1c1f27)",
-  // ② Dark task-checkbox checkmark: dark stroke, because --ink fills light in dark mode (the white
-  //    light variant would vanish). Rides both dark blocks via colorSchemeCss, so it flips with the
-  //    active scope class for forced "dark" and OS-dark "system" alike.
+export const darkTokens: Record<string, string> = {
+  ...bridgedTokens("dark"),
+  // Dark task-checkbox checkmark: dark stroke, because --ink fills light in dark mode (the white
+  // light variant would vanish). Rides both dark blocks via colorSchemeCss, so it flips with the
+  // active scope class for forced "dark" and OS-dark "system" alike.
   "--cm-check-mark":
     "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%20fill='none'%20stroke='%230d1117'%20stroke-width='2.25'%3E%3Cpath%20d='M3.5%208.5l3%203%206-6'/%3E%3C/svg%3E\")",
   // ② Editor-owned code syntax — GitHub Dark Default (mirrors the GitHub Light ramp above)
@@ -214,7 +276,7 @@ export const baseTheme = EditorView.theme({
 // Scoping: `EditorView.editorAttributes` stamps DARK_SCOPE_CLASS on the editor root, and the stylesheet
 // targets `.cm-editor.<scope>`. Two classes = specificity (0,2,0), which outranks baseTheme's single
 // generated class (0,1,0) — so in dark mode these tokens win regardless of source order, while the
-// `--beaket-paper-*` override and `--color-*` porcelain bridge inside each var() chain still apply.
+// `--beaket-paper-*` override and the host `--color-*` bridge inside each var() chain still apply.
 // Color scheme as a public prop (`colorScheme` on EditorOptions/PaperProps):
 // - "system" (default) → follow the OS via `prefers-color-scheme` (the original behavior).
 // - "dark"            → force dark regardless of OS.
@@ -224,14 +286,14 @@ export const baseTheme = EditorView.theme({
 // The scheme only decides which scope class the editor root wears — so flipping it is a single live
 // class swap (`setColorScheme`), no recreation.
 //
-// Forcing is AUTHORITATIVE over the porcelain bridge (#472, ADR-0020). A consumer who bridges
-// `--color-paper`/`--color-frost`/… to a palette that tracks the OS would otherwise leak the OS scheme
+// Forcing is AUTHORITATIVE over the host bridge (#472, ADR-0020). A host whose semantic
+// `--color-bg-overlay`/`--color-bg-hover`/… track the OS would otherwise leak the OS scheme
 // into the editor's surfaces when a scheme is forced: the forced block only swaps the tier-3 *defaults*
 // inside each var() chain, never beating a consumer-provided tier-2 `--color-*`. So each forced block
-// also PINS the bridged surface `--color-*` to its scheme's value (the same mechanism `--color-ink`
-// already uses — a concrete `--color-*` declared on `.cm-editor` overrides the value inherited from the
-// consumer's `:root`, sidestepping the once-resolved-against-the-OS stickiness). "system" is left
-// unpinned, so it keeps deferring to the bridge (the porcelain-match-for-free contract). The tier-1
+// also PINS every bridged `--color-*` to its scheme's value (a concrete `--color-*` declared on
+// `.cm-editor` overrides the value inherited from the host's `:root`, sidestepping the
+// once-resolved-against-the-OS stickiness). "system" is left unpinned, so it keeps deferring to the
+// bridge (the inherit-the-host-theme contract). The tier-1
 // public `--beaket-paper-*` override still wins within a forced scheme — it is the escape hatch.
 export type ColorScheme = "light" | "dark" | "system";
 
@@ -265,27 +327,15 @@ export function colorSchemeClass(scheme: ColorScheme): string {
   return DARK_SCOPE_CLASS;
 }
 
-// A 3-tier porcelain bridge: `var(--beaket-paper-X, var(--color-Y, DEFAULT))`. Captures the tier-2
-// porcelain name (`--color-Y`, or `--shadow-offset` for the shadow) and its tier-3 DEFAULT. 2-tier
-// editor-owned tokens (canvas/surface/syntax/typography) have no inner `var(` and never match, so they
-// are correctly excluded from the surface pins.
-const BRIDGE_CHAIN = /^var\(--beaket-paper-[\w-]+, var\((--[\w-]+), (.+)\)\)$/;
-
 /**
- * Derives the bridged surface pins for a token set — the tier-2 `--color-*`/`--shadow-offset` names
- * mapped to their scheme-specific tier-3 default. Single source of truth: read straight off the var()
- * chains in `tokens`/`darkTokens`, so a new 3-tier token auto-pins under forcing for free. Exported for
- * the wiring test. NOT merged into `tokens`/`darkTokens` themselves — those stay pure var() chains so
- * the public-override contract holds and `system` keeps deferring to the bridge; the pins exist ONLY in
- * the forced blocks emitted by `colorSchemeCss()`.
+ * The bridged host tokens pinned to a scheme's built-in default — the `--color-*`/`--shadow-offset-*`
+ * names of `BRIDGED` mapped to their light or dark value. Exported for the wiring test. NOT merged into
+ * `tokens`/`darkTokens` themselves — those stay pure var() chains so the public-override contract holds
+ * and `system` keeps deferring to the bridge; the pins exist ONLY in the forced blocks emitted by
+ * `colorSchemeCss()` (ADR-0020).
  */
-export function surfacePins(tokenSet: Record<string, string>): Record<string, string> {
-  const pins: Record<string, string> = {};
-  for (const value of Object.values(tokenSet)) {
-    const match = BRIDGE_CHAIN.exec(value);
-    if (match) pins[match[1]] = match[2];
-  }
-  return pins;
+export function surfacePins(scheme: "light" | "dark"): Record<string, string> {
+  return Object.fromEntries(Object.values(BRIDGED).map((t) => [t.bridge, t[scheme]]));
 }
 
 /**
@@ -301,8 +351,8 @@ export function colorSchemeCss(): string {
     Object.entries(pins)
       .map(([name, value]) => `${name}: ${value};`)
       .join(" ");
-  const lightPins = pinDecls(surfacePins(tokens));
-  const darkPins = pinDecls(surfacePins(darkTokens));
+  const lightPins = pinDecls(surfacePins("light"));
+  const darkPins = pinDecls(surfacePins("dark"));
   return (
     `@media (prefers-color-scheme: dark){.cm-editor.${DARK_SCOPE_CLASS}{${darkDecls}}}` +
     `.cm-editor.${DARK_FORCE_CLASS}{${darkDecls} ${darkPins}}` +
@@ -329,7 +379,7 @@ function colorSchemeAttr(scheme: ColorScheme): Extension {
 
 /**
  * Dark mode. Injects the dark token stylesheet once per document/shadow root (idempotent by id) and
- * stamps the scope class for `scheme`. Self-contained — `--beaket-paper-*` overrides and the porcelain
+ * stamps the scope class for `scheme`. Self-contained — `--beaket-paper-*` overrides and the host
  * bridge keep working in every mode. Default "system" reproduces the original OS-follow behavior.
  */
 export function darkThemeStyle(scheme: ColorScheme = "system"): Extension {

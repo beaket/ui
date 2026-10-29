@@ -8,7 +8,7 @@ import {
   tokens,
 } from "./theme";
 
-// Token reconciliation + public theming contract (ADR-0013 decision 6).
+// Token reconciliation + public theming contract (ADR-0013 decision 6, ADR-0025).
 //
 // These are jsdom-safe *wiring* assertions: jsdom's getComputedStyle does not resolve the var()
 // cascade or evaluate color-mix(), so the actual computed colors (e.g. "override --beaket-paper-accent
@@ -17,11 +17,10 @@ import {
 // is what makes that cascade possible.
 
 // The token names extensions read internally that are NOT a direct public override:
-// - --color-ink is a deliberate local override of porcelain's ink (the default in the chain below).
 // - --accent-sel/--accent-weak are derived from --accent, so they inherit a consumer accent override.
 // - --cm-check-mark is an internal SVG image (the task-checkbox checkmark), not a public theming knob;
 //   it carries a light value here and a dark value in darkTokens so it flips with the scope class (#487).
-const NON_PUBLIC = new Set(["--color-ink", "--accent-sel", "--accent-weak", "--cm-check-mark"]);
+const NON_PUBLIC = new Set(["--accent-sel", "--accent-weak", "--cm-check-mark"]);
 
 describe("theme public override contract", () => {
   it("every theming token is overridable via a --beaket-paper-* public name", () => {
@@ -40,29 +39,49 @@ describe("theme public override contract", () => {
 });
 
 describe("theme token reconciliation", () => {
-  it("bridges the accent through 3 tiers: override → porcelain → default", () => {
+  it("bridges a role token to the @beaket/ui semantic token of the same role", () => {
     expect(tokens["--accent"]).toBe(
-      "var(--beaket-paper-accent, var(--color-signal-blue, #0c6bae))",
+      "var(--beaket-paper-accent, var(--color-accent-solid, #0c6bae))",
+    );
+    expect(tokens["--shadow-overlay"]).toBe(
+      "var(--beaket-paper-shadow, var(--shadow-offset-overlay, 1px 1px 0 0 #c0c4ca))",
     );
   });
 
-  it("pins ink to the softened #232a35 as a deliberate local override (ADR-0009)", () => {
-    // porcelain's --color-ink (#0a0d14) is too harsh on the near-white canvas; overridden locally.
-    expect(tokens["--color-ink"]).toBe("#232a35");
-    expect(tokens["--ink"]).toBe("var(--beaket-paper-ink, var(--color-ink, #232a35))");
+  it("reads the pre-ADR-0025 name as a deprecated alias between the override and the bridge", () => {
+    expect(tokens["--ink"]).toBe(
+      "var(--beaket-paper-fg, var(--beaket-paper-ink, var(--color-fg, #232a35)))",
+    );
+    expect(tokens["--canvas"]).toBe(
+      "var(--beaket-paper-bg, var(--beaket-paper-canvas, var(--color-bg-input, #ffffff)))",
+    );
   });
 
-  it("bridges the neutral scale through porcelain --color-* (inheriting its dark-mode block)", () => {
-    expect(tokens["--paper"]).toBe("var(--beaket-paper-paper, var(--color-paper, #ffffff))");
-    expect(tokens["--frost"]).toBe("var(--beaket-paper-frost, var(--color-frost, #f3f4f6))");
-    expect(tokens["--chrome"]).toBe("var(--beaket-paper-chrome, var(--color-chrome, #c0c4ca))");
-    expect(tokens["--silver"]).toBe("var(--beaket-paper-silver, var(--color-silver, #d5d8dc))");
-    expect(tokens["--slate"]).toBe("var(--beaket-paper-slate, var(--color-slate, #3e4145))");
+  it("maps every color role onto the @beaket/ui semantic layer", () => {
+    const bridges = Object.fromEntries(
+      Object.entries(tokens).flatMap(([name, value]) => {
+        const m = /var\((--(?:color|shadow)-[\w-]+),/.exec(value);
+        return m ? [[name, m[1]]] : [];
+      }),
+    );
+    expect(bridges).toEqual({
+      "--ink": "--color-fg",
+      "--steel": "--color-fg-muted",
+      "--muted": "--color-fg-subtle",
+      "--canvas": "--color-bg-input",
+      "--surface": "--color-bg-raised",
+      "--paper": "--color-bg-overlay",
+      "--frost": "--color-bg-hover",
+      "--chrome": "--color-bg-active",
+      "--platinum": "--color-border-subtle",
+      "--silver": "--color-border",
+      "--slate": "--color-border-strong",
+      "--accent": "--color-accent-solid",
+      "--shadow-overlay": "--shadow-offset-overlay",
+    });
   });
 
-  it("keeps editor-owned colors as 2-tier (no porcelain equivalent)", () => {
-    expect(tokens["--canvas"]).toBe("var(--beaket-paper-canvas, #ffffff)");
-    expect(tokens["--surface"]).toBe("var(--beaket-paper-surface, #eceef2)");
+  it("keeps editor-owned syntax colors 2-tier (no semantic equivalent)", () => {
     expect(tokens["--syn-kw"]).toBe("var(--beaket-paper-syntax-keyword, #cf222e)");
   });
 });
@@ -88,7 +107,7 @@ describe("theme typography is variabilized (CJK-first defaults)", () => {
 describe("dark theme keeps the override + bridge chains, swapping only the built-in default", () => {
   // Every color/shadow token a consumer can override stays publicly overridable in dark mode too.
   // --cm-check-mark is the internal checkbox checkmark image (not a public knob), same as in light.
-  const NON_PUBLIC = new Set(["--color-ink", "--cm-check-mark"]);
+  const NON_PUBLIC = new Set(["--cm-check-mark"]);
   it("every dark token still reads a --beaket-paper-* override first", () => {
     for (const [name, value] of Object.entries(darkTokens)) {
       if (NON_PUBLIC.has(name)) continue;
@@ -98,28 +117,23 @@ describe("dark theme keeps the override + bridge chains, swapping only the built
     }
   });
 
-  it("flips the locally-pinned ink to a dark-aware light value (no longer shadows the host with #232a35)", () => {
-    expect(tokens["--color-ink"]).toBe("#232a35");
-    expect(darkTokens["--color-ink"]).toBe("#e6eaee");
-    expect(darkTokens["--ink"]).toBe("var(--beaket-paper-ink, var(--color-ink, #e6eaee))");
-  });
-
-  it("preserves the porcelain bridge while swapping defaults to porcelain's dark block", () => {
-    expect(darkTokens["--paper"]).toBe("var(--beaket-paper-paper, var(--color-paper, #0d1117))");
-    expect(darkTokens["--frost"]).toBe("var(--beaket-paper-frost, var(--color-frost, #0e1016))");
-    expect(darkTokens["--chrome"]).toBe("var(--beaket-paper-chrome, var(--color-chrome, #2a303e))");
-    expect(darkTokens["--accent"]).toBe(
-      "var(--beaket-paper-accent, var(--color-signal-blue, #1a8ed8))",
+  it("keeps the bridge chains while swapping only the built-in default", () => {
+    expect(darkTokens["--ink"]).toBe(
+      "var(--beaket-paper-fg, var(--beaket-paper-ink, var(--color-fg, #e6eaee)))",
     );
-  });
-
-  it("swaps editor-owned canvas/surface and syntax to dark-aware defaults", () => {
-    expect(darkTokens["--canvas"]).toBe("var(--beaket-paper-canvas, #14171c)");
-    expect(darkTokens["--surface"]).toBe("var(--beaket-paper-surface, #1c1f27)");
+    expect(darkTokens["--paper"]).toBe(
+      "var(--beaket-paper-bg-overlay, var(--beaket-paper-paper, var(--color-bg-overlay, #0d1117)))",
+    );
+    expect(darkTokens["--accent"]).toBe(
+      "var(--beaket-paper-accent, var(--color-accent-solid, #1a8ed8))",
+    );
+    expect(darkTokens["--canvas"]).toBe(
+      "var(--beaket-paper-bg, var(--beaket-paper-canvas, var(--color-bg-input, #14171c)))",
+    );
     expect(darkTokens["--syn-kw"]).toBe("var(--beaket-paper-syntax-keyword, #ff7b72)");
   });
 
-  it("covers exactly the light tokens that don't bridge to porcelain's dark block", () => {
+  it("covers every light token that carries color", () => {
     // Typography/measure carry no color, so they need no dark variant; everything else must.
     const LIGHT_ONLY = new Set([
       "--font",
@@ -155,7 +169,9 @@ describe("colorSchemeCss emits a scoped prefers-color-scheme block", () => {
     for (const [name, value] of Object.entries(darkTokens)) {
       expect(css).toContain(`${name}: ${value};`);
     }
-    expect(css).toContain("--ink: var(--beaket-paper-ink, var(--color-ink, #e6eaee));");
+    expect(css).toContain(
+      "--ink: var(--beaket-paper-fg, var(--beaket-paper-ink, var(--color-fg, #e6eaee)));",
+    );
   });
 
   // colorScheme "dark" forces dark regardless of OS, so the same tokens also ship in an
@@ -226,30 +242,27 @@ describe("colorSchemeClass selects the editor-root class per scheme", () => {
   });
 });
 
-// #472: forcing a scheme must be authoritative over a consumer's porcelain `--color-*` bridge (ADR-0020).
-// The forced blocks pin the bridged tier-2 surface names to their scheme value so the editor wins over a
-// bridge that tracks the OS; `system` stays unpinned so it keeps deferring to the bridge. The pins are
-// derived off the var() chains (single source of truth), so these lock the derivation + placement.
-describe("surfacePins derives the bridged tier-2 surfaces from the token chains", () => {
-  it("pins the 3-tier porcelain surfaces to their tier-3 default, per scheme", () => {
-    const light = surfacePins(tokens);
-    expect(light["--color-paper"]).toBe("#ffffff");
-    expect(light["--color-frost"]).toBe("#f3f4f6");
-    expect(light["--color-signal-blue"]).toBe("#0c6bae"); // the accent bridges --color-signal-blue
-    expect(light["--color-ink"]).toBe("#232a35");
-    expect(light["--shadow-offset"]).toBe("1px 1px 0 0 #c0c4ca"); // the shadow bridges --shadow-offset
+// #472: forcing a scheme must be authoritative over a host's `--color-*` bridge (ADR-0020). The
+// forced blocks pin the bridged host names to their scheme value so the editor wins over a bridge that
+// tracks the OS; `system` stays unpinned so it keeps deferring to the bridge.
+describe("surfacePins pins every bridged host token to its scheme default", () => {
+  it("pins each semantic bridge, per scheme", () => {
+    const light = surfacePins("light");
+    expect(light["--color-bg-overlay"]).toBe("#ffffff");
+    expect(light["--color-bg-hover"]).toBe("#f3f4f6");
+    expect(light["--color-accent-solid"]).toBe("#0c6bae");
+    expect(light["--color-fg"]).toBe("#232a35");
+    expect(light["--shadow-offset-overlay"]).toBe("1px 1px 0 0 #c0c4ca");
 
-    const dark = surfacePins(darkTokens);
-    expect(dark["--color-paper"]).toBe("#0d1117");
-    expect(dark["--color-frost"]).toBe("#0e1016");
-    expect(dark["--color-signal-blue"]).toBe("#1a8ed8");
+    const dark = surfacePins("dark");
+    expect(dark["--color-bg-overlay"]).toBe("#0d1117");
+    expect(dark["--color-bg-hover"]).toBe("#0e1016");
+    expect(dark["--color-accent-solid"]).toBe("#1a8ed8");
   });
 
-  it("excludes 2-tier editor-owned tokens (no porcelain bridge to override)", () => {
-    const light = surfacePins(tokens);
-    expect(light).not.toHaveProperty("--canvas"); // editor-owned: var(--beaket-paper-canvas, #ffffff)
-    expect(light).not.toHaveProperty("--surface");
-    expect(light).not.toHaveProperty("--font");
+  it("excludes editor-owned tokens (no host bridge to override)", () => {
+    const light = surfacePins("light");
+    expect(Object.keys(light).every((k) => /^--(color|shadow)-/.test(k))).toBe(true);
   });
 });
 
@@ -264,19 +277,19 @@ describe("colorSchemeCss makes forcing authoritative over the consumer bridge (#
 
   it("pins the bridged surfaces light in the forced-light block (was leaking the OS scheme)", () => {
     const light = forced.slice(forced.indexOf(".cm-editor.cm-beaket-paper-light{"));
-    expect(light).toContain("--color-paper: #ffffff;");
-    expect(light).toContain("--color-frost: #f3f4f6;");
+    expect(light).toContain("--color-bg-overlay: #ffffff;");
+    expect(light).toContain("--color-bg-hover: #f3f4f6;");
   });
 
   it("pins the bridged surfaces dark in the forced-dark block", () => {
-    expect(forced).toContain("--color-paper: #0d1117;");
-    expect(forced).toContain("--color-frost: #0e1016;");
+    expect(forced).toContain("--color-bg-overlay: #0d1117;");
+    expect(forced).toContain("--color-bg-hover: #0e1016;");
   });
 
   // The OS-follow block must NOT pin the surfaces — it defers to the consumer bridge. The `:` (vs the
   // `,` in the `--paper`/`--frost` var() chains) makes this a precise pin assertion, no false positive.
   it("leaves the system/media block deferring to the bridge (no surface pins)", () => {
-    expect(media).not.toContain("--color-paper:");
-    expect(media).not.toContain("--color-frost:");
+    expect(media).not.toContain("--color-bg-overlay:");
+    expect(media).not.toContain("--color-bg-hover:");
   });
 });

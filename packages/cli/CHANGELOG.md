@@ -1,5 +1,28 @@
 # @beaket/ui
 
+## 4.2.1
+
+### Patch Changes
+
+- [#1170](https://github.com/beaket/ui/pull/1170) [`368e504`](https://github.com/beaket/ui/commit/368e504029ba2b532043bb4e7ef7316c3f201536) Thanks [@jihnma](https://github.com/jihnma)! - Describe the package as what it is: React + Tailwind components the CLI copies into your project, not only a CLI. The npm description dated from when the package was the CLI alone and was not updated when the registry joined it.
+
+- [#1168](https://github.com/beaket/ui/pull/1168) [`22dfe95`](https://github.com/beaket/ui/commit/22dfe95ad70fa5c6082b7e246bc3d0f69e2915b2) Thanks [@jihnma](https://github.com/jihnma)! - DropdownMenu: a disabled `SubTrigger` now renders in `fg-disabled` ink and drops pointer affordance, like the disabled `Item`, `CheckboxItem` and `RadioItem` rows beside it.
+
+  Root cause: Radix marks a disabled sub-trigger with `data-disabled`, but `SubTrigger`'s class list was the only menu row without the `data-[disabled]:text-fg-disabled data-[disabled]:pointer-events-none` pair, so a disabled submenu parent rendered in full ink and looked identical to an enabled one. No story rendered `<DropdownMenu.SubTrigger disabled>`, so neither the visual baselines nor the play tests could catch it.
+
+- [#1174](https://github.com/beaket/ui/pull/1174) [`70f4bc8`](https://github.com/beaket/ui/commit/70f4bc890dfb77e1eb0da2255e21b2d207e33c14) Thanks [@jihnma](https://github.com/jihnma)! - Label and Field.Label: render the label of a disabled control in `fg-disabled`.
+
+  DESIGN.md's Dashed-Disabled Rule gives a disabled control `fg-disabled` text, and
+  Quiet Ink names "disabled labels" as one of that token's jobs, but `Label` and
+  `Field.Label` set only `text-fg` and had no disabled variant. A disabled
+  Checkbox, Radio or Switch therefore sat next to a label in full ink that still
+  read as live. `Label` now dims when it follows a disabled `peer` control
+  (Checkbox, Radio and Switch all carry `peer`) or wraps a disabled control.
+  `Field.Label` dims when its Field's control is `:disabled` or carries
+  `data-disabled` (Radix roots such as RadioGroup). No props change.
+
+- [#1172](https://github.com/beaket/ui/pull/1172) [`d00458f`](https://github.com/beaket/ui/commit/d00458f50a2e85c8f0dc5703b2d650a24317fd3d) Thanks [@jihnma](https://github.com/jihnma)! - NavigationProgress now holds a full, static bar under `prefers-reduced-motion: reduce`. Root cause: the global reduced-motion rule collapses the sweep to a single 0.01ms run with no fill mode, so the bar fell back to its resting `w-1/3` at the left of the track and read as "a third done" rather than indeterminate. The bar now adds `motion-reduce:w-full motion-reduce:animate-none`.
+
 ## 4.2.0
 
 ### Minor Changes

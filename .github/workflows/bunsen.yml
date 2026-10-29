@@ -63,7 +63,7 @@ env:
   ALLOWED_TOOLS: "Bash(gh:*),Bash(git log:*),Bash(git show:*),Bash(git diff:*),Bash(git grep:*),Bash(cd:*),Bash(grep:*),Bash(find:*),Bash(ls:*),Bash(cat:*),Bash(head:*),Bash(tail:*),Bash(wc:*),Bash(sort:*),Bash(uniq:*),Bash(cut:*),Bash(tr:*),Bash(sed:*),Bash(awk:*),Bash(diff:*),Bash(jq:*),Bash(date:*),Bash(mkdir:*),Bash(unzip:*),Bash(node:*),Bash(python3:*),Bash(npm view:*),Bash(curl -s https://api.npmjs.org/*),Write,Edit"
   DISALLOWED_TOOLS: "Bash(git push:*),Bash(git commit:*),Bash(gh pr merge:*)"
   # The writing desks (fix, growth, security) add branch, commit, push, and the package scripts.
-  WRITE_ALLOWED_TOOLS: "Bash(gh:*),Bash(git log:*),Bash(git show:*),Bash(git diff:*),Bash(git grep:*),Bash(git status:*),Bash(git switch:*),Bash(git checkout:*),Bash(git branch:*),Bash(git add:*),Bash(git rm:*),Bash(git mv:*),Bash(git restore:*),Bash(git commit:*),Bash(git push:*),Bash(pnpm:*),Bash(npx prettier:*),Bash(cd:*),Bash(grep:*),Bash(find:*),Bash(ls:*),Bash(cat:*),Bash(head:*),Bash(tail:*),Bash(wc:*),Bash(sort:*),Bash(uniq:*),Bash(cut:*),Bash(tr:*),Bash(sed:*),Bash(awk:*),Bash(diff:*),Bash(jq:*),Bash(date:*),Bash(mkdir:*),Bash(node:*),Bash(python3:*),Bash(npm view:*),Write,Edit"
+  WRITE_ALLOWED_TOOLS: "Bash(gh:*),Bash(git log:*),Bash(git show:*),Bash(git diff:*),Bash(git grep:*),Bash(git status:*),Bash(git switch:*),Bash(git checkout:*),Bash(git branch:*),Bash(git add:*),Bash(git rm:*),Bash(git mv:*),Bash(git restore:*),Bash(git fetch:*),Bash(git commit:*),Bash(git push:*),Bash(pnpm:*),Bash(npx prettier:*),Bash(cd:*),Bash(grep:*),Bash(find:*),Bash(ls:*),Bash(cat:*),Bash(head:*),Bash(tail:*),Bash(wc:*),Bash(sort:*),Bash(uniq:*),Bash(cut:*),Bash(tr:*),Bash(sed:*),Bash(awk:*),Bash(diff:*),Bash(jq:*),Bash(date:*),Bash(mkdir:*),Bash(node:*),Bash(python3:*),Bash(npm view:*),Write,Edit"
   WRITE_DISALLOWED_TOOLS: "Bash(git push --force:*),Bash(git push -f:*),Bash(git push --force-with-lease:*),Bash(git push origin main:*),Bash(git config:*),Bash(git reset --hard:*),Bash(gh pr merge:*)"
 
 jobs:
@@ -366,7 +366,7 @@ jobs:
       - if: steps.work.outputs.skip != 'true'
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version: 26
           cache: pnpm
       - if: steps.work.outputs.skip != 'true'
         run: pnpm install
@@ -515,6 +515,8 @@ jobs:
           anthropic_federation_rule_id: ${{ vars.ANTHROPIC_FEDERATION_RULE_ID }}
           anthropic_service_account_id: ${{ vars.ANTHROPIC_SERVICE_ACCOUNT_ID }}
           anthropic_workspace_id: ${{ vars.ANTHROPIC_WORKSPACE_ID }}
+          # release.yml dispatches this job with its own token, so the actor is github-actions[bot].
+          allowed_bots: "github-actions"
           prompt: |
             You are Beaket Bunsen Reviewer, the independent reviewer for Bunsen, the beaket
             organization's maintenance agent. Run the release review for beaket/ui: read
