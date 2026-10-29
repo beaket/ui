@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Search } from "lucide-react";
-import { useRef } from "react";
+import { Search, X } from "lucide-react";
+import { useRef, useState } from "react";
 import { expect, fn, userEvent, within } from "storybook/test";
 import InputAffixesExample from "../examples/input/affixes";
 import InputAllStatesExample from "../examples/input/all-states";
@@ -47,8 +47,7 @@ export const AllTypes = () => <InputAllTypesExample />;
 export const Affixes = () => <InputAffixesExample />;
 
 // One consolidated interaction test — folds typing/onChange, focus/blur,
-// disabled no-op, clear, and ref-focus across both render branches (the bare
-// <input> and the affix-wrapped <div>). Per-input data-testid because several
+// disabled no-op, clear, and ref-focus with and without an affix. Per-input data-testid because several
 // fields share the canvas (and a password field isn't role "textbox").
 export const InteractionTest: Story = {
   tags: ["!autodocs"],
@@ -121,16 +120,83 @@ export const InteractionTest: Story = {
     await userEvent.clear(clearable);
     await expect(clearable).toHaveValue("");
 
-    // Ref-focus — bare <input> branch
+    // Ref-focus — no affix
     const refBare = canvas.getByTestId("ref-input");
     await expect(refBare).not.toHaveFocus();
     await userEvent.click(canvas.getByTestId("focus-bare"));
     await expect(refBare).toHaveFocus();
 
-    // Ref-focus — affix-wrapped <div> branch
+    // Ref-focus — with a prefix
     const refPrefix = canvas.getByTestId("ref-prefix-input");
     await expect(refPrefix).not.toHaveFocus();
     await userEvent.click(canvas.getByTestId("focus-prefix"));
     await expect(refPrefix).toHaveFocus();
+  },
+};
+
+function ClearableInput() {
+  const [value, setValue] = useState("");
+  return (
+    <Input
+      data-testid="toggle-input"
+      aria-label="Search"
+      placeholder="Search..."
+      value={value}
+      onChange={(event) => setValue(event.target.value)}
+      suffix={
+        value && (
+          <button
+            type="button"
+            data-testid="toggle-clear"
+            onClick={() => setValue("")}
+            className="hover:text-fg focus-visible:outline-border-focus flex size-6 cursor-pointer items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-2"
+            aria-label="Clear"
+          >
+            <X />
+          </button>
+        )
+      }
+    />
+  );
+}
+
+// #1105 — an affix appearing or disappearing must not remount the <input>.
+// The suffix mounts on the first keystroke and unmounts when the field empties;
+// focus, the element itself, and the typed value all have to survive both.
+export const AffixToggleTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <div className="max-w-sm">
+      <ClearableInput />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByTestId("toggle-input");
+    const wrapper = input.parentElement;
+    await expect(canvas.queryByTestId("toggle-clear")).not.toBeInTheDocument();
+
+    await userEvent.click(input);
+    await expect(document.activeElement).toBe(input);
+
+    // First keystroke mounts the suffix — same node, still focused.
+    await userEvent.keyboard("a");
+    await expect(canvas.getByTestId("toggle-clear")).toBeInTheDocument();
+    await expect(document.activeElement).toBe(input);
+    await expect(canvas.getByTestId("toggle-input")).toBe(input);
+    await expect(input.parentElement).toBe(wrapper);
+    await expect(wrapper).toHaveAttribute("data-slot", "input-wrapper");
+
+    // Typing continues uninterrupted into the same field.
+    await userEvent.keyboard("bc");
+    await expect(input).toHaveValue("abc");
+
+    // Emptying the field unmounts the suffix — still the same focused node.
+    await userEvent.keyboard("{Backspace}{Backspace}{Backspace}");
+    await expect(input).toHaveValue("");
+    await expect(canvas.queryByTestId("toggle-clear")).not.toBeInTheDocument();
+    await expect(document.activeElement).toBe(input);
+    await expect(canvas.getByTestId("toggle-input")).toBe(input);
+    await expect(input.parentElement).toBe(wrapper);
   },
 };
