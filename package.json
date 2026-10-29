@@ -38,7 +38,7 @@
   ],
   "author": "",
   "license": "MIT",
-  "packageManager": "pnpm@12.15.0",
+  "packageManager": "pnpm@12.16.1",
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",
     "@changesets/changelog-github": "^1.0.0",
