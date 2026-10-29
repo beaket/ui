@@ -343,7 +343,10 @@ jobs:
               [ -n "$pr" ] || continue
               verdict=$(gh api "repos/beaket/ui/pulls/$pr/reviews" --paginate \
                 --jq '.[] | select(.user.login == "beaket-bunsen-reviewer[bot]") | "\(.state) \(.commit_id)"' | tail -n 1)
-              if [ "$verdict" = "CHANGES_REQUESTED $head" ]; then changes=$((changes + 1)); fi
+              if [ "$verdict" = "CHANGES_REQUESTED $head" ]; then
+                changes=$((changes + 1))
+                echo "$pr $head" >> "$RUNNER_TEMP/revise"
+              fi
             done <<< "$prs"
             echo "agent:ready issues: $ready; open Bunsen pull requests: $open; with changes requested: $changes"
             if [ "$changes" -eq 0 ] && { [ "$ready" -eq 0 ] || [ "$open" -ge 2 ]; }; then
@@ -408,6 +411,25 @@ jobs:
           number=$(gh pr list --repo beaket/ui --author app/beaket-bunsen --state open \
             --search "updated:>=$STARTED" --json number --jq '.[0].number // empty')
           echo "number=$number" >> "$GITHUB_OUTPUT"
+      # fix.md puts a change request ahead of new work, so a run that cannot address one blocks the
+      # whole desk. A refused tool once left #1107 unaddressed for two weeks while every run ended
+      # green. Fail the run when a requested pull request is still open on the same head commit.
+      - name: Check the change requests were addressed
+        if: always() && env.JOB == 'fix' && steps.work.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          [ -s "$RUNNER_TEMP/revise" ] || exit 0
+          failed=0
+          while read -r pr head; do
+            read -r state now < <(gh pr view "$pr" --repo beaket/ui --json state,headRefOid --jq '"\(.state) \(.headRefOid)"')
+            if [ "$state" = OPEN ] && [ "$now" = "$head" ]; then
+              echo "::error::#$pr: changes were requested and this run pushed nothing to it."
+              echo "#$pr: changes requested, nothing pushed. Read the run log for why." >> "$GITHUB_STEP_SUMMARY"
+              failed=1
+            fi
+          done < "$RUNNER_TEMP/revise"
+          exit "$failed"
 
   review:
     # Beaket Bunsen Reviewer reviews what the writing desk just produced, on a different model. It
