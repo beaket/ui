@@ -13,8 +13,8 @@ open pull requests, address that review instead of starting new work: check out 
 (`gh pr checkout <n>`), make the changes, push, and reply to each review comment with what you did.
 Then stop; one pull request per run. If you cannot address it — a tool is refused, the branch will
 not check out, or the request needs the maintainer — comment on the pull request with what blocked
-you and stop. Never end the run silently: the workflow fails any run that leaves a change request
-with nothing pushed, and the queue desk closes the pull request after 5 days.
+you and stop. Never end the run silently: the workflow fails a run that addresses no change request,
+and the queue desk closes a pull request left unaddressed for 5 days.
 
 Otherwise, take the highest-priority open issue labeled `agent:ready` (`p1` before `p2` before `p3`, then oldest)
 that has no open pull request linked to it and no Bunsen claim comment from the last 24 hours.

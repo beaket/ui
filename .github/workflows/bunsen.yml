@@ -413,29 +413,30 @@ jobs:
           echo "number=$number" >> "$GITHUB_OUTPUT"
       # fix.md puts a change request ahead of new work, so a run that cannot address one blocks the
       # whole desk. A refused tool once left #1107 unaddressed for two weeks while every run ended
-      # green. Fail the run when a requested pull request is still open on the same head commit.
-      - name: Check the change requests were addressed
+      # green. Fail the run when it moved none of the requested pull requests: it handles one per
+      # run, so the others may wait, but at least one must have a new head or be closed.
+      - name: Check a change request was addressed
         if: always() && env.JOB == 'fix' && steps.work.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           [ -s "$RUNNER_TEMP/revise" ] || exit 0
-          failed=0
+          stuck=""
           while read -r pr head; do
             read -r state now < <(gh pr view "$pr" --repo beaket/ui --json state,headRefOid --jq '"\(.state) \(.headRefOid)"')
-            if [ "$state" = OPEN ] && [ "$now" = "$head" ]; then
-              echo "::error::#$pr: changes were requested and this run pushed nothing to it."
-              echo "#$pr: changes requested, nothing pushed. Read the run log for why." >> "$GITHUB_STEP_SUMMARY"
-              failed=1
-            fi
+            if [ "$state" != OPEN ] || [ "$now" != "$head" ]; then exit 0; fi
+            stuck="$stuck #$pr"
           done < "$RUNNER_TEMP/revise"
-          exit "$failed"
+          echo "::error::Changes were requested on$stuck and this run pushed nothing to any of them."
+          echo "Changes requested on$stuck, nothing pushed. Read the run log for why." >> "$GITHUB_STEP_SUMMARY"
+          exit 1
 
   review:
     # Beaket Bunsen Reviewer reviews what the writing desk just produced, on a different model. It
-    # approves or requests changes; it cannot push, and the maintainer merges.
+    # approves or requests changes; it cannot push, and its approval merges under bunsen-merge.sh.
+    # always(): a failed check at the end of `write` must not skip the review of what it pushed.
     needs: write
-    if: needs.write.outputs.pr != ''
+    if: always() && needs.write.outputs.pr != ''
     runs-on: ubuntu-latest
     timeout-minutes: 30
     concurrency:
