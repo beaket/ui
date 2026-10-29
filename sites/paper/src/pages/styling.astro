@@ -6,8 +6,8 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
 
 const cssCode = `.my-editor-wrapper {
   --beaket-paper-accent: #0c6bae;     /* links, focus, selection tint */
-  --beaket-paper-ink: #232a35;        /* body text + caret */
-  --beaket-paper-canvas: #fffefc;     /* writing surface (default #fff) */
+  --beaket-paper-fg: #232a35;         /* body text + caret */
+  --beaket-paper-bg: #fffefc;         /* writing surface (default #fff) */
   --beaket-paper-font: Georgia, serif;
   --beaket-paper-font-size: 16.5px;
   --beaket-paper-measure: 42rem;      /* max line width; default none = full width */
@@ -37,12 +37,46 @@ const cssCode = `.my-editor-wrapper {
     <span><strong>Note</strong> — <code>letter-spacing</code> is intentionally not exposed: negative spacing breaks mixed-script CJK, so it is fixed at <code>0</code> (a CJK-first guard).</span>
   </p>
 
+  <h3 id="token-list">Color tokens</h3>
+  <p>Color tokens are named by role. Each one bridges to the <code>@beaket/ui</code> semantic token of the same role:</p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Token</th><th>Bridges to</th><th>Used for</th></tr></thead>
+    <tbody>
+      <tr><td><code>--beaket-paper-fg</code></td><td><code>--color-fg</code></td><td>Body text, caret, checked checkbox</td></tr>
+      <tr><td><code>--beaket-paper-fg-muted</code></td><td><code>--color-fg-muted</code></td><td>Blockquotes, list markers, footnote numbers, menu hints</td></tr>
+      <tr><td><code>--beaket-paper-fg-subtle</code></td><td><code>--color-fg-subtle</code></td><td>Syntax markers, image placeholders, table hints</td></tr>
+      <tr><td><code>--beaket-paper-bg</code></td><td><code>--color-bg-input</code></td><td>The writing surface</td></tr>
+      <tr><td><code>--beaket-paper-bg-raised</code></td><td><code>--color-bg-raised</code></td><td>Inline code and code blocks</td></tr>
+      <tr><td><code>--beaket-paper-bg-overlay</code></td><td><code>--color-bg-overlay</code></td><td>Menus, popovers, copy buttons</td></tr>
+      <tr><td><code>--beaket-paper-bg-hover</code></td><td><code>--color-bg-hover</code></td><td>Hovered menu items and table cells</td></tr>
+      <tr><td><code>--beaket-paper-bg-active</code></td><td><code>--color-bg-active</code></td><td>Table row and column grips (active)</td></tr>
+      <tr><td><code>--beaket-paper-border-subtle</code></td><td><code>--color-border-subtle</code></td><td>Inline code and button outlines</td></tr>
+      <tr><td><code>--beaket-paper-border</code></td><td><code>--color-border</code></td><td>Menus, tables, rules, images</td></tr>
+      <tr><td><code>--beaket-paper-border-strong</code></td><td><code>--color-border-strong</code></td><td>Unchecked checkbox</td></tr>
+      <tr><td><code>--beaket-paper-accent</code></td><td><code>--color-accent-solid</code></td><td>Links, focus, selection tint</td></tr>
+      <tr><td><code>--beaket-paper-shadow</code></td><td><code>--shadow-offset-overlay</code></td><td>Overlay shadow</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>
+    The code-syntax colors (<code>--beaket-paper-syntax-*</code>) and typography
+    (<code>-font</code>, <code>-font-size</code>, <code>-line-height</code>, <code>-measure</code>,
+    <code>-word-break</code>) are the editor's own and have no bridge.
+  </p>
+  <p>
+    The earlier names — <code>ink</code>, <code>steel</code>, <code>muted</code>, <code>canvas</code>,
+    <code>surface</code>, <code>paper</code>, <code>frost</code>, <code>chrome</code>,
+    <code>platinum</code>, <code>silver</code>, <code>slate</code> — still work as deprecated aliases
+    through 0.x and are removed at 1.0.
+  </p>
+
   <h2 id="bridge">Design-token bridge</h2>
   <p>
-    If the host app already exposes a <code>--color-*</code> design-token palette, the editor bridges to
-    it automatically — including dark mode — with no setup, so it inherits your theme. Each token
-    resolves three tiers deep: <code>var(--beaket-paper-X, var(--color-Y, default))</code> — your
-    explicit override first, then the host palette, then a built-in default.
+    Inside a <code>@beaket/ui</code> app the editor inherits the theme automatically — including dark
+    mode — with no setup. Each color token resolves three tiers deep:
+    <code>var(--beaket-paper-ROLE, var(--color-ROLE, default))</code> — your explicit override first,
+    then the host's semantic token of the same role, then a built-in default.
   </p>
 
   <h2 id="dark">Dark mode</h2>

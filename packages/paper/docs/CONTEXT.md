@@ -70,9 +70,10 @@ there is no second document model. Everything else follows from this:
   matters (e.g. `blockquoteKeymap` is `Prec.highest` to beat `markdownKeymap`).
 - `editor/value-controller.ts` — `setValue` full-document replacement, IME-safe (deferred during
   composition; does not echo through `onChange`).
-- `editor/theme.ts` — single source of token truth; the porcelain bridge + editor-owned tokens; the
-  CJK font stack; `colorScheme` / `setColorScheme` (light/dark/system, live via a compartment; public
-  as `editor.setColorScheme`); the
+- `editor/theme.ts` — single source of token truth; the role-named tokens bridged to the `@beaket/ui`
+  semantic layer (the `BRIDGED` table, ADR-0025) + editor-owned tokens; the CJK font stack;
+  `colorScheme` / `setColorScheme` (light/dark/system, live via a compartment; public as
+  `editor.setColorScheme`); the
   `height` / `minHeight` sizing recipes (`sizeTheme` / the pure `sizeRules` seam, ADR-0018).
 - `editor/extensions/read-only.ts` — the `readOnly` option: `EditorState.readOnly` +
   `EditorView.editable` in one compartment; `setReadOnly` flips it live (ADR-0018; public as
