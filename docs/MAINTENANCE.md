@@ -207,8 +207,9 @@ report: on weekdays the **Queue** desk, run as Beaket Bunsen Reviewer, may
    [Definition of Ready](#definition-of-ready-outside-beaketpaper) on `main`, at most 3 per run;
 2. **review** a Bunsen pull request whose current head no review reached; and
 3. **close a stalled Bunsen pull request** — one whose latest review is **Needs a decision** with no
-   maintainer reply for 7 days, or that has had changes requested three times — and move its issue
-   to `needs:maintainer`.
+   maintainer reply for 7 days, that has had changes requested three times, or whose current head
+   has carried a change request for 5 days with nothing pushed — and move its issue to
+   `needs:maintainer`.
 
 The delegation never covers an issue labeled `desk:design`, `security`, `type:arch`,
 `post-1.0`, or `needs:maintainer`; anything in `area:paper`, whose queue

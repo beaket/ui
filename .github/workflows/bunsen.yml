@@ -343,7 +343,10 @@ jobs:
               [ -n "$pr" ] || continue
               verdict=$(gh api "repos/beaket/ui/pulls/$pr/reviews" --paginate \
                 --jq '.[] | select(.user.login == "beaket-bunsen-reviewer[bot]") | "\(.state) \(.commit_id)"' | tail -n 1)
-              if [ "$verdict" = "CHANGES_REQUESTED $head" ]; then changes=$((changes + 1)); fi
+              if [ "$verdict" = "CHANGES_REQUESTED $head" ]; then
+                changes=$((changes + 1))
+                echo "$pr $head" >> "$RUNNER_TEMP/revise"
+              fi
             done <<< "$prs"
             echo "agent:ready issues: $ready; open Bunsen pull requests: $open; with changes requested: $changes"
             if [ "$changes" -eq 0 ] && { [ "$ready" -eq 0 ] || [ "$open" -ge 2 ]; }; then
@@ -408,12 +411,32 @@ jobs:
           number=$(gh pr list --repo beaket/ui --author app/beaket-bunsen --state open \
             --search "updated:>=$STARTED" --json number --jq '.[0].number // empty')
           echo "number=$number" >> "$GITHUB_OUTPUT"
+      # fix.md puts a change request ahead of new work, so a run that cannot address one blocks the
+      # whole desk. A refused tool once left #1107 unaddressed for two weeks while every run ended
+      # green. Fail the run when it moved none of the requested pull requests: it handles one per
+      # run, so the others may wait, but at least one must have a new head or be closed.
+      - name: Check a change request was addressed
+        if: always() && env.JOB == 'fix' && steps.work.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          [ -s "$RUNNER_TEMP/revise" ] || exit 0
+          stuck=""
+          while read -r pr head; do
+            read -r state now < <(gh pr view "$pr" --repo beaket/ui --json state,headRefOid --jq '"\(.state) \(.headRefOid)"')
+            if [ "$state" != OPEN ] || [ "$now" != "$head" ]; then exit 0; fi
+            stuck="$stuck #$pr"
+          done < "$RUNNER_TEMP/revise"
+          echo "::error::Changes were requested on$stuck and this run pushed nothing to any of them."
+          echo "Changes requested on$stuck, nothing pushed. Read the run log for why." >> "$GITHUB_STEP_SUMMARY"
+          exit 1
 
   review:
     # Beaket Bunsen Reviewer reviews what the writing desk just produced, on a different model. It
-    # approves or requests changes; it cannot push, and the maintainer merges.
+    # approves or requests changes; it cannot push, and its approval merges under bunsen-merge.sh.
+    # always(): a failed check at the end of `write` must not skip the review of what it pushed.
     needs: write
-    if: needs.write.outputs.pr != ''
+    if: always() && needs.write.outputs.pr != ''
     runs-on: ubuntu-latest
     timeout-minutes: 30
     concurrency:

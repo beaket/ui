@@ -21,6 +21,7 @@ and the commits since it.
 | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | Latest review is **Needs a decision** (`COMMENTED`), more than 7 days old, with no maintainer reply since | Close it, as below                                                                  |
 | You have requested changes **three times** and it is still not approved                                   | Close it, as below                                                                  |
+| You requested changes on its current head commit more than 5 days ago, and nothing has been pushed since  | Close it, as below                                                                  |
 | No review of its current head commit, and the head was pushed more than 2 hours ago                       | Review it now, exactly as [`review.md`](./review.md) describes for the Reviewer App |
 | Anything else                                                                                             | Leave it                                                                            |
 
