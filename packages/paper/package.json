@@ -23,7 +23,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p e2e",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepublishOnly": "pnpm build"

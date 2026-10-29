@@ -32,7 +32,15 @@ const coreCode = `import { createEditor } from "@beaket/paper";
 const editor = createEditor(document.querySelector("#editor")!, {
   doc: "# Hello",
   onChange: (markdown) => console.log(markdown),
-});`;
+});
+
+// The handle is IME-safe: calls made mid-composition apply once it settles.
+editor.setValue("# Loaded document");
+editor.setHighlights([{ id: "h1", anchor: { quote: "Hello", offset: 2 } }]);
+editor.setColorScheme("dark");
+
+// Tear down when the host unmounts.
+editor.destroy();`;
 
 const highlightsCode = `import { Paper, type SelectionInfo, type HighlightInput } from "@beaket/paper/react";
 import { useState } from "react";
@@ -193,13 +201,17 @@ const renderMermaid = async (code, el, ctx) => {
   </p>
 
   <h2 id="core">Framework-agnostic core</h2>
-  <p>The core has zero React. Mount it onto any element and it returns the CodeMirror <code>EditorView</code>:</p>
+  <p>The core has zero React. Mount it onto any element and it returns a <code>PaperEditor</code> handle:</p>
   <CodeBlock code={coreCode} lang="ts" />
   <p>
     It takes the initial document as <code>doc</code>, plus the options the editor accepts anywhere —
     <code>onChange</code>, <code>onSelect</code>, <code>onInsertImage</code>, <code>slashItems</code>.
-    Highlights are driven imperatively here, via <code>setHighlightsEffect</code> and
-    <code>setActiveHighlightEffect</code>. The React wrapper is thin wiring over exactly this surface.
+    What the React wrapper takes as live props, the handle takes as methods —
+    <code>setHighlights</code>, <code>setActiveHighlight</code>, <code>setColorScheme</code>,
+    <code>setReadOnly</code> — and every one of them is held during an IME composition, so a call
+    can never break CJK input. The React wrapper is thin wiring over exactly this handle.
+    <code>getView()</code> returns the underlying CodeMirror <code>EditorView</code> as an unsafe escape
+    hatch with no cross-version guarantees.
   </p>
 
   <p class="next"><a href={withBase('api')}>API Reference →</a></p>

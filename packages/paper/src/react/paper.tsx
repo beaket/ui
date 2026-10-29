@@ -1,18 +1,13 @@
 import type { EditorView } from "@codemirror/view";
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import type { AnchorStatus } from "../editor/anchor";
-import type { EditorOptions } from "../editor/create-editor";
+import type { EditorOptions, PaperEditor } from "../editor/create-editor";
 import { createEditor } from "../editor/create-editor";
-import type { HighlightController, HighlightInput } from "../editor/extensions/highlight-layer";
-import { createHighlightController } from "../editor/extensions/highlight-layer";
-import { setReadOnly } from "../editor/extensions/read-only";
+import type { HighlightInput } from "../editor/extensions/highlight-layer";
 import type { ColorScheme } from "../editor/theme";
-import { setColorScheme } from "../editor/theme";
-import type { ValueController } from "../editor/value-controller";
-import { createValueController } from "../editor/value-controller";
 
 // Thin React wrapper (ADR-0013 decisions 1, 2, 3). All logic lives in the core
-// (createEditor/changeNotifier/valueController) and here we only do wiring — so the core is verified
+// (the createEditor handle, ADR-0024) and here we only do wiring — so the core is verified
 // under jsdom without React test dependencies (ADR-0005).
 // Uncontrolled: defaultValue is only the initial value; full replacement is commanded via ref.setValue().
 
@@ -93,9 +88,7 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
   ref,
 ) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const viewRef = useRef<EditorView | null>(null);
-  const controllerRef = useRef<ValueController | null>(null);
-  const highlightRef = useRef<HighlightController | null>(null);
+  const editorRef = useRef<PaperEditor | null>(null);
 
   // Hold callbacks in refs to call the latest function without recreating the editor (safe even if the parent passes a new function every render).
   const onChangeRef = useRef(onChange);
@@ -109,7 +102,7 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
 
   useEffect(() => {
     if (!containerRef.current) return;
-    const view = createEditor(containerRef.current, {
+    const editor = createEditor(containerRef.current, {
       doc: defaultValue,
       onChange: (v) => onChangeRef.current?.(v),
       onHighlightStatusChange: (m) => onStatusRef.current?.(m),
@@ -126,16 +119,10 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
       height,
       minHeight,
     });
-    viewRef.current = view;
-    controllerRef.current = createValueController(view);
-    highlightRef.current = createHighlightController(view);
+    editorRef.current = editor;
     return () => {
-      controllerRef.current?.dispose();
-      controllerRef.current = null;
-      highlightRef.current?.dispose();
-      highlightRef.current = null;
-      view.destroy();
-      viewRef.current = null;
+      editor.destroy();
+      editorRef.current = null;
     };
     // Uncontrolled: do not recreate on defaultValue change (full replacement is ref.setValue).
     // Live reconfiguration of onInsertImage/slashItems (Compartment) is follow-up scope — fixed at creation time for now.
@@ -143,38 +130,32 @@ export const Paper = forwardRef<PaperHandle, PaperProps>(function Paper(
 
   // highlights is a live prop — re-resolved IME-safely on change (the controller defers during composition).
   useEffect(() => {
-    highlightRef.current?.setHighlights(highlights ?? []);
+    editorRef.current?.setHighlights(highlights ?? []);
   }, [highlights]);
 
   // activeHighlightId is also a live prop — declarative visual sync (deferred during composition).
   useEffect(() => {
-    highlightRef.current?.setActiveHighlight(activeHighlightId ?? null);
+    editorRef.current?.setActiveHighlight(activeHighlightId ?? null);
   }, [activeHighlightId]);
 
   // colorScheme is a live prop — flipped via a compartment reconfigure (no recreation, document kept).
   useEffect(() => {
-    if (viewRef.current) setColorScheme(viewRef.current, colorScheme ?? "system");
+    editorRef.current?.setColorScheme(colorScheme ?? "system");
   }, [colorScheme]);
 
   // readOnly is a live prop — flipped via a compartment reconfigure (no recreation, document kept).
   useEffect(() => {
-    if (viewRef.current) setReadOnly(viewRef.current, readOnly ?? false);
+    editorRef.current?.setReadOnly(readOnly ?? false);
   }, [readOnly]);
 
   useImperativeHandle(
     ref,
     (): PaperHandle => ({
-      getValue: () => viewRef.current?.state.doc.toString() ?? "",
-      setValue: (md) => controllerRef.current?.setValue(md),
-      focus: () => viewRef.current?.focus(),
-      getSelection: () => {
-        const view = viewRef.current;
-        if (!view) return null;
-        const { from, to } = view.state.selection.main;
-        if (from === to) return null;
-        return { from, to, text: view.state.sliceDoc(from, to) };
-      },
-      getView: () => viewRef.current ?? undefined,
+      getValue: () => editorRef.current?.getValue() ?? "",
+      setValue: (md) => editorRef.current?.setValue(md),
+      focus: () => editorRef.current?.focus(),
+      getSelection: () => editorRef.current?.getSelection() ?? null,
+      getView: () => editorRef.current?.getView(),
     }),
     [],
   );

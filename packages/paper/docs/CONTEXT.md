@@ -24,7 +24,8 @@ there is no second document model. Everything else follows from this:
    (`view.composing`): no decoration recompute, no widget DOM rebuild, no menu action. Map existing
    decorations to the new coordinates; re-evaluate on `compositionend`. Any decoration-producing
    extension must go through the **`guardedDecorations`** helper (`extensions/composing-guard.ts`),
-   never a bare `ViewPlugin`. Locked by `composing-guard.test` / `ime-composition.test`.
+   never a bare `ViewPlugin`. Locked by `composing-guard.test` / `ime-composition.test`, and in a
+   real browser by the CDP IME suite (`e2e/composing-guard.e2e.ts`, see invariant #4).
    → [ADR-0004](./adr/0004-composing-guard-defer-plus-map.md)
 2. **CJK font ordering.** In the font stack, **Japanese fonts must precede Korean** — otherwise
    shared Han glyphs render in the Korean font (measured). Lives in `theme.ts`.
@@ -41,7 +42,10 @@ there is no second document model. Everything else follows from this:
 4. **Test boundary.** Logic is covered by jsdom **contract + regression tests** (every bug fixed
    red→green). Coordinate/visual concerns are deliberately _carved out_ — jsdom returns zero-size
    rects (polyfills in `test/setup.ts`), so anything geometry-dependent needs real-browser
-   verification, not a jsdom test.
+   verification, not a jsdom test. IME timing is the other carve-out: `e2e/` drives Chromium's real
+   composition pipeline through CDP `Input.imeSetComposition` (Korean, Japanese, Chinese) against
+   `e2e/fixture/`, a page mounting `<Paper>` from source. Run it with `pnpm test:editor:ime`; add a
+   case by composing a `Run` from `e2e/ime.ts` and asserting through `window.__paper`.
    → [ADR-0005](./adr/0005-quality-via-jsdom-contract-and-regression-tests.md)
 
 ## Glossary
@@ -67,10 +71,12 @@ there is no second document model. Everything else follows from this:
 - `editor/value-controller.ts` — `setValue` full-document replacement, IME-safe (deferred during
   composition; does not echo through `onChange`).
 - `editor/theme.ts` — single source of token truth; the porcelain bridge + editor-owned tokens; the
-  CJK font stack; `colorScheme` / `setColorScheme` (light/dark/system, live via a compartment); the
+  CJK font stack; `colorScheme` / `setColorScheme` (light/dark/system, live via a compartment; public
+  as `editor.setColorScheme`); the
   `height` / `minHeight` sizing recipes (`sizeTheme` / the pure `sizeRules` seam, ADR-0018).
 - `editor/extensions/read-only.ts` — the `readOnly` option: `EditorState.readOnly` +
-  `EditorView.editable` in one compartment; `setReadOnly` flips it live (ADR-0018). The doc-mutating
+  `EditorView.editable` in one compartment; `setReadOnly` flips it live (ADR-0018; public as
+  `editor.setReadOnly`). The doc-mutating
   entry points guard on `view.state.readOnly` themselves (the matrix lives in the ADR).
 - `editor/extensions/markdown.ts` — the dialect: CommonMark + GFM core (Table, TaskList,
   Strikethrough, Autolink), the **footnotes** parser config (below), and the heading/code style ramp.
@@ -130,10 +136,11 @@ there is no second document model. Everything else follows from this:
 
 **Selection annotations** (mechanism only)
 
-- `editor/anchor.ts` — `createAnchor` / `resolveAnchor`; the `Anchor`/`AnchorStatus`/`ResolvedAnchor`
-  types; reserved `prefix`/`suffix` context slots.
+- `editor/anchor.ts` — `createAnchor` (internal; feeds `onSelect`'s `sel.anchor`) / `resolveAnchor`
+  (public); the `Anchor`/`AnchorStatus`/`ResolvedAnchor` types; reserved `prefix`/`suffix` context slots.
 - `extensions/highlight-layer.ts` — renders the consumer's anchor list as mark decorations;
-  `setHighlightsEffect` / `setActiveHighlightEffect`; `HighlightInput`.
+  `setHighlightsEffect` / `setActiveHighlightEffect` (internal), and `createHighlightController`, the
+  IME-deferring dispatcher behind `editor.setHighlights` / `setActiveHighlight`; `HighlightInput`.
 
 **Menus**
 
@@ -192,11 +199,16 @@ view` rendered as a permanently-atomic replace-widget (caret steps over, one Bac
 
 ## Public API surface
 
-**Core (`@beaket/paper`)** — `createEditor`, `editorExtensions`, `defaultSlashItems`,
-`setColorScheme`, `setReadOnly`, `createAnchor`, `resolveAnchor`, `setHighlightsEffect`,
-`setActiveHighlightEffect`; types `EditorOptions`, `SlashItemSpec`, `SlashItemsConfig`,
-`TriggerSpec`, `TriggerItem`, `TokenSpec`, `TokenView`, `ColorScheme`, `ImageResolver`, `Anchor`,
-`AnchorStatus`, `ResolvedAnchor`, `HighlightInput`, `SelectionInfo`.
+**Core (`@beaket/paper`)** — `createEditor` (returns a `PaperEditor` handle, ADR-0024),
+`defaultSlashItems`, `resolveAnchor`; types `PaperEditor`, `EditorOptions`, `SlashItemSpec`,
+`SlashItemsConfig`, `TriggerSpec`, `TriggerItem`, `TokenSpec`, `TokenView`, `CodeBlockRenderer`,
+`CodeBlockRenderers`, `CodeBlockRenderContext`, `ColorScheme`, `ImageResolver`, `Anchor`,
+`AnchorStatus`, `ResolvedAnchor`, `HighlightInput`, `SelectionInfo`. No export names a CM6 type
+except `PaperEditor.getView()`, the unsafe hatch. `editorExtensions` is internal (tests use it).
+
+`PaperEditor`: `getValue`, `setValue`, `focus`, `getSelection`, `setHighlights`,
+`setActiveHighlight`, `setColorScheme`, `setReadOnly`, `getView`, `destroy`. Every method is
+IME-safe.
 
 **React (`@beaket/paper/react`)** — `Paper`; types `PaperHandle`, `PaperProps`, plus the shared
 types above.

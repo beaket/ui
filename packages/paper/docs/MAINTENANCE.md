@@ -14,7 +14,9 @@ Bunsen agent).
 now, expensive deliberate `major`s after. So pre-1.0 the priority is getting the interface right;
 routine perf/bug fixes run underneath. Tracked by the **`1.0.0` milestone** and its exit criteria
 (all must-have): interface freeze + ADR; zero P1/P2 bugs (and every `DECISIONS.md` "Deferred" item
-resolved or accepted-with-reason); perf targets met + measured; CJK/IME real-device verification.
+resolved or accepted-with-reason); perf targets met + measured; CJK/IME verification (an automated
+CDP IME suite for Korean, Japanese, and Chinese, plus one manual Korean spot-check on real OS IMEs,
+[#483](https://github.com/beaket/ui/issues/483)).
 
 ## The queue (GitHub issues)
 

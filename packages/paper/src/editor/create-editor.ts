@@ -13,7 +13,8 @@ import type { CodeBlockRenderers } from "./extensions/code-block-render";
 import { codeBlockRender } from "./extensions/code-block-render";
 import { footnoteRender } from "./extensions/footnote-render";
 import { footnoteSection } from "./extensions/footnote-section";
-import { highlightLayer } from "./extensions/highlight-layer";
+import type { HighlightInput } from "./extensions/highlight-layer";
+import { createHighlightController, highlightLayer } from "./extensions/highlight-layer";
 import type { ImageResolver } from "./extensions/image-drop";
 import { imageDrop } from "./extensions/image-drop";
 import { imageWidget } from "./extensions/image-widget";
@@ -23,7 +24,7 @@ import { listRendering } from "./extensions/list-rendering";
 import { markdownExtension } from "./extensions/markdown";
 import { markdownCopy } from "./extensions/markdown-copy";
 import { pasteTableConvert } from "./extensions/paste-table-convert";
-import { readOnlyState } from "./extensions/read-only";
+import { readOnlyState, setReadOnly } from "./extensions/read-only";
 import type { SelectionInfo } from "./extensions/selection-notifier";
 import { selectionNotifier } from "./extensions/selection-notifier";
 import type { SlashItemsConfig } from "./extensions/slash-command";
@@ -35,7 +36,8 @@ import { tokenRender } from "./extensions/token-render";
 import type { TriggerSpec } from "./extensions/trigger-menu";
 import { triggerMenu } from "./extensions/trigger-menu";
 import { wrapSelection } from "./extensions/wrap-selection";
-import { baseTheme, type ColorScheme, darkThemeStyle, sizeTheme } from "./theme";
+import { baseTheme, type ColorScheme, darkThemeStyle, setColorScheme, sizeTheme } from "./theme";
+import { createValueController } from "./value-controller";
 export type {
   CodeBlockRenderContext,
   CodeBlockRenderer,
@@ -196,7 +198,56 @@ export function editorExtensions(opts: EditorOptions = {}): Extension[] {
   ];
 }
 
-export function createEditor(parent: HTMLElement, opts: EditorOptions = {}): EditorView {
+/**
+ * The editor handle `createEditor` returns (ADR-0024). Every method is IME-safe: a call made during a
+ * composition is held and applied once it settles (ADR-0004), so a consumer never has to check.
+ * No CodeMirror type appears here except behind the explicitly unsafe `getView()`.
+ */
+export interface PaperEditor {
+  /** The full markdown document. */
+  getValue(): string;
+  /** Replace the whole document without echoing through `onChange`. Deferred while composing. */
+  setValue(md: string): void;
+  focus(): void;
+  /** Selection range (source coordinates) and its text. null on an empty selection. */
+  getSelection(): { from: number; to: number; text: string } | null;
+  /** Replace the highlight list (ADR-0014). Deferred while composing. */
+  setHighlights(list: readonly HighlightInput[]): void;
+  /** Set the active (hover/selected) highlight id, or null for none. Deferred while composing. */
+  setActiveHighlight(id: string | null): void;
+  /** Flip the light/dark scheme without recreating the editor. */
+  setColorScheme(scheme: ColorScheme): void;
+  /** Flip read-only mode without recreating the editor (ADR-0018). */
+  setReadOnly(readOnly: boolean): void;
+  /** Raw CM6 EditorView — no cross-version guarantees (unsafe). Power-user escape hatch. */
+  getView(): EditorView;
+  /** Tear the editor down and release its listeners. Do not call the handle afterwards. */
+  destroy(): void;
+}
+
+export function createEditor(parent: HTMLElement, opts: EditorOptions = {}): PaperEditor {
   const state = EditorState.create({ doc: opts.doc ?? "", extensions: editorExtensions(opts) });
-  return new EditorView({ state, parent });
+  const view = new EditorView({ state, parent });
+  const value = createValueController(view);
+  const highlights = createHighlightController(view);
+  return {
+    getValue: () => view.state.doc.toString(),
+    setValue: (md) => value.setValue(md),
+    focus: () => view.focus(),
+    getSelection: () => {
+      const { from, to } = view.state.selection.main;
+      if (from === to) return null;
+      return { from, to, text: view.state.sliceDoc(from, to) };
+    },
+    setHighlights: (list) => highlights.setHighlights([...list]),
+    setActiveHighlight: (id) => highlights.setActiveHighlight(id),
+    setColorScheme: (scheme) => setColorScheme(view, scheme),
+    setReadOnly: (readOnly) => setReadOnly(view, readOnly),
+    getView: () => view,
+    destroy: () => {
+      value.dispose();
+      highlights.dispose();
+      view.destroy();
+    },
+  };
 }
