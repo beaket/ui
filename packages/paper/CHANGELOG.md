@@ -1,5 +1,29 @@
 # @beaket/paper
 
+## 0.10.0
+
+### Minor Changes
+
+- [#1182](https://github.com/beaket/ui/pull/1182) [`d1c6ec6`](https://github.com/beaket/ui/commit/d1c6ec61c04618fa082cc3040ab5c5f930b0489d) Thanks [@jihnma](https://github.com/jihnma)! - Breaking change: `createEditor()` now returns a `PaperEditor` handle instead of the CodeMirror `EditorView`. Every method on the handle is IME-safe. Before this change, a vanilla consumer that replaced the document or the highlights during a composition bypassed the composing guard and could break CJK input. The React wrapper always had that guard and now wraps the same handle. The core no longer exports CodeMirror-typed helpers, so `getView()` is the only path to CodeMirror (ADR-0024).
+
+  Migration:
+
+  - Keep the value `createEditor()` returns. Use `editor.getView()` wherever you used the `EditorView`.
+  - `setColorScheme(view, scheme)` → `editor.setColorScheme(scheme)`
+  - `setReadOnly(view, readOnly)` → `editor.setReadOnly(readOnly)`
+  - `view.dispatch({ effects: setHighlightsEffect.of(list) })` → `editor.setHighlights(list)`
+  - `view.dispatch({ effects: setActiveHighlightEffect.of(id) })` → `editor.setActiveHighlight(id)`
+  - `createAnchor(view.state, from, to)` → use the `anchor` that `onSelect` reports (`sel.anchor`)
+  - `view.destroy()` → `editor.destroy()`
+
+  `TokenSpec` and `TokenView` are now exported from the core entry as well as `@beaket/paper/react`.
+
+### Patch Changes
+
+- [#1178](https://github.com/beaket/ui/pull/1178) [`caa81b4`](https://github.com/beaket/ui/commit/caa81b4ce7b839d71b0a6b173806722601b7b1ed) Thanks [@jihnma](https://github.com/jihnma)! - Keep the slash menu and `@`/`[[` trigger menus closed when an IME composition starts right after the trigger character. Before this fix, a menu could open in the middle of a composition, and the trigger's `onQuery` could receive a partial syllable such as `ㄱ`.
+
+  Root cause: `update()` skips composing updates, but the evaluation it schedules with `setTimeout` did not check `view.composing` again when it ran. When a composition started between the trigger keystroke and that timeout, for example during fast typing or on a busy main thread, `evaluate()` read the document mid-composition. The slash menu then rendered its popup during the composition, against invariant [#1](https://github.com/beaket/ui/issues/1), and the trigger menu called `onQuery` with the uncommitted text. `evaluate()` now returns early while composing, and `composingWake` runs it again after `compositionend`.
+
 ## 0.9.2
 
 ### Patch Changes
