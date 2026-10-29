@@ -1,6 +1,6 @@
 {
   "name": "@beaket/ui",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": "React + Tailwind components you own outright: the CLI copies the source into your project, with a committed visual identity instead of a neutral default.",
   "type": "module",
   "engines": {
