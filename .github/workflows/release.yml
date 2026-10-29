@@ -35,7 +35,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      checks: write
       actions: write # start the release review in bunsen.yml
       id-token: write # OIDC for npm publish provenance
     steps:
@@ -60,10 +59,22 @@ jobs:
         if: github.event_name == 'push'
         run: find .changeset -maxdepth 1 -name '*.md' ! -name README.md -delete
 
+      # Open and update the release pull request as Beaket Bunsen, not with GITHUB_TOKEN: GitHub
+      # holds the pull request's workflows for approval when the workflow's own token pushes, so CI
+      # never ran on it until the maintainer approved each run by hand.
+      - id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ vars.BUNSEN_APP_ID }}
+          private-key: ${{ secrets.BUNSEN_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
       - name: Create Release Pull Request or Publish
         id: changesets
         uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
+          github-token: ${{ steps.app-token.outputs.token }}
           pr-title: "Changes Included in the Next Release"
           commit-message: "chore: version packages"
           publish-script: pnpm run release
@@ -77,30 +88,6 @@ jobs:
           # Provenance comes from a patch to @changesets/cli that appends
           # `--provenance` to its publish flags — see .npmrc for why. Do NOT
           # add NPM_CONFIG_PROVENANCE here; pnpm ignores it.
-
-      - name: Create check run for Release PR
-        if: steps.changesets.outputs.pr-number
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        with:
-          script: |
-            const pr = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: ${{ steps.changesets.outputs.pr-number }}
-            });
-
-            await github.rest.checks.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              name: 'check',
-              head_sha: pr.data.head.sha,
-              status: 'completed',
-              conclusion: 'success',
-              output: {
-                title: 'Release PR Check',
-                summary: 'Automatically approved for Release PR created by changesets'
-              }
-            });
 
       # The workflow's own token may start another workflow by dispatch.
       - name: Start the release review
