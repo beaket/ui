@@ -24,7 +24,7 @@ if [ "$state" != OPEN ] || [ "$draft" = true ]; then
   exit 0
 fi
 case "$author $branch" in
-  "app/beaket-bunsen agent/"* | "app/github-actions changeset-release/main") ;;
+  "app/beaket-bunsen agent/"* | "app/beaket-bunsen changeset-release/main") ;;
   *)
     say "not a Bunsen or release pull request ($author, $branch). Left for the maintainer."
     exit 0
