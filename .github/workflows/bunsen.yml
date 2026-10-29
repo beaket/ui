@@ -515,6 +515,8 @@ jobs:
           anthropic_federation_rule_id: ${{ vars.ANTHROPIC_FEDERATION_RULE_ID }}
           anthropic_service_account_id: ${{ vars.ANTHROPIC_SERVICE_ACCOUNT_ID }}
           anthropic_workspace_id: ${{ vars.ANTHROPIC_WORKSPACE_ID }}
+          # release.yml dispatches this job with its own token, so the actor is github-actions[bot].
+          allowed_bots: "github-actions"
           prompt: |
             You are Beaket Bunsen Reviewer, the independent reviewer for Bunsen, the beaket
             organization's maintenance agent. Run the release review for beaket/ui: read
