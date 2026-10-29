@@ -68,6 +68,15 @@ change needs an ADR vs. a changeset. Each bullet below links to its ADR.
   red → green. Coordinate and visual concerns are deliberately carved out for browser verification
   (jsdom returns zero-size rects via the polyfills in `src/test/setup.ts`).
   ([ADR-0005](./adr/0005-quality-via-jsdom-contract-and-regression-tests.md))
+- **Performance targets (proposed, [#482](https://github.com/beaket/ui/issues/482)).** Keystroke
+  `work` p95 < 16 ms on a 1k-line doc and < 50 ms on a 10k-line doc; **zero** `guardedDecorations`
+  recomputes during an active composition. `work` = keydown → CM update applied, plus the next
+  frame's render time with the vsync wait removed (`e2e/fixture/perf-probe.ts`); `paint`, which keeps
+  the vsync wait, is reported alongside but is frame-quantized (the harness sends each key just after a
+  frame, so it reads ~16 ms at 60 Hz whatever the editor costs), so it is not the gated number. The recompute count is hard-asserted in CI (`pnpm test:editor:ime`);
+  latency runs locally (`pnpm test:editor:perf`, report-only; `PAPER_PERF_ASSERT=targets` makes it a
+  gate) because shared CI runners are too noisy for a millisecond threshold. Targets stay
+  "proposed" until #482 step 2 confirms them on the measured baseline in the PR that added the harness.
 - **Visual language.** "Porcelain, softened"; CSS-variable tokens; evidence-based CJK typography.
   **Trap — CJK font interception:** Japanese fonts must come _before_ Korean in the font stack, or
   shared Han glyphs render in the Korean font (measured). See `theme.ts`.

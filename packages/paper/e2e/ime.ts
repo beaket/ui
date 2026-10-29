@@ -76,6 +76,18 @@ export async function open(page: Page, doc: string) {
   await page.waitForFunction(() => window.__paper.handle?.getView() !== undefined);
 }
 
+/**
+ * Load the fixture with a document too large for a URL (#482): an init script hands it over as
+ * window.__paperDoc before the fixture mounts, so it is the editor's real initial value.
+ */
+export async function openLarge(page: Page, doc: string) {
+  await page.addInitScript((markdown) => {
+    window.__paperDoc = markdown;
+  }, doc);
+  await page.goto("/");
+  await page.waitForFunction(() => window.__paper.handle?.getView() !== undefined);
+}
+
 /** Focus the editor with the caret at `pos` (default: end of the document). */
 export async function caret(page: Page, pos?: number) {
   await page.evaluate((at) => {
