@@ -23,7 +23,11 @@ const routePath = (value: string) => value.split(/[?#]/, 1)[0].replace(/\/+$/, "
 export interface NavigationProps extends React.ComponentProps<"nav"> {
   /** The current page's value. `Navigation.Link` compares its own `value` to it. */
   value?: string;
-  /** Exact by default. Prefix selects the longest segment-boundary match after links mount. */
+  /**
+   * Exact by default. Prefix selects the longest segment-boundary match after links mount,
+   * so server-rendered HTML and the first paint mark no link; the active link appears after
+   * hydration. When the server HTML must carry it, pass `active` on the link or an `isActive` matcher.
+   */
   match?: "exact" | "prefix";
   /** Custom router matching. Explicit active on a link still wins. */
   isActive?: (pathname: string, value: string) => boolean;

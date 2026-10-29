@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
+import { Label } from "./label";
 import { RadioGroup } from "./radio";
 
 const meta: Meta<typeof RadioGroup> = {
@@ -40,21 +41,15 @@ export const AllStates = () => (
       <RadioGroup defaultValue="option1" aria-label="Horizontal options">
         <div className="flex items-center gap-1">
           <RadioGroup.Item value="option1" id="h-opt1" />
-          <label htmlFor="h-opt1" className="text-sm">
-            Option 1
-          </label>
+          <Label htmlFor="h-opt1">Option 1</Label>
         </div>
         <div className="flex items-center gap-1">
           <RadioGroup.Item value="option2" id="h-opt2" />
-          <label htmlFor="h-opt2" className="text-sm">
-            Option 2
-          </label>
+          <Label htmlFor="h-opt2">Option 2</Label>
         </div>
         <div className="flex items-center gap-1">
           <RadioGroup.Item value="option3" id="h-opt3" />
-          <label htmlFor="h-opt3" className="text-sm">
-            Option 3
-          </label>
+          <Label htmlFor="h-opt3">Option 3</Label>
         </div>
       </RadioGroup>
     </div>
@@ -68,21 +63,15 @@ export const AllStates = () => (
       >
         <div className="flex items-center gap-2">
           <RadioGroup.Item value="option1" id="v-opt1" />
-          <label htmlFor="v-opt1" className="text-sm">
-            Option 1
-          </label>
+          <Label htmlFor="v-opt1">Option 1</Label>
         </div>
         <div className="flex items-center gap-2">
           <RadioGroup.Item value="option2" id="v-opt2" />
-          <label htmlFor="v-opt2" className="text-sm">
-            Option 2
-          </label>
+          <Label htmlFor="v-opt2">Option 2</Label>
         </div>
         <div className="flex items-center gap-2">
           <RadioGroup.Item value="option3" id="v-opt3" />
-          <label htmlFor="v-opt3" className="text-sm">
-            Option 3
-          </label>
+          <Label htmlFor="v-opt3">Option 3</Label>
         </div>
       </RadioGroup>
     </div>
@@ -91,15 +80,11 @@ export const AllStates = () => (
       <RadioGroup disabled defaultValue="option1" aria-label="Disabled options">
         <div className="flex items-center gap-1">
           <RadioGroup.Item value="option1" id="d-opt1" />
-          <label htmlFor="d-opt1" className="text-fg-muted text-sm">
-            Option 1
-          </label>
+          <Label htmlFor="d-opt1">Option 1</Label>
         </div>
         <div className="flex items-center gap-1">
           <RadioGroup.Item value="option2" id="d-opt2" />
-          <label htmlFor="d-opt2" className="text-fg-muted text-sm">
-            Option 2
-          </label>
+          <Label htmlFor="d-opt2">Option 2</Label>
         </div>
       </RadioGroup>
     </div>

@@ -74,8 +74,33 @@ export const AllStates: Story = {
         </Label>
         <Input id="input-required" required placeholder="Required" />
       </div>
+      <div className="flex items-center gap-2">
+        <Checkbox id="terms-disabled" disabled />
+        <Label htmlFor="terms-disabled">Disabled label with checkbox</Label>
+      </div>
+      <Label htmlFor="terms-wrapped-disabled" className="flex items-center gap-2">
+        <Checkbox id="terms-wrapped-disabled" disabled />
+        Disabled label wrapping its checkbox
+      </Label>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Resolve the `fg-disabled` token to a computed color to compare against.
+    const probe = document.createElement("span");
+    probe.className = "text-fg-disabled";
+    canvasElement.append(probe);
+    const disabledColor = getComputedStyle(probe).color;
+    probe.remove();
+
+    const enabled = canvas.getByText("Default label with checkbox");
+    await expect(getComputedStyle(enabled).color).not.toBe(disabledColor);
+    for (const text of ["Disabled label with checkbox", "Disabled label wrapping its checkbox"]) {
+      const label = canvas.getByText(text);
+      await expect(label).toHaveClass("peer-disabled:text-fg-disabled");
+      await expect(getComputedStyle(label).color).toBe(disabledColor);
+    }
+  },
 };
 
 export const InteractionTest: Story = {

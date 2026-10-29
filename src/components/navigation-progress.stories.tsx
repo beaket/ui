@@ -76,3 +76,53 @@ export const InactiveRenderTest: Story = {
     await expect(progressbar).not.toBeInTheDocument();
   },
 };
+
+/** Style rules nested inside `@media (prefers-reduced-motion: reduce)` in the loaded stylesheets. */
+function reducedMotionRules() {
+  const rules: CSSStyleRule[] = [];
+  const walk = (list: CSSRuleList, reduced: boolean) => {
+    for (const rule of Array.from(list)) {
+      if (rule instanceof CSSMediaRule) {
+        walk(rule.cssRules, reduced || rule.conditionText.includes("prefers-reduced-motion"));
+      } else if (rule instanceof CSSStyleRule) {
+        if (reduced) rules.push(rule);
+        if (rule.cssRules.length) walk(rule.cssRules, reduced);
+      } else if (rule instanceof CSSGroupingRule) {
+        walk(rule.cssRules, reduced);
+      }
+    }
+  };
+  for (const sheet of Array.from(document.styleSheets)) {
+    try {
+      walk(sheet.cssRules, false);
+    } catch {
+      // Cross-origin sheets cannot be read; component styles are same-origin.
+    }
+  }
+  return rules;
+}
+
+/**
+ * Under `prefers-reduced-motion: reduce` the bar stops sweeping and fills the
+ * whole track, so it reads as "working" rather than "a third done". The test
+ * runner does not emulate the media feature, so the check asserts that the bar
+ * carries the reduced-motion utilities and that the stylesheet compiles them
+ * inside the media query.
+ */
+export const ReducedMotion: Story = {
+  args: {
+    active: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const progressbar = canvas.getByRole("progressbar");
+    const bar = progressbar.querySelector('[data-slot="navigation-progress-bar"]');
+    await expect(bar).toHaveClass("motion-reduce:w-full", "motion-reduce:animate-none");
+
+    const rules = reducedMotionRules();
+    const ruleFor = (utility: string) =>
+      rules.find((rule) => rule.selectorText.includes(`.${CSS.escape(utility)}`));
+    await expect(ruleFor("motion-reduce:w-full")?.style.width).toBe("100%");
+    await expect(ruleFor("motion-reduce:animate-none")?.style.animationName).toBe("none");
+  },
+};

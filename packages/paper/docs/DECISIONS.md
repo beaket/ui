@@ -89,7 +89,7 @@ change needs an ADR vs. a changeset. Each bullet below links to its ADR.
   round-trips to plain markdown (no second model). Built on the `guardedDecorations` `{atomic}` path.
   The same family carries the **embedding options** — `placeholder` (CM6's hint), `readOnly`, and
   explicit sizing (`height` fixed-scroll / `minHeight` grow-floor). `readOnly` sets **both**
-  `EditorState.readOnly` **and** `EditorView.editable` (live via `setReadOnly`), with an explicit
+  `EditorState.readOnly` **and** `EditorView.editable` (live via `editor.setReadOnly`), with an explicit
   behavior matrix: because `EditorState.readOnly` does not block a raw `view.dispatch`, the
   doc-mutating entry points (image ingest, paste-to-table, and the **table cell subview**, which is a
   separate `EditorView` the parent's `editable` does not reach) each guard on `view.state.readOnly`,
@@ -114,7 +114,10 @@ change needs an ADR vs. a changeset. Each bullet below links to its ADR.
 - **Package shape.** Two layers: a framework-agnostic **core** (`createEditor`, zero React) plus a
   thin **React wrapper** (`<Paper>`). Uncontrolled (`defaultValue` + `ref.setValue()`);
   `onChange` emits full markdown on user edits only (IME-guarded; `setValue` does not echo). A
-  curated `ref` handle with a `getView()` escape hatch. Shipped as a **standalone npm package**, not
+  curated `ref` handle with a `getView()` escape hatch. The core returns the same kind of handle —
+  `createEditor()` yields a `PaperEditor` whose every method is IME-safe, so the vanilla surface
+  carries no CM6 type except `getView()` ([ADR-0024](./adr/0024-core-returns-a-curated-editor-handle.md)).
+  Shipped as a **standalone npm package**, not
   a copy-paste registry component — so it is exempt from the monorepo's component checklist (no
   Storybook story, no `registry.json`, no `cn` util, no Tailwind). **Controlled-value** consumers are
   served by a documented **controlled-bridge recipe** (a thin `setValue` + `onChange` + `value !==
@@ -187,10 +190,14 @@ a live design deferral, and dormant-code housekeeping — don't flatten them int
   `onSelect` / `activeHighlightId` flush) are verified with **synthetic** composition events only.
   Real hardware-IME verification is the deliberate boundary of the jsdom strategy
   ([ADR-0005](./adr/0005-quality-via-jsdom-contract-and-regression-tests.md) — jsdom cannot reproduce a
-  genuine IME pipeline), and it is owned by the **CJK/IME real-device verification** exit criterion
-  ([#483](https://github.com/beaket/ui/issues/483), whose first step is choosing the verification
-  method), not by #481. That exact list of guarded paths is the
-  concrete test matrix #483 inherits. Until #483 passes, IME is **delegated and still owed — not verified.**
+  genuine IME pipeline), and it is owned by the **CJK/IME verification** exit criterion
+  ([#483](https://github.com/beaket/ui/issues/483)), not by #481. That exact list of guarded paths is the
+  concrete test matrix #483 inherits. The method (rescoped 2026-10-27): a Playwright + CDP
+  `Input.imeSetComposition` suite drives Chromium's real composition pipeline for Korean, Japanese,
+  and Chinese ([#1176](https://github.com/beaket/ui/issues/1176)). The guard only reads whether a
+  composition is active, so that suite covers its logic. The OS-IME layer CDP cannot reach is narrowed
+  to a manual Korean spot-check on macOS Safari and Chrome. Until #483 passes, IME is **delegated and
+  still owed — not verified.**
 
 - **Orphan-status re-emit on in-session delete; prefix/suffix context anchors — _accepted for 1.0_.**
   Reaffirms [ADR-0014](./adr/0014-selection-annotation-mechanism.md) decisions 2 / 7. Bounded

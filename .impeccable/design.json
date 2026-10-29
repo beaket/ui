@@ -437,6 +437,11 @@
         "name": "reduced-motion",
         "value": "prefers-reduced-motion: reduce -> 0.01ms",
         "purpose": "foundation.css collapses every animation, transition, and scroll behavior globally."
+      },
+      {
+        "name": "reduced-motion-indeterminate",
+        "value": "prefers-reduced-motion: reduce -> full static bar",
+        "purpose": "With motion removed, an indeterminate indicator holds a full, static ink line across its track rather than a partial one, because a partial fill reads as determinate progress."
       }
     ],
     "breakpoints": [

@@ -51,7 +51,7 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
   </div>
 
   <h2 id="core">Core <code>createEditor(parent, options)</code></h2>
-  <p>The vanilla core takes the mount element and an <code>EditorOptions</code> object, returning the CodeMirror <code>EditorView</code>. These options are the editor's own surface; <code>highlights</code>, <code>activeHighlightId</code>, and <code>className</code> are React-wrapper additions, not core options:</p>
+  <p>The vanilla core takes the mount element and an <code>EditorOptions</code> object, returning a <code>PaperEditor</code> handle (below). These options are the editor's own surface; <code>highlights</code>, <code>activeHighlightId</code>, and <code>className</code> are React-wrapper additions, not core options:</p>
   <div class="table-scroll">
   <table>
     <thead><tr><th>Option</th><th>Type</th><th>Notes</th></tr></thead>
@@ -63,12 +63,32 @@ const withBase = (p: string) => (base.endsWith('/') ? base + p : base + '/' + p)
       <tr><td><code>triggers</code></td><td><code>TriggerSpec[]</code></td><td>Declarative <code>@</code> / <code>[[</code> autocomplete triggers (async <code>onQuery</code>; declarative insert). Same in core and React.</td></tr>
       <tr><td><code>tokens</code></td><td><code>TokenSpec[]</code></td><td>Atomic token rendering — <code>pattern</code>-matched markdown rendered inline (link visual language by default) as atomic units the caret steps over (declarative <code>render</code>). Same in core and React.</td></tr>
       <tr><td><code>codeBlockRenderers</code></td><td><code>Record&lt;string, CodeBlockRenderer&gt;</code></td><td>Consumer-delegated code-block rendering — a registered fence (e.g. <code>mermaid</code>) renders as a widget off-cursor, raw source on-cursor. The editor ships no renderer; you inject one. Same in core and React.</td></tr>
-      <tr><td><code>colorScheme</code></td><td><code>"light" | "dark" | "system"</code></td><td>Light/dark scheme. Flip live (without recreating) via <code>setColorScheme(view, scheme)</code>.</td></tr>
+      <tr><td><code>colorScheme</code></td><td><code>"light" | "dark" | "system"</code></td><td>Light/dark scheme. Flip live (without recreating) via <code>editor.setColorScheme(scheme)</code>.</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td>Hint shown on an empty document. Fixed at creation.</td></tr>
-      <tr><td><code>readOnly</code></td><td><code>boolean</code></td><td>Read-only mode. Flip live via <code>setReadOnly(view, readOnly)</code>. Disables editing/ingest; copy + selection still work.</td></tr>
+      <tr><td><code>readOnly</code></td><td><code>boolean</code></td><td>Read-only mode. Flip live via <code>editor.setReadOnly(readOnly)</code>. Disables editing/ingest; copy + selection still work.</td></tr>
       <tr><td><code>height</code> / <code>minHeight</code></td><td><code>string</code></td><td>Explicit sizing (CSS lengths). <code>height</code> = fixed with internal scroll; <code>minHeight</code> = grow-with-content floor (the editable surface fills it). Same in core and React.</td></tr>
       <tr><td><code>onSelect</code></td><td><code>(sel: SelectionInfo | null) =&gt; void</code></td><td>Selection report.</td></tr>
-      <tr><td><code>onHighlightStatusChange</code> / <code>onHighlightClick</code></td><td>callbacks</td><td>Highlight surface. The highlight <em>list</em> is set imperatively via <code>setHighlightsEffect</code>.</td></tr>
+      <tr><td><code>onHighlightStatusChange</code> / <code>onHighlightClick</code></td><td>callbacks</td><td>Highlight surface. The highlight <em>list</em> is set imperatively via <code>editor.setHighlights(list)</code>.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3 id="handle">The <code>PaperEditor</code> handle</h3>
+  <p>Every method is IME-safe: a call made during a composition is held and applied once it settles.</p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Method</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>getValue()</code></td><td>The full markdown document.</td></tr>
+      <tr><td><code>setValue(md)</code></td><td>Replace the whole document. Does not echo through <code>onChange</code>.</td></tr>
+      <tr><td><code>focus()</code></td><td>Focus the editor.</td></tr>
+      <tr><td><code>getSelection()</code></td><td><code>&#123; from, to, text &#125;</code> in source coordinates, or <code>null</code> on an empty selection.</td></tr>
+      <tr><td><code>setHighlights(list)</code></td><td>Replace the highlight list (<code>HighlightInput[]</code>).</td></tr>
+      <tr><td><code>setActiveHighlight(id)</code></td><td>Set the active highlight id, or <code>null</code>.</td></tr>
+      <tr><td><code>setColorScheme(scheme)</code></td><td>Flip light/dark/system without recreating the editor.</td></tr>
+      <tr><td><code>setReadOnly(readOnly)</code></td><td>Flip read-only mode without recreating the editor.</td></tr>
+      <tr><td><code>getView()</code></td><td>The underlying CodeMirror <code>EditorView</code>. Unsafe — no cross-version guarantees.</td></tr>
+      <tr><td><code>destroy()</code></td><td>Tear the editor down. Do not call the handle afterwards.</td></tr>
     </tbody>
   </table>
   </div>

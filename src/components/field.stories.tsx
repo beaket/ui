@@ -180,3 +180,43 @@ export const SsrAssociations: Story = {
     expect(control).toHaveAttribute("aria-describedby", `${hint?.id} ${error?.id}`);
   },
 };
+
+export const DisabledLabel: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <div className="max-w-sm space-y-8">
+      <Field label="Enabled email">{(id) => <Input id={id} />}</Field>
+      <Field label="Disabled email">{(id) => <Input id={id} disabled />}</Field>
+      <Field>
+        <Field.Label>Disabled terms</Field.Label>
+        <Field.Control>
+          <Checkbox disabled />
+        </Field.Control>
+      </Field>
+      <Field>
+        <Field.Label>Disabled account type</Field.Label>
+        <Field.Control>
+          <RadioGroup disabled defaultValue="personal" className="gap-8">
+            <RadioGroup.Item value="personal" aria-label="Personal" />
+          </RadioGroup>
+        </Field.Control>
+      </Field>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Resolve the `fg-disabled` token to a computed color to compare against.
+    const probe = document.createElement("span");
+    probe.className = "text-fg-disabled";
+    canvasElement.append(probe);
+    const disabledColor = getComputedStyle(probe).color;
+    probe.remove();
+
+    const enabled = canvas.getByText("Enabled email", { selector: "label" });
+    await expect(getComputedStyle(enabled).color).not.toBe(disabledColor);
+    for (const name of ["Disabled email", "Disabled terms", "Disabled account type"]) {
+      const label = canvas.getByText(name, { selector: "label" });
+      await expect(getComputedStyle(label).color).toBe(disabledColor);
+    }
+  },
+};

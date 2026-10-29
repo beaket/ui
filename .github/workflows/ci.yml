@@ -63,5 +63,7 @@ jobs:
         run: pnpm test:cli:unit
       - name: Test Editor
         run: pnpm test:editor
+      - name: Test Editor IME (real composition pipeline via CDP)
+        run: pnpm test:editor:ime
       - name: Check ADR references resolve
         run: pnpm check:adr

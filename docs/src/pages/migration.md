@@ -137,6 +137,11 @@ Prefix mode chooses the longest mounted segment-boundary match. It ignores
 query strings, hashes and trailing slashes. Exact matching remains the default.
 Prefix selection appears after links mount; use explicit `active` or a custom
 `isActive(pathname, value)` matcher when your router already knows the answer.
+Because links mount only in the browser, server-rendered HTML and the first
+paint carry no `aria-current="page"` or `data-active` in prefix mode; the active
+link appears after hydration. Server-rendered apps that need the current link in
+the server HTML should pass `active` on that link (or use `isActive`), which is
+resolved during render.
 An explicit `active` prop wins and is excluded from automatic prefix selection.
 Custom matchers are responsible for their own exclusivity.
 
