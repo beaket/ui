@@ -24,7 +24,9 @@ deterministic (the same assertion every time) or intermittent.
 `npm view @beaket/paper version`) with `packages/cli/package.json` and
 `packages/paper/package.json` on `main`. A version on `main` that never reached npm is a finding.
 Note the age of the open `changeset-release/main` pull request, if any; older than 14 days is a
-finding.
+finding. So is one whose latest Beaket Bunsen Reviewer review is **Needs changes**: file what the
+review asks — a changeset to rewrite on `main`, or the failing check — so the queue desk can make it
+`agent:ready` before the next weekly rebuild.
 
 **Dependencies.** Renovate automerges minor and patch updates, so an open Renovate pull request older
 than 7 days, or one with failing checks, is a finding — say why it is stuck. Any open issue or pull

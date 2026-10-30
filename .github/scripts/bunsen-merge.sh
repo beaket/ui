@@ -3,7 +3,8 @@
 #
 # The maintainer's rule (docs/MAINTENANCE.md § Merging): these pull requests merge without the
 # maintainer once the reviewer has approved the exact head commit and the required checks pass. A
-# `major` bump or a `Breaking change:` waits for the maintainer. GitHub enforces the required checks;
+# `major` bump waits for the maintainer, and so does a `Breaking change:` anywhere but the release
+# pull request's changelog for a package still below 1.0.0. GitHub enforces the required checks;
 # this script enforces the rest. No model decides here, and running it again is harmless.
 #
 # Usage: bunsen-merge.sh <pull request number>, with GH_TOKEN from Beaket Bunsen (it can merge).
@@ -24,9 +25,9 @@ if [ "$state" != OPEN ] || [ "$draft" = true ]; then
   exit 0
 fi
 case "$author $branch" in
-  "app/beaket-bunsen agent/"* | "app/beaket-bunsen changeset-release/main") ;;
+  "app/beaket-bunsen agent/"* | "app/beaket-bunsen changeset-release/main" | "app/renovate renovate/"*) ;;
   *)
-    say "not a Bunsen or release pull request ($author, $branch). Left for the maintainer."
+    say "not a Bunsen, Renovate, or release pull request ($author, $branch). Left for the maintainer."
     exit 0
     ;;
 esac
@@ -46,8 +47,28 @@ breaking=$(gh api "repos/$repo/pulls/$pr/files" --paginate --jq '
       | select(test("breaking change|^\\+#+ *major changes|^\\+ *[\"'\'']?[@a-z0-9/._-]+[\"'\'']? *: *[\"'\'']?major[\"'\'']? *$"; "i"))
       | "\($f.filename): \(.)"
     end')
+# Below 1.0.0 a breaking change ships as a minor on the reviewer's approval (docs/MAINTENANCE.md
+# § Releases). Drop the release changelog's `Breaking change:` lines for a package whose new version
+# is still 0.x; a `major` line, or a breaking line anywhere else, still stops the merge.
+if [ -n "$breaking" ] && [ "$branch" = changeset-release/main ]; then
+  kept=""
+  while IFS= read -r line; do
+    file=${line%%: *}
+    case "$file" in
+      packages/*/CHANGELOG.md)
+        if ! printf '%s\n' "${line#*: }" | grep -qiE '^\+#+ *major changes'; then
+          version=$(gh api "repos/$repo/contents/${file%CHANGELOG.md}package.json?ref=$head" \
+            --jq .content | base64 -d | jq -r .version)
+          case "$version" in 0.*) continue ;; esac
+        fi
+        ;;
+    esac
+    kept+="$line"$'\n'
+  done <<< "$breaking"
+  breaking=${kept%$'\n'}
+fi
 if [ -n "$breaking" ]; then
-  say "carries a major or breaking change. Left for the maintainer:"
+  say "carries a major change, or a breaking change outside a 0.x release. Left for the maintainer:"
   echo "$breaking" | tee -a "${GITHUB_STEP_SUMMARY:-/dev/null}"
   exit 0
 fi

@@ -1,6 +1,6 @@
 name: Bunsen merge
-# Merges Bunsen's pull requests and the release pull request once Beaket Bunsen Reviewer has
-# approved them and every check has passed; a major or breaking change waits for the maintainer.
+# Merges Bunsen's and Renovate's pull requests and the release pull request once Beaket Bunsen
+# Reviewer has approved them and every check has passed; a major release waits for the maintainer.
 # The rule is .github/scripts/bunsen-merge.sh, and the charter is docs/MAINTENANCE.md § Merging.
 #
 # The Bunsen workflow runs the script right after each review. This one runs it again when a pull
@@ -26,6 +26,7 @@ jobs:
       (github.event.workflow_run.event == 'pull_request' &&
        github.event.workflow_run.conclusion == 'success' &&
        (startsWith(github.event.workflow_run.head_branch, 'agent/') ||
+        startsWith(github.event.workflow_run.head_branch, 'renovate/') ||
         github.event.workflow_run.head_branch == 'changeset-release/main'))
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -53,6 +54,6 @@ jobs:
             prs=$(gh pr list --repo beaket/ui --head "$BRANCH" --state open --json number --jq '.[].number')
           else
             prs=$(gh pr list --repo beaket/ui --state open --json number,headRefName \
-              --jq '.[] | select(.headRefName | startswith("agent/") or . == "changeset-release/main") | .number')
+              --jq '.[] | select(.headRefName | startswith("agent/") or startswith("renovate/") or . == "changeset-release/main") | .number')
           fi
           for pr in $prs; do .github/scripts/bunsen-merge.sh "$pr"; done

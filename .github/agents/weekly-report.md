@@ -46,9 +46,10 @@ See [`README.md` § The runtime](./README.md#the-runtime) for what `gh` can reac
   reply for more than 3 days. Read each one and draft a short reply in the project's voice — factual,
   warm, no promises about dates. These are drafts for the maintainer to post; do not post them.
 - **Decisions**: open `needs:maintainer` issues, `source:agent` issues outside the
-  [delegated queue rule](../../docs/MAINTENANCE.md#delegated-queue-decisions) (`desk:design`,
-  `area:paper`, `type:arch`) that recommend `agent:ready` but have not been labeled, pull requests
-  waiting on the maintainer (a major or breaking change, a `draft/*` branch, a reviewer's **Needs a
+  [delegated queue rule](../../docs/MAINTENANCE.md#delegated-queue-decisions) (`type:arch`,
+  `post-1.0`) that recommend `agent:ready` but have not been labeled, Renovate pull requests the
+  queue desk closed, pull requests
+  waiting on the maintainer (a `major` release, a `draft/*` branch, a reviewer's **Needs a
   decision**), and pull requests from people awaiting review for more than 3 days.
 - **Queue**: from the queue desk's run summaries in the window, the issues it granted
   `agent:ready`, the pull requests it closed as stalled, and the issues it escalated.

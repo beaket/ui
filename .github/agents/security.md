@@ -67,13 +67,12 @@ published package ships to users — a `dependencies` entry in `packages/cli/pac
 2. **Make sure it releases.** Once the fix is on `main`, check that a pending changeset covers it
    (Renovate's pull requests carry none). If none does, open a pull request that adds only the
    `Security:` changeset.
-3. **Escalate the release.** When a `Security:` changeset is pending on `main`, file one issue —
-   title `Release the security fix for <advisory ID>`, labels `source:agent`, `desk:security`,
-   `security`, `needs:maintainer`, `p1` recommended in the body — linking the changeset and asking
-   the maintainer to run the **Release** workflow by hand (Actions › Release › Run workflow). That
-   rebuilds the release pull request with the fix and starts the release review; the weekly rebuild
-   is days away. If a breaking change is pending too, say so in the issue: the maintainer must
-   either ship both or release the fix separately.
+3. **Check it released.** A `Security:` changeset landing on `main` starts the Release workflow,
+   which rebuilds the release pull request and starts the release review. When one is pending,
+   confirm that a Release run started after it landed and that the release pull request carries it.
+   If not, or if a pending `major` blocks the release, file one issue — title
+   `Release the security fix for <advisory ID>`, labels `source:agent`, `desk:security`,
+   `security`, `needs:maintainer` — saying what stopped it.
 
 ## 5. Summarize
 

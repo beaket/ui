@@ -2,13 +2,13 @@
 
 Once a week, decide whether the release pull request is ready to ship. You run as Beaket Bunsen
 Reviewer. You never merge, but your approval releases: the merge step merges an approved release
-pull request once its checks pass, and merging publishes to npm. A release with a `major` bump or a
-`Breaking change:` is the maintainer's decision, so it gets a comment, never an approval.
+pull request once its checks pass, and merging publishes to npm. A `major` release is the
+maintainer's decision, so it gets a comment, never an approval. A `Breaking change:` on a package
+below 1.0.0 is yours to judge.
 
 Releases are weekly: the **Release** workflow rebuilds the release pull request on Thursday and
-starts this review. The one exception is a security fix, which the security desk escalates the day
-it lands (see [`security.md`](./security.md#4-ship-security-fixes)); the maintainer then runs the
-Release workflow by hand, which rebuilds the pull request and starts this review the same way.
+starts this review. The one exception is a security fix: when a `Security:` changeset lands on
+`main`, the Release workflow rebuilds the pull request and starts this review the same way.
 
 Complete the [preflight](./README.md#preflight--every-job-before-anything-else) first.
 
@@ -23,19 +23,18 @@ nothing to release; end the run saying so.
   the package, the bump, whether it starts with `Breaking change:`, and whether it is a security
   fix (starts with `Security:`).
 - The release pull request's diff: version bumps and generated changelog entries.
-- Its check results. The release pull request gets a synthetic `check`; `screenshots` must pass.
-  You run minutes after the rebuild, so most checks are still running or waiting for the
-  maintainer to approve the run. The merge step waits for every check, so judge the content and
-  hold back only for a check that has failed.
+- Its check results. You run minutes after the rebuild, so most checks are still running. The merge
+  step waits for every check, so judge the content and hold back only for a check that has failed.
 - The previous release (`gh release list --repo beaket/ui --limit 1`) and its date.
 
 ## 3. Verdict
 
-| Situation                                                 | Verdict                                                                                                                                           |
-| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| A `major` bump or any `Breaking change:` changeset        | **Needs a decision.** List each breaking change with its migration note; flag any whose migration is missing or unclear. Comment, do not approve. |
-| No breaking change, no failed check, changelog reads well | **Ready to release.** Approve with a summary: what ships, who should upgrade, and anything worth announcing.                                      |
-| No breaking change, but checks fail or notes are unclear  | **Needs changes.** Name the failing check or the changeset to rewrite. Request changes.                                                           |
+| Situation                                                              | Verdict                                                                                                                                                                                                                                                           |
+| ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A `major` bump, or a `Breaking change:` on a package at 1.0.0 or above | **Needs a decision.** List each breaking change with its migration note; flag any whose migration is missing or unclear. Comment, do not approve.                                                                                                                 |
+| A `Breaking change:` on a package below 1.0.0, bumped `minor`          | Check the migration note against the diff of the change it describes: every removed or renamed export, option, or behavior has a replacement or a stated removal. Complete → judge the rest as below. Missing or wrong → **Needs changes**, naming the changeset. |
+| No failed check, changelog reads well                                  | **Ready to release.** Approve with a summary: what ships, who should upgrade, each breaking change with its migration, and anything worth announcing.                                                                                                             |
+| Checks fail or notes are unclear                                       | **Needs changes.** Name the failing check or the changeset to rewrite. Request changes. The release branch is rebuilt, never edited: triage files the fix against the changeset on `main`, and the next rebuild picks it up.                                      |
 
 Post it on the release pull request with `gh pr review <number> --body-file <file>` and the flag
 from [`review.md`](./review.md#3-verdict). Write for someone deciding in thirty seconds: lead with the

@@ -28,8 +28,10 @@ CDP IME suite for Korean, Japanese, and Chinese, plus one manual Korean spot-che
 | `p1` / `p2` / `p3` | Priority; highest-priority `agent:ready` is taken first.                   |
 | `type:arch`        | Architectural/strategic — maintainer-driven, not routine queue work.       |
 
-Anyone can open an issue. Marking it `agent:ready` is a **maintainer** action (GitHub restricts
-labels to triage+), so the queue stays curated — filing a candidate is not the same as authorizing it.
+Anyone can open an issue. Marking it `agent:ready` is a curated action — filing a candidate is not
+the same as authorizing it. The maintainer does it, and so does Bunsen's queue desk for issues Bunsen
+filed, under the delegated rule in [`docs/MAINTENANCE.md`](../../../docs/MAINTENANCE.md#delegated-queue-decisions),
+when every item below holds.
 
 ## Definition of Ready (the `agent:ready` gate)
 
@@ -59,5 +61,7 @@ an item fails, comment why, remove `agent:ready`, and move on — don't fix blin
 ## Releases
 
 Releases ride [Changesets](https://github.com/changesets/changesets): merged PRs accumulate in the
-open "Changes Included in the Next Release" PR, which is merged periodically to publish to npm and
-deploy the docs. Add a changeset with every user-facing change (`pnpm changeset`).
+"Changes Included in the Next Release" PR, which is rebuilt and released weekly
+([`docs/MAINTENANCE.md` § Releases](../../../docs/MAINTENANCE.md#releases)). Below 1.0.0 a
+`Breaking change:` ships as a `minor` on the reviewer's approval, so its migration note must be
+complete. Add a changeset with every user-facing change (`pnpm changeset`).
