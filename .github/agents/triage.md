@@ -60,7 +60,11 @@ finding against the `Fingerprint:` line in their bodies.
   new failing run, a new file), add one comment with it; otherwise do nothing.
 - A match **closed in the last 30 days** means the maintainer may have decided against it. Do not
   reopen or refile; mention it in your run summary instead.
-- **No match** means it is a candidate for a new issue.
+- **No match** means it is a candidate for a new issue, once you have also searched open issues
+  from every desk for the same component and symptom
+  (`gh api 'repos/beaket/ui/issues?state=open&per_page=100'`). Each desk uses its own fingerprint
+  prefix, so the same problem found by two desks does not match by fingerprint. A finding another
+  open issue already covers is not filed; add materially new evidence there as one comment.
 
 ## 3. Rank and file
 

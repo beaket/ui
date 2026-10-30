@@ -1,8 +1,9 @@
 # Skip in CI or for changeset-release/renovate branches
 [ -n "$CI" ] && exit 0
 branch=$(git rev-parse --abbrev-ref HEAD)
-[[ "$branch" == changeset-release/* ]] && exit 0
-[[ "$branch" == renovate/* ]] && exit 0
+case "$branch" in
+  changeset-release/* | renovate/*) exit 0 ;;
+esac
 
 # Check if src/** or packages/** changed (docs-only changes ship in no
 # tarball, so they don't need a changeset — mirrors changeset-check.yml).

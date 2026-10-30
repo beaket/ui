@@ -12,10 +12,9 @@
       "allowedVersions": "<7"
     },
     {
-      "description": "Keep changesets/action compatible with our patched @changesets/cli v2. Upgrade both together after porting the provenance patch to CLI v3.",
-      "matchManagers": ["github-actions"],
-      "matchPackageNames": ["changesets/action"],
-      "allowedVersions": "<2"
+      "description": "@changesets/cli carries the provenance patch in patches/, keyed to its exact version (see .npmrc). Any update must port the patch, so it never automerges.",
+      "matchPackageNames": ["@changesets/cli"],
+      "automerge": false
     }
   ],
   "vulnerabilityAlerts": {

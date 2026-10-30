@@ -36,6 +36,9 @@ See [`README.md` § The runtime](./README.md#the-runtime) for what `gh` can reac
   own: count the Release workflow's scheduled runs (`actions/workflows/release.yml/runs`, same
   filter) as its slot. Report the totals and the longest delay, and name every desk that missed a
   slot.
+- **Failed runs**: every Bunsen, Bunsen merge, and Release run in the window whose conclusion is
+  `failure`, with its desk and the first error line (`gh run view <id> --log-failed`). A desk that
+  failed twice or more is a decision item: something in its setup is broken, not flaky.
 - **Desks**: for each label `desk:dev`, `desk:design`, `desk:growth`, and `desk:security` — issues
   filed in the window, open now, and accepted and declined over the last 8 weeks, as the
   [desk throttle](./README.md#desk-throttle) defines them.
@@ -76,6 +79,7 @@ Write "Nothing needs you this week." when empty.
 | CI runs on `main` (failed)    |           |        |
 | Scheduled runs started / due  |           |        |
 | Longest schedule delay        |           |        |
+| Failed Bunsen runs            |           |        |
 | Open issues                   |           |        |
 | `needs:maintainer`            |           |        |
 | `agent:ready` (unclaimed)     |           |        |

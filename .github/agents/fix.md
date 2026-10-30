@@ -33,7 +33,10 @@ Re-check the Definition of Ready in `docs/MAINTENANCE.md` (and, for `area:paper`
 - Write the regression test first and confirm it fails, then make it pass.
 - Keep the change to what the issue describes. Note anything else you notice in the pull request
   body instead of fixing it.
-- Add a `patch` changeset for the package you changed, whose body states the root cause.
+- If the fix changes a published package (`packages/cli`, `packages/paper`, or the component
+  source `ui add` installs), add a `patch` changeset for that package whose body states the root
+  cause. A fix to tooling, tests, or docs ships in no package and takes no changeset
+  (`docs/git-rules.md` § Changeset Guidelines).
 - Run `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, and the unit tests for the area you changed
   (`pnpm exec vitest run <path>`). Visual regression needs browsers this job does not have; CI runs
   it on the pull request. Do not open a pull request with failing checks; comment on the issue with
