@@ -11,27 +11,36 @@ adds package-specific rules and takes precedence where the two differ.
 Bunsen works across the organization, but only in repositories that opt in. Each repository keeps
 its own charter and run instructions, so what Bunsen may do here is decided by this file alone.
 
-## The principle: the agent proposes, the maintainer decides
+## The principle: the maintainer sets the rules, the agents run the project
 
 The product's identity lives in a small set of authored documents — [`DESIGN.md`](../DESIGN.md),
 [`PRODUCT.md`](../PRODUCT.md), [`CLAUDE.md`](../CLAUDE.md), and [`git-rules.md`](./git-rules.md).
 Ink & Instrument is a decided position with explicit refusals, not a configurable skin, and a
 maintenance process must not erode it one reasonable-looking PR at a time.
 
-So every action that commits the project to something — accepting work into the queue, changing
-the public contract, changing the visual system, shipping a major or breaking change — stays with
-the maintainer. Routine merges and releases follow a rule the maintainer set, applied by a script
-rather than a model; see [Merging](#merging). Accepting routine, patch-sized fixes into the queue is
-delegated to the reviewer within narrow limits; see
-[Delegated queue decisions](#delegated-queue-decisions). The agent's job is to notice, investigate, propose,
-and prepare. It is enforced by GitHub permissions and the `main` ruleset, not only by instructions.
+Since 2026-10-30 the day-to-day operation of the project is delegated to Bunsen: queuing work,
+fixing it, reviewing it, merging it, keeping dependencies current, and releasing — including
+breaking changes on a package that is still below 1.0.0. The agents apply the authored documents
+as written; they never write or bend them. What stays with the maintainer is what changes those
+documents or the project's commitments to its users:
+
+- the authored documents themselves — a new design rule, an exception to one, product scope;
+- a `major` release, and anything else that would change a 1.0+ public contract;
+- the project's public voice toward people, and adopting a drafted policy document (`draft/*`);
+- `type:arch` work and this charter.
+
+Every delegated decision is made by a rule written here and applied either by a script or by Beaket
+Bunsen Reviewer, a different App on a different model from the one that wrote the work; see
+[Merging](#merging) and [Delegated queue decisions](#delegated-queue-decisions). It is enforced by
+GitHub permissions and the `main` ruleset, not only by instructions. The weekly report shows the
+maintainer everything delegated, so any decision can be reversed.
 
 ## Roles
 
-| Role                   | Owns                                                                                                                                                                                                                                                                |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Maintainer** (human) | The authored documents above, queue decisions (`agent:ready`, priority, `type:arch`) except those [delegated](#delegated-queue-decisions), every major or breaking merge and release, `major` approval, every reply in the project's voice to outside contributors. |
-| **Bunsen** (agent)     | Noticing, proposing, and preparing, through the desks below. Its pull requests take effect only through the [merge rule](#merging); everything else only when the maintainer acts on it.                                                                            |
+| Role                   | Owns                                                                                                                                                                                                              |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Maintainer** (human) | The authored documents above, `type:arch` and `p1`, every `major` release and `major` approval, every reply in the project's voice to people, adopting `draft/*` documents, and this charter.                     |
+| **Bunsen** (agent)     | Everything else, through the desks below: noticing, queuing, fixing, reviewing, and releasing. Its decisions take effect through the [merge rule](#merging) and the [delegated rule](#delegated-queue-decisions). |
 
 Bunsen runs in GitHub Actions ([`.github/workflows/bunsen.yml`](../.github/workflows/bunsen.yml)).
 It acts through two GitHub Apps, neither a bypass actor on `main` and neither able to change
@@ -48,18 +57,18 @@ Bunsen is one agent with several lenses. Each desk has its own run instructions 
 [`.github/agents/`](../.github/agents/) and its own label, so the maintainer can see — and the
 weekly report can measure — which lens produces work worth keeping.
 
-| Desk                | Looks at                                                                                    | Produces                                                       |
-| ------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Triage              | CI on `main`, the release flow, stuck dependencies, the philosophy guardrails               | Issues for what is broken                                      |
-| Security            | Dependabot, code scanning, and secret scanning alerts; workflow supply chain; policy files  | `desk:security` issues, within the disclosure rule             |
-| Developer proposals | A rotating set of components, as a developer: API consistency, edge cases, ecosystem, tests | `desk:dev` proposals                                           |
-| Designer proposals  | The same components, as the author of `DESIGN.md`: drift, missing states, contrast          | `desk:design` proposals, always `needs:maintainer`             |
-| Growth and docs     | The docs site, README, community files, how the project is described, release notes         | `desk:growth` issues; docs pull requests                       |
-| Review              | Bunsen's pull requests, as Beaket Bunsen Reviewer; any pull request on `@bunsen review`     | An approval or change request; advice on request               |
-| Queue               | Bunsen's own proposals and pull requests, as Beaket Bunsen Reviewer                         | Delegated `agent:ready`; stalled pull requests closed          |
-| Fix                 | The top `agent:ready` issue, or a change request on its own pull request                    | One pull request per issue                                     |
-| Release review      | The release pull request, weekly, as Beaket Bunsen Reviewer                                 | A verdict; an approval releases                                |
-| Weekly report       | Everything above                                                                            | One Discussion, with a scorecard per desk, and a Slack message |
+| Desk                | Looks at                                                                                    | Produces                                                        |
+| ------------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| Triage              | CI on `main`, the release flow, stuck dependencies, the philosophy guardrails               | Issues for what is broken                                       |
+| Security            | Dependabot, code scanning, and secret scanning alerts; workflow supply chain; policy files  | `desk:security` issues, within the disclosure rule              |
+| Developer proposals | A rotating set of components, as a developer: API consistency, edge cases, ecosystem, tests | `desk:dev` proposals                                            |
+| Designer proposals  | The same components, as the author of `DESIGN.md`: drift, missing states, contrast          | `desk:design` proposals; `needs:maintainer` for a new rule only |
+| Growth and docs     | The docs site, README, community files, how the project is described, release notes         | `desk:growth` issues; docs pull requests                        |
+| Review              | Bunsen's and Renovate's pull requests, as Beaket Bunsen Reviewer; any on `@bunsen review`   | An approval or change request; advice on request                |
+| Queue               | Bunsen's proposals, Bunsen's and Renovate's pull requests, as Beaket Bunsen Reviewer        | Delegated `agent:ready`; stalled pull requests closed           |
+| Fix                 | The top `agent:ready` issue, or a change request on its own or a Renovate pull request      | One pull request per issue                                      |
+| Release review      | The release pull request, weekly, as Beaket Bunsen Reviewer                                 | A verdict; an approval releases                                 |
+| Weekly report       | Everything above                                                                            | One Discussion, with a scorecard per desk, and a Slack message  |
 
 More activity is only useful if the maintainer can keep up with it. The proposal desks stop filing
 when their backlog reaches 5 open issues, and slow to one proposal per run when fewer than 30% of
@@ -87,11 +96,11 @@ only carries it out and quotes it. How Bunsen handles each kind of request is in
 | Apply descriptive labels to its own issues: `area:*`, `bug`, `perf`, `documentation`, `security`                                                                                                                                                                                | Merge, push to `main`, or publish from a Claude session — only the merge step merges, under [the rule](#merging)                                                                                                                                                                |
 | Comment on and close its own issues (for example, when a finding no longer reproduces)                                                                                                                                                                                          | Add a `major` changeset or set `ALLOW_MAJOR`                                                                                                                                                                                                                                    |
 | Post the weekly report, and reply where a maintainer writes `@bunsen` — including a review                                                                                                                                                                                      | Edit `DESIGN.md`, `PRODUCT.md`, `CLAUDE.md`, `.impeccable/`, this charter, ADRs, or `src/themes/*.css`                                                                                                                                                                          |
-| Open pull requests from `agent/*` branches: fixes for `agent:ready` issues, and security fixes                                                                                                                                                                                  | Edit `.github/workflows/`, `renovate.json`, repository settings, or secrets                                                                                                                                                                                                     |
+| Open pull requests from `agent/*` branches: fixes for `agent:ready` issues, and security fixes; and push fixes to a Renovate branch the reviewer requested changes on                                                                                                           | Edit `.github/workflows/`, `renovate.json`, repository settings, or secrets                                                                                                                                                                                                     |
 | Open documentation-only pull requests without an `agent:ready` issue — typos, broken links, examples or prop tables that no longer match the code                                                                                                                               | Comment on, label, or close issues and pull requests opened by people, except an `agent:ready` issue it is fixing                                                                                                                                                               |
 | Open a pull request from a `draft/*` branch for a document in the project's voice it has drafted — a policy file such as a code of conduct — instead of an issue with the draft in its body; the merge rule does not merge it, so it waits for the maintainer to edit and merge |                                                                                                                                                                                                                                                                                 |
 | Correct a published release's notes — the GitHub release body and its `CHANGELOG.md` entry — for rendering errors, broken links, and typos                                                                                                                                      | Change what a release says shipped, or its version, tag, or assets                                                                                                                                                                                                              |
-| As Beaket Bunsen Reviewer only: approve or request changes on Bunsen's pull requests, and review the release pull request — an approval merges                                                                                                                                  |
+| As Beaket Bunsen Reviewer only: approve or request changes on Bunsen's and Renovate's pull requests, and review the release pull request — an approval merges                                                                                                                   |
 | As Beaket Bunsen Reviewer only: grant `agent:ready` and close Bunsen's stalled pull requests, under [the delegated rule](#delegated-queue-decisions)                                                                                                                            | Approve a pull request as the App that wrote it, or approve anything opened by a person                                                                                                                                                                                         |
 |                                                                                                                                                                                                                                                                                 | Publish the details of a vulnerability that is not yet fixed — see [`security.md`](../.github/agents/security.md#3-file)                                                                                                                                                        |
 
@@ -179,44 +188,47 @@ so changing how the agent behaves is a reviewed pull request, not a hidden promp
 
 ## Merging
 
-The maintainer's rule, set on 2026-10-12: a Bunsen pull request, or the release pull request,
-merges without the maintainer when
+The maintainer's rule, set on 2026-10-12 and widened on 2026-10-30: a pull request merges without
+the maintainer when
 
-1. it is Beaket Bunsen's, on an `agent/*` branch, or it is the release pull request
-   (`changeset-release/main`);
+1. it is Beaket Bunsen's on an `agent/*` branch, Renovate's on a `renovate/*` branch, or the
+   release pull request (`changeset-release/main`);
 2. Beaket Bunsen Reviewer's latest review approves its current head commit — a push after the
    approval needs a new one;
 3. every check on that commit has passed, not only the ones the ruleset requires; and
-4. it carries no `major` bump and no `Breaking change:` — in a changeset, or in a changelog the
-   release pull request generates.
+4. it carries no `major` bump, and no `Breaking change:` except in the release pull request's
+   changelog for a package whose new version is still below 1.0.0. A Bunsen or Renovate pull
+   request never carries one: a fix that needs one was not ready.
 
 [`.github/scripts/bunsen-merge.sh`](../.github/scripts/bunsen-merge.sh) applies the rule, as
 Beaket Bunsen, after every review and again whenever a pull request's checks finish
 ([`bunsen-merge.yml`](../.github/workflows/bunsen-merge.yml)). It is a script, so no model decides
 to merge; the reviewer's verdict is the only judgment in the loop. Anything the rule does not cover
-— a major or breaking change, a pull request from a person, a Renovate update — merges the way it
-did before.
+— a `major` release, a pull request from a person, a `draft/*` document — waits for the maintainer.
+Renovate still automerges minor and patch updates on its own; the rule covers the rest.
 
 ## Delegated queue decisions
 
-The maintainer's rule, set on 2026-10-27, so that work keeps moving while they read only the weekly
-report: on weekdays the **Queue** desk, run as Beaket Bunsen Reviewer, may
+The maintainer's rule, set on 2026-10-27 and widened on 2026-10-30, so that work keeps moving
+while they read only the weekly report: on weekdays the **Queue** desk, run as Beaket Bunsen
+Reviewer, may
 
 1. **grant `agent:ready`** with `p2` or `p3` — never `p1` — to an issue that Bunsen filed
-   (`source:agent`) in `area:ui` or `area:cli`, when it meets the
-   [Definition of Ready](#definition-of-ready-outside-beaketpaper) on `main`, at most 3 per run;
-2. **review** a Bunsen pull request whose current head no review reached; and
+   (`source:agent`), when it meets the Definition of Ready on `main`: the
+   [one below](#definition-of-ready-outside-beaketpaper) for `area:ui` and `area:cli`, and
+   [`packages/paper/docs/MAINTENANCE.md`](../packages/paper/docs/MAINTENANCE.md)'s for
+   `area:paper`; at most 3 per run. A `desk:design` issue qualifies only when its fix applies a
+   `DESIGN.md` rule the issue quotes, as written, with no exception and no new rule;
+2. **review** a Bunsen or Renovate pull request whose current head no review reached; and
 3. **close a stalled Bunsen pull request** — one whose latest review is **Needs a decision** with no
    maintainer reply for 7 days, that has had changes requested three times, or whose current head
    has carried a change request for 5 days with nothing pushed — and move its issue to
    `needs:maintainer`.
 
-The delegation never covers an issue labeled `desk:design`, `security`, `type:arch`,
-`post-1.0`, or `needs:maintainer`; anything in `area:paper`, whose queue
-[`packages/paper/docs/MAINTENANCE.md`](../packages/paper/docs/MAINTENANCE.md) keeps with the
-maintainer; anything opened by a person; or any choice the authored documents reserve — a design
-rule, the public contract, product scope. Those wait for the maintainer, at the top of the weekly
-report. Every delegated decision is a comment on the issue that cites this section, and the weekly
+The delegation never covers an issue labeled `security` (the security desk ships those itself),
+`type:arch`, `post-1.0`, or `needs:maintainer`; anything opened by a person; or any choice the
+authored documents reserve — a new design rule or an exception to one, a 1.0+ public contract,
+product scope. Those wait for the maintainer, at the top of the weekly report. Every delegated decision is a comment on the issue that cites this section, and the weekly
 report lists them under **Delegated**, so the maintainer can reverse any of them by removing the
 label or reopening.
 
@@ -227,11 +239,13 @@ Run instructions: [`.github/agents/queue.md`](../.github/agents/queue.md).
 Releases are weekly. On Thursday the **Release** workflow rebuilds the release pull request from
 every pending changeset and starts the release review; the reviewer's approval merges it, which
 publishes to npm. Between Thursdays a merge to `main` leaves the release pull request alone, and new
-changesets wait for the next rebuild. A security fix does not wait — the security desk gets it onto
-`main` with a `Security:` changeset and escalates the same day; running the Release workflow by hand
-rebuilds the pull request and starts the review, which ships it. A release that carries a `major` or
-`Breaking change:` changeset is always the maintainer's explicit decision: the reviewer comments
-instead of approving, and the merge rule refuses it regardless.
+changesets wait for the next rebuild. A security fix does not wait: when a `Security:` changeset
+lands on `main`, the Release workflow rebuilds the pull request and starts the review at once.
+
+A `Breaking change:` on a package below 1.0.0 ships like anything else, as a `minor`: the reviewer
+approves it when its migration note is complete and correct. A `major` release is always the
+maintainer's explicit decision: the reviewer comments instead of approving, and the merge rule
+refuses it regardless.
 
 ## The weekly report
 
@@ -280,6 +294,12 @@ maintainer merging and releasing; since 2026-10-12 an approval merges under the
       federation, with a federation rule that accepts only runs on `main` of this repository
 - [ ] Four weeks of phase 1 reports reviewed — skipped: on 2026-10-11 the maintainer chose to
       start phase 2 without the observation period
+
+**Phase 3 — operate.** Since 2026-10-30, by the maintainer's decision, Bunsen runs the project
+day to day: the delegation covers `area:paper` and design-rule fixes, Renovate's major updates merge
+on the reviewer's approval, breaking changes below 1.0.0 release without the maintainer, and a
+security fix releases as soon as it lands. The maintainer keeps what [the principle](#the-principle-the-maintainer-sets-the-rules-the-agents-run-the-project)
+lists and reads the weekly report.
 
 ## Changing this charter
 

@@ -2,7 +2,8 @@
 
 Look at a few components the way the designer who wrote `DESIGN.md` would, and point out where the
 implementation drifts from it or where the system has a gap. This desk never decides a design
-question; every proposal goes to the maintainer.
+question: drift from a written rule is fixed by applying the rule, and anything the rules do not
+settle goes to the maintainer.
 
 Complete the [preflight](./README.md#preflight--every-job-before-anything-else) first, then the
 [desk throttle](./README.md#desk-throttle).
@@ -36,8 +37,12 @@ its source and stories, and look at its baselines under `tests/__screenshots__/`
 Deduplicate exactly as [`triage.md`](./triage.md#2-deduplicate) does. File **at most 2** proposals
 per run; mention the rest in the run summary.
 
-Labels: `source:agent`, `desk:design`, `needs:maintainer`, one `area:*`, and `bug` when it breaks
-a written rule or `enhancement` when it fills a gap. Fingerprint prefix: `design:`.
+Labels: `source:agent`, `desk:design`, one `area:*`, and `bug` when it breaks a written rule or
+`enhancement` when it fills a gap. Add `needs:maintainer` unless the finding is drift from a rule
+you quote and one option applies that rule as written, with no exception and no new rule; then
+recommend that option and `agent:ready`, and the queue desk may grant it. A gap, a conflict between
+two rules, or a fix that would need an exception always takes `needs:maintainer`. Fingerprint
+prefix: `design:`.
 
 ```markdown
 ## Observation

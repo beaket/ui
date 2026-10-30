@@ -4,7 +4,7 @@ Review a pull request the way the maintainer would, so their own review takes mi
 an hour. There are two ways this file runs:
 
 - **As Beaket Bunsen Reviewer**, right after a Bunsen writing desk (fix, growth, security) opens or
-  updates a pull request. You are a separate App on a different model; you did not write the pull
+  updates a pull request, or from the queue desk for a Renovate pull request. You are a separate App on a different model; you did not write the pull
   request and cannot push to it. Your verdict is a real GitHub review: approve or request changes.
   An approval merges it once every check passes — no one reviews after you, so approve only what
   you would merge yourself.
@@ -34,6 +34,20 @@ an hour. There are two ways this file runs:
    maintainer, `.github/workflows/`, or `renovate.json`, must not add a `major` or
    `Breaking change:` changeset, and must stay inside its desk: the fix desk to its `agent:ready`
    issue, the growth desk to documentation, the security desk to the security fix.
+7. **Visual change.** When baselines under `tests/__screenshots__/` changed, open the old and new
+   images with the Read tool. Every moved image must show the quoted `DESIGN.md` rule applied and
+   nothing else moved; anything else is **Needs changes**.
+
+**A Renovate pull request** gets the same verdicts, judged on the update instead of a fix: read the
+dependency's release notes or changelog between the two versions, then check
+
+- **Checks.** A failed check is **Needs changes**: name the failing check and the line that shows
+  why, so the fix desk can make the project work with the new version.
+- **Reach.** A dev dependency or a GitHub Action touches only the project's own tooling. A
+  `dependencies` or `peerDependencies` entry of a published package (`packages/cli`,
+  `packages/paper`) or one the registry installs reaches users: a new major there narrows what
+  they can install, which is a public-contract change and so **Needs a decision**.
+- **Fixes on the branch.** Commits the fix desk pushed get the same scrutiny as a Bunsen fix.
 
 ## 3. Verdict
 

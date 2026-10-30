@@ -1,9 +1,9 @@
 # Queue
 
 Keep work moving while the maintainer is away: decide which of Bunsen's own proposals are ready to
-fix, make sure every Bunsen pull request has a current review, and clear pull requests that have
-stopped moving. You run as **Beaket Bunsen Reviewer**, the App that did not file the proposals or
-write the pull requests.
+fix, make sure every Bunsen and Renovate pull request has a current review, and clear pull requests
+that have stopped moving. You run as **Beaket Bunsen Reviewer**, the App that did not file the
+proposals or write the pull requests.
 
 The authority for this job is [Delegated queue decisions](../../docs/MAINTENANCE.md#delegated-queue-decisions)
 in the charter. Anything it does not hand you stays with the maintainer, and the weekly report puts
@@ -13,7 +13,10 @@ Complete the [preflight](./README.md#preflight--every-job-before-anything-else) 
 
 ## 1. Clear stalled pull requests
 
-List Beaket Bunsen's open pull requests on `agent/*` branches. For each, read your latest review
+List Beaket Bunsen's open pull requests on `agent/*` branches and Renovate's on `renovate/*`
+branches. Renovate's minor and patch updates automerge on their own once checks pass; a Renovate
+pull request still open is a major update, one that failed a check, or one `renovate.json` holds
+back from automerge. For each, read your latest review
 (`gh api repos/beaket/ui/pulls/<n>/reviews --paginate`, filtered on `beaket-bunsen-reviewer[bot]`)
 and the commits since it.
 
@@ -26,28 +29,37 @@ and the commits since it.
 | Anything else                                                                                             | Leave it                                                                            |
 
 To close one: comment with the verdict that stopped it and a link to that review, then
-`gh pr close <n> --delete-branch`. If it closes an issue (`Closes #<issue>`), comment on that issue
-with the same link, remove `agent:ready`, and add `needs:maintainer`. If the linked issue was opened
-by a person, comment only; do not relabel it.
+`gh pr close <n> --delete-branch` (for a Renovate pull request, plain `gh pr close <n>`; Renovate
+will not reopen that version, so list it in the run summary for the weekly report's decisions). If
+it closes an issue (`Closes #<issue>`), comment on that issue with the same link, remove
+`agent:ready`, and add `needs:maintainer`. If the linked issue was opened by a person, comment
+only; do not relabel it.
 
 Bunsen merge picks up any approval you give here on its next sweep. Never merge.
 
 ## 2. Grant `agent:ready`
 
 Candidates are open issues that carry `source:agent` and **none** of `agent:ready`,
-`needs:maintainer`, `desk:design`, `desk:security`, `security`, `type:arch`, `post-1.0`, or
-`area:paper`, and carry `area:ui` or `area:cli`. Issues opened by people are never candidates.
-Oldest first, at most **3** grants per run.
+`needs:maintainer`, `desk:security`, `security`, `type:arch`, or `post-1.0`, and carry `area:ui`,
+`area:cli`, or `area:paper`. Issues opened by people are never candidates. Oldest first, at most
+**3** grants per run.
 
 For each candidate, re-check the issue against the code on `main`, not only its body:
 
 1. **It still reproduces.** If the problem is gone, comment with the evidence and close the issue.
 2. **Definition of Ready.** Every item in
    [`docs/MAINTENANCE.md` § Definition of Ready](../../docs/MAINTENANCE.md#definition-of-ready-outside-beaketpaper)
-   holds: patch-sized, reproducible, cause identified, acceptance criteria and a regression test
-   named, no open question, no change to the public contract, no intended visual change.
-3. **No reserved judgment.** It does not touch a file the charter reserves for the maintainer,
-   change what a component looks like, add a prop or an export, or decide product scope.
+   holds for `area:ui` and `area:cli` — patch-sized, reproducible, cause identified, acceptance
+   criteria and a regression test named, no open question, no change to the public contract, no
+   intended visual change except restoring a `DESIGN.md` rule the issue quotes. For `area:paper`,
+   every item in
+   [`packages/paper/docs/MAINTENANCE.md` § Definition of Ready](../../packages/paper/docs/MAINTENANCE.md#definition-of-ready-the-agentready-gate)
+   holds instead.
+3. **No reserved judgment.** It does not touch a file the charter reserves for the maintainer, add
+   a prop or an export, decide product scope, or change what a component looks like beyond applying
+   a quoted `DESIGN.md` rule as written. A `desk:design` issue qualifies only when one of its options
+   applies the quoted rule with no exception and no new rule; grant that option, name it in your
+   comment, and treat the others as declined.
 
 If all three hold, apply `agent:ready` and one priority: `p2` for a bug users can hit, `p3` for
 anything else. Never `p1`. Comment:

@@ -4,7 +4,7 @@ name: Bunsen
 # Two GitHub Apps split the work. Beaket Bunsen (beaket-bunsen[bot]) writes issues, branches, and
 # pull requests. Beaket Bunsen Reviewer (beaket-bunsen-reviewer[bot]) reviews them on a different
 # model and cannot push. An approval merges through .github/scripts/bunsen-merge.sh, never through
-# Claude; a major or breaking change waits for the maintainer. Each job mints App tokens with only
+# Claude; a major release waits for the maintainer. Each job mints App tokens with only
 # what it needs, and Claude is billed to the company Console through federation.
 
 # Scheduled runs are named after their cron line, so the weekly report can count which desks ran and
@@ -335,6 +335,10 @@ jobs:
             prs=$(gh pr list --repo beaket/ui --author app/beaket-bunsen --state open --json number,headRefName,headRefOid \
               --jq '.[] | select(.headRefName | startswith("agent/")) | "\(.number) \(.headRefOid)"')
             open=$(printf '%s' "$prs" | grep -c . || true)
+            # Renovate's pull requests count for change requests only, not toward the open limit.
+            renovate=$(gh pr list --repo beaket/ui --author app/renovate --state open --json number,headRefName,headRefOid \
+              --jq '.[] | select(.headRefName | startswith("renovate/")) | "\(.number) \(.headRefOid)"')
+            prs=$(printf '%s\n%s' "$prs" "$renovate")
             # A change request counts while it is the reviewer's latest verdict on the current head. The
             # `review:changes_requested` search reads reviewDecision, which stays empty on a repository
             # that does not require reviews, so read the reviews themselves, as bunsen-merge.sh does.
@@ -348,7 +352,7 @@ jobs:
                 echo "$pr $head" >> "$RUNNER_TEMP/revise"
               fi
             done <<< "$prs"
-            echo "agent:ready issues: $ready; open Bunsen pull requests: $open; with changes requested: $changes"
+            echo "agent:ready issues: $ready; open Bunsen pull requests: $open; Bunsen or Renovate with changes requested: $changes"
             if [ "$changes" -eq 0 ] && { [ "$ready" -eq 0 ] || [ "$open" -ge 2 ]; }; then
               echo "Nothing to do." >> "$GITHUB_STEP_SUMMARY"
               echo "skip=true" >> "$GITHUB_OUTPUT"
@@ -487,7 +491,7 @@ jobs:
         env:
           EXECUTION_FILE: ${{ steps.claude.outputs.execution_file }}
         run: .github/scripts/summarize-claude-run.sh "$EXECUTION_FILE"
-      # An approval merges unless the change is major or breaking. The script decides, not a model.
+      # An approval merges unless the script's rule refuses it. The script decides, not a model.
       - id: merge-token
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -503,8 +507,8 @@ jobs:
 
   release:
     # The reviewer checks the release pull request. Its approval merges it, which publishes to npm;
-    # a release with a major or breaking change waits for the maintainer. release.yml dispatches
-    # this weekly, and by hand for an urgent release, right after it rebuilds the pull request.
+    # a major release waits for the maintainer. release.yml dispatches this weekly, and when a
+    # security fix lands, right after it rebuilds the pull request.
     if: github.event_name == 'workflow_dispatch' && inputs.job == 'release'
     runs-on: ubuntu-latest
     timeout-minutes: 30
