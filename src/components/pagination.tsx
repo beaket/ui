@@ -324,8 +324,17 @@ function PaginationStep({
   );
 
   if (asChild) {
+    // The consumer's element is not ours to disable, so mark it and cancel the
+    // click; otherwise a router link still navigates on the first/last page.
+    const disabledProps = enabled
+      ? {}
+      : {
+          "aria-disabled": true,
+          tabIndex: -1,
+          onClick: (event: React.MouseEvent<HTMLElement>) => event.preventDefault(),
+        };
     return (
-      <Slot data-slot={slot} className={classes} aria-label={label} {...props}>
+      <Slot data-slot={slot} className={classes} aria-label={label} {...props} {...disabledProps}>
         {children}
       </Slot>
     );
