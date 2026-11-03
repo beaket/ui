@@ -46,3 +46,64 @@ export const ValueContract: Story = {
     );
   },
 };
+
+/** Style rules nested inside `@media (prefers-reduced-motion: reduce)` in the loaded stylesheets. */
+function reducedMotionRules() {
+  const rules: CSSStyleRule[] = [];
+  const walk = (list: CSSRuleList, reduced: boolean) => {
+    for (const rule of Array.from(list)) {
+      if (rule instanceof CSSMediaRule) {
+        walk(rule.cssRules, reduced || rule.conditionText.includes("prefers-reduced-motion"));
+      } else if (rule instanceof CSSStyleRule) {
+        if (reduced) rules.push(rule);
+        if (rule.cssRules.length) walk(rule.cssRules, reduced);
+      } else if (rule instanceof CSSGroupingRule) {
+        walk(rule.cssRules, reduced);
+      }
+    }
+  };
+  for (const sheet of Array.from(document.styleSheets)) {
+    try {
+      walk(sheet.cssRules, false);
+    } catch {
+      // Cross-origin sheets cannot be read; component styles are same-origin.
+    }
+  }
+  return rules;
+}
+
+/**
+ * Under `prefers-reduced-motion: reduce` an indeterminate indicator stops
+ * sweeping and holds a full, static line across the track, so it reads as
+ * "working" rather than "a third done". The test runner does not emulate the
+ * media feature, so the check asserts that the indicator carries the
+ * reduced-motion utilities and that the stylesheet compiles them inside the
+ * media query.
+ */
+export const ReducedMotion: Story = {
+  render: () => (
+    <Progress value={null} aria-label="Loading">
+      <Progress.Indicator data-testid="fill" />
+    </Progress>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const root = canvas.getByRole("progressbar", { name: "Loading" });
+    const fill = canvas.getByTestId("fill");
+    await expect(root).toHaveAttribute("data-state", "indeterminate");
+    await expect(fill).toHaveClass(
+      "data-[state=indeterminate]:motion-reduce:w-full",
+      "motion-reduce:animate-none",
+    );
+
+    const rules = reducedMotionRules();
+    const ruleFor = (utility: string) =>
+      rules.find((rule) => rule.selectorText.includes(`.${CSS.escape(utility)}`));
+    await expect(ruleFor("data-[state=indeterminate]:motion-reduce:w-full")?.style.width).toBe(
+      "100%",
+    );
+    await expect(ruleFor("motion-reduce:animate-none")?.style.animationName).toBe("none");
+    // The root sets --progress-scale to 1 while indeterminate, so scaleX does not collapse the line.
+    await expect(root.style.getPropertyValue("--progress-scale")).toBe("1");
+  },
+};
