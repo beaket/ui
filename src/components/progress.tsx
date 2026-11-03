@@ -50,7 +50,7 @@ export function ProgressIndicator({ className, style, ...props }: ProgressIndica
       data-slot="progress-indicator"
       className={cn(
         "bg-bg-emphasis h-full w-full origin-left transition-transform duration-150 rtl:origin-right",
-        "data-[state=indeterminate]:animate-navigation-progress data-[state=indeterminate]:w-1/3 motion-reduce:animate-none motion-reduce:transition-none",
+        "data-[state=indeterminate]:animate-navigation-progress data-[state=indeterminate]:w-1/3 motion-reduce:animate-none motion-reduce:transition-none data-[state=indeterminate]:motion-reduce:w-full",
         className,
       )}
       style={{ transform: "scaleX(var(--progress-scale, 0))", ...style }}
