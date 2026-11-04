@@ -48,7 +48,7 @@ export default defineConfig({
       {
         test: {
           name: "cli",
-          include: ["packages/cli/src/**/*.test.ts"],
+          include: ["packages/cli/src/**/*.test.ts", ".changeset/**/*.test.ts"],
           environment: "node",
         },
       },
