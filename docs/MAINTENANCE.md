@@ -161,19 +161,19 @@ precedence — are not auto-fixed. A suspected drift is filed with `needs:mainta
 
 All times are UTC+9.
 
-| Job           | When                               | Output                                                   |
-| ------------- | ---------------------------------- | -------------------------------------------------------- |
-| Respond       | When a maintainer writes `@bunsen` | A reply in the same thread                               |
-| Triage        | Tuesday and Friday, 09:07          | Up to 3 new issues per run; otherwise nothing            |
-| Security      | Weekdays, 09:37                    | Issues for open alerts and supply-chain weaknesses       |
-| Developer     | Wednesday, 09:07                   | Up to 2 proposals                                        |
-| Designer      | Thursday, 09:07                    | Up to 2 proposals                                        |
-| Growth        | Friday, 10:07                      | Up to 3 documentation issues                             |
-| Weekly report | Monday, 09:07                      | One Discussion covering the previous Monday–Sunday       |
-| Queue         | Weekdays, 10:37                    | Delegated queue decisions; stalled pull requests closed  |
-| Fix           | Weekdays, 11:07                    | Pull requests for `agent:ready` issues, one issue per PR |
-| Release       | Thursday, 09:17, after the rebuild | A release verdict; an approval merges, which publishes   |
-| Merge         | When checks finish; weekdays 11:47 | Merges what the reviewer approved — no Claude involved   |
+| Job           | When                                         | Output                                                   |
+| ------------- | -------------------------------------------- | -------------------------------------------------------- |
+| Respond       | When a maintainer writes `@bunsen`           | A reply in the same thread                               |
+| Triage        | Tuesday and Friday, 09:07                    | Up to 3 new issues per run; otherwise nothing            |
+| Security      | Weekdays, 09:37                              | Issues for open alerts and supply-chain weaknesses       |
+| Developer     | Wednesday, 09:07                             | Up to 2 proposals                                        |
+| Designer      | Thursday, 09:07                              | Up to 2 proposals                                        |
+| Growth        | Friday, 10:07                                | Up to 3 documentation issues                             |
+| Weekly report | Monday, 09:07                                | One Discussion covering the previous Monday–Sunday       |
+| Queue         | Weekdays, 10:37                              | Delegated queue decisions; stalled pull requests closed  |
+| Fix           | Weekdays, 11:07 and 16:07                    | Pull requests for `agent:ready` issues, one issue per PR |
+| Release       | Thursday, 09:17, after the rebuild           | A release verdict; an approval merges, which publishes   |
+| Merge         | When checks finish; weekdays 11:47 and 16:47 | Merges what the reviewer approved — no Claude involved   |
 
 The times are when GitHub queues a run, not when it starts. Under load GitHub starts scheduled runs
 late — in this organization four to six hours late in a typical week of 2026 — and may skip one. The

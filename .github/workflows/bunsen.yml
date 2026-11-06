@@ -29,6 +29,7 @@ on:
     - cron: "7 1 * * 5" # Growth and docs, Friday 10:07
     - cron: "37 1 * * 1-5" # Queue, weekdays 10:37
     - cron: "7 2 * * 1-5" # Fix, weekdays 11:07
+    - cron: "7 7 * * 1-5" # Fix, weekdays 16:07
     # The release review has no line here: release.yml starts it right after its weekly rebuild of
     # the release pull request.
   workflow_dispatch:
@@ -283,7 +284,7 @@ jobs:
     # The writing desks: fix, growth, and security. They push `agent/*` branches and open pull
     # requests; the `review` job then reviews what they produced.
     if: >-
-      (github.event_name == 'schedule' && contains(fromJSON('["37 0 * * 1-5","7 1 * * 5","7 2 * * 1-5"]'), github.event.schedule)) ||
+      (github.event_name == 'schedule' && contains(fromJSON('["37 0 * * 1-5","7 1 * * 5","7 2 * * 1-5","7 7 * * 1-5"]'), github.event.schedule)) ||
       (github.event_name == 'workflow_dispatch' && contains(fromJSON('["security","growth","fix"]'), inputs.job))
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -303,7 +304,7 @@ jobs:
           case "$SCHEDULE" in
             "37 0 * * 1-5") job=security ;;
             "7 1 * * 5") job=growth ;;
-            "7 2 * * 1-5") job=fix ;;
+            "7 2 * * 1-5" | "7 7 * * 1-5") job=fix ;;
             *) job="$DISPATCHED" ;;
           esac
           test -n "$job"
@@ -353,7 +354,7 @@ jobs:
               fi
             done <<< "$prs"
             echo "agent:ready issues: $ready; open Bunsen pull requests: $open; Bunsen or Renovate with changes requested: $changes"
-            if [ "$changes" -eq 0 ] && { [ "$ready" -eq 0 ] || [ "$open" -ge 2 ]; }; then
+            if [ "$changes" -eq 0 ] && { [ "$ready" -eq 0 ] || [ "$open" -ge 4 ]; }; then
               echo "Nothing to do." >> "$GITHUB_STEP_SUMMARY"
               echo "skip=true" >> "$GITHUB_OUTPUT"
             fi
@@ -463,6 +464,18 @@ jobs:
         with:
           fetch-depth: 50
           persist-credentials: false
+      # The verdict is final: an approval merges as soon as checks pass, and nothing reviews the
+      # pull request again. So the checks finish before the reviewer reads them; an approval given
+      # while they ran left #1211 approved, failing, and picked up by no desk.
+      - name: Wait for checks
+        continue-on-error: true
+        timeout-minutes: 20
+        env:
+          GH_TOKEN: ${{ steps.reviewer-token.outputs.token }}
+          PR: ${{ needs.write.outputs.pr }}
+        run: |
+          sleep 30
+          gh pr checks "$PR" --repo beaket/ui --watch --fail-level none
       - id: claude
         uses: anthropics/claude-code-action@c0949c50a78c1ec8ce2647db36629b870e715d0c # v1.0.268
         env:

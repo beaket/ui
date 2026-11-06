@@ -20,7 +20,7 @@ waits for the maintainer.
 | [`weekly-report.md`](./weekly-report.md)   | Weekly report       | Monday, 09:07                                              |
 | [`review.md`](./review.md)                 | Review              | After each writing run (Reviewer App); on `@bunsen review` |
 | [`queue.md`](./queue.md)                   | Queue               | Weekdays, 10:37 (Reviewer App)                             |
-| [`fix.md`](./fix.md)                       | Fix                 | Weekdays, 11:07, when there is work                        |
+| [`fix.md`](./fix.md)                       | Fix                 | Weekdays, 11:07 and 16:07, when there is work              |
 | [`release.md`](./release.md)               | Release review      | Thursday 09:17, from the Release workflow (Reviewer App)   |
 
 The times are when GitHub queues a run; it often starts scheduled runs hours later. Do not assume

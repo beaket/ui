@@ -13,8 +13,10 @@ an hour. There are two ways this file runs:
 
 ## 1. Read
 
-- The pull request body, every commit, the full diff, and the check results. Wait for nothing:
-  if checks are still running, say which and review the rest.
+- The pull request body, every commit, the full diff, and the check results. As the Reviewer App
+  the workflow waits for the checks before starting you, so a check still running after that is one
+  that stalled: name it and review the rest, but do not approve. A failed check is **Needs
+  changes**, with the failing check and the line that shows why.
 - Review comments already on it. Note whether each was addressed.
 - The linked issue, and the documents that govern the files it touches: `DESIGN.md` for anything
   visual, `docs/git-rules.md` for anything in the public contract, `docs/component-api-patterns.md`

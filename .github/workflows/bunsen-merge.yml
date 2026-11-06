@@ -12,7 +12,8 @@ on:
     workflows: [CI, Visual regression, Consumer templates, Changeset Check]
     types: [completed]
   schedule:
-    - cron: "47 2 * * 1-5" # Weekdays 11:47 UTC+9, after the fix desk and its review
+    - cron: "47 2 * * 1-5" # Weekdays 11:47 UTC+9, after the first fix desk run and its review
+    - cron: "47 7 * * 1-5" # Weekdays 16:47 UTC+9, after the second
   workflow_dispatch:
 
 permissions:
