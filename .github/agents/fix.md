@@ -4,7 +4,7 @@ Turn one `agent:ready` issue into one pull request that a maintainer can review 
 
 Complete the [preflight](./README.md#preflight--every-job-before-anything-else) first. The workflow
 only starts this job when a reviewer has requested changes on a Bunsen or Renovate pull request, or
-when an `agent:ready` issue is open and Bunsen has fewer than 2 pull requests open.
+when an `agent:ready` issue is open and Bunsen has fewer than 4 pull requests open.
 
 ## 1. Pick
 
