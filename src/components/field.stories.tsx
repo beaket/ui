@@ -155,6 +155,34 @@ export const DynamicDescriptions: Story = {
   },
 };
 
+function RenderProp({ children }: { children: (state: { ready: boolean }) => React.ReactNode }) {
+  return <div>{children({ ready: true })}</div>;
+}
+
+export const RenderPropDescendant: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <Field>
+      <Field.Label>Name</Field.Label>
+      <Field.Control>
+        <Input />
+      </Field.Control>
+      <Field.Hint>Shown on your profile.</Field.Hint>
+      <RenderProp>{(state) => <span data-ready={String(state.ready)}>Ready</span>}</RenderProp>
+    </Field>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const marker = canvasElement.querySelector("[data-ready]");
+    await expect(marker).toHaveAttribute("data-ready", "true");
+    const control = canvas.getByRole("textbox", { name: "Name" });
+    const label = canvasElement.querySelector("[data-slot='field-label']");
+    const hint = canvasElement.querySelector("[data-slot='field-hint']");
+    await expect(control).toHaveAttribute("aria-labelledby", label?.id);
+    await expect(control).toHaveAttribute("aria-describedby", hint?.id);
+  },
+};
+
 export const SsrAssociations: Story = {
   tags: ["!autodocs"],
   render: () => <div data-testid="ssr-host" />,
