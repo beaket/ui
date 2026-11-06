@@ -6,7 +6,7 @@ attention without publishing how to exploit it.
 
 Complete the [preflight](./README.md#preflight--every-job-before-anything-else) first. The desk
 throttle does not apply here; a real security finding is always filed. This desk runs every weekday
-and may open pull requests, but only for the security fixes in step 4.
+and may open pull requests, but only for the security fixes and overrides in step 4.
 
 ## 1. Alerts
 
@@ -73,6 +73,20 @@ published package ships to users — a `dependencies` entry in `packages/cli/pac
    If not, or if a pending `major` blocks the release, file one issue — title
    `Release the security fix for <advisory ID>`, labels `source:agent`, `desk:security`,
    `security`, `needs:maintainer` — saying what stopped it.
+
+For a Dependabot alert in any other dependency — a dev dependency, the docs site, or a transitive
+entry in `pnpm-lock.yaml` — the fix is an override, not a changeset:
+
+1. If Renovate has an open pull request that clears it, including `chore(deps): lock file
+maintenance`, leave it to Renovate and note it.
+2. Otherwise open one pull request per run on `agent/security-overrides-<date>` that covers every
+   such alert with a published fix: add or raise the package's entry under `overrides:` in
+   `pnpm-workspace.yaml` to the first patched version, run `pnpm install`, and check that
+   `pnpm audit` no longer reports it. Nothing published changes, so no changeset. A major bump of the
+   dependency is allowed here when the checks pass; say so in the pull request. If an alert has no
+   patched version, or the bump breaks the checks, leave it in the issue with the reason.
+
+Record what the pull request covers in the desk issue, and close the issue once the alerts close.
 
 ## 5. Summarize
 
