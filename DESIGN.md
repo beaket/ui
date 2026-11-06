@@ -798,7 +798,8 @@ channel.
 - **Select trigger** is field-surfaced — `bg-input`, hairline border, 32/36px on
   the shared ladder — and quiet at rest and on hover. It is pressed rather than
   written in, so it keeps the keyboard outline and holds the grown accent edge
-  while its menu is open.
+  while its menu is open. Its placeholder is `fg-subtle`, as in Input, so an
+  unset Select is told apart from one set to its first option.
 
 ### Small Controls (Checkbox, Radio, Switch)
 

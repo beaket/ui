@@ -125,7 +125,8 @@ are not:
 
 ## Evidence on Hand
 
-- Live packages: `@beaket/ui` CLI v4.1.0, `@beaket/paper` v0.9.1 (npm, MIT).
+- Live packages: `@beaket/ui` (CLI and registry) and `@beaket/paper`, on npm under
+  MIT. `npm view <package> version` has the current version of each.
 - Docs site: https://beaket.github.io/ui/ · Paper site:
   https://beaket.github.io/ui/paper/
 - Storybook with `autodocs` and `play`-function interaction tests per component;
