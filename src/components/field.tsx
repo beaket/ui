@@ -59,7 +59,7 @@ function prepareFieldParts(children: React.ReactNode, invalid: boolean, controlI
         return cloneElement(node, { id });
       }
 
-      return node.props.children === undefined
+      return node.props.children === undefined || typeof node.props.children === "function"
         ? node
         : cloneElement(node, undefined, visit(node.props.children));
     });
