@@ -111,11 +111,12 @@ jobs:
           commit-message: "chore: version packages"
           publish-script: pnpm run release
         env:
-          # For @changesets/changelog-github, not for the action. `changeset
-          # version` renders changelogs through it, and it throws without
-          # GITHUB_TOKEN in the environment. The action takes its own token
-          # through the `github-token` input (default: github.token).
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # For @changesets/changelog-github, which renders changelogs during
+          # `changeset version` and throws without GITHUB_TOKEN in the
+          # environment. It must be the same token as the `github-token` input:
+          # changesets/action refuses to run when the two differ, which is what
+          # failed every rebuild since the PR moved to the Bunsen token (#1200).
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           # Provenance comes from a patch to @changesets/cli that appends
           # `--provenance` to its publish flags — see .npmrc for why. Do NOT
