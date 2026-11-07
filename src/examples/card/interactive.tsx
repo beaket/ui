@@ -2,7 +2,7 @@ import { Card } from "../../components/card";
 
 export const Elevation = () => (
   <div className="flex flex-wrap items-start gap-6">
-    {(["flat", "shade", "overlay"] as const).map((e) => (
+    {(["hairline", "mat", "flat", "shade", "overlay"] as const).map((e) => (
       <Card key={e} elevation={e} className="w-52">
         <Card.Header>
           <Card.Title>acme-web</Card.Title>
@@ -23,8 +23,16 @@ export default () => (
         </Card.Header>
       </a>
     </Card>
+    <Card asChild interactive elevation="mat">
+      <a href="#acme-docs">
+        <Card.Header>
+          <Card.Title>acme-docs</Card.Title>
+          <Card.Description>The mount stays put while the shade changes voice.</Card.Description>
+        </Card.Header>
+      </a>
+    </Card>
     <p className="text-fg-muted text-sm">
-      Hover to reveal the accent edge; press to drop the card onto it.
+      Hover to turn the shade accent and grow it; press to drop the card onto it.
     </p>
   </div>
 );

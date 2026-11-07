@@ -1,6 +1,6 @@
 /*
  * Beaket UI Design System — Semantic tokens
- * The 70 names components use (64 color + 6 shadow). Authored once — every theme shares these
+ * The 73 names components use (66 color + 7 shadow). Authored once — every theme shares these
  * definitions verbatim. A theme never touches this layer; it only supplies
  * the 30-value palette (surface / tone / signal / knockout / shadow) that
  * these definitions point at. 28 values are functional; tone 8–9 are reserved
@@ -49,6 +49,15 @@
   --color-border-subtle: var(--tone-2);
   --color-border-strong: var(--tone-11);
   --color-border-focus: var(--signal-accent);
+  /* The faint pen — the hairline that frames a card. One ramp step off the
+     page, lighter than any control's border, so a sheet is outlined without
+     being boxed. */
+  --color-border-faint: var(--tone-1);
+  /* The mount seam — the inner line of a mat card, 4px inside its frame and
+     lighter than the frame it sits in. Mixed toward the far end of the surface
+     ladder rather than the page, so it stays visible in dark schemes, where the
+     ramp's first steps crowd the page. */
+  --color-border-mount: color-mix(in oklab, var(--tone-1) 50%, var(--surface-2));
 
   /* Solid interaction states move away from their knockout color. This keeps
      the authored foreground readable whether a palette chose its paper or ink
@@ -213,6 +222,11 @@
   /* Shadow — elevation is drawn, not lit */
   --shadow-offset: var(--shadow-size) var(--shadow-size) 0 0 var(--shadow-color);
   --shadow-offset-overlay: var(--shadow-size) var(--shadow-size) 0 0 var(--shadow-color-overlay);
+  /* Faint shade — one pixel short of the surface shade, in the shade grey thinned
+     toward the page. It sits under a card's faint pen, a step lighter than the pen,
+     so the sheet reads as laid down rather than boxed in. */
+  --shadow-offset-faint: calc(var(--shadow-size) - 1px) calc(var(--shadow-size) - 1px) 0 0
+    color-mix(in oklab, var(--shadow-color) 30%, var(--surface-0));
 
   /* Action shadow — the accent edge under what you can press. Surfaces keep
      the grey shade above; pressables carry the one vivid voice. A button rests

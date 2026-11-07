@@ -83,11 +83,14 @@ export function Button({
   );
 }
 
-// Edged buttons rest on a hairline accent edge, one pixel short of hover; hover
-// grows it and a held-open overlay grows it again. The 1px press lands exactly on
-// the resting edge, and keyboard focus remains the outer outline.
-const edge =
-  "shadow-offset-action-rest hover:shadow-offset-action data-[state=open]:shadow-offset-action-hover";
+// Edged buttons show the accent edge on hover and grow it while they hold an
+// overlay open. Solid buttons — the committing actions — also rest on it, one
+// pixel short of hover, so hover grows the edge and the 1px press lands exactly
+// on it. Secondary and outline rest neutral: a screen of them would otherwise be
+// a field of accent, and the one committing action on it would no longer stand
+// out. Keyboard focus remains the outer outline.
+const edge = "hover:shadow-offset-action data-[state=open]:shadow-offset-action-hover";
+const restingEdge = `shadow-offset-action-rest ${edge}`;
 
 const buttonVariants = cva(
   [
@@ -105,10 +108,10 @@ const buttonVariants = cva(
       variant: {
         // Ink fill is the complete persistent primary signal. Accent appears
         // only through interaction, so emphasis never splits into two voices.
-        primary: `bg-bg-emphasis text-fg-on-emphasis border border-border-strong hover:bg-bg-emphasis-hover data-[state=open]:bg-bg-emphasis-hover active:bg-bg-emphasis-active disabled:text-fg-disabled no-underline ${edge}`,
-        destructive: `bg-danger-solid text-danger-fg-on-solid border border-danger-solid hover:bg-danger-solid-hover hover:border-danger-solid-hover data-[state=open]:bg-danger-solid-hover data-[state=open]:border-danger-solid-hover active:bg-danger-solid-active disabled:text-fg-disabled no-underline ${edge}`,
+        primary: `bg-bg-emphasis text-fg-on-emphasis border border-border-strong hover:bg-bg-emphasis-hover data-[state=open]:bg-bg-emphasis-hover active:bg-bg-emphasis-active disabled:text-fg-disabled no-underline ${restingEdge}`,
+        destructive: `bg-danger-solid text-danger-fg-on-solid border border-danger-solid hover:bg-danger-solid-hover hover:border-danger-solid-hover data-[state=open]:bg-danger-solid-hover data-[state=open]:border-danger-solid-hover active:bg-danger-solid-active disabled:text-fg-disabled no-underline ${restingEdge}`,
         // Outline is airy at rest; on engage its signal is the accent edge
-        // growing, not a grey fill — so hover and held-open drop the fill and lean
+        // appearing, not a grey fill — so hover and held-open drop the fill and lean
         // on the edge. The press keeps a faint grey settle (active:bg-bg-active) to
         // confirm the drop.
         outline: `border border-border bg-transparent text-fg active:bg-bg-active ${edge}`,
@@ -119,8 +122,8 @@ const buttonVariants = cva(
         ghost:
           "text-fg hover:bg-bg-hover data-[state=open]:bg-bg-hover active:bg-bg-active active:translate-x-0 active:translate-y-0",
         link: "text-fg-link underline-offset-4 hover:underline data-[state=open]:underline active:translate-x-0 active:translate-y-0",
-        success: `bg-success-solid text-success-fg-on-solid border border-success-solid hover:bg-success-solid-hover hover:border-success-solid-hover data-[state=open]:bg-success-solid-hover data-[state=open]:border-success-solid-hover active:bg-success-solid-active disabled:text-fg-disabled no-underline ${edge}`,
-        warning: `bg-warning-solid text-warning-fg-on-solid border border-warning-solid hover:bg-warning-solid-hover hover:border-warning-solid-hover data-[state=open]:bg-warning-solid-hover data-[state=open]:border-warning-solid-hover active:bg-warning-solid-active disabled:text-fg-disabled no-underline ${edge}`,
+        success: `bg-success-solid text-success-fg-on-solid border border-success-solid hover:bg-success-solid-hover hover:border-success-solid-hover data-[state=open]:bg-success-solid-hover data-[state=open]:border-success-solid-hover active:bg-success-solid-active disabled:text-fg-disabled no-underline ${restingEdge}`,
+        warning: `bg-warning-solid text-warning-fg-on-solid border border-warning-solid hover:bg-warning-solid-hover hover:border-warning-solid-hover data-[state=open]:bg-warning-solid-hover data-[state=open]:border-warning-solid-hover active:bg-warning-solid-active disabled:text-fg-disabled no-underline ${restingEdge}`,
       },
       size: {
         sm: "h-8 px-3 text-xs",

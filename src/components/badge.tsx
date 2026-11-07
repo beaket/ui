@@ -31,13 +31,16 @@ export function Badge({ className, variant = "default", ...props }: BadgeProps) 
 
 const badgeBase = "inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium border";
 
+// Secondary and code are fills, not boxes: their pen would repeat what the fill
+// already says, and a row of boxed labels inside a penned card reads as noise.
+// The border stays transparent so every variant keeps the same box size.
 const variantClasses = {
   default: "bg-bg-emphasis text-fg-on-emphasis border-border-strong",
-  secondary: "bg-bg-hover text-fg border-border",
+  secondary: "bg-bg-hover text-fg border-transparent",
   success: "bg-success-solid text-success-fg-on-solid border-success-solid",
   error: "bg-danger-solid text-danger-fg-on-solid border-danger-solid",
   info: "bg-info-solid text-info-fg-on-solid border-info-solid",
   outline: "bg-transparent text-fg border-border",
   warning: "bg-warning-solid text-warning-fg-on-solid border-warning-solid",
-  code: "font-mono bg-bg-hover text-fg border-border",
+  code: "font-mono bg-bg-hover text-fg border-transparent",
 } as const;

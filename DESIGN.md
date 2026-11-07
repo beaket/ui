@@ -205,10 +205,12 @@ glow of a light source. Nothing here emits light, because nothing printed does.
 The identity is rationed by scale, and the rationing is the thesis: **a drawn
 edge means you can act on it.** _Instruments_ — button, input, select trigger,
 checkbox, radio, switch, badge — keep the 1px pen, the accent edge on engage,
-and the grown edge while they hold an overlay open. _Surfaces_ — card, alert,
-table wrapper, DataTable container — carry no resting stroke at all; they are
-read by their fill step (page → raised → overlay) plus the drawn grey shade.
-Overlays keep a frame because they float over arbitrary content. Where two
+and the grown edge while they hold an overlay open. _Surfaces_ — alert, table
+wrapper, DataTable container — carry no resting stroke at all; they are read by
+their fill step (page → raised → overlay) plus the drawn grey shade. The card is
+the one surface with a pen, and it is the faintest on the ramp
+(`border-faint`): a sheet laid on the page is outlined, not boxed, and a faint
+shade a step lighter than the pen sits under it. Overlays keep a frame because they float over arbitrary content. Where two
 strokes must meet, they share one seam rather than stacking. A border around a
 region only repeats what the surface already said, and repeating it at every
 nesting level is what made a dense screen unreadable.
@@ -223,9 +225,10 @@ act on. Signals (danger, success, warning, info) carry meaning but never
 emphasis, so a screen full of status never becomes a screen full of shouting.
 
 Depth is semantic before it is spatial. A grey offset shade means "this is a
-raised surface"; an accent edge means "this responds to you." Buttons rest on a
-hairline accent edge, grow it on hover, and drop onto it under the press; the
-other pressables are neutral at rest and reveal the edge on hover. Writing fields stay quiet until engaged and then cap off with a static
+raised surface"; an accent edge means "this responds to you." Solid buttons —
+the committing actions — rest on a hairline accent edge, grow it on hover, and
+drop onto it under the press; the other pressables are neutral at rest and
+reveal the edge on hover. Writing fields stay quiet until engaged and then cap off with a static
 edge that leaves when the pen lifts. Small controls are instruments: the chassis
 stays put while the inner key — a check, a thumb, a label — travels one pixel.
 Brutalism supplies the refusals (no gradients, no blur, no rounding, nothing
@@ -244,13 +247,14 @@ everything else.
 **Key Characteristics:**
 
 - Square by default — `0` radius everywhere except Radio's circle.
-- Surfaces carry no resting stroke; instruments keep the 1px pen.
+- Surfaces carry no resting stroke, except the card's faint pen; instruments
+  keep the 1px pen.
 - One neutral ink at three pressures — ink, hairline, seam. No diluted grey.
 - One chromatic accent, reserved for interaction — never for decoration.
 - Offset shadows with zero blur; grey for surfaces, accent for engagement.
 - Flat fills only. No gradient, no blur, no opacity used as a styling device.
 - 14px carries the interface; 12px carries labels. The floor is set by CJK.
-- Two-layer tokens: a theme writes 30 palette values, components read 69
+- Two-layer tokens: a theme writes 30 palette values, components read 73
   semantic names and never touch a palette value directly.
 
 ## Colors
@@ -355,6 +359,12 @@ direction is what let every page move back up to near-white.
   of ink, not a faded one.
 - **Faint Hairline** (`border-muted`): fused-strip frames, table footers, and
   every disabled border (always dashed).
+- **Faint Pen** (`border-faint`, `tone-1`): the card's frame — the one stroke
+  on a surface, and the lightest on the ramp, so a sheet is outlined without
+  being boxed and a screen of cards stays quiet.
+- **Mount Seam** (`border-mount`): the inner line of a `mat` card, 4px inside
+  its frame. `tone-1` mixed halfway to `surface-2`, so it sits lighter than the
+  pen in light schemes and stays visible in dark ones.
 - **Seam** (`border-subtle`): a divider _inside_ a surface. The two things it
   parts are already known to belong together, so it needs less pressure than a
   border that bounds a control. Its only consumer in the shipped set is the
@@ -379,10 +389,12 @@ pressure and no "slightly softer black" between them. What this replaces is the
 old habit of drawing every seam at full hairline strength and then framing the
 group as well.
 
-**The Border-Means-Act Rule.** A resting stroke is a claim that you can operate
-the thing it encloses. Instruments make that claim; surfaces do not. If a new
-region wants a border, the question is whether it is pressable — and if it is
-not, the answer is a fill step and a shade.
+**The Border-Means-Act Rule.** A resting stroke at control pressure
+(`border` / `border-muted` and above) is a claim that you can operate the thing
+it encloses. Instruments make that claim; surfaces do not. If a new region wants
+a border, the question is whether it is pressable — and if it is not, the answer
+is a fill step and a shade. The card's `border-faint` is the one stroke below
+that pressure: it outlines a sheet and claims nothing.
 
 **The One Vivid Voice Rule.** The accent belongs solely to what you can act on.
 Hue carries meaning, never emphasis. If a mark is not focus, open ownership,
@@ -393,8 +405,8 @@ hover intent, current selection, or a link, it does not get the accent.
 solid, and never mix roles — warning text on an info tint is a defect, not a
 variation.
 
-**The Palette-Swap Rule.** Components consume only the 70 semantic names (64
-color + 6 shadow). A theme authors 30 palette values (`--surface-0…2`,
+**The Palette-Swap Rule.** Components consume only the 73 semantic names (66
+color + 7 shadow). A theme authors 30 palette values (`--surface-0…2`,
 `--tone-0…11`, `--signal-*`, `--signal-*-on`, `--shadow-size`, `--shadow-color`,
 `--shadow-color-overlay`) and nothing else; 28 of those are functional
 dependencies and `--tone-8` and `--tone-9` are the reserved ramp slots —
@@ -558,9 +570,11 @@ true in the code). Touch targets are sized by what the control stands beside:
 
 There are no lit shadows in this system. Elevation is drawn: a hard offset with
 zero blur and zero spread, exactly the trace a raised object leaves on paper.
-Since surfaces gave up their resting borders, the shade is now the load-bearing
-signal that something is raised rather than a decoration beside a border that
-already said so — which is why Solace draws it at 2px in both schemes. Depth is
+On the surfaces that gave up their resting borders, the shade is the
+load-bearing signal that something is raised — which is why Solace draws it at
+2px in both schemes. The card is the exception in both directions: its faint pen
+carries the boundary, so its shade can drop to a 1px faint shade that only says
+the sheet is laid down. Depth is
 also semantic: the shadow's ink says what kind of thing is raised. A grey shade
 means "this is a surface." An accent edge means "this responds to you."
 
@@ -574,8 +588,12 @@ feel differently pressed would change that one value and nothing else.
 
 Values are Solace; `--shadow-size` and the two shade greys are per-theme.
 
+- **Faint shade** (`box-shadow: 1px 1px 0 0 #eae9e6`): a card at its default
+  `hairline` and `mat` elevations. One pixel short of the surface shade, in the
+  shade grey thinned 30% toward the page, and a step lighter than the card's
+  pen. Static until an interactive card is hovered.
 - **Surface shade** (`box-shadow: 2px 2px 0 0 #bfbdb9`): raised surfaces — a
-  card at its default elevation, a table with `shadow`. Static. The shade is not
+  card at `shade` elevation, a table with `shadow`. Static. The shade is not
   a neutral grey: it carries the palette's own hue, so it reads as this paper's
   shadow rather than a borrowed one.
 - **Overlay shade** (`box-shadow: 2px 2px 0 0 #a19e98`): dialogs, sheets, menus,
@@ -603,10 +621,12 @@ rim is light on the top/left and ink on the bottom/right, never the reverse.
 
 **The Shadow-Is-Voice Rule.** Grey shade = raised surface. Accent edge =
 engagement. A surface never takes the accent edge _at rest_; a passive surface
-never gains one at all. An interactive surface is the one crossing: it rests as
-a raised sheet with the grey shade and **changes voice** on hover — the same
-shade turns accent while the fill lifts one ladder step. Without a resting shade
-a borderless interactive card would be invisible until hovered.
+never gains one at all. An interactive surface is the one crossing: it rests on
+its grey shade and **changes voice** on hover — the same shade turns accent. A
+penned card's faint shade also grows to the 2px action edge, the button's
+rest-to-hover step one register quieter; a raised card, which has no pen, lifts
+its fill one ladder step instead, since without a resting shade it would be
+invisible until hovered.
 
 **The One-Shadow Rule.** Exactly one shadow utility may land in a class list.
 tailwind-merge cannot dedupe custom shadow utilities against one another, and
@@ -652,7 +672,9 @@ no — find the meaning that corner was carrying and draw it with a stroke.
 **The No-Frame-On-Frame Rule.** Nothing draws a boundary that its container
 already drew. A table inside a card has no wrapper border; rows are parted by
 seams that reach the card's padding edge. An alert is a rule and a glyph on
-paper, not a box on a surface.
+paper, not a box on a surface. A card nested in a card is `flat`. The `mat`
+card's mount seam is not a second frame: it sits 4px inside the pen, lighter
+than it, and marks the one card that should stand out.
 
 **The Dashed-Disabled Rule.** Disabled always means the same four things:
 dashed border, `border-muted` stroke, `bg-disabled` fill, `fg-disabled` text —
@@ -687,18 +709,20 @@ channel.
   lg) and a 36px square icon variant. Horizontal padding 12 / 16 / 24px. Type is
   12px on `sm` and 14px on `md` and `lg`, all at weight 500.
 - **Primary:** ink fill (`bg-emphasis`) with paper text (`fg-on-emphasis`) and
-  an ink border. Ink is the emphasis signal; the accent at rest is only the
-  hairline edge every edged button shares, so it marks pressability, not rank.
-- **Rest / Hover / Focus:** edged buttons rest on a hairline accent edge
-  (`shadow-offset-action-rest`, one pixel short of the hover edge). Hover grows
-  it to `shadow-offset-action` and mixes 24% accent into the ink fill; focus is a 2px accent outline offset 2px, always the outermost
+  an ink border. Ink is the emphasis signal; the hairline accent edge at rest
+  marks it as a committing action.
+- **Rest / Hover / Focus:** solid buttons (primary, destructive, success,
+  warning) rest on a hairline accent edge (`shadow-offset-action-rest`, one pixel
+  short of the hover edge); secondary and outline rest neutral, so the one
+  committing action on a screen keeps the only standing accent. Hover grows or
+  reveals `shadow-offset-action`, and on primary mixes 24% accent into the ink fill; focus is a 2px accent outline offset 2px, always the outermost
   mark. Active drops the shadow and translates 1px. A trigger holding an open
   overlay holds the grown edge (`data-[state=open]`), which Radix supplies
   natively to `asChild` triggers.
-- **Secondary:** raised paper fill, hairline border, neutral hover fill, same
-  resting and hover edge.
+- **Secondary:** raised paper fill, hairline border, neutral hover fill, no
+  edge at rest and the accent edge on hover.
 - **Outline:** transparent and airy at rest with a hairline border; on engage
-  the edge grows rather than a fill appearing. The press keeps a faint grey
+  the edge appears rather than a fill. The press keeps a faint grey
   settle (`active:bg-bg-active`) to confirm the drop.
 - **Ghost / Link:** not edged pressables. Ghost's only hover signal is the grey
   fill; Link is `fg-link` text with a hover underline. Neither takes an edge and
@@ -712,15 +736,20 @@ channel.
 ### Cards / Containers
 
 - **Corner Style:** square (`0`).
-- **Background:** raised paper (`bg-raised`), or overlay paper at the `overlay`
-  elevation.
-- **Border:** none. A card is a sheet laid on the page, not a box drawn on it.
-- **Shadow Strategy:** `shade` by default, `overlay` for the higher layer,
-  `flat` for none — and `flat` therefore means **flush**: on a raised parent the
-  card carries no mark of its own, which is what no elevation should look like.
-  An `interactive` card rests with the grey shade, lifts its fill to overlay
-  paper on hover while the shade turns accent, and drops on press. Focus owns the
-  outer 2px outline.
+- **Background:** the page's own stock (`bg`) at `hairline` and `mat`; raised
+  paper (`bg-raised`) at `flat` and `shade`; overlay paper at `overlay`.
+- **Border:** the faint pen (`border-faint`, 1px) at `hairline` and `mat`; none
+  on the raised sheets. A card is a sheet laid on the page, outlined but not
+  boxed.
+- **Shadow Strategy:** `hairline` by default — the faint pen plus the 1px faint
+  shade. `mat` is the one emphasis: the same sheet set in a 4px mount, drawn by
+  `::before` as a `border-mount` seam lighter than the pen, so a press can drop
+  the shade without erasing the mount. `shade` and `overlay` keep the older
+  raised sheet with the 2px grey shade, and `flat` means **flush**: on a raised
+  parent the card carries no mark of its own; use it for a card nested in a
+  card. An `interactive` penned card rests on its faint shade, turns it into the
+  2px accent edge on hover, and drops on press; an interactive raised card also
+  lifts its fill to overlay paper on hover. Focus owns the outer 2px outline.
 - **Internal Padding:** 20px, with a 16px column gap between children. A card is
   a material, not a template — it imposes no header/body/footer structure.
   `Card.Section` cancels the padding (`-mx-5`, and top/bottom as first/last
@@ -840,7 +869,9 @@ the inner key moves.
 - **Badge:** square, 1px border, 12px/500 type, 2px × 8px padding. `default` is
   ink with paper knockout and a `border-strong` frame; role variants are the
   role solid with its own knockout and a border in the same role; `secondary`,
-  `outline` and `code` stay neutral, `code` in mono.
+  `outline` and `code` stay neutral, `code` in mono. `secondary` and `code` are
+  fills, not boxes — their border is transparent, so they keep the box size
+  without a pen; only `outline` is drawn as a box.
 - **Alert:** raised paper, never a tinted well and no longer a box. The role
   marks **one 2px rule down the leading edge** (`border-l-2`) and colors the
   16px glyph, and nothing else; the title is full ink at weight 500 and the
@@ -925,10 +956,11 @@ pattern for a new surface to copy.
 
 ### Do:
 
-- **Do** use only the 70 semantic token names (`bg-bg-raised`, `text-fg-muted`,
+- **Do** use only the 73 semantic token names (`bg-bg-raised`, `text-fg-muted`,
   `border-border-subtle`). They are the entire color and shadow API.
 - **Do** give a region a fill step and a shade instead of a border, unless it is
-  an instrument you can operate.
+  an instrument you can operate or a card, whose pen is the faint
+  `border-faint`.
 - **Do** pick the pressure that matches the job: `border-strong` for a region
   that outranks the page, `border` / `border-muted` for a control, and
   `border-subtle` for a divider inside a surface.
@@ -938,7 +970,7 @@ pattern for a new surface to copy.
 - **Do** give pressables the rest / accent-edge-on-hover /
   grown-edge-while-open / drop-on-press sequence
   (`hover:shadow-offset-action data-[state=open]:shadow-offset-action-hover active:shadow-none active:translate-x-px active:translate-y-px`).
-  Edged buttons rest on the hairline `shadow-offset-action-rest`; every other
+  Solid buttons rest on the hairline `shadow-offset-action-rest`; every other
   pressable rests neutral.
 - **Do** use one focus grammar on pressables —
   `focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2`
@@ -962,9 +994,10 @@ pattern for a new surface to copy.
 
 - **Don't** write a palette value (`--tone-4`, `--surface-1`, `--signal-accent`)
   or a raw color inside a component. Palette values belong to themes only.
-- **Don't** put a resting border on a surface, or a border on something already
-  bounded by its container. A card inside a card, a table inside a card, and an
-  alert on a page all draw zero frames.
+- **Don't** put a resting border on a surface other than the card's faint pen,
+  or a border on something already bounded by its container. A card inside a
+  card (`flat`), a table inside a card, and an alert on a page all draw zero
+  frames.
 - **Don't** add a border radius. `rounded-lg`, `rounded-md`, and `rounded-sm`
   have no place here; Radio's `rounded-full` is the sole exception.
 - **Don't** use a blurred shadow (`shadow-md`, `shadow-lg`, any non-zero blur or
