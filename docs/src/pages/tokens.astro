@@ -53,6 +53,7 @@ const roleSlots = [
 const shadows = [
   { name: "--shadow-offset", usage: "Surfaces (cards, panels)" },
   { name: "--shadow-offset-overlay", usage: "Overlays" },
+  { name: "--shadow-offset-action-rest", usage: "Hairline action edge — edged button at rest" },
   { name: "--shadow-offset-action", usage: "Thin action edge — pressable hover or field focus" },
   { name: "--shadow-offset-action-hover", usage: "Grown action edge — open owner" },
   { name: "--shadow-offset-action-danger", usage: "Invalid writing field, focused" },
@@ -72,7 +73,7 @@ const palette = [
 
 <h1>Design tokens</h1>
 
-<p>Three layers. The theme-independent foundation supplies type, spacing, borders, and radii. A theme authors <strong>30 palette values</strong>; 28 feed the <strong>69 semantic names</strong> components actually use, while <code>--tone-8</code> and <code>--tone-9</code> are reserved to preserve the public 12-step neutral ramp and support future deep-ink roles. The <code>init</code> command adds all three layers to your CSS file — after that you own them. Values shown are Solace (default). See <a href="/ui/themes">Themes</a> for other presets.</p>
+<p>Three layers. The theme-independent foundation supplies type, spacing, borders, and radii. A theme authors <strong>30 palette values</strong>; 28 feed the <strong>70 semantic names</strong> components actually use, while <code>--tone-8</code> and <code>--tone-9</code> are reserved to preserve the public 12-step neutral ramp and support future deep-ink roles. The <code>init</code> command adds all three layers to your CSS file — after that you own them. Values shown are Solace (default). See <a href="/ui/themes">Themes</a> for other presets.</p>
 
 <h2>Background</h2>
 
@@ -116,7 +117,7 @@ const palette = [
 
 <TokenTable tokens={shadows} showSwatch={false} />
 
-<p>Surfaces use <code>shadow-offset</code>; overlays use <code>shadow-offset-overlay</code>. Pressables are neutral at rest: edged controls reveal <code>shadow-offset-action</code> on hover, and open owners hold <code>shadow-offset-action-hover</code>. Writing fields engage the thin edge only on focus, swapping to <code>shadow-offset-action-danger</code> when invalid. Size and color vary by theme.</p>
+<p>Surfaces use <code>shadow-offset</code>; overlays use <code>shadow-offset-overlay</code>. Edged buttons rest on <code>shadow-offset-action-rest</code>; other pressables are neutral at rest. Edged controls show <code>shadow-offset-action</code> on hover, and open owners hold <code>shadow-offset-action-hover</code>. Writing fields engage the thin edge only on focus, swapping to <code>shadow-offset-action-danger</code> when invalid. Size and color vary by theme.</p>
 
 <h2>Palette — authored by the theme</h2>
 

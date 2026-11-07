@@ -98,6 +98,7 @@ export const StatePrecedenceTest: Story = {
 
     await expect(button.className).toContain("focus-visible:outline-2");
     await expect(button.className).toContain("data-[state=open]:shadow-offset-action-hover");
+    await expect(button.className).toContain("shadow-offset-action-rest");
   },
 };
 
