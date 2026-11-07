@@ -7,14 +7,14 @@ const meta: Meta<typeof Card> = {
   component: Card,
   tags: ["autodocs"],
   argTypes: {
-    elevation: { control: "select", options: ["flat", "shade", "overlay"] },
+    elevation: { control: "select", options: ["hairline", "mat", "flat", "shade", "overlay"] },
     interactive: { control: "boolean" },
   },
   parameters: {
     docs: {
       description: {
         component:
-          "A surface, not a template. The Card's identity is its material — square corners, a single-ink border, and the drawn grey offset shade that marks a raised surface — and it imposes no structure: pour any content in. `elevation` sets how it lifts (flat / shade / overlay); `interactive` turns the whole card into a pressable link that carries the accent edge. Header / Title / Description / Action / Content / Footer and Section are optional layout helpers, never required anatomy.",
+          "A surface, not a template. The Card's identity is its material — square corners, the page's own stock, a faint pen around it and a faint shade under it — and it imposes no structure: pour any content in. `elevation` sets how it sits: `hairline` by default, `mat` to set the one card that should stand out in a 4px mount, and the older raised sheets `shade` / `overlay` / `flat`. `interactive` turns the whole card into a pressable link whose shade turns accent on hover. Header / Title / Description / Action / Content / Footer and Section are optional layout helpers, never required anatomy.",
       },
     },
   },
@@ -24,7 +24,7 @@ export default meta;
 type Story = StoryObj<typeof Card>;
 
 export const Default: Story = {
-  args: { elevation: "shade", interactive: false },
+  args: { elevation: "hairline", interactive: false },
   render: (args) => (
     <Card {...args} className="max-w-sm">
       <Card.Header>
@@ -42,7 +42,7 @@ export const Default: Story = {
 
 export const Elevation = () => (
   <div className="flex flex-wrap items-start gap-6">
-    {(["flat", "shade", "overlay"] as const).map((e) => (
+    {(["hairline", "mat", "flat", "shade", "overlay"] as const).map((e) => (
       <Card key={e} elevation={e} className="w-52">
         <Card.Header>
           <Card.Title>acme-web</Card.Title>
@@ -63,8 +63,16 @@ export const Interactive = () => (
         </Card.Header>
       </a>
     </Card>
+    <Card asChild interactive elevation="mat">
+      <a href="#acme-docs">
+        <Card.Header>
+          <Card.Title>acme-docs</Card.Title>
+          <Card.Description>The mount stays put while the shade changes voice.</Card.Description>
+        </Card.Header>
+      </a>
+    </Card>
     <p className="text-fg-muted text-sm">
-      Hover to reveal the accent edge; press to drop the card onto it.
+      Hover to turn the shade accent and grow it; press to drop the card onto it.
     </p>
   </div>
 );

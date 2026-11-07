@@ -5,26 +5,33 @@ import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-// A card is a surface, not a template — and a sheet laid on the page, not a box
-// drawn on it. Its identity is the material: square corners, the fill step that
-// lifts it off the stock, and the drawn grey offset shade that says how far.
-// Never an imposed header/body/footer; content is whatever you pour in, and the
-// padding + column gap make raw children sit right with no ceremony.
+// A card is a surface, not a template — a sheet laid on the page. Its identity is
+// the material: square corners, the page's own stock, a faint pen around it and a
+// faint shade under it, one step lighter than the pen. Never an imposed
+// header/body/footer; content is whatever you pour in, and the padding + column
+// gap make raw children sit right with no ceremony.
 //
-// It carries no resting stroke. A border here would only repeat what the surface
-// already said, and repeating it at every nesting level is what made a dense
-// screen unreadable. `flat` therefore means flush: on a raised parent it has no
-// mark of its own, which is what no elevation should look like.
+// The pen is the faintest on the ramp, so it outlines the sheet without boxing
+// it, and a dense screen of cards stays quiet. `mat` is the one emphasis: the same
+// sheet set in a 4px mount, its inner seam lighter than the frame. The older
+// raised sheets — `shade`, `overlay`, and the flush `flat` — keep no pen and are
+// read by their fill step and the grey shade alone.
 //
 // Exactly one shadow utility may ever land in the class list: twMerge can't
-// dedupe custom shadow utilities against one another, so the grey shade (per
+// dedupe custom shadow utilities against one another, so the shade (per
 // elevation) and the pressable accent edge are assigned through mutually
-// exclusive compound variants rather than layered and overridden.
-const cardVariants = cva("bg-bg-raised text-fg flex flex-col gap-4 p-5", {
+// exclusive compound variants rather than layered and overridden. The mount
+// seam is drawn by `::before`, not by a shadow, so pressing can drop the shade
+// without erasing the mount.
+const cardVariants = cva("text-fg flex flex-col gap-4 p-5", {
   variants: {
     elevation: {
-      flat: "",
-      shade: "",
+      hairline: "bg-bg border-border-faint border",
+      // The seam sits 4px inside the frame, within the padding. A Card.Section
+      // reaches the frame and runs under it.
+      mat: "bg-bg border-border-faint before:border-border-mount relative border before:pointer-events-none before:absolute before:inset-1 before:border before:content-['']",
+      flat: "bg-bg-raised",
+      shade: "bg-bg-raised",
       overlay: "bg-bg-overlay",
     },
     interactive: {
@@ -33,25 +40,35 @@ const cardVariants = cva("bg-bg-raised text-fg flex flex-col gap-4 p-5", {
     },
   },
   compoundVariants: [
-    // Passive surface — the quiet grey shade, one drawn level per elevation.
+    // Passive surface — a faint shade under a penned sheet, the grey shade under
+    // a raised one.
+    { interactive: false, elevation: ["hairline", "mat"], class: "shadow-offset-faint" },
     { interactive: false, elevation: "shade", class: "shadow-offset" },
     { interactive: false, elevation: "overlay", class: "shadow-offset-overlay" },
-    // Pressable — raised at rest like any other sheet, then the shade turns
-    // accent on hover: the surface does not appear, it changes voice. Without
-    // a resting shade a borderless interactive card would be invisible until
-    // hovered. Focus owns the outer outline; pressing drops it onto the edge.
+    // Pressable — rests like any other sheet, then the shade turns accent and
+    // grows on hover: the button's grammar, one register quieter, since the
+    // card rests on grey where the button rests on accent. Focus owns the outer
+    // outline; pressing drops it onto the edge.
     {
       interactive: true,
+      elevation: ["hairline", "mat"],
+      class: "shadow-offset-faint hover:shadow-offset-action active:shadow-none",
+    },
+    // A raised sheet has no pen, so without a resting shade it would be
+    // invisible until hovered; its fill lifts one step as the shade changes voice.
+    {
+      interactive: true,
+      elevation: ["flat", "shade", "overlay"],
       class: "shadow-offset hover:bg-bg-overlay hover:shadow-offset-action active:shadow-none",
     },
   ],
-  defaultVariants: { elevation: "shade", interactive: false },
+  defaultVariants: { elevation: "hairline", interactive: false },
 });
 
 export interface CardRootProps extends React.ComponentProps<"div"> {
-  /** flat | shade | overlay. How the surface lifts off the page — the drawn grey offset shade by default */
-  elevation?: "flat" | "shade" | "overlay";
-  /** Turn the whole card into a pressable link: an accent edge appears on hover and drops when pressed */
+  /** hairline | mat | flat | shade | overlay. How the sheet sits on the page — a faint pen and faint shade by default; `mat` sets it in a mount for emphasis */
+  elevation?: "hairline" | "mat" | "flat" | "shade" | "overlay";
+  /** Turn the whole card into a pressable link: the shade turns accent and grows on hover, and drops when pressed */
   interactive?: boolean;
   /** Merge props onto the immediate child (e.g. an `<a>`) instead of rendering a div — for a card that is itself a link */
   asChild?: boolean;
