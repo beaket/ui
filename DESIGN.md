@@ -223,9 +223,9 @@ act on. Signals (danger, success, warning, info) carry meaning but never
 emphasis, so a screen full of status never becomes a screen full of shouting.
 
 Depth is semantic before it is spatial. A grey offset shade means "this is a
-raised surface"; an accent edge means "this responds to you." Pressables are
-neutral at rest, reveal a thin accent edge on hover, and drop onto it under the
-press. Writing fields stay quiet until engaged and then cap off with a static
+raised surface"; an accent edge means "this responds to you." Buttons rest on a
+hairline accent edge, grow it on hover, and drop onto it under the press; the
+other pressables are neutral at rest and reveal the edge on hover. Writing fields stay quiet until engaged and then cap off with a static
 edge that leaves when the pen lifts. Small controls are instruments: the chassis
 stays put while the inner key — a check, a thumb, a label — travels one pixel.
 Brutalism supplies the refusals (no gradients, no blur, no rounding, nothing
@@ -393,8 +393,8 @@ hover intent, current selection, or a link, it does not get the accent.
 solid, and never mix roles — warning text on an info tint is a defect, not a
 variation.
 
-**The Palette-Swap Rule.** Components consume only the 69 semantic names (64
-color + 5 shadow). A theme authors 30 palette values (`--surface-0…2`,
+**The Palette-Swap Rule.** Components consume only the 70 semantic names (64
+color + 6 shadow). A theme authors 30 palette values (`--surface-0…2`,
 `--tone-0…11`, `--signal-*`, `--signal-*-on`, `--shadow-size`, `--shadow-color`,
 `--shadow-color-overlay`) and nothing else; 28 of those are functional
 dependencies and `--tone-8` and `--tone-9` are the reserved ramp slots —
@@ -687,15 +687,16 @@ channel.
   lg) and a 36px square icon variant. Horizontal padding 12 / 16 / 24px. Type is
   12px on `sm` and 14px on `md` and `lg`, all at weight 500.
 - **Primary:** ink fill (`bg-emphasis`) with paper text (`fg-on-emphasis`) and
-  an ink border. Ink alone is the complete persistent emphasis signal — the
-  accent never appears at rest.
-- **Hover / Focus:** hover reveals the accent edge and mixes 24% accent into
-  the ink fill; focus is a 2px accent outline offset 2px, always the outermost
+  an ink border. Ink is the emphasis signal; the accent at rest is only the
+  hairline edge every edged button shares, so it marks pressability, not rank.
+- **Rest / Hover / Focus:** edged buttons rest on a hairline accent edge
+  (`shadow-offset-action-rest`, one pixel short of the hover edge). Hover grows
+  it to `shadow-offset-action` and mixes 24% accent into the ink fill; focus is a 2px accent outline offset 2px, always the outermost
   mark. Active drops the shadow and translates 1px. A trigger holding an open
   overlay holds the grown edge (`data-[state=open]`), which Radix supplies
   natively to `asChild` triggers.
 - **Secondary:** raised paper fill, hairline border, neutral hover fill, same
-  accent edge on hover.
+  resting and hover edge.
 - **Outline:** transparent and airy at rest with a hairline border; on engage
   the edge grows rather than a fill appearing. The press keeps a faint grey
   settle (`active:bg-bg-active`) to confirm the drop.
@@ -924,7 +925,7 @@ pattern for a new surface to copy.
 
 ### Do:
 
-- **Do** use only the 69 semantic token names (`bg-bg-raised`, `text-fg-muted`,
+- **Do** use only the 70 semantic token names (`bg-bg-raised`, `text-fg-muted`,
   `border-border-subtle`). They are the entire color and shadow API.
 - **Do** give a region a fill step and a shade instead of a border, unless it is
   an instrument you can operate.
@@ -934,9 +935,11 @@ pattern for a new surface to copy.
 - **Do** pair every role solid with its own knockout
   (`bg-danger-solid text-danger-fg-on-solid`), and every role tint with its full
   triple (`bg-{role}-bg` + `border-{role}-border` + `text-{role}-fg`).
-- **Do** give pressables the neutral rest / accent-edge-on-hover /
+- **Do** give pressables the rest / accent-edge-on-hover /
   grown-edge-while-open / drop-on-press sequence
   (`hover:shadow-offset-action data-[state=open]:shadow-offset-action-hover active:shadow-none active:translate-x-px active:translate-y-px`).
+  Edged buttons rest on the hairline `shadow-offset-action-rest`; every other
+  pressable rests neutral.
 - **Do** use one focus grammar on pressables —
   `focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2`
   — and cap-off on writing fields:

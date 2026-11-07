@@ -83,10 +83,11 @@ export function Button({
   );
 }
 
-// Accent is state, not standing decoration. Edged pressables reveal a thin edge
-// on hover and a grown edge while they own an open overlay. Rest stays neutral;
-// active press drops onto the edge, and keyboard focus remains the outer outline.
-const edge = "hover:shadow-offset-action data-[state=open]:shadow-offset-action-hover";
+// Edged buttons rest on a hairline accent edge, one pixel short of hover; hover
+// grows it and a held-open overlay grows it again. The 1px press lands exactly on
+// the resting edge, and keyboard focus remains the outer outline.
+const edge =
+  "shadow-offset-action-rest hover:shadow-offset-action data-[state=open]:shadow-offset-action-hover";
 
 const buttonVariants = cva(
   [

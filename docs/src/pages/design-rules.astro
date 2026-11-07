@@ -15,7 +15,7 @@ import { AccentStateDemo } from '../components/accent-state-demo';
 
 <h2>Accent is state, not decoration</h2>
 
-<p>Accent is scarce. It marks what is happening now; it is not a permanent synonym for “interactive.” At rest, pressables rely on neutral material — an ink fill, border, label, or geometry — and carry no standing accent edge. Raised surfaces keep a quiet grey offset shadow.</p>
+<p>Accent is scarce. It marks what is happening now; it is not a permanent synonym for “interactive.” At rest, pressables rely on neutral material — an ink fill, border, label, or geometry. Edged buttons are the one exception: they rest on a hairline accent edge that hover grows, so the resting state previews the engaged one. Raised surfaces keep a quiet grey offset shadow.</p>
 
 <h2 id="state-precedence">State precedence</h2>
 
@@ -47,7 +47,7 @@ import { AccentStateDemo } from '../components/accent-state-demo';
 
 <h3>Pressables</h3>
 
-<p>Edged buttons and interactive cards are neutral at idle. Hover reveals the thin <code>shadow-offset-action</code> edge; an open overlay owner holds the grown <code>shadow-offset-action-hover</code> edge. Press drops the edge and translates the control by 1px. Ghost and link buttons use tint or underline instead of an edge. Disabled controls use a dashed muted boundary and disabled surface/text, with no edge or focus treatment.</p>
+<p>Edged buttons rest on the hairline <code>shadow-offset-action-rest</code> edge; interactive cards are neutral at idle. Hover shows the thin <code>shadow-offset-action</code> edge; an open overlay owner holds the grown <code>shadow-offset-action-hover</code> edge. Press drops the edge and translates the control by 1px. Ghost and link buttons use tint or underline instead of an edge. Disabled controls use a dashed muted boundary and disabled surface/text, with no edge or focus treatment.</p>
 
 <h3>Writing fields and invalid state</h3>
 

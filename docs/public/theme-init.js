@@ -101,6 +101,7 @@
       "--color-accent-bg-subtle": "color-mix(in oklab, #0470b6 8%, #f4f7f9)",
       "--shadow-offset": "2px 2px 0 0 #b9bfc2",
       "--shadow-offset-overlay": "2px 2px 0 0 #99a0a4",
+      "--shadow-offset-action-rest": "calc(2px - 1px) calc(2px - 1px) 0 0 #0470b6",
       "--shadow-offset-action": "2px 2px 0 0 #0470b6",
       "--shadow-offset-action-hover": "calc(2px + 1px) calc(2px + 1px) 0 0 #0470b6",
       "--shadow-offset-action-danger": "2px 2px 0 0 #a5342b"
@@ -202,6 +203,7 @@
       "--color-accent-bg-subtle": "color-mix(in oklab, #37b1ec 8%, #222527)",
       "--shadow-offset": "2px 2px 0 0 #35383b",
       "--shadow-offset-overlay": "2px 2px 0 0 #4a4e51",
+      "--shadow-offset-action-rest": "calc(2px - 1px) calc(2px - 1px) 0 0 #37b1ec",
       "--shadow-offset-action": "2px 2px 0 0 #37b1ec",
       "--shadow-offset-action-hover": "calc(2px + 1px) calc(2px + 1px) 0 0 #37b1ec",
       "--shadow-offset-action-danger": "2px 2px 0 0 #e66f62"
@@ -303,6 +305,7 @@
       "--color-accent-bg-subtle": "color-mix(in oklab, #7145d2 8%, #faf9fc)",
       "--shadow-offset": "2px 2px 0 0 #bebdc2",
       "--shadow-offset-overlay": "2px 2px 0 0 #9f9da4",
+      "--shadow-offset-action-rest": "calc(2px - 1px) calc(2px - 1px) 0 0 #7145d2",
       "--shadow-offset-action": "2px 2px 0 0 #7145d2",
       "--shadow-offset-action-hover": "calc(2px + 1px) calc(2px + 1px) 0 0 #7145d2",
       "--shadow-offset-action-danger": "2px 2px 0 0 #c42359"
@@ -404,6 +407,7 @@
       "--color-accent-bg-subtle": "color-mix(in oklab, #a287fe 8%, #18141f)",
       "--shadow-offset": "2px 2px 0 0 #3a3830",
       "--shadow-offset-overlay": "2px 2px 0 0 #504d43",
+      "--shadow-offset-action-rest": "calc(2px - 1px) calc(2px - 1px) 0 0 #a287fe",
       "--shadow-offset-action": "2px 2px 0 0 #a287fe",
       "--shadow-offset-action-hover": "calc(2px + 1px) calc(2px + 1px) 0 0 #a287fe",
       "--shadow-offset-action-danger": "2px 2px 0 0 #f76689"
@@ -505,6 +509,7 @@
       "--color-accent-bg-subtle": "color-mix(in oklab, #172889 8%, #fdfdfe)",
       "--shadow-offset": "2px 2px 0 0 #bcbec1",
       "--shadow-offset-overlay": "2px 2px 0 0 #9c9ea3",
+      "--shadow-offset-action-rest": "calc(2px - 1px) calc(2px - 1px) 0 0 #172889",
       "--shadow-offset-action": "2px 2px 0 0 #172889",
       "--shadow-offset-action-hover": "calc(2px + 1px) calc(2px + 1px) 0 0 #172889",
       "--shadow-offset-action-danger": "2px 2px 0 0 #c24b40"
@@ -606,6 +611,7 @@
       "--color-accent-bg-subtle": "color-mix(in oklab, #5379fe 8%, #151617)",
       "--shadow-offset": "2px 2px 0 0 #36383d",
       "--shadow-offset-overlay": "2px 2px 0 0 #4a4d54",
+      "--shadow-offset-action-rest": "calc(2px - 1px) calc(2px - 1px) 0 0 #5379fe",
       "--shadow-offset-action": "2px 2px 0 0 #5379fe",
       "--shadow-offset-action-hover": "calc(2px + 1px) calc(2px + 1px) 0 0 #5379fe",
       "--shadow-offset-action-danger": "2px 2px 0 0 #f27e70"
@@ -707,6 +713,7 @@
       "--color-accent-bg-subtle": "color-mix(in oklab, #2657d0 8%, #fdfcfa)",
       "--shadow-offset": "2px 2px 0 0 #bfbdb9",
       "--shadow-offset-overlay": "2px 2px 0 0 #a19e98",
+      "--shadow-offset-action-rest": "calc(2px - 1px) calc(2px - 1px) 0 0 #2657d0",
       "--shadow-offset-action": "2px 2px 0 0 #2657d0",
       "--shadow-offset-action-hover": "calc(2px + 1px) calc(2px + 1px) 0 0 #2657d0",
       "--shadow-offset-action-danger": "2px 2px 0 0 #961733"
@@ -808,6 +815,7 @@
       "--color-accent-bg-subtle": "color-mix(in oklab, #6c9bfe 8%, #0f171e)",
       "--shadow-offset": "2px 2px 0 0 #3a3831",
       "--shadow-offset-overlay": "2px 2px 0 0 #504d45",
+      "--shadow-offset-action-rest": "calc(2px - 1px) calc(2px - 1px) 0 0 #6c9bfe",
       "--shadow-offset-action": "2px 2px 0 0 #6c9bfe",
       "--shadow-offset-action-hover": "calc(2px + 1px) calc(2px + 1px) 0 0 #6c9bfe",
       "--shadow-offset-action-danger": "2px 2px 0 0 #e36f79"
@@ -909,6 +917,7 @@
       "--color-accent-bg-subtle": "color-mix(in oklab, #a8372a 8%, #f6f3f0)",
       "--shadow-offset": "2px 2px 0 0 #c2bdb7",
       "--shadow-offset-overlay": "2px 2px 0 0 #a39d97",
+      "--shadow-offset-action-rest": "calc(2px - 1px) calc(2px - 1px) 0 0 #a8372a",
       "--shadow-offset-action": "2px 2px 0 0 #a8372a",
       "--shadow-offset-action-hover": "calc(2px + 1px) calc(2px + 1px) 0 0 #a8372a",
       "--shadow-offset-action-danger": "2px 2px 0 0 #7f0329"
@@ -1010,6 +1019,7 @@
       "--color-accent-bg-subtle": "color-mix(in oklab, #e87a69 8%, #1b150e)",
       "--shadow-offset": "2px 2px 0 0 #3d3730",
       "--shadow-offset-overlay": "2px 2px 0 0 #534b44",
+      "--shadow-offset-action-rest": "calc(2px - 1px) calc(2px - 1px) 0 0 #e87a69",
       "--shadow-offset-action": "2px 2px 0 0 #e87a69",
       "--shadow-offset-action-hover": "calc(2px + 1px) calc(2px + 1px) 0 0 #e87a69",
       "--shadow-offset-action-danger": "2px 2px 0 0 #d05a6a"

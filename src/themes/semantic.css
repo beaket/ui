@@ -1,6 +1,6 @@
 /*
  * Beaket UI Design System — Semantic tokens
- * The 69 names components use (64 color + 5 shadow). Authored once — every theme shares these
+ * The 70 names components use (64 color + 6 shadow). Authored once — every theme shares these
  * definitions verbatim. A theme never touches this layer; it only supplies
  * the 30-value palette (surface / tone / signal / knockout / shadow) that
  * these definitions point at. 28 values are functional; tone 8–9 are reserved
@@ -215,9 +215,13 @@
   --shadow-offset-overlay: var(--shadow-size) var(--shadow-size) 0 0 var(--shadow-color-overlay);
 
   /* Action shadow — the accent edge under what you can press. Surfaces keep
-     the grey shade above; pressables carry the one vivid voice. Writing fields
+     the grey shade above; pressables carry the one vivid voice. A button rests
+     on the edge one pixel short of hover, so hover grows it rather than
+     revealing it, and the 1px press lands exactly on it. Writing fields
      are quiet at rest and gain the edge only while engaged (cap-off focus);
      the danger variant marks an invalid field under focus. */
+  --shadow-offset-action-rest: calc(var(--shadow-size) - 1px) calc(var(--shadow-size) - 1px) 0 0
+    var(--signal-accent);
   --shadow-offset-action: var(--shadow-size) var(--shadow-size) 0 0 var(--signal-accent);
   --shadow-offset-action-hover: calc(var(--shadow-size) + 1px) calc(var(--shadow-size) + 1px) 0 0
     var(--signal-accent);
