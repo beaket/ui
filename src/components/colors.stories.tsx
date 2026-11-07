@@ -270,7 +270,7 @@ function Colors() {
           <div className="bg-bg border-border border p-6">
             <code className="text-fg-subtle text-xs">bg-bg — page</code>
             <div className="border-border bg-bg-raised mt-2 border p-4">
-              <code className="text-fg-subtle text-xs">bg-bg-raised — card</code>
+              <code className="text-fg-subtle text-xs">bg-bg-raised — raised sheet</code>
               <div className="border-border bg-bg-overlay mt-2 border p-3">
                 <code className="text-fg-subtle text-xs">bg-bg-overlay — dropdown / dialog</code>
               </div>
