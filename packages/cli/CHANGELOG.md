@@ -1,5 +1,36 @@
 # @beaket/ui
 
+## 4.3.0
+
+### Minor Changes
+
+- [#1267](https://github.com/beaket/ui/pull/1267) [`9437405`](https://github.com/beaket/ui/commit/94374052d3ce59340cd1c6789b22ffb20cb390ce) Thanks [@jihnma](https://github.com/jihnma)! - `Badge`: the `secondary` and `code` variants are now fills without a visible border. The border is transparent, so the badge keeps the same size; `outline` is still drawn as a box.
+
+- [#1266](https://github.com/beaket/ui/pull/1266) [`6de17c9`](https://github.com/beaket/ui/commit/6de17c983dd2fc118cac368a99217b3bb6897032) Thanks [@jihnma](https://github.com/jihnma)! - `Button`: the solid variants — `primary`, `destructive`, `success` and `warning` — now rest on a hairline accent edge instead of no edge. A new semantic token, `--shadow-offset-action-rest`, sits one pixel short of `--shadow-offset-action`, so hover grows the edge rather than revealing it and the 1px press lands exactly on it. `secondary` and `outline` rest neutral and show the accent edge on hover, so a screen with many buttons keeps the standing accent on its committing action; ghost and link are unchanged. Re-run `npx @beaket/ui theme` to pick up the new token in an existing install.
+
+- [#1267](https://github.com/beaket/ui/pull/1267) [`9437405`](https://github.com/beaket/ui/commit/94374052d3ce59340cd1c6789b22ffb20cb390ce) Thanks [@jihnma](https://github.com/jihnma)! - Breaking change: `Card` now rests on the page's own stock with a faint 1px pen and a faint 1px shade, instead of raised paper with the 2px grey shade. The new default elevation is `hairline`, and a new `mat` elevation sets the one card that should stand out in a 4px mount. An interactive `hairline` or `mat` card turns its shade into the 2px accent edge on hover and drops onto it when pressed. The semantic layer gains `--color-border-faint`, `--color-border-mount` and `--shadow-offset-faint`, so it now holds 73 names.
+
+  To keep the previous look, pass `elevation="shade"`; `flat` and `overlay` are unchanged. Re-run `npx @beaket/ui add card` to pick up the component, and `npx @beaket/ui theme` to pick up the three new tokens.
+
+- [#1169](https://github.com/beaket/ui/pull/1169) [`904a191`](https://github.com/beaket/ui/commit/904a191f24d777674b912f7a6e4fbd571f6c2161) Thanks [@jihnma](https://github.com/jihnma)! - Breaking change: `Input` now always renders `<div data-slot="input-wrapper">` around its `<input>`, including when it has no `prefix` or `suffix`. Before this change, an `Input` without an affix returned a bare `<input>` and one with an affix returned the wrapper, so React remounted the `<input>` whenever an affix appeared or disappeared, for example a clear button that shows on the first keystroke. The field lost focus, caret, selection and IME composition at that moment. The `<input>` now keeps one position in the tree and stays focused ([#1105](https://github.com/beaket/ui/issues/1105)).
+
+  What changed: the outermost element of every `Input` is now `div[data-slot="input-wrapper"]` with `flex w-full items-center`. It is `relative` only when an affix is present. `className`, `ref`, `data-slot="input"` and all other props still go to the `<input>`, so class overrides that style the field itself (padding, height, border, colors) and refs need no change. In a block or column layout the field looks and lays out the same as before.
+
+  Migration:
+
+  - Layout classes that place the field within its parent no longer reach the outermost element, because `className` lands on the `<input>` inside the wrapper. These include `flex-1`, `grow`, `shrink-0`, `basis-*`, `col-span-*`, `row-span-*`, `self-*`, `order-*`, outer margins (`mt-*`, `ml-auto`), `w-*`/`max-w-*` meant to size the field in a row, and `absolute`/`relative` placement. Move those classes to an element you wrap around the `Input`, for example `<div className="flex-1"><Input /></div>`. The `<input>` fills that element because the wrapper is `w-full`.
+  - Child and sibling selectors: `form > input`, `.row > [data-slot=input]` or `[data-slot=input] + p` no longer match. Use a descendant selector (`.row [data-slot=input]`) or target the wrapper (`.row > [data-slot=input-wrapper]`).
+  - Structural pseudo-classes such as `:first-child` and `:last-child` now apply to the wrapper, not the `<input>`.
+  - `[data-slot=input-wrapper]` now matches every `Input`. Scope rules meant for inputs with an affix with `:has([data-slot=input-prefix],[data-slot=input-suffix])`.
+  - In a flex row, an `Input` with an affix now fills the row like an `Input` without one, because its wrapper is `w-full`. Give it a wrapping element with an explicit width if you relied on the narrower size.
+  - DOM code: `input.parentElement` is now the wrapper, and `nextElementSibling` or `previousElementSibling` on the `<input>` returns `null` when there is no affix.
+
+### Patch Changes
+
+- [#1261](https://github.com/beaket/ui/pull/1261) [`b8f79bb`](https://github.com/beaket/ui/commit/b8f79bb22fb90a1925120d3a0abf47aed7a07155) Thanks [@beaket-bunsen](https://github.com/apps/beaket-bunsen)! - Fix `Field` crashing any descendant that takes a render-prop child. `prepareFieldParts` walked the whole child tree with `Children.map` and re-cloned every element that had `children`, but `Children.map` turns a function child into an empty array, so the component then threw `children is not a function`. The walk now leaves an element alone when its `children` is a function.
+
+- [#1212](https://github.com/beaket/ui/pull/1212) [`b04cddd`](https://github.com/beaket/ui/commit/b04cdddd2e278b6fe2765fdd2d548b49e0b0b930) Thanks [@beaket-bunsen](https://github.com/apps/beaket-bunsen)! - Fix `Progress` reading as about 33% done under `prefers-reduced-motion: reduce` when indeterminate. The indicator kept its `w-1/3` width while `motion-reduce:animate-none` stopped the sweep, so it rested at the left third of the track like a partial determinate fill. It now holds a full, static line, as `DESIGN.md` § Motion requires.
+
 ## 4.2.1
 
 ### Patch Changes
