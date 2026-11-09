@@ -240,6 +240,72 @@ export const ComposedPartsTest: Story = {
   },
 };
 
+// asChild hands the element to the consumer's router, so the disabled edge has
+// to be marked on that element: styled-only would still announce and navigate.
+export const AsChildStepDisabledEdgesTest: Story = {
+  tags: ["!autodocs"],
+  render: () => (
+    <div>
+      <Pagination
+        page={1}
+        totalPages={3}
+        buildPageUrl={(p) => `/page/${p}`}
+        labels={{ navigation: "First page" }}
+      >
+        <Pagination.Previous asChild>
+          <a href="/router/0" data-testid="first-prev">
+            Prev
+          </a>
+        </Pagination.Previous>
+        <Pagination.Next asChild>
+          <a href="/router/2" data-testid="first-next">
+            Next
+          </a>
+        </Pagination.Next>
+      </Pagination>
+      <Pagination
+        page={3}
+        totalPages={3}
+        buildPageUrl={(p) => `/page/${p}`}
+        labels={{ navigation: "Last page" }}
+      >
+        <Pagination.Previous asChild>
+          <a href="/router/2" data-testid="last-prev">
+            Prev
+          </a>
+        </Pagination.Previous>
+        <Pagination.Next asChild>
+          <a href="/router/4" data-testid="last-next">
+            Next
+          </a>
+        </Pagination.Next>
+      </Pagination>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    for (const id of ["first-prev", "last-next"]) {
+      const step = canvas.getByTestId(id);
+      await expect(step).toHaveAttribute("aria-disabled", "true");
+      await expect(step).toHaveAttribute("tabindex", "-1");
+      // The click must be cancelled so the consumer's link does not navigate.
+      const notCancelled = step.dispatchEvent(
+        new MouseEvent("click", { bubbles: true, cancelable: true }),
+      );
+      await expect(notCancelled).toBe(false);
+    }
+
+    // The enabled edges keep the consumer's element untouched.
+    for (const id of ["first-next", "last-prev"]) {
+      const step = canvas.getByTestId(id);
+      await expect(step).toHaveAttribute("href");
+      await expect(step).not.toHaveAttribute("aria-disabled");
+      await expect(step).not.toHaveAttribute("tabindex");
+    }
+  },
+};
+
 // Button mode composes the same way, and the disabled edges still behave.
 export const ComposedButtonModeTest: Story = {
   tags: ["!autodocs"],
