@@ -254,12 +254,12 @@ export const AsChildStepDisabledEdgesTest: Story = {
       >
         <Pagination.Previous asChild>
           <a href="/router/0" data-testid="first-prev">
-            Prev
+            Previous page
           </a>
         </Pagination.Previous>
         <Pagination.Next asChild>
           <a href="/router/2" data-testid="first-next">
-            Next
+            Next page
           </a>
         </Pagination.Next>
       </Pagination>
@@ -271,12 +271,12 @@ export const AsChildStepDisabledEdgesTest: Story = {
       >
         <Pagination.Previous asChild>
           <a href="/router/2" data-testid="last-prev">
-            Prev
+            Previous page
           </a>
         </Pagination.Previous>
         <Pagination.Next asChild>
           <a href="/router/4" data-testid="last-next">
-            Next
+            Next page
           </a>
         </Pagination.Next>
       </Pagination>
