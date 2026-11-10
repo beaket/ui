@@ -103,7 +103,7 @@ jobs:
           fetch-depth: 50
           persist-credentials: false
       - id: claude
-        uses: anthropics/claude-code-action@9eb012b6d0900c2b9eede65ee1758cec4d2973e9 # v1.0.270
+        uses: anthropics/claude-code-action@4fa93a88de49bbef68b10eb15aabedf28ca0e1ed # v1.0.271
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         with:
@@ -177,7 +177,7 @@ jobs:
           fetch-depth: 200
           persist-credentials: false
       - id: claude
-        uses: anthropics/claude-code-action@9eb012b6d0900c2b9eede65ee1758cec4d2973e9 # v1.0.270
+        uses: anthropics/claude-code-action@4fa93a88de49bbef68b10eb15aabedf28ca0e1ed # v1.0.271
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         with:
@@ -252,7 +252,7 @@ jobs:
           fetch-depth: 50
           persist-credentials: false
       - id: claude
-        uses: anthropics/claude-code-action@9eb012b6d0900c2b9eede65ee1758cec4d2973e9 # v1.0.270
+        uses: anthropics/claude-code-action@4fa93a88de49bbef68b10eb15aabedf28ca0e1ed # v1.0.271
         env:
           GH_TOKEN: ${{ steps.reviewer-token.outputs.token }}
         with:
@@ -380,7 +380,7 @@ jobs:
         run: pnpm install
       - id: claude
         if: steps.work.outputs.skip != 'true'
-        uses: anthropics/claude-code-action@9eb012b6d0900c2b9eede65ee1758cec4d2973e9 # v1.0.270
+        uses: anthropics/claude-code-action@4fa93a88de49bbef68b10eb15aabedf28ca0e1ed # v1.0.271
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         with:
@@ -477,7 +477,7 @@ jobs:
           sleep 30
           gh pr checks "$PR" --repo beaket/ui --watch --fail-level none
       - id: claude
-        uses: anthropics/claude-code-action@9eb012b6d0900c2b9eede65ee1758cec4d2973e9 # v1.0.270
+        uses: anthropics/claude-code-action@4fa93a88de49bbef68b10eb15aabedf28ca0e1ed # v1.0.271
         env:
           GH_TOKEN: ${{ steps.reviewer-token.outputs.token }}
         with:
@@ -546,7 +546,7 @@ jobs:
           fetch-depth: 50
           persist-credentials: false
       - id: claude
-        uses: anthropics/claude-code-action@9eb012b6d0900c2b9eede65ee1758cec4d2973e9 # v1.0.270
+        uses: anthropics/claude-code-action@4fa93a88de49bbef68b10eb15aabedf28ca0e1ed # v1.0.271
         env:
           GH_TOKEN: ${{ steps.reviewer-token.outputs.token }}
         with:
