@@ -2,6 +2,7 @@ import type { EditorState, Extension } from "@codemirror/state";
 import { StateField } from "@codemirror/state";
 import type { DecorationSet } from "@codemirror/view";
 import { Decoration, EditorView, WidgetType } from "@codemirror/view";
+import { parseAdvanced } from "./composing-guard";
 import { type FootnoteModel, footnoteModelField } from "./footnote-render";
 
 // The collected "Footnotes" section — definitions authored anywhere in the source are gathered into a
@@ -83,7 +84,7 @@ const footnoteSectionField = StateField.define<DecorationSet>({
   update(value, tr) {
     // The section content depends only on the document. Skip recompute on pure selection/viewport
     // transactions; just map the end-anchored widget to the new coordinates.
-    if (!tr.docChanged) return value.map(tr.changes);
+    if (!tr.docChanged && !parseAdvanced(tr)) return value.map(tr.changes);
     return sectionDecorations(tr.state);
   },
   provide: (f) => EditorView.decorations.from(f),

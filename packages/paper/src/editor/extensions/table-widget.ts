@@ -13,7 +13,7 @@ import {
 import type { DecorationSet, ViewUpdate } from "@codemirror/view";
 import { Decoration, EditorView, ViewPlugin, WidgetType, keymap } from "@codemirror/view";
 import { renderCellInline } from "./cell-inline-renderer";
-import { guardedDecorations } from "./composing-guard";
+import { guardedDecorations, parseAdvanced } from "./composing-guard";
 import { markdownExtension } from "./markdown";
 import { PopupMenu, type MenuClasses, type MenuRow } from "./menu-engine";
 import type { TableAlign, TableData } from "./table-model";
@@ -973,7 +973,7 @@ export function buildTableDecorations(state: EditorState): DecorationSet {
 const tableField = StateField.define<DecorationSet>({
   create: buildTableDecorations,
   update(deco, tr) {
-    if (!tr.docChanged) return deco;
+    if (!tr.docChanged && !parseAdvanced(tr)) return deco;
     return buildTableDecorations(tr.state);
   },
   provide: (field) => EditorView.decorations.from(field),

@@ -1,4 +1,5 @@
-import type { Extension } from "@codemirror/state";
+import { syntaxTree } from "@codemirror/language";
+import type { Extension, Transaction } from "@codemirror/state";
 import { Annotation } from "@codemirror/state";
 import type { DecorationSet, ViewUpdate } from "@codemirror/view";
 import { Decoration, EditorView, ViewPlugin } from "@codemirror/view";
@@ -6,6 +7,15 @@ import { Decoration, EditorView, ViewPlugin } from "@codemirror/view";
 // CJK first-class gate: defer decoration recomputation during IME composition (view.composing),
 // then wake and re-evaluate via an annotation transaction after compositionend.
 // Every extension that creates decorations should go through this helper instead of using ViewPlugin directly.
+
+/**
+ * True when a transaction moved the syntax tree without touching the document. CM6 parses only the
+ * first ~3 KB synchronously and finishes the rest in idle slices, delivered as a `Language.setState`
+ * effect transaction with no doc, selection or viewport change — so a field keyed on `docChanged`
+ * alone never sees the late nodes (tables, footnotes, renderer fences).
+ */
+export const parseAdvanced = (tr: Transaction): boolean =>
+  syntaxTree(tr.state) !== syntaxTree(tr.startState);
 
 export const composingRefresh = Annotation.define<boolean>();
 
@@ -50,7 +60,11 @@ export function guardedDecorations(
             // breaks the entire view with a "Decorations that replace line breaks ..." exception.
             this.decorations = this.decorations.map(update.changes);
             this.deferred = true;
-          } else if (update.viewportChanged || update.selectionSet) {
+          } else if (
+            update.viewportChanged ||
+            update.selectionSet ||
+            update.transactions.some(parseAdvanced)
+          ) {
             this.deferred = true;
           }
           return;
@@ -60,6 +74,7 @@ export function guardedDecorations(
           this.deferred ||
           woken ||
           update.docChanged ||
+          update.transactions.some(parseAdvanced) ||
           update.viewportChanged ||
           update.selectionSet
         ) {

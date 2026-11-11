@@ -2,7 +2,7 @@ import { syntaxTree } from "@codemirror/language";
 import { type EditorState, type Extension, StateField } from "@codemirror/state";
 import type { DecorationSet } from "@codemirror/view";
 import { Decoration, EditorView, WidgetType } from "@codemirror/view";
-import { guardedDecorations } from "./composing-guard";
+import { guardedDecorations, parseAdvanced } from "./composing-guard";
 import { selectionTouches } from "./selection-utils";
 
 // Live-Preview rendering for footnotes. A `[^label]` reference renders as a superscript ordinal
@@ -86,7 +86,7 @@ export function computeFootnotes(state: EditorState): FootnoteModel {
  */
 export const footnoteModelField = StateField.define<FootnoteModel>({
   create: computeFootnotes,
-  update: (value, tr) => (tr.docChanged ? computeFootnotes(tr.state) : value),
+  update: (value, tr) => (tr.docChanged || parseAdvanced(tr) ? computeFootnotes(tr.state) : value),
 });
 
 /** Superscript ordinal shown in place of a `[^label]` reference off-cursor. */
