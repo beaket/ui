@@ -266,7 +266,7 @@ class TableController {
   }
 
   private addRow(): void {
-    if (!this.mainView) return;
+    if (!this.mainView || this.mainView.state.readOnly) return; // read-only: no structure edits (ADR-0018)
     const cols = this.data.rows[0]?.length ?? 0;
     const lines = this.tableLines();
     const last = lines[lines.length - 1];
@@ -279,7 +279,7 @@ class TableController {
   }
 
   private addColumn(): void {
-    if (!this.mainView) return;
+    if (!this.mainView || this.mainView.state.readOnly) return; // read-only: no structure edits (ADR-0018)
     const changes = this.tableLines().map((line) => {
       const text = line.text.trimEnd();
       const endsWithPipe = text.endsWith("|") && !text.endsWith("\\|");
@@ -392,6 +392,7 @@ class TableController {
   }
 
   private addRowAndFocus(): void {
+    if (this.mainView?.state.readOnly) return;
     this.addRow();
     // dispatch is synchronous — this.data already reflects the new row
     this.setActive(this.data.rows.length - 1, 0);
@@ -704,7 +705,8 @@ class TableController {
     // No menu actions during IME composition (CJK first-class)
     if (this.subview?.composing) return;
     this.closeMenu();
-    if (!this.mainView) return;
+    // Read-only: the menu only offers structure edits, so never open it (ADR-0018).
+    if (!this.mainView || this.mainView.state.readOnly) return;
 
     const menu = new PopupMenu<TableMenuRow>(
       this.mainView,
@@ -742,7 +744,7 @@ class TableController {
   }
 
   private replaceTable(rows: string[][], aligns: TableAlign[]): void {
-    if (!this.mainView) return;
+    if (!this.mainView || this.mainView.state.readOnly) return; // read-only: no structure edits (ADR-0018)
     clearActiveCell(this.mainView);
     const lines = [
       serializeRow(rows[0] ?? []),
@@ -765,7 +767,7 @@ class TableController {
    * matching the block-select Backspace path.
    */
   private deleteTable(): void {
-    if (!this.mainView) return;
+    if (!this.mainView || this.mainView.state.readOnly) return; // read-only: no structure edits (ADR-0018)
     clearActiveCell(this.mainView);
     const tableLines = this.tableLines();
     const from = tableLines[0]?.from ?? this.data.tableFrom;

@@ -86,3 +86,52 @@ describe("read-only behavior matrix (ADR-0018)", () => {
     expect(v.dom.querySelector(".cm-cell-editing")).not.toBeNull();
   });
 });
+
+async function waitFor<T>(get: () => T | null): Promise<T> {
+  await until(() => get() !== null);
+  return get() as T;
+}
+
+describe("read-only widget buttons never mutate the document (#1239)", () => {
+  const DOC = "| A | B |\n| --- | --- |\n| 1 | 2 |\n";
+
+  it("task checkbox mousedown leaves the doc unchanged", async () => {
+    const v = makeView("- [ ] task\n\nafter", true);
+    v.dispatch({ selection: { anchor: v.state.doc.length } });
+    const box = (await waitFor(() => v.dom.querySelector(".cm-task-checkbox"))) as HTMLElement;
+    box.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true }));
+    expect(v.state.doc.toString()).toBe("- [ ] task\n\nafter");
+  });
+
+  it("an editable editor toggles the checkbox (positive control)", async () => {
+    const v = makeView("- [ ] task\n\nafter", false);
+    v.dispatch({ selection: { anchor: v.state.doc.length } });
+    const box = (await waitFor(() => v.dom.querySelector(".cm-task-checkbox"))) as HTMLElement;
+    box.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true }));
+    expect(v.state.doc.toString()).toBe("- [x] task\n\nafter");
+  });
+
+  it.each(["cm-table-add-col", "cm-table-add-row"])(
+    "%s click leaves the table unchanged",
+    async (cls) => {
+      const v = makeView(DOC, true);
+      const btn = (await waitFor(() => v.dom.querySelector("." + cls))) as HTMLElement;
+      btn.click();
+      expect(v.state.doc.toString()).toBe(DOC);
+    },
+  );
+
+  it("an editable editor adds a column (positive control)", async () => {
+    const v = makeView(DOC, false);
+    const btn = (await waitFor(() => v.dom.querySelector(".cm-table-add-col"))) as HTMLElement;
+    btn.click();
+    expect(v.state.doc.toString()).not.toBe(DOC);
+  });
+
+  it("the column grip opens no menu when read-only", async () => {
+    const v = makeView(DOC, true);
+    const grip = (await waitFor(() => v.dom.querySelector(".cm-col-grip"))) as HTMLElement;
+    grip.click();
+    expect(document.body.textContent).not.toContain("Delete table");
+  });
+});

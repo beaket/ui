@@ -53,6 +53,7 @@ class CheckboxWidget extends WidgetType {
     input.checked = this.checked;
     input.addEventListener("mousedown", (event) => {
       event.preventDefault();
+      if (view.state.readOnly) return; // read-only: the checkbox must not toggle the source (ADR-0018)
       view.dispatch({
         changes: {
           from: this.markerFrom,
