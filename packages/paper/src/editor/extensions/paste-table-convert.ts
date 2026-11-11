@@ -1,4 +1,5 @@
-import type { Extension } from "@codemirror/state";
+import { syntaxTree } from "@codemirror/language";
+import type { EditorState, Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 
 // Table entry point ③: paste conversion — HTML tables (spreadsheet copy) and TSV into markdown tables.
@@ -59,10 +60,21 @@ function insertTable(view: EditorView, markdown: string): void {
   });
 }
 
+const CODE_NODES = new Set(["FencedCode", "CodeBlock", "InlineCode"]);
+
+/** True when `pos` sits inside a fenced/indented code block or inline code, where a paste is literal text. */
+function inCode(state: EditorState, pos: number): boolean {
+  for (let n = syntaxTree(state).resolveInner(pos, -1); n; n = n.parent as typeof n) {
+    if (CODE_NODES.has(n.name)) return true;
+  }
+  return false;
+}
+
 export function pasteTableConvert(): Extension {
   return EditorView.domEventHandlers({
     paste(event, view) {
       if (view.state.readOnly) return false; // read-only: no paste-to-table conversion (ADR-0018)
+      if (inCode(view.state, view.state.selection.main.from)) return false; // code is literal text
       const html = event.clipboardData?.getData("text/html") ?? "";
       const text = event.clipboardData?.getData("text/plain") ?? "";
 
