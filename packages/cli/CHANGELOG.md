@@ -1,5 +1,11 @@
 # @beaket/ui
 
+## 4.3.1
+
+### Patch Changes
+
+- [#1272](https://github.com/beaket/ui/pull/1272) [`2b8d32b`](https://github.com/beaket/ui/commit/2b8d32bcfaa6a2adc27e5a10dc52365595be05b9) Thanks [@beaket-bunsen](https://github.com/apps/beaket-bunsen)! - Fix `Pagination.Previous` and `Pagination.Next` with `asChild` ignoring the disabled state on the first and last page. The `asChild` branch of `PaginationStep` applied the disabled classes to the consumer's element but never marked it disabled, so a router link was announced as enabled and still navigated, unlike the button and link paths, which set `disabled` and `aria-disabled`. The branch now sets `aria-disabled="true"` and `tabIndex={-1}` on the disabled edge and cancels its click ([#1187](https://github.com/beaket/ui/issues/1187)).
+
 ## 4.3.0
 
 ### Minor Changes
