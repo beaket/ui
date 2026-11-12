@@ -10,11 +10,11 @@ import { setReadOnly } from "./read-only";
 
 let view: EditorView | null = null;
 
-function makeView(doc: string, readOnly?: boolean): EditorView {
+function makeView(doc: string, readOnly?: boolean, onChange?: (value: string) => void): EditorView {
   const parent = document.createElement("div");
   document.body.appendChild(parent);
   view = new EditorView({
-    state: EditorState.create({ doc, extensions: editorExtensions({ readOnly }) }),
+    state: EditorState.create({ doc, extensions: editorExtensions({ readOnly, onChange }) }),
     parent,
   });
   return view;
@@ -95,37 +95,45 @@ async function waitFor<T>(get: () => T | null): Promise<T> {
 describe("read-only widget buttons never mutate the document (#1239)", () => {
   const DOC = "| A | B |\n| --- | --- |\n| 1 | 2 |\n";
 
-  it("task checkbox mousedown leaves the doc unchanged", async () => {
-    const v = makeView("- [ ] task\n\nafter", true);
+  it("task checkbox mousedown leaves the doc unchanged and fires no onChange", async () => {
+    const calls: string[] = [];
+    const v = makeView("- [ ] task\n\nafter", true, (s) => calls.push(s));
     v.dispatch({ selection: { anchor: v.state.doc.length } });
     const box = (await waitFor(() => v.dom.querySelector(".cm-task-checkbox"))) as HTMLElement;
     box.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true }));
     expect(v.state.doc.toString()).toBe("- [ ] task\n\nafter");
+    expect(calls).toHaveLength(0);
   });
 
-  it("an editable editor toggles the checkbox (positive control)", async () => {
-    const v = makeView("- [ ] task\n\nafter", false);
+  it("an editable editor toggles the checkbox and fires onChange once (positive control)", async () => {
+    const calls: string[] = [];
+    const v = makeView("- [ ] task\n\nafter", false, (s) => calls.push(s));
     v.dispatch({ selection: { anchor: v.state.doc.length } });
     const box = (await waitFor(() => v.dom.querySelector(".cm-task-checkbox"))) as HTMLElement;
     box.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true }));
     expect(v.state.doc.toString()).toBe("- [x] task\n\nafter");
+    expect(calls).toEqual(["- [x] task\n\nafter"]);
   });
 
   it.each(["cm-table-add-col", "cm-table-add-row"])(
-    "%s click leaves the table unchanged",
+    "%s click leaves the table unchanged and fires no onChange",
     async (cls) => {
-      const v = makeView(DOC, true);
+      const calls: string[] = [];
+      const v = makeView(DOC, true, (s) => calls.push(s));
       const btn = (await waitFor(() => v.dom.querySelector("." + cls))) as HTMLElement;
       btn.click();
       expect(v.state.doc.toString()).toBe(DOC);
+      expect(calls).toHaveLength(0);
     },
   );
 
-  it("an editable editor adds a column (positive control)", async () => {
-    const v = makeView(DOC, false);
+  it("an editable editor adds a column and fires onChange once (positive control)", async () => {
+    const calls: string[] = [];
+    const v = makeView(DOC, false, (s) => calls.push(s));
     const btn = (await waitFor(() => v.dom.querySelector(".cm-table-add-col"))) as HTMLElement;
     btn.click();
     expect(v.state.doc.toString()).not.toBe(DOC);
+    expect(calls).toHaveLength(1);
   });
 
   it("the column grip opens no menu when read-only", async () => {
