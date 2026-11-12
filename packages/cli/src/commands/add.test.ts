@@ -77,6 +77,56 @@ it("records successful and unchanged installs but preserves the baseline of skip
   }
 });
 
+it("merges a tracked file's local edit when the overwrite prompt is answered yes", async () => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "beaket-install-prompt-"));
+  vi.spyOn(process, "cwd").mockReturnValue(directory);
+  vi.spyOn(console, "log").mockImplementation(() => {});
+  const firstRef = "a".repeat(40);
+  const nextRef = "b".repeat(40);
+  const firstUpstream = "one\ntwo\nthree\n";
+  const nextUpstream = "one\ntwo\nsecond release\n";
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(
+      async (url: string) =>
+        new Response(
+          url.endsWith("registry.json")
+            ? JSON.stringify({
+                components: [
+                  {
+                    name: "button",
+                    files: ["components/button.tsx"],
+                    dependencies: [],
+                    registryDependencies: [],
+                  },
+                ],
+              })
+            : url.includes(`/${firstRef}/src/`)
+              ? firstUpstream
+              : nextUpstream,
+        ),
+    ),
+  );
+  const componentPath = path.join(directory, "ui/button.tsx");
+  try {
+    await writeFile(
+      path.join(directory, "package.json"),
+      JSON.stringify({ devDependencies: { typescript: "6.0.3" } }),
+    );
+    await writeFile(path.join(directory, "tsconfig.json"), "{}");
+    await writeFile(path.join(directory, "beaket.ui.json"), JSON.stringify({ components: "ui" }));
+    await add(["button"], { registryRef: firstRef });
+    await writeFile(componentPath, "custom branding\ntwo\nthree\n");
+    prompts.inject([true]);
+    await add(["button"], { registryRef: nextRef });
+    expect(await readFile(componentPath, "utf8")).toBe("custom branding\ntwo\nsecond release\n");
+  } finally {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
 it("adds and records opt-in test files", async () => {
   const directory = await mkdtemp(path.join(os.tmpdir(), "beaket-install-tests-"));
   vi.spyOn(process, "cwd").mockReturnValue(directory);

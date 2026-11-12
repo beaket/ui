@@ -93,7 +93,9 @@ CVA table is a source edit: keep a small diff and regression test for it.
 
 By default, changed existing files ask for confirmation with **No** selected.
 Matching files are left alone. Review the diff and hand-merge customizations
-when you need to keep them. There is no automatic merge command.
+when you need to keep them. Files with a recorded baseline are merged
+three-way when you confirm the prompt or pass `--overwrite`; a conflict is
+reported and the file is left alone.
 
 ```bash
 npx @beaket/ui@latest add button

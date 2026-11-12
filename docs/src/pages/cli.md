@@ -131,7 +131,8 @@ removals; conflict counts describe conflicting regions, not individual lines.
 
 Older installs have no baseline: differing files get an explicit unknown-baseline
 result and a two-way diff. Do not overwrite a customized file just to establish a
-baseline. Review and hand-merge first. Automatic merging is not implemented.
+baseline. Review and hand-merge first. Files with a recorded baseline are merged
+three-way by `add`, whether you answer the prompt or pass `--overwrite`.
 
 ## theme
 

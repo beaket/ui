@@ -151,17 +151,15 @@ export async function add(componentNames: string[], options: AddOptions) {
       ref,
     );
     const baselines: Record<string, string> = {};
-    if (options.overwrite) {
-      for (const file of files) {
-        const recorded = config.installed?.[def.name]?.[file.path];
-        if (!recorded) continue;
-        const [baseline] = await fetchComponent({ ...def, files: [file.path] }, recorded.ref);
-        if (contentHash(baseline.content) !== recorded.hash)
-          throw new Error(
-            `Baseline hash mismatch for ${file.path} at ${recorded.ref}; refusing to merge.`,
-          );
-        baselines[file.path] = baseline.content;
-      }
+    for (const file of files) {
+      const recorded = config.installed?.[def.name]?.[file.path];
+      if (!recorded) continue;
+      const [baseline] = await fetchComponent({ ...def, files: [file.path] }, recorded.ref);
+      if (contentHash(baseline.content) !== recorded.hash)
+        throw new Error(
+          `Baseline hash mismatch for ${file.path} at ${recorded.ref}; refusing to merge.`,
+        );
+      baselines[file.path] = baseline.content;
     }
     const { written, overwritten, backups, skipped, preserved, conflicts, unchanged } =
       await writeComponentFiles(componentsDir, files, options.overwrite, baselines);
