@@ -1,5 +1,13 @@
 # @beaket/paper
 
+## 0.11.1
+
+### Patch Changes
+
+- [#1287](https://github.com/beaket/ui/pull/1287) [`4dba72b`](https://github.com/beaket/ui/commit/4dba72b0ed1600e4a2f27f732d743117c07d51ee) Thanks [@beaket-bunsen](https://github.com/apps/beaket-bunsen)! - Stop pasting tab-containing text inside code from turning into a markdown table. The paste-to-table handler only checked `readOnly` and the clipboard and never where the cursor was, so pasting indented code (for example Go) into a fenced block, indented code block or inline code replaced it with a table. The handler now returns early when the selection sits inside `FencedCode`, `CodeBlock` or `InlineCode`, leaving the paste to CodeMirror's default insertion ([#1241](https://github.com/beaket/ui/issues/1241)).
+
+- [#1281](https://github.com/beaket/ui/pull/1281) [`5dda91b`](https://github.com/beaket/ui/commit/5dda91bbf3a16c0d8f54bcce63c7a7aa849ed148) Thanks [@beaket-bunsen](https://github.com/apps/beaket-bunsen)! - Tables, footnotes and renderer code blocks past the first ~3 KB of a large document now render once the parser reaches them, instead of staying raw until the next edit. Root cause: CodeMirror parses only the first slice synchronously and delivers the rest as a transaction with no document, selection or viewport change, but `tableField`, `footnoteModelField`, the footnote section, the code-block model and `guardedDecorations` recomputed only on those. They now also recompute when the syntax tree changed (deferred while composing).
+
 ## 0.11.0
 
 ### Minor Changes
