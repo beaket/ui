@@ -17,19 +17,21 @@ The dev server starts at `http://localhost:4321/ui/`.
 
 ## Scripts
 
-| Command          | Description                                |
-| :--------------- | :----------------------------------------- |
-| `pnpm dev`       | Generate props data, then start dev server |
-| `pnpm build`     | Build static site to `dist/`               |
-| `pnpm preview`   | Preview the production build locally       |
-| `pnpm typecheck` | Generate props data and run `astro check`  |
+| Command          | Description                                                 |
+| :--------------- | :---------------------------------------------------------- |
+| `pnpm dev`       | Generate theme tokens and props data, then start dev server |
+| `pnpm build`     | Build static site to `dist/`                                |
+| `pnpm preview`   | Preview the production build locally                        |
+| `pnpm typecheck` | Generate props data, check it, and run `astro check`        |
 
 ## Structure
 
 ```
 docs/
 ├── scripts/
-│   └── generate-props.ts   # auto-generates component prop tables
+│   ├── generate-props.ts         # auto-generates component prop tables
+│   ├── generate-theme-tokens.ts  # auto-generates the theme token data
+│   └── check-props.mjs           # checks the generated prop tables
 ├── src/
 │   ├── components/          # docs-specific UI (theme switcher, showcase, etc.)
 │   ├── layouts/             # doc.astro layout with sidebar nav
@@ -37,6 +39,8 @@ docs/
 │   │   ├── index.astro      # landing / component showcase
 │   │   ├── installation.md
 │   │   ├── cli.md
+│   │   ├── updating.md
+│   │   ├── migration.md
 │   │   ├── design-rules.astro
 │   │   ├── tokens.astro
 │   │   ├── themes.astro
