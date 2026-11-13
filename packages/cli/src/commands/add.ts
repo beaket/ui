@@ -1,7 +1,7 @@
 import { writeFile } from "node:fs/promises";
 import { styleText } from "node:util";
 import path from "path";
-import { contentHash, getConfig, writeConfig } from "../utils/config.ts";
+import { contentHash, getConfig, readJson, writeConfig } from "../utils/config.ts";
 import { toLocalRelativePath } from "../utils/diff.ts";
 import {
   DependencyInstallError,
@@ -39,6 +39,19 @@ async function ensureTestTsconfig(): Promise<void> {
     await writeFile(path.join(process.cwd(), TEST_TSCONFIG), TEST_TSCONFIG_CONTENT, { flag: "wx" });
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+  }
+}
+
+async function readDeclaredDependencies(cwd: string): Promise<Set<string>> {
+  try {
+    const pkg = await readJson(path.join(cwd, "package.json"));
+    return new Set(
+      (["dependencies", "devDependencies", "peerDependencies"] as const).flatMap((field) =>
+        Object.keys(pkg?.[field] ?? {}),
+      ),
+    );
+  } catch {
+    return new Set();
   }
 }
 
@@ -91,8 +104,14 @@ export async function add(componentNames: string[], options: AddOptions) {
     console.log();
   }
 
-  // Collect all unique dependencies
-  const allDependencies = new Set(componentDefs.flatMap((def) => def.dependencies));
+  // Collect all unique dependencies the project does not already declare, so a bare-name
+  // install never re-resolves a pinned range to `latest`.
+  const declaredDependencies = await readDeclaredDependencies(process.cwd());
+  const allDependencies = new Set(
+    componentDefs
+      .flatMap((def) => def.dependencies)
+      .filter((name) => !declaredDependencies.has(name)),
+  );
 
   // Install dependencies once
   if (allDependencies.size > 0) {
