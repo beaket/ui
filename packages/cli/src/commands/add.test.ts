@@ -141,3 +141,56 @@ it("adds and records opt-in test files", async () => {
     await rm(directory, { recursive: true, force: true });
   }
 });
+
+it("does not reinstall dependencies the project already declares", async () => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "beaket-install-deps-"));
+  vi.spyOn(process, "cwd").mockReturnValue(directory);
+  vi.spyOn(console, "log").mockImplementation(() => {});
+  vi.mocked(installDependencies).mockClear();
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(
+      async (url: string) =>
+        new Response(
+          url.endsWith("registry.json")
+            ? JSON.stringify({
+                components: [
+                  {
+                    name: "alert",
+                    files: ["components/alert.tsx"],
+                    dependencies: ["clsx", "tailwind-merge", "lucide-react"],
+                    registryDependencies: [],
+                  },
+                ],
+              })
+            : "export const Alert = () => null;\n",
+        ),
+    ),
+  );
+  const writePackage = (pkg: object) =>
+    writeFile(path.join(directory, "package.json"), JSON.stringify(pkg));
+  try {
+    await writeFile(path.join(directory, "tsconfig.json"), "{}");
+    await writeFile(path.join(directory, "beaket.ui.json"), JSON.stringify({ components: "ui" }));
+    await writePackage({
+      dependencies: { clsx: "2.0.0" },
+      devDependencies: { typescript: "6.0.3", "tailwind-merge": "3.0.0" },
+    });
+    await add(["alert"], { registryRef: "f".repeat(40) });
+    expect(vi.mocked(installDependencies)).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(installDependencies)).toHaveBeenCalledWith(["lucide-react"]);
+
+    vi.mocked(installDependencies).mockClear();
+    await writePackage({
+      dependencies: { clsx: "2.0.0", "lucide-react": "1.0.0" },
+      peerDependencies: { "tailwind-merge": "3.0.0" },
+      devDependencies: { typescript: "6.0.3" },
+    });
+    await add(["alert"], { registryRef: "f".repeat(40), overwrite: true });
+    expect(vi.mocked(installDependencies)).not.toHaveBeenCalled();
+  } finally {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+    await rm(directory, { recursive: true, force: true });
+  }
+});
