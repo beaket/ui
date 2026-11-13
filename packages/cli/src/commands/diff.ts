@@ -79,7 +79,7 @@ export async function diff(componentName: string | undefined, options: RegistryO
   }
   if (!checked) console.log("No installed components found.");
   console.log(
-    "Review or hand-merge changes. --overwrite discards local edits and saves a backup.\n",
+    "Review changes, then run add: tracked files are merged three-way, with a backup saved.\n",
   );
   process.exitCode = exitCode;
 }
