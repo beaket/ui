@@ -76,7 +76,7 @@ export async function writeComponentFiles(
         const { confirm } = await prompts({
           type: "confirm",
           name: "confirm",
-          message: `${path.basename(targetPath)} differs from the registry version. Overwrite?`,
+          message: `${path.basename(targetPath)} differs from the registry version. Update?`,
           initial: false,
         });
         if (!confirm) {

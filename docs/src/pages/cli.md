@@ -87,15 +87,17 @@ npx @beaket/ui add alert button label
 Copies component files and their transitive registry dependencies to your project,
 and installs their npm dependencies (`clsx`, `tailwind-merge`, Radix primitives, etc.) automatically.
 
-| Option              | Description                                         |
-| ------------------- | --------------------------------------------------- |
-| `-o`, `--overwrite` | Discard local edits after saving a backup           |
-| `--with-tests`      | Add component smoke tests and the `tsx` test runner |
+| Option              | Description                                          |
+| ------------------- | ---------------------------------------------------- |
+| `-o`, `--overwrite` | Skip the prompt; merge tracked files, replace others |
+| `--with-tests`      | Add component smoke tests and the `tsx` test runner  |
 
 When a file already exists, `add` compares it with the registry. Matching files
-are left alone; changed files prompt before they are overwritten.
-Every replacement saves the previous file as `.bak`, then `.bak.1`, `.bak.2`, and
-so on. Review the diff or hand-merge customizations before choosing to overwrite.
+are left alone; changed files prompt first. Confirming (or passing `--overwrite`)
+merges a file with a recorded baseline three-way, and leaves it alone with a
+reported conflict if the merge conflicts. An untracked file, or one with no
+baseline, is replaced. Every replacement saves the previous file as `.bak`, then
+`.bak.1`, `.bak.2`, and so on. Review the diff before confirming.
 
 `--with-tests` is opt-in so normal installs stay small. It copies Node-based smoke tests for every selected component, installs `tsx` and `@types/node` as dev dependencies, and creates `beaket.ui.test.json` for the automatic JSX runtime. Run them with `npx tsx --tsconfig beaket.ui.test.json --test <components-dir>/**/*.test.tsx`.
 

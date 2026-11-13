@@ -89,13 +89,16 @@ Fork the copied source when you need to change internal rendering or behavior
 that its composition and props cannot express. A custom variant inside its
 CVA table is a source edit: keep a small diff and regression test for it.
 
-## Replacement is not merging
+## Tracked files merge; others are replaced
 
 By default, changed existing files ask for confirmation with **No** selected.
-Matching files are left alone. Review the diff and hand-merge customizations
-when you need to keep them. Files with a recorded baseline are merged
-three-way when you confirm the prompt or pass `--overwrite`; a conflict is
-reported and the file is left alone.
+Matching files are left alone. What confirming does depends on the baseline:
+
+- A file with a recorded baseline in `beaket.ui.json` is merged three-way, on
+  the prompt and with `--overwrite` alike. If the merge conflicts, the file is
+  left alone and the conflict is reported.
+- An untracked file, or one from an older install with no baseline, is replaced
+  after a backup is saved. Review the diff and hand-merge customizations first.
 
 ```bash
 npx @beaket/ui@latest add button
@@ -103,12 +106,12 @@ npx @beaket/ui@latest add button
 npx @beaket/ui@latest add button --overwrite
 ```
 
-**Treat `--overwrite` as permission to discard local edits in the target
-files.** Every replacement first saves the previous file as `.bak`, then
+**Treat `--overwrite` on an untracked file as permission to discard local
+edits.** Every replacement first saves the previous file as `.bak`, then
 `.bak.1`, `.bak.2`, and so on without replacing earlier backups. A backup
-failure aborts that replacement. These are recovery copies, not a merge
-strategy or a substitute for version control. Review the resulting Git diff,
-restore or reapply needed edits, and run your tests before committing.
+failure aborts that replacement. These are recovery copies, not a substitute
+for version control. Review the resulting Git diff, restore or reapply needed
+edits, and run your tests before committing.
 
 ## Theme updates have their own boundary
 
