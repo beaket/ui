@@ -104,6 +104,30 @@ export async function add(componentNames: string[], options: AddOptions) {
     console.log();
   }
 
+  // Fetch every component file (and merge baseline) before touching package.json, so a
+  // failed fetch leaves the project exactly as it was.
+  const fetched = [];
+  for (const def of componentDefs) {
+    const files = await fetchComponent(
+      { ...def, files: options.withTests ? [...def.files, ...(def.testFiles ?? [])] : def.files },
+      ref,
+    );
+    const baselines: Record<string, string> = {};
+    if (options.overwrite) {
+      for (const file of files) {
+        const recorded = config.installed?.[def.name]?.[file.path];
+        if (!recorded) continue;
+        const [baseline] = await fetchComponent({ ...def, files: [file.path] }, recorded.ref);
+        if (contentHash(baseline.content) !== recorded.hash)
+          throw new Error(
+            `Baseline hash mismatch for ${file.path} at ${recorded.ref}; refusing to merge.`,
+          );
+        baselines[file.path] = baseline.content;
+      }
+    }
+    fetched.push({ def, files, baselines });
+  }
+
   // Collect all unique dependencies the project does not already declare, so a bare-name
   // install never re-resolves a pinned range to `latest`.
   const declaredDependencies = await readDeclaredDependencies(process.cwd());
@@ -164,24 +188,7 @@ export async function add(componentNames: string[], options: AddOptions) {
   const allConflicts: Array<{ path: string; hunk: string }> = [];
   const allUnchanged: string[] = [];
 
-  for (const def of componentDefs) {
-    const files = await fetchComponent(
-      { ...def, files: options.withTests ? [...def.files, ...(def.testFiles ?? [])] : def.files },
-      ref,
-    );
-    const baselines: Record<string, string> = {};
-    if (options.overwrite) {
-      for (const file of files) {
-        const recorded = config.installed?.[def.name]?.[file.path];
-        if (!recorded) continue;
-        const [baseline] = await fetchComponent({ ...def, files: [file.path] }, recorded.ref);
-        if (contentHash(baseline.content) !== recorded.hash)
-          throw new Error(
-            `Baseline hash mismatch for ${file.path} at ${recorded.ref}; refusing to merge.`,
-          );
-        baselines[file.path] = baseline.content;
-      }
-    }
+  for (const { def, files, baselines } of fetched) {
     const { written, overwritten, backups, skipped, preserved, conflicts, unchanged } =
       await writeComponentFiles(componentsDir, files, options.overwrite, baselines);
     allWritten.push(...written);
