@@ -68,7 +68,7 @@ npx @beaket/ui diff [component]
 ```
 
 - Without an argument, lists every installed component as matching the registry or differing from it.
-- With a component name, prints the line-by-line diff between your copy and the latest registry version, then points you at `add <component> --overwrite` to take the update (or hand-merge if you've customized it).
+- With a component name, prints the line-by-line diff between your copy and the latest registry version, then points you at `add <component> --overwrite` to take the update. A customized file with a recorded baseline is merged three-way by `add`; hand-merge only files installed before baselines were tracked.
 
 ## License
 
