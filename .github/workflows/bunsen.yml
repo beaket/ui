@@ -83,7 +83,7 @@ jobs:
       id-token: write
     steps:
       - id: app-token
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         with:
           app-id: ${{ vars.BUNSEN_APP_ID }}
           private-key: ${{ secrets.BUNSEN_APP_PRIVATE_KEY }}
@@ -157,7 +157,7 @@ jobs:
           test -n "$job"
           echo "JOB=$job" >> "$GITHUB_ENV"
       - id: app-token
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         with:
           app-id: ${{ vars.BUNSEN_APP_ID }}
           private-key: ${{ secrets.BUNSEN_APP_PRIVATE_KEY }}
@@ -238,7 +238,7 @@ jobs:
       id-token: write
     steps:
       - id: reviewer-token
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         with:
           app-id: ${{ vars.BUNSEN_REVIEWER_APP_ID }}
           private-key: ${{ secrets.BUNSEN_REVIEWER_APP_PRIVATE_KEY }}
@@ -311,7 +311,7 @@ jobs:
           echo "JOB=$job" >> "$GITHUB_ENV"
           echo "STARTED=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
       - id: app-token
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         with:
           app-id: ${{ vars.BUNSEN_APP_ID }}
           private-key: ${{ secrets.BUNSEN_APP_PRIVATE_KEY }}
@@ -451,7 +451,7 @@ jobs:
       id-token: write
     steps:
       - id: reviewer-token
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         with:
           app-id: ${{ vars.BUNSEN_REVIEWER_APP_ID }}
           private-key: ${{ secrets.BUNSEN_REVIEWER_APP_PRIVATE_KEY }}
@@ -506,7 +506,7 @@ jobs:
         run: .github/scripts/summarize-claude-run.sh "$EXECUTION_FILE"
       # An approval merges unless the script's rule refuses it. The script decides, not a model.
       - id: merge-token
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         with:
           app-id: ${{ vars.BUNSEN_APP_ID }}
           private-key: ${{ secrets.BUNSEN_APP_PRIVATE_KEY }}
@@ -532,7 +532,7 @@ jobs:
       id-token: write
     steps:
       - id: reviewer-token
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         with:
           app-id: ${{ vars.BUNSEN_REVIEWER_APP_ID }}
           private-key: ${{ secrets.BUNSEN_REVIEWER_APP_PRIVATE_KEY }}
@@ -576,7 +576,7 @@ jobs:
           EXECUTION_FILE: ${{ steps.claude.outputs.execution_file }}
         run: .github/scripts/summarize-claude-run.sh "$EXECUTION_FILE"
       - id: merge-token
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         with:
           app-id: ${{ vars.BUNSEN_APP_ID }}
           private-key: ${{ secrets.BUNSEN_APP_PRIVATE_KEY }}
