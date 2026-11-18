@@ -3,6 +3,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { styleText } from "node:util";
 import path from "path";
 import prompts from "prompts";
+import { onCancel } from "./cancel.ts";
 import { contentHash, writeConfig, type BeaketConfig } from "./config.ts";
 import { collapseContext, diffLines } from "./diff.ts";
 import { backupFile } from "./files.ts";
@@ -157,12 +158,15 @@ export async function syncTheme(
 
   // Theme exists but is outdated
   if (!options.overwrite) {
-    const { confirm } = await prompts({
-      type: "confirm",
-      name: "confirm",
-      message: `Replace theme tokens in ${config.css} with ${themeName}? Local token edits will be replaced (a backup is saved).`,
-      initial: false,
-    });
+    const { confirm } = await prompts(
+      {
+        type: "confirm",
+        name: "confirm",
+        message: `Replace theme tokens in ${config.css} with ${themeName}? Local token edits will be replaced (a backup is saved).`,
+        initial: false,
+      },
+      { onCancel },
+    );
     if (!confirm) {
       console.log(styleText("yellow", "ℹ"), "Skipped theme update.");
       return false;

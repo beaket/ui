@@ -6,6 +6,7 @@ import { pathToFileURL } from "node:url";
 import prompts from "prompts";
 import type ts from "typescript";
 import type { DetectedAlias } from "../commands/init.ts";
+import { onCancel } from "./cancel.ts";
 import { backupFile } from "./files.ts";
 import { importsTailwind } from "./theme.ts";
 
@@ -196,12 +197,15 @@ export async function checkSetup(
           const fixed = enableViteTsconfigPaths(require("typescript"), content);
           // ponytail: only literal Vite objects are rewritten; dynamic configs need the printed manual edit.
           if (fixed && !yes) {
-            const { confirm } = await prompts({
-              type: "confirm",
-              name: "confirm",
-              initial: false,
-              message: `Back up ${path.basename(file)} and enable resolve.tsconfigPaths?`,
-            });
+            const { confirm } = await prompts(
+              {
+                type: "confirm",
+                name: "confirm",
+                initial: false,
+                message: `Back up ${path.basename(file)} and enable resolve.tsconfigPaths?`,
+              },
+              { onCancel },
+            );
             if (confirm) {
               // Do not overwrite a config edited while the prompt was open.
               if ((await readFile(file, "utf8")) !== content)

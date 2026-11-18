@@ -3,6 +3,7 @@ import { constants, existsSync } from "node:fs";
 import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "path";
 import prompts from "prompts";
+import { onCancel } from "./cancel.ts";
 import { mergeThreeWay, normalize, toLocalRelativePath } from "./diff.ts";
 import type { ComponentFile } from "./registry.ts";
 
@@ -73,12 +74,15 @@ export async function writeComponentFiles(
       if (!overwrite) {
         // Distinguish a real content difference from a bare name clash, so the
         // user knows their copy is out of sync — not just that a file is there.
-        const { confirm } = await prompts({
-          type: "confirm",
-          name: "confirm",
-          message: `${path.basename(targetPath)} differs from the registry version. Update?`,
-          initial: false,
-        });
+        const { confirm } = await prompts(
+          {
+            type: "confirm",
+            name: "confirm",
+            message: `${path.basename(targetPath)} differs from the registry version. Update?`,
+            initial: false,
+          },
+          { onCancel },
+        );
         if (!confirm) {
           skipped.push(targetPath);
           continue;

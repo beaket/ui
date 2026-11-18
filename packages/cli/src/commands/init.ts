@@ -3,6 +3,7 @@ import { readdir, readFile, writeFile } from "node:fs/promises";
 import { styleText } from "node:util";
 import path from "path";
 import prompts from "prompts";
+import { onCancel } from "../utils/cancel.ts";
 import {
   contentHash,
   getConfig,
@@ -292,36 +293,42 @@ export async function init(options: InitOptions) {
       theme: options.theme || "solace",
     };
   } else {
-    const answers = await prompts([
-      {
-        type: "text",
-        name: "components",
-        message: "Where should components be installed?",
-        initial: detectedComponentsPath,
-      },
-      {
-        type: "text",
-        name: "css",
-        message: "Where is your Tailwind CSS file?",
-        initial: detectedCssPath,
-      },
-      {
-        type: options.theme ? null : "select",
-        name: "theme",
-        message: "Choose a theme",
-        choices: [
-          { title: "Solace — warm paper, cool ink, one vivid blue for action", value: "solace" },
-          {
-            title: "Porcelain — near-white paper, cool graphite ink, balanced",
-            value: "porcelain",
-          },
-          { title: "Tobacco — warm earthen paper, quiet low-chroma signals", value: "tobacco" },
-          { title: "Marigold — pure-grey paper, the loudest signals", value: "marigold" },
-          { title: "Eucalyptus — cool-blue paper, vivid high-chroma signals", value: "eucalyptus" },
-        ],
-        initial: 0,
-      },
-    ]);
+    const answers = await prompts(
+      [
+        {
+          type: "text",
+          name: "components",
+          message: "Where should components be installed?",
+          initial: detectedComponentsPath,
+        },
+        {
+          type: "text",
+          name: "css",
+          message: "Where is your Tailwind CSS file?",
+          initial: detectedCssPath,
+        },
+        {
+          type: options.theme ? null : "select",
+          name: "theme",
+          message: "Choose a theme",
+          choices: [
+            { title: "Solace — warm paper, cool ink, one vivid blue for action", value: "solace" },
+            {
+              title: "Porcelain — near-white paper, cool graphite ink, balanced",
+              value: "porcelain",
+            },
+            { title: "Tobacco — warm earthen paper, quiet low-chroma signals", value: "tobacco" },
+            { title: "Marigold — pure-grey paper, the loudest signals", value: "marigold" },
+            {
+              title: "Eucalyptus — cool-blue paper, vivid high-chroma signals",
+              value: "eucalyptus",
+            },
+          ],
+          initial: 0,
+        },
+      ],
+      { onCancel },
+    );
 
     if (!answers.components) {
       console.log(styleText("red", "Cancelled."));
