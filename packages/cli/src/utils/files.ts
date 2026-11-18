@@ -3,7 +3,6 @@ import { constants, existsSync } from "node:fs";
 import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "path";
 import prompts from "prompts";
-import { onCancel } from "./cancel.ts";
 import { mergeThreeWay, normalize, toLocalRelativePath } from "./diff.ts";
 import type { ComponentFile } from "./registry.ts";
 
@@ -18,6 +17,8 @@ export interface WriteResult {
   conflicts: Array<{ path: string; hunk: string }>;
   /** Files already identical to upstream — left untouched, no prompt. */
   unchanged: string[];
+  /** Ctrl+C at a prompt: the loop stopped, and the lists above hold what was done before it. */
+  cancelled: boolean;
 }
 
 type PackageManager = "npm" | "pnpm" | "yarn" | "bun";
@@ -53,6 +54,7 @@ export async function writeComponentFiles(
   const preserved: string[] = [];
   const conflicts: Array<{ path: string; hunk: string }> = [];
   const unchanged: string[] = [];
+  let cancelled = false;
 
   for (const file of files) {
     // Transform file path: components/button.tsx -> button.tsx
@@ -81,8 +83,14 @@ export async function writeComponentFiles(
             message: `${path.basename(targetPath)} differs from the registry version. Update?`,
             initial: false,
           },
-          { onCancel },
+          {
+            // Stop here instead of exiting, so the caller can record the files already written.
+            onCancel: () => {
+              cancelled = true;
+            },
+          },
         );
+        if (cancelled) break;
         if (!confirm) {
           skipped.push(targetPath);
           continue;
@@ -111,7 +119,7 @@ export async function writeComponentFiles(
     written.push(targetPath);
   }
 
-  return { written, overwritten, backups, skipped, preserved, conflicts, unchanged };
+  return { written, overwritten, backups, skipped, preserved, conflicts, unchanged, cancelled };
 }
 
 /** Never replace an earlier backup; abort the write if the backup fails. */

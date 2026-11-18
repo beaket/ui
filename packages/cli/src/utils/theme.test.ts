@@ -1,9 +1,13 @@
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { describe, expect, it } from "vitest";
-import { extractThemeBlock, replaceThemeInCss, wrapThemeCss } from "./theme.ts";
+import prompts from "prompts";
+import { describe, expect, it, vi } from "vitest";
+import { extractThemeBlock, replaceThemeInCss, syncTheme, wrapThemeCss } from "./theme.ts";
+
+vi.mock("prompts", () => ({ default: vi.fn() }));
 
 const THEME_START = "/* beaket:theme:start */";
 const THEME_END = "/* beaket:theme:end */";
@@ -185,5 +189,36 @@ describe("extractThemeBlock", () => {
     const result = extractThemeBlock(cssContent);
 
     expect(result).toBeNull();
+  });
+});
+
+describe("syncTheme cancel", () => {
+  it("exits with code 1 and writes nothing when Ctrl+C answers the replace prompt", async () => {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), "beaket-theme-cancel-"));
+    const css = `@import "tailwindcss";\n${wrapThemeCss("/* old */")}`;
+    vi.spyOn(process, "cwd").mockReturnValue(directory);
+    vi.spyOn(console, "log").mockImplementation(() => {});
+    const exit = vi.spyOn(process, "exit").mockImplementation((() => {
+      throw new Error("exit");
+    }) as never);
+    try {
+      fs.writeFileSync(path.join(directory, "style.css"), css);
+      vi.mocked(prompts).mockImplementation((async (
+        _q: unknown,
+        options?: { onCancel?: () => void },
+      ) => {
+        options?.onCancel?.();
+        return {};
+      }) as never);
+      await expect(
+        syncTheme({ components: "ui", css: "style.css" } as never, { solace: "/* new */" }, {}),
+      ).rejects.toThrow("exit");
+      expect(exit).toHaveBeenCalledWith(1);
+      expect(fs.readFileSync(path.join(directory, "style.css"), "utf8")).toBe(css);
+      expect(fs.readdirSync(directory)).toEqual(["style.css"]);
+    } finally {
+      vi.restoreAllMocks();
+      fs.rmSync(directory, { recursive: true, force: true });
+    }
   });
 });

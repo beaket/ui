@@ -185,10 +185,19 @@ export async function add(componentNames: string[], options: AddOptions) {
   const allPreserved: string[] = [];
   const allConflicts: Array<{ path: string; hunk: string }> = [];
   const allUnchanged: string[] = [];
+  let cancelled = false;
 
   for (const { def, files, baselines } of fetched) {
-    const { written, overwritten, backups, skipped, preserved, conflicts, unchanged } =
-      await writeComponentFiles(componentsDir, files, options.overwrite, baselines);
+    const {
+      written,
+      overwritten,
+      backups,
+      skipped,
+      preserved,
+      conflicts,
+      unchanged,
+      cancelled: stopped,
+    } = await writeComponentFiles(componentsDir, files, options.overwrite, baselines);
     allWritten.push(...written);
     allOverwritten.push(...overwritten);
     allBackups.push(...backups);
@@ -210,6 +219,10 @@ export async function add(componentNames: string[], options: AddOptions) {
     }
     // Persist each successful component, including no-op installs; never relabel skipped edits.
     await writeConfig(config);
+    if (stopped) {
+      cancelled = true;
+      break;
+    }
   }
 
   // Files already matching upstream — reassure rather than warn.
@@ -249,6 +262,14 @@ export async function add(componentNames: string[], options: AddOptions) {
     }
   }
 
+  if (cancelled) {
+    process.exitCode = 1;
+    console.log(
+      styleText("red", "Cancelled."),
+      "Files written before Ctrl+C are kept and recorded.",
+    );
+  }
+
   if (allWritten.length === 0) {
     console.log();
     return;
@@ -267,14 +288,14 @@ export async function add(componentNames: string[], options: AddOptions) {
   }
 
   // Sync theme tokens
-  if (config.css) {
+  if (config.css && !cancelled) {
     console.log();
     await syncTheme(config, THEME_CSS, { overwrite: options.overwrite });
   }
 
   console.log();
 
-  if (options.withTests) {
+  if (options.withTests && !cancelled) {
     console.log(
       styleText("dim", "  Run tests with"),
       styleText(
