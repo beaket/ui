@@ -1,5 +1,15 @@
 # @beaket/ui
 
+## 4.3.2
+
+### Patch Changes
+
+- [#1297](https://github.com/beaket/ui/pull/1297) [`f33fb06`](https://github.com/beaket/ui/commit/f33fb06aceec28cd8562c25a7a0b0845f3910474) Thanks [@beaket-bunsen](https://github.com/apps/beaket-bunsen)! - Fix `add` discarding local edits when the overwrite prompt is answered yes. The baseline fetch that feeds the three-way merge was gated on `--overwrite` instead of on whether the file is tracked in `beaket.ui.json`, so the prompt path did a plain overwrite. Tracked files are now merged on both paths.
+
+- [#1311](https://github.com/beaket/ui/pull/1311) [`abbd7f6`](https://github.com/beaket/ui/commit/abbd7f6426b17c5d585bcd53b049739ee5ce2e16) Thanks [@beaket-bunsen](https://github.com/apps/beaket-bunsen)! - `add` no longer leaves `package.json` and the lockfile modified when a component fetch fails. Root cause: dependencies were installed before the per-component `fetchComponent` calls in the write loop, so a 404 or dropped network after the registry loaded threw with the install already done. All component files and merge baselines are now fetched first, then dependencies install, then files are written.
+
+- [#1303](https://github.com/beaket/ui/pull/1303) [`fbfc1f1`](https://github.com/beaket/ui/commit/fbfc1f1ad7d4a1254cc1869f70ca44213ece8da6) Thanks [@beaket-bunsen](https://github.com/apps/beaket-bunsen)! - Fix `add` re-installing dependencies the project already declares. The command passed every component dependency to the package manager by bare name without reading `package.json`, so pinned ranges such as `clsx@2.0.0` were re-resolved to `latest` on every run. It now skips names present in `dependencies`, `devDependencies` or `peerDependencies`, and skips the install entirely when none are left.
+
 ## 4.3.1
 
 ### Patch Changes
