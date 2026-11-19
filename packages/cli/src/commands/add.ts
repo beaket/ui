@@ -263,7 +263,7 @@ export async function add(componentNames: string[], options: AddOptions) {
   }
 
   if (cancelled) {
-    process.exitCode = 1;
+    process.exitCode = Math.max(Number(process.exitCode ?? 0), 1);
     console.log(
       styleText("red", "Cancelled."),
       "Files written before Ctrl+C are kept and recorded.",

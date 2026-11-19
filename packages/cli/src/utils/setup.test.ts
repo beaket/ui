@@ -153,9 +153,7 @@ it("recognizes common PostCSS configs without treating disabled or dynamic plugi
 
 it("exits with code 1 and leaves the Vite config alone when Ctrl+C answers the confirm", async () => {
   const { cwd, alias } = await project();
-  const exit = vi.spyOn(process, "exit").mockImplementation((() => {
-    throw new Error("exit");
-  }) as never);
+  const exit = vi.spyOn(process, "exit").mockImplementation((() => undefined) as never);
   vi.mocked(prompts).mockImplementation((async (
     _q: unknown,
     options?: { onCancel?: () => void },
@@ -163,7 +161,7 @@ it("exits with code 1 and leaves the Vite config alone when Ctrl+C answers the c
     options?.onCancel?.();
     return {};
   }) as never);
-  await expect(checkSetup(alias, false, "style.css", cwd)).rejects.toThrow("exit");
+  await checkSetup(alias, false, "style.css", cwd);
   expect(exit).toHaveBeenCalledWith(1);
   expect(await readFile(path.join(cwd, "vite.config.ts"), "utf8")).toBe(config);
   expect((await readdir(cwd)).some((file) => file.endsWith(".bak"))).toBe(false);
