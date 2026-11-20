@@ -17,6 +17,8 @@ export interface WriteResult {
   conflicts: Array<{ path: string; hunk: string }>;
   /** Files already identical to upstream — left untouched, no prompt. */
   unchanged: string[];
+  /** Ctrl+C at a prompt: the loop stopped, and the lists above hold what was done before it. */
+  cancelled: boolean;
 }
 
 type PackageManager = "npm" | "pnpm" | "yarn" | "bun";
@@ -52,6 +54,7 @@ export async function writeComponentFiles(
   const preserved: string[] = [];
   const conflicts: Array<{ path: string; hunk: string }> = [];
   const unchanged: string[] = [];
+  let cancelled = false;
 
   for (const file of files) {
     // Transform file path: components/button.tsx -> button.tsx
@@ -73,12 +76,21 @@ export async function writeComponentFiles(
       if (!overwrite) {
         // Distinguish a real content difference from a bare name clash, so the
         // user knows their copy is out of sync — not just that a file is there.
-        const { confirm } = await prompts({
-          type: "confirm",
-          name: "confirm",
-          message: `${path.basename(targetPath)} differs from the registry version. Update?`,
-          initial: false,
-        });
+        const { confirm } = await prompts(
+          {
+            type: "confirm",
+            name: "confirm",
+            message: `${path.basename(targetPath)} differs from the registry version. Update?`,
+            initial: false,
+          },
+          {
+            // Stop here instead of exiting, so the caller can record the files already written.
+            onCancel: () => {
+              cancelled = true;
+            },
+          },
+        );
+        if (cancelled) break;
         if (!confirm) {
           skipped.push(targetPath);
           continue;
@@ -107,7 +119,7 @@ export async function writeComponentFiles(
     written.push(targetPath);
   }
 
-  return { written, overwritten, backups, skipped, preserved, conflicts, unchanged };
+  return { written, overwritten, backups, skipped, preserved, conflicts, unchanged, cancelled };
 }
 
 /** Never replace an earlier backup; abort the write if the backup fails. */

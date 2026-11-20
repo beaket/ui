@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import prompts from "prompts";
@@ -336,3 +336,85 @@ it("fetches every component file before installing dependencies", async () => {
     await rm(directory, { recursive: true, force: true });
   }
 });
+
+it.each([
+  { before: undefined, after: 1 },
+  { before: 2, after: 2 },
+])(
+  "records written files and keeps the backup list when Ctrl+C stops a two-file install (exit code $before -> $after)",
+  async ({ before, after }) => {
+    const directory = await mkdtemp(path.join(os.tmpdir(), "beaket-install-cancel-"));
+    vi.spyOn(process, "cwd").mockReturnValue(directory);
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    const exit = vi.spyOn(process, "exit").mockImplementation((() => {
+      throw new Error("exit");
+    }) as never);
+    const ref = "f".repeat(40);
+    const source = "export const Button = () => null;\n";
+    const testFile = 'test("button", () => {});\n';
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async (url: string) =>
+          new Response(
+            url.endsWith("registry.json")
+              ? JSON.stringify({
+                  components: [
+                    {
+                      name: "button",
+                      files: ["components/button.tsx"],
+                      testFiles: ["components/button.test.tsx"],
+                      dependencies: [],
+                      registryDependencies: [],
+                    },
+                  ],
+                })
+              : url.endsWith("button.test.tsx")
+                ? testFile
+                : source,
+          ),
+      ),
+    );
+    const previousExitCode = process.exitCode;
+    try {
+      // A merge conflict earlier in the run sets exit code 2; Ctrl+C must not lower it.
+      process.exitCode = before;
+      await writeFile(
+        path.join(directory, "package.json"),
+        JSON.stringify({ devDependencies: { typescript: "6.0.3" } }),
+      );
+      await writeFile(path.join(directory, "tsconfig.json"), "{}");
+      await writeFile(path.join(directory, "beaket.ui.json"), JSON.stringify({ components: "ui" }));
+      await mkdir(path.join(directory, "ui"));
+      await writeFile(path.join(directory, "ui/button.tsx"), "local component\n");
+      await writeFile(path.join(directory, "ui/button.test.tsx"), "local test\n");
+      // Yes for button.tsx, then Ctrl+C (an injected Error aborts the prompt) at button.test.tsx.
+      prompts.inject([true, new Error("cancel")]);
+      await add(["button"], { registryRef: ref, withTests: true });
+
+      expect(exit).not.toHaveBeenCalled();
+      expect(process.exitCode).toBe(after);
+      expect(await readFile(path.join(directory, "ui/button.tsx"), "utf8")).toBe(source);
+      expect(await readFile(path.join(directory, "ui/button.tsx.bak"), "utf8")).toBe(
+        "local component\n",
+      );
+      expect(await readFile(path.join(directory, "ui/button.test.tsx"), "utf8")).toBe(
+        "local test\n",
+      );
+      const config = JSON.parse(await readFile(path.join(directory, "beaket.ui.json"), "utf8"));
+      expect(config.installed.button["components/button.tsx"]).toMatchObject({
+        ref,
+        hash: contentHash(source),
+      });
+      expect(config.installed.button["components/button.test.tsx"]).toBeUndefined();
+      const output = log.mock.calls.flat().join("\n");
+      expect(output).toContain("Backups:");
+      expect(output).toContain("button.tsx.bak");
+    } finally {
+      process.exitCode = previousExitCode;
+      vi.restoreAllMocks();
+      vi.unstubAllGlobals();
+      await rm(directory, { recursive: true, force: true });
+    }
+  },
+);
