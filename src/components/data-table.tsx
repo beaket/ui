@@ -510,6 +510,11 @@ function DataTableRoot<TData extends RowData>({
     },
   });
 
+  // `initialState` is read once, so a changed `pageSize` prop is synced here.
+  useEffect(() => {
+    table.setPageSize(pageSize);
+  }, [table, pageSize]);
+
   // F2: both hand-rolled "latest ref" writes happened during render, which React
   // tells you not to do and which React Compiler refuses to optimize past.
   // useEffectEvent is the official replacement for exactly this shape — an

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CircleCheck, CircleMinus, Clock } from "lucide-react";
+import { useState } from "react";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 import { Badge } from "./badge";
 import { DataTable, type ColumnDef } from "./data-table";
@@ -528,5 +529,31 @@ export const DeferredFilterTest: Story = {
         1,
       ),
     );
+  },
+};
+
+// `pageSize` is a prop, not an initial value: a "rows per page" selector that
+// drives it must change the table after mount. TanStack reads `initialState`
+// once, so the prop has to be synced into the table.
+export const PageSizeChangeTest: Story = {
+  tags: ["!autodocs"],
+  render: () => {
+    const [pageSize, setPageSize] = useState(2);
+    return (
+      <div>
+        <button type="button" onClick={() => setPageSize(4)}>
+          Four per page
+        </button>
+        <DataTable columns={columns} data={users} paginated pageSize={pageSize} />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const rows = () => canvasElement.querySelectorAll("[data-slot='data-table-row']");
+
+    await expect(rows()).toHaveLength(2);
+    await userEvent.click(canvas.getByRole("button", { name: "Four per page" }));
+    await waitFor(() => expect(rows()).toHaveLength(4));
   },
 };
