@@ -179,7 +179,7 @@ components:
     rounded: "{rounded.full}"
     size: "16px"
   switch:
-    backgroundColor: "{colors.border-muted}"
+    backgroundColor: "{colors.border}"
     rounded: "{rounded.none}"
     width: "28px"
     height: "16px"
@@ -678,7 +678,10 @@ than it, and marks the one card that should stand out.
 
 **The Dashed-Disabled Rule.** Disabled always means the same four things:
 dashed border, `border-muted` stroke, `bg-disabled` fill, `fg-disabled` text —
-plus removal of every shadow and interaction affordance. Never opacity.
+plus removal of every shadow and interaction affordance. Never opacity. One
+exception: a mark that carries a value — a Slider's filled range — is drawn in
+`fg-disabled` on its `bg-disabled` track, so the value stays legible (3:1 or
+better) while the control is disabled.
 
 ## Components
 
@@ -846,8 +849,9 @@ the inner key moves.
   glyph, dot, or thumb translates 1px while the chassis holds still. A checked
   radio cannot be unchecked, so it takes no press affordance at all.
 - **Switch:** a track defaulting to `sm` (28×16, then 36×20, 44×24px) with an
-  8 / 12 / 16px thumb. Checked fills the track with ink; unchecked uses a
-  `border-muted` track that darkens one step to `border` on hover.
+  8 / 12 / 16px thumb. Checked fills the track with ink; unchecked rests on a
+  `border` track, so the `bg-input` thumb clears 3:1 against it. Unchecked hover
+  takes the accent edge alone — the track does not tint further.
 - All three carry the `-15px` expander when they stand alone, which reaches 44px
   from the padding box.
 
@@ -944,8 +948,7 @@ rules.** The navigation/tab selection plate measures 1.12:1 in light and
 1.10:1 in dark, and its two-tone rim inverts in dark — reading as lit from the
 lower right, which Drawn-Not-Lit forbids. It is unfixed because a correct fix
 needs per-scheme highlight and shade palette tokens across all five themes, not
-a component patch. Switch's disabled thumb and disabled track both resolve to
-`bg-disabled`, so the thumb is not locatable while disabled. `RadioGroup`'s own
+a component patch. `RadioGroup`'s own
 default layout is `flex gap-2` — a 24px pitch under 16px items whose `-15px`
 expanders overlap by 20px, which contradicts the 44px-pitch clause stated above.
 Breadcrumb's links carry a `-8px` expander, roughly 37px tall, covered by neither

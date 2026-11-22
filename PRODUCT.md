@@ -69,7 +69,7 @@ are not:
    neighboring library that ships a neutral default surface cannot claim it
    without becoming a different product.
 2. **Two-layer theming that a fork can actually extend.** A theme author writes
-   30 palette values; components consume only the 69 shared semantic names.
+   30 palette values; components consume only the shared semantic names defined in `src/themes/semantic.css`.
    Adding a theme never touches component source — the property a
    design-system-base user needs most.
 3. **Source ownership without version chaos.** `add` resolves the registry at
