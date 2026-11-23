@@ -130,6 +130,32 @@ describe("resolveAnchor — approximate", () => {
     }
   });
 
+  it("resolves a long quote with a small edit quickly (#1246)", () => {
+    const quote = Array.from({ length: 1000 }, (_, i) =>
+      String.fromCharCode(97 + ((i * 7) % 26)),
+    ).join("");
+    const edited = `${quote.slice(0, 500)}ZZZZ${quote.slice(500)}`;
+    const doc = `${"x".repeat(300)}${edited}${"y".repeat(300)}`;
+    const t0 = performance.now();
+    const r = resolveAnchor(doc, { quote, offset: 300 });
+    const ms = performance.now() - t0;
+    expect(r.status).toBe("approximate");
+    if (r.status !== "orphaned") {
+      expect(r.from).toBe(300);
+    }
+    expect(ms).toBeLessThan(250);
+  });
+
+  it("prefers the candidate closest to the offset hint on a tie", () => {
+    const body = "The quick brown fox jumps over";
+    const edited = "The quick brown fox jumpz over";
+    const doc = `${edited}${" . ".repeat(10)}${edited}`;
+    const second = doc.lastIndexOf(edited);
+    const r = resolveAnchor(doc, { quote: body, offset: second });
+    expect(r.status).toBe("approximate");
+    if (r.status !== "orphaned") expect(r.from).toBe(second);
+  });
+
   it("rejects differences exceeding the threshold (25%) → orphaned", () => {
     const r = resolveAnchor("completely unrelated content here", {
       quote: "The quick brown fox jumps over the lazy dog",
