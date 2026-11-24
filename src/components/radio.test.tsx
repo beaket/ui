@@ -15,3 +15,13 @@ test("RadioGroup renders an item", () => {
     /radio/,
   );
 });
+
+test("RadioGroup orientation=vertical lays the items out in a column", () => {
+  const markup = renderToStaticMarkup(
+    <RadioGroup orientation="vertical" aria-label="Options">
+      <RadioGroup.Item value="one" aria-label="One" />
+    </RadioGroup>,
+  );
+  assert.match(markup, /data-orientation="vertical"/);
+  assert.match(markup, /data-\[orientation=vertical\]:flex-col/);
+});

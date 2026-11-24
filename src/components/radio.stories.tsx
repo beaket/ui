@@ -55,12 +55,7 @@ export const AllStates = () => (
     </div>
     <div className="flex flex-col gap-7">
       <span className="text-fg-muted text-xs tracking-wide uppercase">Vertical</span>
-      <RadioGroup
-        defaultValue="option2"
-        orientation="vertical"
-        className="flex-col"
-        aria-label="Vertical options"
-      >
+      <RadioGroup defaultValue="option2" orientation="vertical" aria-label="Vertical options">
         <div className="flex items-center gap-2">
           <RadioGroup.Item value="option1" id="v-opt1" />
           <Label htmlFor="v-opt1">Option 1</Label>
@@ -104,6 +99,12 @@ export const InteractionTest: Story = {
           <RadioGroup.Item value="option3" aria-label="Option 3" />
         </RadioGroup>
       </div>
+      <div data-testid="vertical-group">
+        <RadioGroup aria-label="Vertical options" orientation="vertical">
+          <RadioGroup.Item value="option1" aria-label="Option X" />
+          <RadioGroup.Item value="option2" aria-label="Option Y" />
+        </RadioGroup>
+      </div>
       <div data-testid="disabled-group">
         <RadioGroup aria-label="Disabled options" disabled onValueChange={args.onValueChange}>
           <RadioGroup.Item value="option1" aria-label="Option A" />
@@ -124,6 +125,10 @@ export const InteractionTest: Story = {
     await expect(args.onValueChange).toHaveBeenCalledWith("option2");
     await userEvent.click(radios[2]);
     await expect(args.onValueChange).toHaveBeenCalledWith("option3");
+
+    // orientation="vertical" lays the items out in a column without a className
+    const vertical = canvas.getByRole("radiogroup", { name: "Vertical options" });
+    await expect(getComputedStyle(vertical).flexDirection).toBe("column");
 
     // Disabled group is a no-op — still only the three calls above
     const disabled = within(canvas.getByTestId("disabled-group"));
