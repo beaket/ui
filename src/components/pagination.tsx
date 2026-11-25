@@ -124,7 +124,8 @@ const buttonBaseClass =
 const buttonActiveClass =
   "bg-bg-emphasis text-fg-on-emphasis border-border-strong z-[1] cursor-default before:hidden";
 const buttonInactiveClass = "border-border cursor-pointer hover:bg-bg-hover active:bg-bg-active";
-const buttonDisabledClass = "border-border-muted text-fg-disabled cursor-not-allowed";
+const buttonDisabledClass =
+  "border-dashed border-border-muted bg-bg-disabled text-fg-disabled cursor-not-allowed";
 const keyClass =
   "inline-block transition-transform duration-100 group-active:translate-x-px group-active:translate-y-px";
 const heldKeyClass = "inline-block translate-x-px translate-y-px";
