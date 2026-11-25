@@ -121,7 +121,11 @@ function findApproximate(
   let bestDist = maxAllowed + 1;
   let bestStart = -1;
   let bestEnd = -1;
-  for (let start = searchStart; start < searchEnd; start++) {
+  // Closest to the hint first, so the true match is found early and bestDist tightens before the far candidates.
+  const starts: number[] = [];
+  for (let start = searchStart; start < searchEnd; start++) starts.push(start);
+  starts.sort((a, b) => Math.abs(a - offset) - Math.abs(b - offset) || a - b);
+  for (const start of starts) {
     // qLen, ±20% windows absorb small insertions/deletions.
     const lengths = [qLen, Math.max(1, Math.floor(qLen * 0.8)), Math.ceil(qLen * 1.2)];
     for (const winLen of lengths) {
@@ -153,20 +157,27 @@ function boundedLevenshtein(a: string, b: string, ceiling: number): number {
   if (m === 0) return n;
   if (n === 0) return m;
 
-  let prev = new Array<number>(n + 1);
-  let curr = new Array<number>(n + 1);
-  for (let j = 0; j <= n; j++) prev[j] = j;
+  // Only cells within `ceiling` of the diagonal can hold a distance <= ceiling, so fill just that band.
+  // Cells outside it stay at `over`, which is what an unbounded run would report for them anyway.
+  const over = ceiling + 1;
+  let prev = new Array<number>(n + 1).fill(over);
+  let curr = new Array<number>(n + 1).fill(over);
+  for (let j = 0; j <= Math.min(n, ceiling); j++) prev[j] = j;
 
   for (let i = 1; i <= m; i++) {
-    curr[0] = i;
-    let rowMin = curr[0];
-    for (let j = 1; j <= n; j++) {
+    const lo = Math.max(1, i - ceiling);
+    const hi = Math.min(n, i + ceiling);
+    curr[lo - 1] = lo === 1 ? i : over;
+    if (hi < n) curr[hi + 1] = over;
+    let rowMin = lo === 1 ? i : over;
+    for (let j = lo; j <= hi; j++) {
       const cost = a.charCodeAt(i - 1) === b.charCodeAt(j - 1) ? 0 : 1;
-      curr[j] = Math.min(curr[j - 1] + 1, prev[j] + 1, prev[j - 1] + cost);
-      if (curr[j] < rowMin) rowMin = curr[j];
+      const v = Math.min(curr[j - 1] + 1, prev[j] + 1, prev[j - 1] + cost);
+      curr[j] = v;
+      if (v < rowMin) rowMin = v;
     }
-    if (rowMin > ceiling) return ceiling + 1;
+    if (rowMin > ceiling) return over;
     [prev, curr] = [curr, prev];
   }
-  return prev[n];
+  return Math.min(prev[n], over);
 }
