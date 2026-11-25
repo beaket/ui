@@ -3,6 +3,14 @@ import { Component, useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { Pagination } from "./pagination";
 
+// DESIGN.md § The Dashed-Disabled Rule: dashed border, muted stroke, disabled fill and text.
+const disabledMarks = [
+  "border-dashed",
+  "border-border-muted",
+  "bg-bg-disabled",
+  "text-fg-disabled",
+];
+
 const meta: Meta<typeof Pagination> = {
   title: "UI/Pagination",
   component: Pagination,
@@ -159,6 +167,7 @@ export const InteractionTest: Story = {
     const prevSpan = first.getByLabelText("Previous page");
     await expect(prevSpan.tagName).toBe("SPAN");
     await expect(prevSpan).toHaveAttribute("aria-disabled", "true");
+    await expect(prevSpan).toHaveClass(...disabledMarks);
     await expect(first.getByRole("link", { name: "Next page" })).toHaveAttribute("href", "?page=2");
 
     // Link mode — last page: next collapses to a disabled span, prev stays active
@@ -166,6 +175,7 @@ export const InteractionTest: Story = {
     const nextSpan = last.getByLabelText("Next page");
     await expect(nextSpan.tagName).toBe("SPAN");
     await expect(nextSpan).toHaveAttribute("aria-disabled", "true");
+    await expect(nextSpan).toHaveClass(...disabledMarks);
     await expect(last.getByRole("link", { name: "Previous page" })).toHaveAttribute(
       "href",
       "?page=9",
@@ -176,6 +186,7 @@ export const InteractionTest: Story = {
     const pageInfo = btn.getByTestId("page-info");
     // First page: prev disabled, page 1 current
     await expect(btn.getByRole("button", { name: "Previous page" })).toBeDisabled();
+    await expect(btn.getByRole("button", { name: "Previous page" })).toHaveClass(...disabledMarks);
     await expect(btn.getByRole("button", { name: "1" })).toHaveAttribute("aria-current", "page");
     // Next → page 2, prev becomes enabled
     await userEvent.click(btn.getByRole("button", { name: "Next page" }));
@@ -188,6 +199,7 @@ export const InteractionTest: Story = {
     await userEvent.click(btn.getByRole("button", { name: "Next page" }));
     await expect(pageInfo).toHaveTextContent("Page 5 of 5");
     await expect(btn.getByRole("button", { name: "Next page" })).toBeDisabled();
+    await expect(btn.getByRole("button", { name: "Next page" })).toHaveClass(...disabledMarks);
     await expect(btn.getByRole("button", { name: "5" })).toHaveAttribute("aria-current", "page");
     // Prev → page 4
     await userEvent.click(btn.getByRole("button", { name: "Previous page" }));
