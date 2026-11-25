@@ -10,7 +10,7 @@ function RadioGroupRoot({ className, ...props }: RadioGroupProps) {
   return (
     <RadioGroupPrimitive.Root
       data-slot="radio-group"
-      className={cn("flex gap-2", className)}
+      className={cn("flex gap-2 data-[orientation=vertical]:flex-col", className)}
       {...props}
     />
   );
