@@ -165,7 +165,7 @@ function SheetRoot({
         >
           <div
             data-slot="sheet-body"
-            className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto"
+            className="-m-1 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-1"
           >
             {content}
           </div>

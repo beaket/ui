@@ -370,6 +370,11 @@ export const LongContent: Story = {
     const dialog = await screen.findByRole("dialog");
     const body = dialog.querySelector<HTMLElement>('[data-slot="sheet-body"]');
     await expect(body).not.toBeNull();
+    // The scroll box clips at its padding edge; keep room for the 3px hover edge and the 2px outline at a 2px offset.
+    const bodyStyle = getComputedStyle(body!);
+    for (const side of ["Top", "Right", "Bottom", "Left"] as const) {
+      await expect(parseFloat(bodyStyle[`padding${side}`])).toBeGreaterThanOrEqual(4);
+    }
     await expect(body!.scrollHeight).toBeGreaterThan(body!.clientHeight);
 
     const last = within(dialog).getByTestId("row-39");
