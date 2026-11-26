@@ -63,15 +63,15 @@ export interface SheetProps extends React.ComponentProps<typeof DialogPrimitive.
 const sidePositions = {
   right: "inset-y-0 right-0 h-full w-3/4",
   left: "inset-y-0 left-0 h-full w-3/4",
-  top: "inset-x-0 top-0 w-full",
-  bottom: "inset-x-0 bottom-0 w-full",
+  top: "inset-x-0 top-0 max-h-dvh w-full",
+  bottom: "inset-x-0 bottom-0 max-h-dvh w-full",
 };
 
 const sidePositionsFullScreen = {
   right: "inset-y-0 right-0 h-full w-full",
   left: "inset-y-0 left-0 h-full w-full",
-  top: "inset-x-0 top-0 w-full",
-  bottom: "inset-x-0 bottom-0 w-full",
+  top: "inset-x-0 top-0 max-h-dvh w-full",
+  bottom: "inset-x-0 bottom-0 max-h-dvh w-full",
 };
 
 const sheetSizes = {
@@ -163,7 +163,12 @@ function SheetRoot({
             if (preventClose) event.preventDefault();
           }}
         >
-          {content}
+          <div
+            data-slot="sheet-body"
+            className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto"
+          >
+            {content}
+          </div>
           {!hideCloseButton && (
             <DialogPrimitive.Close
               data-slot="sheet-close"
