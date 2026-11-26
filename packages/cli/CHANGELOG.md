@@ -1,5 +1,15 @@
 # @beaket/ui
 
+## 4.3.3
+
+### Patch Changes
+
+- [#1338](https://github.com/beaket/ui/pull/1338) [`94d8888`](https://github.com/beaket/ui/commit/94d88887fdfd4a87dde6735237170fc849aed1a4) Thanks [@beaket-bunsen](https://github.com/apps/beaket-bunsen)! - `DataTable` now applies changes to the `pageSize` prop after mount. The prop was passed only through TanStack's `initialState`, which is read once, so a "rows per page" selector driving it had no effect. The prop is now synced into the table with `table.setPageSize`.
+
+- [#1322](https://github.com/beaket/ui/pull/1322) [`47126eb`](https://github.com/beaket/ui/commit/47126eb9a37379807204cd22059bde3f99e4fdf1) Thanks [@beaket-bunsen](https://github.com/apps/beaket-bunsen)! - Pressing Ctrl+C during `init` or an overwrite confirmation now cancels the command instead of continuing. `prompts` resolves with the partial answers after Ctrl+C unless `onCancel` stops the process, so `init` wrote `beaket.ui.json` without a CSS path and printed "Done!", and the confirm prompts treated a cancel as "no" and carried on.
+
+- [#1350](https://github.com/beaket/ui/pull/1350) [`fc47f21`](https://github.com/beaket/ui/commit/fc47f21503d8399426d6602b90c493935732bef7) Thanks [@beaket-bunsen](https://github.com/apps/beaket-bunsen)! - `RadioGroup` with `orientation="vertical"` now lays its items out in a column. The root class was the constant `flex gap-2`, so the prop changed only arrow-key behavior and `data-orientation`; the root now adds `data-[orientation=vertical]:flex-col`. Groups that already pass `className="flex-col"` are unaffected.
+
 ## 4.3.2
 
 ### Patch Changes
