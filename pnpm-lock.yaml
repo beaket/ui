@@ -462,7 +462,7 @@ importers:
         version: 1.2.5
       '@lezer/markdown':
         specifier: ^1.6.4
-        version: 1.8.1
+        version: 1.8.2
     devDependencies:
       '@types/react':
         specifier: 19.3.3
@@ -1535,8 +1535,8 @@ packages:
   '@lezer/lr@1.4.10':
     resolution: {integrity: sha512-rnCpTIBafOx4mRp43xOxDJbFipJm/c0cia/V5TiGlhmMa+wsSdoGmUN3w5Bqrks/09Q/D4tNAmWaT8p6NRi77A==}
 
-  '@lezer/markdown@1.8.1':
-    resolution: {integrity: sha512-M5YmEcKWO4mJ45Y1hECwqyu8cLv25EiXOK554PVOvDOWOP0olwelHHQUWr9sjF+d1bENVhy0nfJ8E57XZUTiXg==}
+  '@lezer/markdown@1.8.2':
+    resolution: {integrity: sha512-q0kGuKOFrKEMi8d3ExryIOAT5XwjW86x1JO5scQB7gcXr8LobgXP3l6Gq6ArpXUQLeDju9cwRHF2Axjk6VMhLQ==}
 
   '@lezer/php@1.0.6':
     resolution: {integrity: sha512-QJ2xNXPmsm/Z3IpThq8fnJrEIVpxhsIoj6GZBW0JYEd/l9zxpJZW216X4fzqQY4vgpdGIumypvI4uQjd4tnYtw==}
@@ -6960,7 +6960,7 @@ snapshots:
       '@codemirror/state': 6.7.6
       '@codemirror/view': 6.44.0
       '@lezer/common': 1.5.7
-      '@lezer/markdown': 1.8.1
+      '@lezer/markdown': 1.8.2
 
   '@codemirror/lang-php@6.0.2':
     dependencies:
@@ -7516,7 +7516,7 @@ snapshots:
     dependencies:
       '@lezer/common': 1.5.7
 
-  '@lezer/markdown@1.8.1':
+  '@lezer/markdown@1.8.2':
     dependencies:
       '@lezer/common': 1.5.7
       '@lezer/highlight': 1.2.5
