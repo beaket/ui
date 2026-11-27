@@ -377,6 +377,12 @@ export const LongContent: Story = {
     }
     await expect(body!.scrollHeight).toBeGreaterThan(body!.clientHeight);
 
+    // Plain text has no focusable child, so the scroll region itself must take focus.
+    await expect(body).toHaveAttribute("role", "region");
+    await expect(body).toHaveAccessibleName("Long form");
+    body!.focus();
+    await expect(body).toHaveFocus();
+
     const last = within(dialog).getByTestId("row-39");
     last.scrollIntoView();
     const bodyRect = body!.getBoundingClientRect();

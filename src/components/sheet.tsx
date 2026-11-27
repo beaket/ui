@@ -3,7 +3,7 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { type ClassValue, clsx } from "clsx";
 import { X } from "lucide-react";
-import { Children, isValidElement, useEffect, useRef } from "react";
+import { Children, isValidElement, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
@@ -115,6 +115,9 @@ function SheetRoot({
   // wrapper is §9's dev warning, which is about `open` without `onOpenChange` —
   // not about the state it used to mirror.
   const hasWarnedRef = useRef(false);
+  // Radix names the panel through `aria-labelledby` on the content element but does not
+  // expose the title id, so the scroll region reads it back from its parent.
+  const [labelledBy, setLabelledBy] = useState<string>();
   useEffect(() => {
     if (process.env.NODE_ENV !== "production") {
       if (open !== undefined && !onOpenChange && !hasWarnedRef.current) {
@@ -164,8 +167,16 @@ function SheetRoot({
           }}
         >
           <div
+            ref={(node) => {
+              setLabelledBy(node?.parentElement?.getAttribute("aria-labelledby") ?? undefined);
+            }}
             data-slot="sheet-body"
-            className="-m-1 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-1"
+            role="region"
+            aria-labelledby={labelledBy}
+            aria-label={labelledBy ? undefined : contentProps["aria-label"]}
+            // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users need to focus this region to scroll long content.
+            tabIndex={0}
+            className="focus-visible:outline-border-focus -m-1 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-1 focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             {content}
           </div>
