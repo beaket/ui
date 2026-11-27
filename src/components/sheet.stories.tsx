@@ -298,6 +298,8 @@ export const InteractionTest: Story = {
     await userEvent.keyboard("{Enter}");
     let sheet = await screen.findByRole("dialog");
     await expect(sheet.contains(document.activeElement)).toBe(true);
+    // Opening lands on the first control, not on the scroll region that wraps it.
+    await expect(within(sheet).getByRole("button", { name: "Close" })).toHaveFocus();
     await userEvent.keyboard("{Tab}");
     await expect(sheet.contains(document.activeElement)).toBe(true);
     await userEvent.keyboard("{Escape}");
@@ -345,5 +347,66 @@ export const TriggerPartTest: Story = {
     await userEvent.click(canvas.getByTestId("sheet-trigger"));
     await expect(await screen.findByRole("dialog")).toBeInTheDocument();
     await expect(screen.getByText("Opened from the part, not the prop.")).toBeInTheDocument();
+  },
+};
+
+// Content taller than the viewport scrolls inside the panel; the close button
+// is a sibling of the scroll body, so it stays in the corner.
+const LongContentSheet = ({ side }: { side: "right" | "bottom" }) => (
+  <Sheet side={side} trigger={<Button>Open long sheet</Button>}>
+    <Sheet.Title>Long form</Sheet.Title>
+    <Sheet.Description>More fields than the viewport can show.</Sheet.Description>
+    {Array.from({ length: 40 }, (_, i) => (
+      <p key={i} data-testid={`row-${i}`}>
+        Field {i + 1}
+      </p>
+    ))}
+  </Sheet>
+);
+
+export const LongContent: Story = {
+  tags: ["!autodocs"],
+  render: () => <LongContentSheet side="right" />,
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Open long sheet" }));
+    const dialog = await screen.findByRole("dialog");
+    const body = dialog.querySelector<HTMLElement>('[data-slot="sheet-body"]');
+    await expect(body).not.toBeNull();
+    // The scroll box clips at its padding edge; keep room for the 3px hover edge and the 2px outline at a 2px offset.
+    const bodyStyle = getComputedStyle(body!);
+    for (const side of ["Top", "Right", "Bottom", "Left"] as const) {
+      await expect(parseFloat(bodyStyle[`padding${side}`])).toBeGreaterThanOrEqual(4);
+    }
+    await expect(body!.scrollHeight).toBeGreaterThan(body!.clientHeight);
+
+    // Plain text has no focusable child, so the scroll region itself must take focus.
+    await expect(body).toHaveAttribute("role", "region");
+    await expect(body).toHaveAccessibleName("Long form");
+    body!.focus();
+    await expect(body).toHaveFocus();
+
+    const last = within(dialog).getByTestId("row-39");
+    last.scrollIntoView();
+    const bodyRect = body!.getBoundingClientRect();
+    const lastRect = last.getBoundingClientRect();
+    await expect(lastRect.bottom).toBeLessThanOrEqual(bodyRect.bottom + 1);
+    await expect(lastRect.top).toBeGreaterThanOrEqual(bodyRect.top - 1);
+
+    const close = within(dialog).getByRole("button", { name: "Close sheet" });
+    const closeRect = close.getBoundingClientRect();
+    await expect(closeRect.top).toBeGreaterThanOrEqual(0);
+    await expect(closeRect.bottom).toBeLessThanOrEqual(window.innerHeight);
+  },
+};
+
+export const LongContentBottom: Story = {
+  tags: ["!autodocs"],
+  render: () => <LongContentSheet side="bottom" />,
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Open long sheet" }));
+    const dialog = await screen.findByRole("dialog");
+    await expect(dialog.getBoundingClientRect().height).toBeLessThanOrEqual(window.innerHeight);
+    const body = dialog.querySelector<HTMLElement>('[data-slot="sheet-body"]');
+    await expect(body!.scrollHeight).toBeGreaterThan(body!.clientHeight);
   },
 };
