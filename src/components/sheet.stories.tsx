@@ -298,6 +298,8 @@ export const InteractionTest: Story = {
     await userEvent.keyboard("{Enter}");
     let sheet = await screen.findByRole("dialog");
     await expect(sheet.contains(document.activeElement)).toBe(true);
+    // Opening lands on the first control, not on the scroll region that wraps it.
+    await expect(within(sheet).getByRole("button", { name: "Close" })).toHaveFocus();
     await userEvent.keyboard("{Tab}");
     await expect(sheet.contains(document.activeElement)).toBe(true);
     await userEvent.keyboard("{Escape}");

@@ -3,13 +3,28 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { type ClassValue, clsx } from "clsx";
 import { X } from "lucide-react";
-import { Children, isValidElement, useEffect, useRef, useState } from "react";
+import {
+  Children,
+  createContext,
+  isValidElement,
+  useContext,
+  useEffect,
+  useId,
+  useRef,
+} from "react";
 import { twMerge } from "tailwind-merge";
 
 const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 // Module-local type for bundlers that replace NODE_ENV without Node globals.
 declare const process: { env: { NODE_ENV?: string } };
+
+// Radix does not expose its title id, so the root owns one and hands it to the title, the
+// content and the scroll region, which all name themselves from it.
+const SheetTitleIdContext = createContext<string | undefined>(undefined);
+
+const FOCUSABLE =
+  'a[href],button:not([disabled]),input:not([disabled]):not([type="hidden"]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 
 export interface SheetProps extends React.ComponentProps<typeof DialogPrimitive.Content> {
   /** Width preset for left/right sheets; className can override it. Defaults to md. */
@@ -108,6 +123,7 @@ function SheetRoot({
   closeLabel = "Close sheet",
   onInteractOutside,
   onEscapeKeyDown,
+  onOpenAutoFocus,
   ...contentProps
 }: SheetProps) {
   // Radix's Root already implements controlled/uncontrolled, so `open` and
@@ -115,9 +131,8 @@ function SheetRoot({
   // wrapper is §9's dev warning, which is about `open` without `onOpenChange` —
   // not about the state it used to mirror.
   const hasWarnedRef = useRef(false);
-  // Radix names the panel through `aria-labelledby` on the content element but does not
-  // expose the title id, so the scroll region reads it back from its parent.
-  const [labelledBy, setLabelledBy] = useState<string>();
+  const titleId = useId();
+  const labelledBy = contentProps["aria-labelledby"] ?? titleId;
   useEffect(() => {
     if (process.env.NODE_ENV !== "production") {
       if (open !== undefined && !onOpenChange && !hasWarnedRef.current) {
@@ -150,6 +165,7 @@ function SheetRoot({
         />
         <DialogPrimitive.Content
           {...contentProps}
+          aria-labelledby={labelledBy}
           data-slot="sheet-content"
           className={cn(
             "shadow-offset-overlay border-border bg-bg-overlay fixed z-50 flex flex-col gap-4 border p-6",
@@ -161,24 +177,41 @@ function SheetRoot({
             onInteractOutside?.(event);
             if (preventClose) event.preventDefault();
           }}
+          onOpenAutoFocus={(event) => {
+            onOpenAutoFocus?.(event);
+            if (event.defaultPrevented) return;
+            // The scroll region is the first tab stop, but opening should still land on the first
+            // control (as it did before the region existed). It takes focus only when nothing else can.
+            const panel = event.target as HTMLElement;
+            const body = panel.querySelector<HTMLElement>('[data-slot="sheet-body"]');
+            const candidates = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
+              (el) => el !== body,
+            );
+            event.preventDefault();
+            for (const el of [...candidates, ...(body ? [body] : [])]) {
+              el.focus({ preventScroll: true });
+              if (document.activeElement === el) break;
+            }
+          }}
           onEscapeKeyDown={(event) => {
             onEscapeKeyDown?.(event);
             if (preventClose) event.preventDefault();
           }}
         >
           <div
-            ref={(node) => {
-              setLabelledBy(node?.parentElement?.getAttribute("aria-labelledby") ?? undefined);
-            }}
             data-slot="sheet-body"
             role="region"
-            aria-labelledby={labelledBy}
-            aria-label={labelledBy ? undefined : contentProps["aria-label"]}
+            aria-labelledby={
+              contentProps["aria-label"] && !contentProps["aria-labelledby"]
+                ? undefined
+                : labelledBy
+            }
+            aria-label={contentProps["aria-labelledby"] ? undefined : contentProps["aria-label"]}
             // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users need to focus this region to scroll long content.
             tabIndex={0}
             className="focus-visible:outline-border-focus -m-1 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-1 focus-visible:outline-2 focus-visible:outline-offset-2"
           >
-            {content}
+            <SheetTitleIdContext.Provider value={titleId}>{content}</SheetTitleIdContext.Provider>
           </div>
           {!hideCloseButton && (
             <DialogPrimitive.Close
@@ -196,8 +229,10 @@ function SheetRoot({
 }
 
 function SheetTitle({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Title>) {
+  const titleId = useContext(SheetTitleIdContext);
   return (
     <DialogPrimitive.Title
+      id={titleId}
       data-slot="sheet-title"
       className={cn("text-fg text-xl leading-7 font-semibold", className)}
       {...props}
